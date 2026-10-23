@@ -56,5 +56,28 @@ for i in range(4):
 need(TEX / "environment/splitterweite_sky.png", (128, 128)); need(TEX / "environment/splitterweite_moon.png", (64, 64))
 need(TEX / "misc/shard_portal_overlay.png", (256, 256)); need(TEX / "gui/advancements/backgrounds/shardline.png", (16, 16))
 need(RESOURCE_ROOT / "shardline_logo.png", (256, 128))
+
+# ---- Story-Erweiterung
+story_blocks = "infected_stone infected_dirt infected_grass_top infected_grass_side infected_log infected_log_top infected_leaves infected_sand".split()
+for b in story_blocks:
+    need(TEX / "block" / f"{b}.png", (16, 16))
+    need(TEX / "block" / f"{b}_glow.png", (16, 64) if b in ("infected_grass_top", "infected_grass_side", "infected_leaves") else (16, 16))
+for b in ("infected_grass_top", "infected_grass_side", "infected_leaves"):
+    need(TEX / "block" / f"{b}_glow.png.mcmeta")
+for b in ("memory_crystal", "purity_anchor"): need(TEX / "block" / f"{b}.png", (16, 16))
+need(TEX / "block" / "purity_anchor_crystal.png"); need(TEX / "block" / "purity_anchor_crystal.png.mcmeta")
+for i in ("lore_book", "purification_essence", "breach_core"): need(TEX / "item" / f"{i}.png", (16, 16))
+need(TEX / "entity" / "keeper_cape.png", (64, 32))
+need(TEX / "entity" / "virus_heart.png", (128, 128)); need(TEX / "entity" / "virus_heart_glowmask.png", (128, 128))
+need(TEX / "entity" / "shard_zombie.png", (64, 64)); need(TEX / "entity" / "shard_zombie_glowmask.png", (64, 64))
+need(TEX / "entity" / "crystallized_cow.png", (64, 32)); need(TEX / "entity" / "crystallized_cow_glowmask.png", (64, 32))
+need(TEX / "mob_effect" / "shard_fever.png", (18, 18))
+for i in range(4): need(TEX / "particle" / f"virus_spore_{i}.png", (8, 8))
+need(TEX / "misc" / "breach_overlay.png", (256, 256)); need(TEX / "gui/advancements/backgrounds/story.png", (16, 16))
+hg = json.loads((GEO / "virus_heart.geo.json").read_text(encoding="utf-8"))["minecraft:geometry"][0]
+hb = {b["name"] for b in hg["bones"]}
+ha = json.loads((ANIM / "virus_heart.animation.json").read_text(encoding="utf-8"))["animations"]
+for clip in ("idle", "spawn", "attack_tendrils", "summon_infected", "hurt", "death"):
+    if clip not in ha: errors.append(f"virus_heart: Clip {clip} fehlt")
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

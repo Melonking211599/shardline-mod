@@ -13,10 +13,14 @@ import anims
 import armor
 import blocks
 import bosses
+import effects_gui
 import entities
 import geo_prep
 import gui
+import infected_entities
 import items
+import story_items
+import virus_blocks
 
 
 def main():
@@ -28,6 +32,11 @@ def main():
     entities.main()
     bosses.main()
     gui.main()
+    # Story-Erweiterung
+    virus_blocks.main()
+    story_items.main()
+    infected_entities.main()
+    effects_gui.main()
     print("Fertig.")
 
 
