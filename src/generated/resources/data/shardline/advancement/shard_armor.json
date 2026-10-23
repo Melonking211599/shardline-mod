@@ -1,0 +1,43 @@
+{
+  "parent": "shardline:shard_ingot",
+  "criteria": {
+    "shard_armor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:shard_helmet"
+          },
+          {
+            "items": "shardline:shard_chestplate"
+          },
+          {
+            "items": "shardline:shard_leggings"
+          },
+          {
+            "items": "shardline:shard_boots"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.shard_armor.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_chestplate"
+    },
+    "title": {
+      "translate": "advancements.shardline.shard_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "shard_armor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

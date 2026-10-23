@@ -1,0 +1,38 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "tamed": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "shardline:glow_moth"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.tame_glow_moth.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:glowbloom"
+    },
+    "title": {
+      "translate": "advancements.shardline.tame_glow_moth.title"
+    }
+  },
+  "requirements": [
+    [
+      "tamed"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

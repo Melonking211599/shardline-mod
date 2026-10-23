@@ -1,0 +1,34 @@
+{
+  "parent": "shardline:root",
+  "criteria": {
+    "shard_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:shard_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.shard_ingot.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_ingot"
+    },
+    "title": {
+      "translate": "advancements.shardline.shard_ingot.title"
+    }
+  },
+  "requirements": [
+    [
+      "shard_ingot"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

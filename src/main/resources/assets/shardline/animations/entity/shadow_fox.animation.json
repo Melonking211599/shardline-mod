@@ -1,0 +1,162 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"tail": {
+					"rotation": [
+						0,
+						"math.sin(query.anim_time * 180) * 12",
+						0
+					]
+				}
+			}
+		},
+		"walk": {
+			"loop": true,
+			"animation_length": 0.6,
+			"bones": {
+				"leg_front_left": {
+					"rotation": [
+						"math.sin(query.anim_time * 600) * 35",
+						0,
+						0
+					]
+				},
+				"leg_back_right": {
+					"rotation": [
+						"math.sin(query.anim_time * 600) * 35",
+						0,
+						0
+					]
+				},
+				"leg_front_right": {
+					"rotation": [
+						"math.sin(query.anim_time * 600) * -35",
+						0,
+						0
+					]
+				},
+				"leg_back_left": {
+					"rotation": [
+						"math.sin(query.anim_time * 600) * -35",
+						0,
+						0
+					]
+				},
+				"tail": {
+					"rotation": [
+						0,
+						"math.sin(query.anim_time * 600) * 8",
+						0
+					]
+				}
+			}
+		},
+		"attack": {
+			"loop": false,
+			"animation_length": 0.35,
+			"bones": {
+				"head": {
+					"rotation": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.12": [
+							20,
+							0,
+							0
+						],
+						"0.35": [
+							0,
+							0,
+							0
+						]
+					},
+					"position": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.12": [
+							0,
+							-1,
+							-1.5
+						],
+						"0.35": [
+							0,
+							0,
+							0
+						]
+					}
+				},
+				"body": {
+					"rotation": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.12": [
+							8,
+							0,
+							0
+						],
+						"0.35": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		},
+		"death": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.9,
+			"bones": {
+				"root": {
+					"rotation": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.63": [
+							0.0,
+							0.0,
+							81.0
+						],
+						"0.90": [
+							0,
+							0,
+							90
+						]
+					},
+					"position": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.63": [
+							2.7,
+							0.0,
+							0.0
+						],
+						"0.90": [
+							3,
+							0,
+							0
+						]
+					}
+				}
+			}
+		}
+	}
+}

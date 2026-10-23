@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "raw_shard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:raw_shard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "shard_fragment": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:shard_fragment"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "shardline:textures/gui/advancements/backgrounds/shardline.png",
+    "description": {
+      "translate": "advancements.shardline.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_fragment"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.shardline.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "shard_fragment",
+      "raw_shard"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,44 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.shard_trader",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 1.5, 0]
+			},
+			"bones": [
+				{"name": "root", "pivot": [0, 0, 0]},
+				{"name": "body", "parent": "root", "pivot": [0, 12, 0], "cubes": [
+					{"origin": [-4, 12, -3], "size": [8, 12, 6], "uv": [16, 20]},
+					{"origin": [-4.5, 4, -3.5], "size": [9, 8, 7], "uv": [16, 46]}
+				]},
+				{"name": "head", "parent": "body", "pivot": [0, 24, 0], "cubes": [
+					{"origin": [-4, 24, -4], "size": [8, 10, 8], "uv": [0, 0]},
+					{"origin": [-1, 25, -6], "size": [2, 4, 2], "uv": [32, 0]}
+				]},
+				{"name": "arms", "parent": "body", "pivot": [0, 20, -1], "rotation": [-45, 0, 0], "cubes": [
+					{"origin": [-4, 16, -5], "size": [8, 4, 4], "uv": [40, 38]},
+					{"origin": [-8, 16, -5], "size": [4, 8, 4], "uv": [44, 22]},
+					{"origin": [4, 16, -5], "size": [4, 8, 4], "uv": [44, 22]}
+				]},
+				{"name": "backpack", "parent": "body", "pivot": [0, 13, 3], "cubes": [
+					{"origin": [-3, 13, 3], "size": [6, 9, 4], "uv": [0, 40]}
+				]},
+				{"name": "pack_crystals", "parent": "backpack", "pivot": [0, 22, 5], "cubes": [
+					{"origin": [-2, 22, 4], "size": [2, 4, 2], "pivot": [-1, 22, 5], "rotation": [0, 0, 15], "uv": [24, 40]},
+					{"origin": [1, 22, 4.5], "size": [2, 3, 2], "pivot": [2, 22, 5.5], "rotation": [0, 0, -15], "uv": [24, 40]}
+				]},
+				{"name": "right_leg", "parent": "root", "pivot": [-2, 12, 0], "cubes": [
+					{"origin": [-4, 0, -2], "size": [4, 12, 4], "uv": [0, 22]}
+				]},
+				{"name": "left_leg", "parent": "root", "pivot": [2, 12, 0], "cubes": [
+					{"origin": [0, 0, -2], "size": [4, 12, 4], "uv": [0, 22]}
+				]}
+			]
+		}
+	]
+}

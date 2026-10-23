@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:item/bow",
+  "overrides": [
+    {
+      "model": "shardline:item/crystal_bow_pulling_0",
+      "predicate": {
+        "minecraft:pulling": 1.0
+      }
+    },
+    {
+      "model": "shardline:item/crystal_bow_pulling_1",
+      "predicate": {
+        "minecraft:pull": 0.65,
+        "minecraft:pulling": 1.0
+      }
+    },
+    {
+      "model": "shardline:item/crystal_bow_pulling_2",
+      "predicate": {
+        "minecraft:pull": 0.9,
+        "minecraft:pulling": 1.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "shardline:item/crystal_bow"
+  }
+}

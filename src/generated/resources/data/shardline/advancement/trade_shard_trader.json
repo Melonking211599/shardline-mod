@@ -1,0 +1,38 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "traded": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "shardline:shard_trader"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:villager_trade"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.trade_shard_trader.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_fragment"
+    },
+    "title": {
+      "translate": "advancements.shardline.trade_shard_trader.title"
+    }
+  },
+  "requirements": [
+    [
+      "traded"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

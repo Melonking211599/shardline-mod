@@ -1,0 +1,45 @@
+{
+  "parent": "shardline:kill_shattered_knight",
+  "criteria": {
+    "summoned": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "shardline:colossus_altar"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": "shardline:colossus_summoning_crystal"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.summon_colossus.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:colossus_summoning_crystal"
+    },
+    "title": {
+      "translate": "advancements.shardline.summon_colossus.title"
+    }
+  },
+  "requirements": [
+    [
+      "summoned"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shardstone_bricks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:shardstone_bricks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shardline:shardstone_brick_wall"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_shardstone_bricks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shardline:shardstone_brick_wall"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.8,
+  "group": "shard_ingot",
+  "ingredient": {
+    "item": "shardline:deepslate_shard_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "shardline:shard_ingot"
+  }
+}

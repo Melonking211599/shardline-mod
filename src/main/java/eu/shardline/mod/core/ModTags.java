@@ -1,0 +1,59 @@
+package eu.shardline.mod.core;
+
+import eu.shardline.mod.Shardline;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.structure.Structure;
+
+public final class ModTags {
+    private ModTags() {
+    }
+
+    public static final class Blocks {
+        /** Boden, auf dem die Pflanzen der Splitterweite wachsen. */
+        public static final TagKey<Block> SHARD_PLANT_SOIL = TagKey.create(Registries.BLOCK, Shardline.id("shard_plant_soil"));
+        public static final TagKey<Block> CRYSTAL_LOGS = TagKey.create(Registries.BLOCK, Shardline.id("crystal_logs"));
+        /** Bloecke, deren Abbau einen Kristallgolem wuetend macht. */
+        public static final TagKey<Block> ANGERS_CRYSTAL_GOLEM = TagKey.create(Registries.BLOCK, Shardline.id("angers_crystal_golem"));
+        public static final TagKey<Block> ORES_SHARD = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "ores/shard"));
+        public static final TagKey<Block> STORAGE_BLOCKS_SHARD = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/shard"));
+
+        private Blocks() {
+        }
+    }
+
+    public static final class Items {
+        public static final TagKey<Item> CRYSTAL_LOGS = TagKey.create(Registries.ITEM, Shardline.id("crystal_logs"));
+        public static final TagKey<Item> SHARD_SET = TagKey.create(Registries.ITEM, Shardline.id("shard_set"));
+        public static final TagKey<Item> COLOSSUS_SET = TagKey.create(Registries.ITEM, Shardline.id("colossus_set"));
+        public static final TagKey<Item> INGOTS_SHARD = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ingots/shard"));
+        public static final TagKey<Item> RAW_MATERIALS_SHARD = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "raw_materials/shard"));
+        public static final TagKey<Item> ORES_SHARD = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "ores/shard"));
+        public static final TagKey<Item> STORAGE_BLOCKS_SHARD = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/shard"));
+
+        private Items() {
+        }
+    }
+
+    public static final class Biomes {
+        public static final TagKey<Biome> IS_SPLITTERWEITE = TagKey.create(Registries.BIOME, Shardline.id("is_splitterweite"));
+        public static final TagKey<Biome> HAS_RUIN_TOWER = TagKey.create(Registries.BIOME, Shardline.id("has_structure/ruin_tower"));
+        public static final TagKey<Biome> HAS_COLOSSUS_ARENA = TagKey.create(Registries.BIOME, Shardline.id("has_structure/colossus_arena"));
+        public static final TagKey<Biome> HAS_QUEEN_ARENA = TagKey.create(Registries.BIOME, Shardline.id("has_structure/queen_arena"));
+
+        private Biomes() {
+        }
+    }
+
+    public static final class Structures {
+        /** Ziel der Karte des Splitterhaendlers. */
+        public static final TagKey<Structure> ON_COLOSSUS_MAPS = TagKey.create(Registries.STRUCTURE, Shardline.id("on_colossus_maps"));
+
+        private Structures() {
+        }
+    }
+}

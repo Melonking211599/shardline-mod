@@ -1,0 +1,12 @@
+{
+  "values": [
+    "shardline:shard_helmet",
+    "shardline:shard_chestplate",
+    "shardline:shard_leggings",
+    "shardline:shard_boots",
+    "shardline:colossus_helmet",
+    "shardline:colossus_chestplate",
+    "shardline:colossus_leggings",
+    "shardline:colossus_boots"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "shardline:block/glow_crystal_block"
+    }
+  }
+}

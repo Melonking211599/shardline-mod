@@ -1,0 +1,22 @@
+{
+  "values": {
+    "shardline:crystal_leaves": {
+      "chance": 0.3
+    },
+    "shardline:crystal_sapling": {
+      "chance": 0.3
+    },
+    "shardline:glowbloom": {
+      "chance": 0.65
+    },
+    "shardline:glowcap": {
+      "chance": 0.65
+    },
+    "shardline:luminous_berry": {
+      "chance": 0.3
+    },
+    "shardline:shard_fern": {
+      "chance": 0.3
+    }
+  }
+}

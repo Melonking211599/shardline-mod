@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_knight_crest": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:knight_crest"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shardline:colossus_summoning_crystal"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_knight_crest"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shardline:colossus_summoning_crystal"
+    ]
+  }
+}

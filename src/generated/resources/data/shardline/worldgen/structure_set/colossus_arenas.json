@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 7712381,
+    "separation": 14,
+    "spacing": 36
+  },
+  "structures": [
+    {
+      "structure": "shardline:colossus_arena",
+      "weight": 1
+    }
+  ]
+}

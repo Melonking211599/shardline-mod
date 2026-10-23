@@ -1,0 +1,48 @@
+{
+  "type": "shardline:splitterweite",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "shardline:crystal_forest",
+          "parameters": {
+            "continentalness": 0.0,
+            "depth": 0.0,
+            "erosion": 0.0,
+            "humidity": 0.25,
+            "offset": 0.0,
+            "temperature": 0.0,
+            "weirdness": 0.0
+          }
+        },
+        {
+          "biome": "shardline:ash_fields",
+          "parameters": {
+            "continentalness": 0.0,
+            "depth": 0.0,
+            "erosion": 0.0,
+            "humidity": -0.4,
+            "offset": 0.0,
+            "temperature": 0.55,
+            "weirdness": 0.0
+          }
+        },
+        {
+          "biome": "shardline:glowing_caves",
+          "parameters": {
+            "continentalness": 0.0,
+            "depth": 0.0,
+            "erosion": 0.0,
+            "humidity": -0.1,
+            "offset": 0.0,
+            "temperature": -0.55,
+            "weirdness": 0.0
+          }
+        }
+      ]
+    },
+    "settings": "shardline:splitterweite"
+  }
+}

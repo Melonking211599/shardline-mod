@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:portal_key",
+  "criteria": {
+    "entered": {
+      "conditions": {
+        "to": "shardline:splitterweite"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.enter_splitterweite.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_portal_frame"
+    },
+    "title": {
+      "translate": "advancements.shardline.enter_splitterweite.title"
+    }
+  },
+  "requirements": [
+    [
+      "entered"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

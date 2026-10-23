@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colossus_core": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:colossus_core"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shardline:colossus_pickaxe_smithing"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_colossus_core"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shardline:colossus_pickaxe_smithing"
+    ]
+  }
+}

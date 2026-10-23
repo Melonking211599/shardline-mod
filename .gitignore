@@ -1,0 +1,19 @@
+# Gradle / IDE
+.gradle/
+build/
+out/
+run/
+runs/
+repo/
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+bin/
+
+# Portables JDK fuer lokale Builds
+.tools/
+
+# Datagen-Cache
+src/generated/resources/.cache/

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "F": {
+      "item": "shardline:shard_fragment"
+    },
+    "I": {
+      "item": "shardline:shard_ingot"
+    }
+  },
+  "pattern": [
+    " FE",
+    " IF",
+    "I  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "shardline:shard_key"
+  }
+}

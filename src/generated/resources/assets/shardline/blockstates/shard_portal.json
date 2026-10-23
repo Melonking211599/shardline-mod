@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "shardline:block/shard_portal_ns"
+    },
+    "axis=z": {
+      "model": "shardline:block/shard_portal_ew"
+    }
+  }
+}

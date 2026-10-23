@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "shardline:shard_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "shardline:shard_ingot"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "shardline:block/shardstone_bricks",
+    "side": "shardline:block/shardstone_bricks",
+    "top": "shardline:block/shardstone_bricks"
+  }
+}

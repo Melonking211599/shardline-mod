@@ -1,0 +1,98 @@
+package eu.shardline.mod.client;
+
+import eu.shardline.mod.Shardline;
+import eu.shardline.mod.client.particle.ShardParticle;
+import eu.shardline.mod.client.renderer.CrystalGolemRenderer;
+import eu.shardline.mod.client.renderer.QueenCloneRenderer;
+import eu.shardline.mod.client.renderer.ShardCreeperRenderer;
+import eu.shardline.mod.client.renderer.ShardlineGeoRenderer;
+import eu.shardline.mod.client.renderer.VoidRayRenderer;
+import eu.shardline.mod.client.sky.SplitterweiteEffects;
+import eu.shardline.mod.core.ModParticles;
+import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.item.ModItems;
+import eu.shardline.mod.world.dimension.ModDimensions;
+import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+
+/**
+ * Client-Einstieg: Renderer, Partikel, Himmel, Tasten und Konfigurationsbildschirm.
+ */
+@Mod(value = Shardline.MODID, dist = Dist.CLIENT)
+@EventBusSubscriber(modid = Shardline.MODID, value = Dist.CLIENT)
+public final class ShardlineClient {
+    public ShardlineClient(ModContainer container) {
+        container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            ItemProperties.register(ModItems.CRYSTAL_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), (stack, level, entity, seed) -> {
+                if (entity == null || entity.getUseItem() != stack) {
+                    return 0.0F;
+                }
+                return (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / 20.0F;
+            });
+            ItemProperties.register(ModItems.CRYSTAL_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"),
+                    (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+        });
+    }
+
+    @SubscribeEvent
+    static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.SHARD_CREEPER.get(), ShardCreeperRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTAL_GOLEM.get(), CrystalGolemRenderer::new);
+        event.registerEntityRenderer(ModEntities.GLOW_MOTH.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "glow_moth", 0.2F, true));
+        event.registerEntityRenderer(ModEntities.ASH_WALKER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "ash_walker", 0.5F, false));
+        event.registerEntityRenderer(ModEntities.SHARD_SCOUT.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_scout", 0.4F, true));
+        event.registerEntityRenderer(ModEntities.VOID_RAY.get(), VoidRayRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTAL_SPIDER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_spider", 0.8F, true));
+        event.registerEntityRenderer(ModEntities.SHARD_TRADER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_trader", 0.5F, false));
+        event.registerEntityRenderer(ModEntities.SHADOW_FOX.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shadow_fox", 0.4F, true));
+        event.registerEntityRenderer(ModEntities.SHATTERED_KNIGHT.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shattered_knight", 0.6F, true));
+        event.registerEntityRenderer(ModEntities.CRYSTAL_COLOSSUS.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_colossus", 1.6F, true));
+        event.registerEntityRenderer(ModEntities.SHARD_QUEEN.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_queen", 0.8F, true));
+        event.registerEntityRenderer(ModEntities.QUEEN_CLONE.get(), QueenCloneRenderer::new);
+        event.registerEntityRenderer(ModEntities.SHARD_PROJECTILE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
+        event.registerEntityRenderer(ModEntities.CRYSTAL_PILLAR.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_pillar", 0.0F, true));
+        event.registerEntityRenderer(ModEntities.VOID_ZONE.get(), NoopRenderer::new);
+    }
+
+    @SubscribeEvent
+    static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.SHARD_SPARKLE.get(), ShardParticle.SparkleProvider::new);
+        event.registerSpriteSet(ModParticles.VOID_MOTE.get(), ShardParticle.VoidProvider::new);
+    }
+
+    @SubscribeEvent
+    static void registerKeys(RegisterKeyMappingsEvent event) {
+        event.register(KeyBindings.CRYSTAL_SHIELD);
+    }
+
+    @SubscribeEvent
+    static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
+        event.register(ModDimensions.SPLITTERWEITE_EFFECTS, new SplitterweiteEffects());
+    }
+
+    @SubscribeEvent
+    static void registerGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("shard_portal_overlay"), PortalOverlay::render);
+    }
+}

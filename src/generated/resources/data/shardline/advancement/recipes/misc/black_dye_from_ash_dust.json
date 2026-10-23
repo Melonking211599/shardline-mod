@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ash_dust": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:ash_dust"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shardline:black_dye_from_ash_dust"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ash_dust"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shardline:black_dye_from_ash_dust"
+    ]
+  }
+}

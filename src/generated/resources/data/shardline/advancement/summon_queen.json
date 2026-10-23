@@ -1,0 +1,45 @@
+{
+  "parent": "shardline:colossus_armor",
+  "criteria": {
+    "summoned": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "shardline:queen_altar"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": "shardline:colossus_core"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.summon_queen.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:colossus_core"
+    },
+    "title": {
+      "translate": "advancements.shardline.summon_queen.title"
+    }
+  },
+  "requirements": [
+    [
+      "summoned"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

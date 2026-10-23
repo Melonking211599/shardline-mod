@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "shardline:colossus_core"
+  },
+  "base": {
+    "item": "minecraft:netherite_leggings"
+  },
+  "result": {
+    "count": 1,
+    "id": "shardline:colossus_leggings"
+  },
+  "template": {
+    "item": "shardline:colossus_upgrade_smithing_template"
+  }
+}

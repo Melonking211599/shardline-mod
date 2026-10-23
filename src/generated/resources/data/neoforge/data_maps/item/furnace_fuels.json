@@ -1,0 +1,13 @@
+{
+  "values": {
+    "shardline:ash_dust": {
+      "burn_time": 800
+    },
+    "shardline:crystal_log": {
+      "burn_time": 300
+    },
+    "shardline:crystal_planks": {
+      "burn_time": 300
+    }
+  }
+}

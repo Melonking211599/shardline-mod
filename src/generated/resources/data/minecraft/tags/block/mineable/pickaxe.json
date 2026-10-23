@@ -1,0 +1,18 @@
+{
+  "values": [
+    "shardline:shardstone",
+    "shardline:shardstone_bricks",
+    "shardline:cracked_shardstone_bricks",
+    "shardline:shardstone_brick_stairs",
+    "shardline:shardstone_brick_slab",
+    "shardline:shardstone_brick_wall",
+    "shardline:shard_ore",
+    "shardline:deepslate_shard_ore",
+    "shardline:shard_block",
+    "shardline:glow_crystal_block",
+    "shardline:glow_crystal_cluster",
+    "shardline:shard_portal_frame",
+    "shardline:colossus_trophy",
+    "shardline:queen_trophy"
+  ]
+}

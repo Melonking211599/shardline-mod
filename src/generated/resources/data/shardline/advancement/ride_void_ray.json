@@ -1,0 +1,40 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "riding": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "shardline:void_ray"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.ride_void_ray.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:void_ray_hide"
+    },
+    "title": {
+      "translate": "advancements.shardline.ride_void_ray.title"
+    }
+  },
+  "requirements": [
+    [
+      "riding"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

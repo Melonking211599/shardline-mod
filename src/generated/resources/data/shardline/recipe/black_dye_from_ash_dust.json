@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "shardline:ash_dust"
+    },
+    {
+      "item": "shardline:ash_dust"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:black_dye"
+  }
+}

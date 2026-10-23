@@ -1,0 +1,122 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "ambient_sound": "minecraft:ambient.warped_forest.loop",
+    "fog_color": 3877478,
+    "foliage_color": 12618751,
+    "grass_color": 7332824,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "music": {
+      "max_delay": 24000,
+      "min_delay": 12000,
+      "replace_current_music": false,
+      "sound": "shardline:music.splitterweite"
+    },
+    "particle": {
+      "options": {
+        "type": "shardline:shard_sparkle"
+      },
+      "probability": 0.006
+    },
+    "sky_color": 1313834,
+    "water_color": 8019199,
+    "water_fog_color": 1707827
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "shardline:shard_ore",
+      "shardline:glow_crystal_vein"
+    ],
+    [],
+    [],
+    [
+      "shardline:crystal_trees",
+      "shardline:glowbloom_patch",
+      "shardline:shard_fern_patch",
+      "shardline:luminous_berry_patch",
+      "shardline:hanging_glow_cluster"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [
+      {
+        "type": "shardline:glow_moth",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 12
+      }
+    ],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "shardline:crystal_golem",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 6
+      },
+      {
+        "type": "shardline:void_ray",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 4
+      },
+      {
+        "type": "shardline:shard_trader",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 1
+      }
+    ],
+    "misc": [],
+    "monster": [
+      {
+        "type": "shardline:shard_creeper",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 40
+      },
+      {
+        "type": "shardline:crystal_spider",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 20
+      },
+      {
+        "type": "shardline:shadow_fox",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 15
+      },
+      {
+        "type": "shardline:shard_scout",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 15
+      },
+      {
+        "type": "shardline:shattered_knight",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 3
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.7
+}

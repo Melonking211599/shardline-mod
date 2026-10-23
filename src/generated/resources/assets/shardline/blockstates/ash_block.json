@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "shardline:block/ash_block"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "shardline:shadow_pelt"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:leather"
+  }
+}

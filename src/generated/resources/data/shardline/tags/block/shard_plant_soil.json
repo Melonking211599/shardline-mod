@@ -1,0 +1,10 @@
+{
+  "values": [
+    "shardline:crystal_moss",
+    "shardline:ash_block",
+    "shardline:shardstone",
+    "shardline:glow_crystal_block",
+    "minecraft:moss_block",
+    "#minecraft:dirt"
+  ]
+}

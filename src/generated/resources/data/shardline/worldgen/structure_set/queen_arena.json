@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "shardline:fixed_chunk",
+    "chunk_x": 0,
+    "chunk_z": 0,
+    "salt": 90210
+  },
+  "structures": [
+    {
+      "structure": "shardline:queen_arena",
+      "weight": 1
+    }
+  ]
+}

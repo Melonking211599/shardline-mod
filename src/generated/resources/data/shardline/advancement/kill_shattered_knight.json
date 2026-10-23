@@ -1,0 +1,38 @@
+{
+  "parent": "shardline:shard_armor",
+  "criteria": {
+    "killed": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "shardline:shattered_knight"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.kill_shattered_knight.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:knight_crest"
+    },
+    "title": {
+      "translate": "advancements.shardline.kill_shattered_knight.title"
+    }
+  },
+  "requirements": [
+    [
+      "killed"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

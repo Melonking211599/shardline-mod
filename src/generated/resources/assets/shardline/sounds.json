@@ -1,0 +1,541 @@
+{
+  "block.shard_portal.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.portal.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.shard_portal.ambient"
+  },
+  "block.shard_portal.travel": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.resonate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.shard_portal.travel"
+  },
+  "entity.ash_walker.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.husk.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.ash_walker.ambient"
+  },
+  "entity.ash_walker.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.husk.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.ash_walker.death"
+  },
+  "entity.ash_walker.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.husk.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.ash_walker.hurt"
+  },
+  "entity.crystal_colossus.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.warden.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.ambient"
+  },
+  "entity.crystal_colossus.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wither.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.death"
+  },
+  "entity.crystal_colossus.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.iron_golem.damage"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.hurt"
+  },
+  "entity.crystal_colossus.pillar": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_cluster.place"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.pillar"
+  },
+  "entity.crystal_colossus.roar": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.warden.roar"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.roar"
+  },
+  "entity.crystal_colossus.slam": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.warden.sonic_boom"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.slam"
+  },
+  "entity.crystal_colossus.summon": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.evoker.prepare_summon"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_colossus.summon"
+  },
+  "entity.crystal_golem.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.chime"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_golem.ambient"
+  },
+  "entity.crystal_golem.angry": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_cluster.break"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_golem.angry"
+  },
+  "entity.crystal_golem.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.iron_golem.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_golem.death"
+  },
+  "entity.crystal_golem.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.iron_golem.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_golem.hurt"
+  },
+  "entity.crystal_spider.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.spider.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_spider.ambient"
+  },
+  "entity.crystal_spider.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.spider.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_spider.death"
+  },
+  "entity.crystal_spider.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.spider.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_spider.hurt"
+  },
+  "entity.glow_moth.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.allay.ambient_with_item"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.glow_moth.ambient"
+  },
+  "entity.glow_moth.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.bee.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.glow_moth.death"
+  },
+  "entity.glow_moth.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.bee.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.glow_moth.hurt"
+  },
+  "entity.shadow_fox.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.fox.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shadow_fox.ambient"
+  },
+  "entity.shadow_fox.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.fox.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shadow_fox.death"
+  },
+  "entity.shadow_fox.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.fox.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shadow_fox.hurt"
+  },
+  "entity.shadow_fox.vanish": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.illusioner.mirror_move"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shadow_fox.vanish"
+  },
+  "entity.shard_creeper.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.creeper.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_creeper.death"
+  },
+  "entity.shard_creeper.fuse": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.resonate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_creeper.fuse"
+  },
+  "entity.shard_creeper.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.creeper.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_creeper.hurt"
+  },
+  "entity.shard_projectile.shatter": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.break"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_projectile.shatter"
+  },
+  "entity.shard_queen.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.allay.ambient_without_item"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_queen.ambient"
+  },
+  "entity.shard_queen.cast": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.evoker.cast_spell"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_queen.cast"
+  },
+  "entity.shard_queen.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.ender_dragon.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_queen.death"
+  },
+  "entity.shard_queen.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.blaze.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_queen.hurt"
+  },
+  "entity.shard_queen.scream": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.ender_dragon.growl"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_queen.scream"
+  },
+  "entity.shard_queen.teleport": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.enderman.teleport"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_queen.teleport"
+  },
+  "entity.shard_scout.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.vex.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_scout.ambient"
+  },
+  "entity.shard_scout.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.vex.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_scout.death"
+  },
+  "entity.shard_scout.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.vex.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_scout.hurt"
+  },
+  "entity.shard_scout.shoot": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.breeze.shoot"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_scout.shoot"
+  },
+  "entity.shard_trader.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_trader.ambient"
+  },
+  "entity.shard_trader.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_trader.death"
+  },
+  "entity.shard_trader.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_trader.hurt"
+  },
+  "entity.shard_trader.no": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.no"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_trader.no"
+  },
+  "entity.shard_trader.trade": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.trade"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_trader.trade"
+  },
+  "entity.shard_trader.yes": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.yes"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shard_trader.yes"
+  },
+  "entity.shattered_knight.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wither_skeleton.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shattered_knight.ambient"
+  },
+  "entity.shattered_knight.charge": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.ravager.roar"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shattered_knight.charge"
+  },
+  "entity.shattered_knight.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wither_skeleton.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shattered_knight.death"
+  },
+  "entity.shattered_knight.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wither_skeleton.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.shattered_knight.hurt"
+  },
+  "entity.void_ray.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.phantom.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.void_ray.ambient"
+  },
+  "entity.void_ray.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.phantom.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.void_ray.death"
+  },
+  "entity.void_ray.flap": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.phantom.flap"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.void_ray.flap"
+  },
+  "entity.void_ray.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.phantom.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.void_ray.hurt"
+  },
+  "item.colossus_gauntlet.slam": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.warden.attack_impact"
+      }
+    ],
+    "subtitle": "subtitles.shardline.item.colossus_gauntlet.slam"
+  },
+  "item.crystal_shield.activate": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.resonate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.item.crystal_shield.activate"
+  },
+  "item.heart_of_the_expanse.blink": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.enderman.teleport"
+      }
+    ],
+    "subtitle": "subtitles.shardline.item.heart_of_the_expanse.blink"
+  },
+  "item.queens_shardblade.volley": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.breeze.shoot"
+      }
+    ],
+    "subtitle": "subtitles.shardline.item.queens_shardblade.volley"
+  },
+  "item.shard_key.use": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.end_portal.spawn"
+      }
+    ],
+    "subtitle": "subtitles.shardline.item.shard_key.use"
+  },
+  "music.splitterweite": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "music.end"
+      }
+    ]
+  }
+}

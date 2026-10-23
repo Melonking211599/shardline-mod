@@ -1,0 +1,133 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"fly": {
+			"loop": true,
+			"animation_length": 3,
+			"bones": {
+				"left_wing": {
+					"rotation": [
+						0,
+						0,
+						"math.sin(query.anim_time * 120) * 14"
+					]
+				},
+				"left_wing_tip": {
+					"rotation": [
+						0,
+						0,
+						"math.sin(query.anim_time * 120 - 40) * 20"
+					]
+				},
+				"right_wing": {
+					"rotation": [
+						0,
+						0,
+						"math.sin(query.anim_time * 120) * -14"
+					]
+				},
+				"right_wing_tip": {
+					"rotation": [
+						0,
+						0,
+						"math.sin(query.anim_time * 120 - 40) * -20"
+					]
+				},
+				"tail": {
+					"rotation": [
+						"math.sin(query.anim_time * 120 + 60) * 6",
+						"math.sin(query.anim_time * 60) * 10",
+						0
+					]
+				},
+				"body": {
+					"position": [
+						0,
+						"math.sin(query.anim_time * 120) * 0.6",
+						0
+					]
+				}
+			}
+		},
+		"death": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1.2,
+			"bones": {
+				"root": {
+					"rotation": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.84": [
+							18.0,
+							0.0,
+							63.0
+						],
+						"1.20": [
+							20,
+							0,
+							70
+						]
+					},
+					"position": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.84": [
+							0.0,
+							-7.2,
+							0.0
+						],
+						"1.20": [
+							0,
+							-8,
+							0
+						]
+					}
+				}
+			}
+		},
+		"idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"body": {
+					"position": [
+						0,
+						"math.sin(query.anim_time * 180) * 0.8",
+						0
+					]
+				}
+			}
+		},
+		"attack": {
+			"loop": false,
+			"animation_length": 0.4,
+			"bones": {
+				"head": {
+					"rotation": {
+						"0.0": [
+							0,
+							0,
+							0
+						],
+						"0.16": [
+							30,
+							0,
+							0
+						],
+						"0.40": [
+							0,
+							0,
+							0
+						]
+					}
+				}
+			}
+		}
+	}
+}

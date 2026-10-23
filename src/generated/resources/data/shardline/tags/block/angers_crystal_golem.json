@@ -1,0 +1,11 @@
+{
+  "values": [
+    "shardline:shardstone",
+    "shardline:shard_ore",
+    "shardline:deepslate_shard_ore",
+    "shardline:glow_crystal_block",
+    "shardline:glow_crystal_cluster",
+    "shardline:shardstone_bricks",
+    "shardline:cracked_shardstone_bricks"
+  ]
+}

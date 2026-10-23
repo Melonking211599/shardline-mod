@@ -1,0 +1,34 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "crystal_bow": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:crystal_bow"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.crystal_bow.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:crystal_bow"
+    },
+    "title": {
+      "translate": "advancements.shardline.crystal_bow.title"
+    }
+  },
+  "requirements": [
+    [
+      "crystal_bow"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

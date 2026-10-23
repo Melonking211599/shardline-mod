@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "shardline:block/queen_trophy",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "shardline:block/queen_trophy"
+    },
+    "facing=south": {
+      "model": "shardline:block/queen_trophy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "shardline:block/queen_trophy",
+      "y": 270
+    }
+  }
+}
