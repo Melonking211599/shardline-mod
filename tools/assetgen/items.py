@@ -54,8 +54,12 @@ def new() -> Tex:
     return Tex(16, 16)
 
 
-def finish(t: Tex, edge=EDGE) -> Tex:
-    t.outline(edge)
+def finish(t: Tex, edge=None) -> Tex:
+    """Kontur setzen: ohne feste Farbe weich (dunklerer Ton der Nachbarpixel, wie bei Vanilla), sonst die gegebene."""
+    if edge is None:
+        t.selout(0.38, EDGE, 0.22)
+    else:
+        t.outline(edge)
     return t
 
 
@@ -406,29 +410,42 @@ def queens_shardblade():
     return finish(t, hx("#2a0825"))
 
 
+# Koepfe nach Vanilla-Proportionen: Spitzhacke mit Bogen und nach unten reichendem rechten Arm, Axt mit Keilklinge
+# oben rechts, Spaten mit rundem Blatt. Zeichen 1-5 = Materialrampe (dunkel -> hell).
 PICK = """
 ................
-..5554..........
-..3332544.......
-.....23334......
-......23334.....
-.......2333.....
-.........2332...
-..........232...
-...........22...
-...........12...
+................
+................
+......5544332...
+......4....32...
+...........32...
+............32..
+............32..
+............22..
+.............1..
 """
 
 AXE = """
 ................
 ................
-.....55544......
-....544433332...
-...5443333322...
-...543333322....
-...54....332...
-...43...........
-...32...........
+..........54....
+.........5443...
+........554332..
+.......5544332..
+.......443322...
+........33221...
+..........21....
+"""
+
+SHOVEL = """
+................
+................
+..........5543..
+.........554432.
+.........544332.
+.........443322.
+.........44332..
+..........322...
 """
 
 
@@ -443,30 +460,11 @@ def _head_tool(rows, r, glow=None, glow_px=(), n=8):
 
 
 def _shovel(r, glow=None):
-    """Spatenblatt als Linse laengs des Griffs: obere linke Haelfte hell, untere rechte dunkel."""
-    p = _pal(r, glow)
-    t = new()
-    _handle(t, p, 2, 13, 6)
-    ox, oy = 8.5, 7.5
-    for y in range(16):
-        for x in range(16):
-            dx, dy = x + .5 - ox, y + .5 - oy
-            u = (dx - dy) / math.sqrt(2)
-            v = (dx + dy) / math.sqrt(2)
-            if not (0.2 <= u <= 8.2):
-                continue
-            w = 2.5 * math.sqrt(max(0.0, 1 - ((u - 4.7) / 3.6) ** 2)) if u > 1.8 else 0.55 + (u - 0.2) * 0.2
-            if abs(v) <= w:
-                s = v / max(w, 0.5)
-                idx = 3.1 - s * 1.6 + (0.5 if u > 6.6 else 0)
-                t.set(x, y, p[str(max(1, min(5, int(round(idx)))))])
-    if glow is not None:
-        t.set(11, 4, p["g"])
-    return finish(t)
+    return _head_tool(SHOVEL, r, glow, ((12, 4),) if glow is not None else (), n=7)
 
 
 def shard_pickaxe():
-    return _head_tool(PICK, SHARD)
+    return _head_tool(PICK, SHARD, n=10)
 
 
 def shard_axe():
@@ -478,11 +476,11 @@ def shard_shovel():
 
 
 def colossus_pickaxe():
-    return _head_tool(PICK, COL, CYAN[4], ((9, 4),))
+    return _head_tool(PICK, COL, CYAN[4], ((8, 3),), n=10)
 
 
 def colossus_axe():
-    return _head_tool(AXE, COL, CYAN[4], ((6, 3),), n=9)
+    return _head_tool(AXE, COL, CYAN[4], ((10, 4),), n=9)
 
 
 def colossus_shovel():

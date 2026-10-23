@@ -182,6 +182,26 @@ class Tex:
                         self.px[x, y] = c
                         break
 
+    def selout(self, factor: float = 0.4, base=OUTLINE, keep: float = 0.2):
+        """Weiche Kontur wie bei Vanilla: jeder Randpixel bekommt einen dunkleren Ton seiner Nachbarn
+        (Anteil `keep` der festen Konturfarbe `base` bleibt beigemischt, damit es auf dunklem Grund sichtbar bleibt)."""
+        src = self.img.copy()
+        sp = src.load()
+        for y in range(self.h):
+            for x in range(self.w):
+                if sp[x, y][3] != 0:
+                    continue
+                near = [sp[nx, ny] for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
+                        if 0 <= nx < self.w and 0 <= ny < self.h and sp[nx, ny][3] != 0]
+                if not near:
+                    continue
+                r = sum(c[0] for c in near) / len(near)
+                g = sum(c[1] for c in near) / len(near)
+                b = sum(c[2] for c in near) / len(near)
+                self.px[x, y] = (int((r * factor) * (1 - keep) + base[0] * keep),
+                                 int((g * factor) * (1 - keep) + base[1] * keep),
+                                 int((b * factor) * (1 - keep) + base[2] * keep), 255)
+
     def save(self, path: Path):
         path.parent.mkdir(parents=True, exist_ok=True)
         self.img.save(path, "PNG", optimize=False)
