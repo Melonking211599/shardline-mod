@@ -32,18 +32,18 @@ public final class LoreBooks {
     }
 
     public static final List<LoreBook> ALL = List.of(
-            new LoreBook(1, "wanderer_notes", 3),
-            new LoreBook(2, "crystal_kingdom", 3),
-            new LoreBook(3, "keepers_oath", 3),
-            new LoreBook(4, "the_resonance", 3),
-            new LoreBook(5, "first_infection", 3),
-            new LoreBook(6, "the_colossus", 3),
-            new LoreBook(7, "the_last_knights", 3),
-            new LoreBook(8, "queen_selvaine", 3),
-            new LoreBook(9, "the_seal", 3),
-            new LoreBook(10, "the_shattering", 3),
-            new LoreBook(11, "traders_ledger", 3),
-            new LoreBook(12, "the_breach_core", 3));
+            new LoreBook(1, "wanderer_notes", 7),
+            new LoreBook(2, "crystal_kingdom", 7),
+            new LoreBook(3, "keepers_oath", 7),
+            new LoreBook(4, "the_resonance", 7),
+            new LoreBook(5, "first_infection", 7),
+            new LoreBook(6, "the_colossus", 7),
+            new LoreBook(7, "the_last_knights", 7),
+            new LoreBook(8, "queen_selvaine", 7),
+            new LoreBook(9, "the_seal", 7),
+            new LoreBook(10, "the_shattering", 7),
+            new LoreBook(11, "traders_ledger", 7),
+            new LoreBook(12, "the_breach_core", 7));
 
     private LoreBooks() {
     }
