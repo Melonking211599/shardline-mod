@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import anims
 import armor
+import armor_extras
 import blocks
 import bosses
 import effects_gui
@@ -29,6 +30,7 @@ def main():
     blocks.main()
     items.main()
     armor.main()
+    armor_extras.main()
     entities.main()
     bosses.main()
     gui.main()

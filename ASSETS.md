@@ -4,6 +4,8 @@ Alle Pfade sind relativ zu `src/main/resources/assets/shardline/`. Jede Datei ex
 
 **Aktuelle Texturen:** Alle Texturen entstehen deterministisch aus `python tools/assetgen/run_all.py` (Pillow nötig, Prüfung mit `python tools/assetgen/validate.py`). Die Farbpaletten stehen in `tools/assetgen/common.py`. Der Stil kommt aus `tools/assetgen/clean.py`: kantige Bruchplatten für Stein, feines gleichmäßiges Korn mit Steinchen und Büscheln für Boden und Moos, einzelne Blätter für Laub und lange, zusammenhängende Risse bei den Bossen statt Pixelrauschen. Ein erneuter Lauf liefert immer dieselben Bilder.
 
+**Ruestungen am Koerper:** Die Vanilla-Layer (`textures/models/armor/<set>_layer_1/2.png`) werden auf ein schlankeres Modell gelegt (`SlimArmorModels`, Aufblaehung 0,55 statt 1,0, Hose 0,3 statt 0,5). Dazu kommen 3D-Zusatzteile (Kristallkamm, Rueckenkristalle, Schulterplatten, Knieschuetzer, Stiefelflossen) aus `<set>_extras.png` und `<set>_extras_glow.png`. Sie entstehen zusammen mit `client/renderer/ArmorExtraModels.java` aus `tools/assetgen/armor_extras.py` (Java-Datei nicht von Hand aendern). `python tools/assetgen/preview_armor.py <bild.png>` rendert Spieler mit beiden Sets aus vier Blickwinkeln.
+
 ## Entity-Modelle (GeckoLib)
 
 Jedes Wesen hat drei Dateien: ein Modell unter `geo/entity/<name>.geo.json`, die Animationen unter `animations/entity/<name>.animation.json` und die Textur unter `textures/entity/<name>.png`. Steht bei Leuchtmaske ein Ja, gibt es zusätzlich `textures/entity/<name>_glowmask.png`: Was dort deckend ist, leuchtet im Dunkeln.
