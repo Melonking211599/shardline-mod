@@ -1,0 +1,27 @@
+{
+  "parent": "shardline:story/chapter_4",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.chapter_5.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "shardline:infected_stone"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.chapter_5.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

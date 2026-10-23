@@ -21,6 +21,15 @@ public final class ModTags {
         public static final TagKey<Block> ANGERS_CRYSTAL_GOLEM = TagKey.create(Registries.BLOCK, Shardline.id("angers_crystal_golem"));
         public static final TagKey<Block> ORES_SHARD = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "ores/shard"));
         public static final TagKey<Block> STORAGE_BLOCKS_SHARD = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/shard"));
+        /** Vom Shardvirus befallbare Bloecke, nach Art des infizierten Blocks (per Datapack erweiterbar). */
+        public static final TagKey<Block> INFECTABLE_STONE = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/stone"));
+        public static final TagKey<Block> INFECTABLE_DIRT = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/dirt"));
+        public static final TagKey<Block> INFECTABLE_GRASS = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/grass"));
+        public static final TagKey<Block> INFECTABLE_LOG = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/log"));
+        public static final TagKey<Block> INFECTABLE_LEAVES = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/leaves"));
+        public static final TagKey<Block> INFECTABLE_SAND = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/sand"));
+        /** Alle infizierten Bloecke. */
+        public static final TagKey<Block> INFECTED = TagKey.create(Registries.BLOCK, Shardline.id("infected"));
 
         private Blocks() {
         }

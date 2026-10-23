@@ -1,7 +1,9 @@
 package eu.shardline.mod.world.structure;
 
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.custom.MemoryCrystalBlock;
 import eu.shardline.mod.core.ModLootTables;
+import eu.shardline.mod.story.lore.Visions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -144,6 +146,12 @@ public class QueenArenaPiece extends ShardlinePiece {
         for (Direction side : Direction.Plane.HORIZONTAL) {
             this.set(level, chunkBox, ox + side.getStepX() * 2, oy + 3, oz + side.getStepZ() * 2, clusterUp);
         }
+
+        // Erinnerungskristalle vor dem Thron
+        this.set(level, chunkBox, ox, oy + 1, oz + 7, ModBlocks.MEMORY_CRYSTAL.get().defaultBlockState()
+                .setValue(MemoryCrystalBlock.VISION, Visions.QUEEN_VISION));
+        this.set(level, chunkBox, ox, oy + 1, oz - 7, ModBlocks.MEMORY_CRYSTAL.get().defaultBlockState()
+                .setValue(MemoryCrystalBlock.VISION, Visions.WARNING_VISION));
 
         // Schatztruhen
         this.chest(level, chunkBox, random, ox + 7, oy + 1, oz, Direction.WEST, ModLootTables.QUEEN_ARENA_CHEST);

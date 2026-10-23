@@ -129,6 +129,41 @@ public class GeneratePlaceholders {
         stone("gui/advancements/backgrounds/shardline", 0x24163A);
         logo(Path.of("src/main/resources/shardline_logo.png"));
 
+        // ---------- Story & Shardvirus ----------
+        // Infizierte Bloecke: Grundtextur + transparente Leuchtschicht (<name>_glow)
+        stone("block/infected_stone", 0x5A3A78);
+        glow("block/infected_stone_glow", 0xD070FF, 18);
+        stone("block/infected_dirt", 0x4A2E4E);
+        glow("block/infected_dirt_glow", 0xC060FF, 12);
+        stone("block/infected_grass_top", 0x7A3C9A);
+        glow("block/infected_grass_top_glow", 0xE080FF, 22);
+        mossSide("block/infected_grass_side", 0x4A2E4E, 0x7A3C9A);
+        glow("block/infected_grass_side_glow", 0xE080FF, 10);
+        logSide("block/infected_log", 0x5A3A6A);
+        glow("block/infected_log_glow", 0xD070FF, 10);
+        logTop("block/infected_log_top", 0x5A3A6A);
+        glow("block/infected_log_top_glow", 0xD070FF, 8);
+        leaves("block/infected_leaves", 0x8A3CB0);
+        glow("block/infected_leaves_glow", 0xF090FF, 14);
+        stone("block/infected_sand", 0xB08AC0);
+        glow("block/infected_sand_glow", 0xE080FF, 10);
+        crystal("block/memory_crystal", 0x9FD8FF);
+        stone("block/purity_anchor", 0xE8E4D8);
+        stone("block/purity_anchor_crystal", 0xA0FFE0);
+        book("item/lore_book", 0x5A3A78, 0xE0B0FF);
+        bottle("item/purification_essence", 0xA0FFE0);
+        gem("item/breach_core", 0xE040FF);
+        entity("entity/shard_zombie", 64, 64, 0x3B2A55, 0xC05CFF, true);
+        entity("entity/crystallized_cow", 64, 32, 0x4A3A3A, 0xB57BFF, true);
+        entity("entity/virus_heart", 128, 128, 0x2A0A40, 0xE040FF, true);
+        cape("entity/keeper_cape", 0xF2EAD0, 0xD8A63A);
+        for (int i = 0; i < 4; i++) {
+            sparkle("particle/virus_spore_" + i, i, 0xC070FF);
+        }
+        gem("mob_effect/shard_fever", 0xB04BFF);
+        cracks("misc/breach_overlay");
+        stone("gui/advancements/backgrounds/story", 0x1C0F2E);
+
         System.out.println("Fertig.");
     }
 
@@ -614,6 +649,102 @@ public class GeneratePlaceholders {
         for (int i = 0; i < 24; i++) {
             int x = r.nextInt(size), y = r.nextInt(size);
             g.drawLine(x, y, x + r.nextInt(60) - 30, y + r.nextInt(60) - 30);
+        }
+        g.dispose();
+        save(name, img);
+    }
+
+    // ---------- Story & Shardvirus ----------
+
+    /** Transparente Leuchtschicht mit Adern und Funken (Overlay der infizierten Bloecke). */
+    private static void glow(String name, int rgb, int density) throws IOException {
+        BufferedImage img = image(16, 16);
+        Random r = rnd(name);
+        Color bright = shade(rgb, 1.25F);
+        for (int i = 0; i < 3; i++) {
+            int x = r.nextInt(16), y = r.nextInt(16);
+            for (int step = 0; step < 6; step++) {
+                set(img, x, y, alpha(c(rgb), 210));
+                x = Math.floorMod(x + r.nextInt(3) - 1, 16);
+                y = Math.floorMod(y + 1, 16);
+            }
+        }
+        for (int i = 0; i < density; i++) {
+            set(img, r.nextInt(16), r.nextInt(16), bright);
+        }
+        save(name, img);
+    }
+
+    private static void book(String name, int cover, int accent) throws IOException {
+        BufferedImage img = image(16, 16);
+        Graphics2D g = itemGraphics(img);
+        g.setColor(c(cover));
+        g.fillRect(3, 2, 10, 12);
+        g.setColor(new Color(0xEDE3CF));
+        g.fillRect(12, 3, 2, 10);
+        g.setColor(c(accent));
+        g.fillPolygon(new int[] {8, 10, 8, 6}, new int[] {5, 8, 11, 8}, 4);
+        g.dispose();
+        outline(img);
+        save(name, img);
+    }
+
+    private static void bottle(String name, int rgb) throws IOException {
+        BufferedImage img = image(16, 16);
+        Graphics2D g = itemGraphics(img);
+        g.setColor(new Color(0x8A6A4A));
+        g.fillRect(7, 1, 3, 2);
+        g.setColor(new Color(220, 240, 255, 200));
+        g.fillRect(7, 3, 3, 3);
+        g.fillOval(3, 5, 10, 10);
+        g.setColor(c(rgb));
+        g.fillOval(4, 8, 8, 6);
+        g.setColor(Color.WHITE);
+        g.drawLine(5, 7, 6, 6);
+        g.dispose();
+        outline(img);
+        save(name, img);
+    }
+
+    /** Umhang im Vanilla-Layout (64x32, Vorderseite bei 1,1 bis 11,17). */
+    private static void cape(String name, int cloth, int trim) throws IOException {
+        BufferedImage img = image(64, 32);
+        Random r = rnd(name);
+        Graphics2D g = img.createGraphics();
+        g.setColor(c(cloth));
+        g.fillRect(0, 0, 22, 17);
+        for (int x = 0; x < 22; x++) {
+            for (int y = 0; y < 17; y++) {
+                img.setRGB(x, y, shade(cloth, 0.9F + r.nextFloat() * 0.15F).getRGB());
+            }
+        }
+        g.setColor(c(trim));
+        g.drawRect(1, 1, 9, 15);
+        g.fillPolygon(new int[] {6, 8, 6, 4}, new int[] {5, 9, 13, 9}, 4);
+        g.dispose();
+        save(name, img);
+    }
+
+    /** Risse ueber dem ganzen Bildschirm, Mitte frei (Ausbruch des Virus). */
+    private static void cracks(String name) throws IOException {
+        int size = 256;
+        BufferedImage img = image(size, size);
+        Graphics2D g = img.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Random r = rnd(name);
+        for (int i = 0; i < 14; i++) {
+            double angle = r.nextDouble() * Math.PI * 2.0;
+            double x = size / 2.0 + Math.cos(angle) * size * 0.5;
+            double y = size / 2.0 + Math.sin(angle) * size * 0.5;
+            for (int step = 0; step < 7; step++) {
+                double nx = x - Math.cos(angle) * 12 + r.nextInt(17) - 8;
+                double ny = y - Math.sin(angle) * 12 + r.nextInt(17) - 8;
+                g.setStroke(new BasicStroke(Math.max(1.0F, 3.0F - step * 0.4F)));
+                g.setColor(new Color(225, 140, 255, 220 - step * 25));
+                g.drawLine((int) x, (int) y, (int) nx, (int) ny);
+                x = nx;
+                y = ny;
+            }
         }
         g.dispose();
         save(name, img);

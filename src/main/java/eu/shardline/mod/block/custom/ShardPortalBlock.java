@@ -5,6 +5,7 @@ import eu.shardline.mod.Shardline;
 import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.core.ModSounds;
+import eu.shardline.mod.virus.VirusSpreadManager;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import eu.shardline.mod.world.portal.ShardPortalForcer;
 import eu.shardline.mod.world.portal.ShardPortalShape;
@@ -91,6 +92,14 @@ public class ShardPortalBlock extends Block implements Portal {
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity.canUsePortal(false)) {
             entity.setAsInsidePortal(this, pos);
+        }
+    }
+
+    /** Nach dem Bruch tragen Portale ausserhalb der Splitterweite den Virus in ihre Umgebung. */
+    @Override
+    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (level.dimension() != ModDimensions.SPLITTERWEITE_LEVEL) {
+            VirusSpreadManager.seedFromPortal(level, pos, random);
         }
     }
 

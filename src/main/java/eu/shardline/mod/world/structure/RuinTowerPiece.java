@@ -1,8 +1,10 @@
 package eu.shardline.mod.world.structure;
 
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.custom.MemoryCrystalBlock;
 import eu.shardline.mod.core.ModLootTables;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.story.lore.Visions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -127,6 +129,9 @@ public class RuinTowerPiece extends ShardlinePiece {
         if (this.lastFloor() >= 10 && structure.nextBoolean()) {
             this.chest(level, chunkBox, random, ox - 2, oy + this.lastFloor() + 1, oz - 1, Direction.EAST, ModLootTables.RUIN_TOWER_TREASURE);
         }
+        // Erinnerungskristall im Erdgeschoss (eigener Zufall, damit die uebrige Ausstattung gleich bleibt)
+        int vision = Visions.RUIN_VISIONS[this.positional(ox, oy, oz).nextInt(Visions.RUIN_VISIONS.length)];
+        this.set(level, chunkBox, ox - 2, oy + 1, oz + 1, ModBlocks.MEMORY_CRYSTAL.get().defaultBlockState().setValue(MemoryCrystalBlock.VISION, vision));
         // Waechter
         int knights = 1 + structure.nextInt(2);
         this.spawn(level, chunkBox, ModEntities.SHATTERED_KNIGHT.get(), ox - 1, oy + 1, oz - 1, structure.nextFloat() * 360.0F);

@@ -1,10 +1,13 @@
 package eu.shardline.mod.datagen;
 
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.core.ModDataComponents;
 import eu.shardline.mod.core.ModLootTables;
 import eu.shardline.mod.item.ModItems;
+import eu.shardline.mod.story.lore.LoreBooks;
 import java.util.function.BiConsumer;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
@@ -12,12 +15,15 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
+import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetPotionFunction;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 /**
@@ -44,7 +50,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(item(Items.ENDER_PEARL, 4, 1, 1))
                 .add(item(Items.OBSIDIAN, 4, 1, 2))
                 .add(LootItem.lootTableItem(Items.BOOK).setWeight(3)
-                        .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries)))));
+                        .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries))))
+                .withPool(loreBooks(4, "wanderer_notes", "crystal_kingdom", "keepers_oath", "the_resonance", "first_infection", "traders_ledger")));
 
         output.accept(ModLootTables.RUIN_TOWER_TREASURE, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(2.0F, 4.0F))
@@ -58,7 +65,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(enchanted(ModItems.SHARD_CHESTPLATE.get(), 2))
                 .add(enchanted(ModItems.SHARD_LEGGINGS.get(), 2))
                 .add(enchanted(ModItems.SHARD_BOOTS.get(), 2))
-                .add(item(ModItems.CRYSTAL_BOW.get(), 2, 1, 1))));
+                .add(item(ModItems.CRYSTAL_BOW.get(), 2, 1, 1)))
+                .withPool(loreBooks(2, "the_colossus", "the_last_knights", "queen_selvaine", "the_shattering")));
 
         output.accept(ModLootTables.COLOSSUS_ARENA_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(3.0F, 5.0F))
@@ -71,7 +79,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(LootItem.lootTableItem(Items.POTION).setWeight(6)
                         .apply(SetPotionFunction.setPotion(Potions.STRONG_HEALING)))
                 .add(LootItem.lootTableItem(Items.SPLASH_POTION).setWeight(4)
-                        .apply(SetPotionFunction.setPotion(Potions.STRONG_HEALING)))));
+                        .apply(SetPotionFunction.setPotion(Potions.STRONG_HEALING))))
+                .withPool(loreBooks(3, "the_colossus", "the_last_knights", "the_breach_core")));
 
         output.accept(ModLootTables.QUEEN_ARENA_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(4.0F, 6.0F))
@@ -84,7 +93,24 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(item(Items.TOTEM_OF_UNDYING, 2, 1, 1))
                 .add(item(Items.ENCHANTED_GOLDEN_APPLE, 2, 1, 1))
                 .add(LootItem.lootTableItem(Items.BOOK).setWeight(4)
-                        .apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, UniformGenerator.between(25.0F, 39.0F))))));
+                        .apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, UniformGenerator.between(25.0F, 39.0F)))))
+                .withPool(loreBooks(1, "the_seal", "the_shattering", "the_breach_core")));
+    }
+
+    /** Ein Lore-Buch aus der Liste oder (mit Gewicht {@code emptyWeight}) keines. */
+    private static LootPool.Builder loreBooks(int emptyWeight, String... ids) {
+        LootPool.Builder pool = LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
+                .add(EmptyLootItem.emptyItem().setWeight(emptyWeight));
+        for (String id : ids) {
+            LoreBooks.LoreBook book = LoreBooks.byId(id);
+            if (book == null) {
+                throw new IllegalArgumentException("Unbekanntes Lore-Buch: " + id);
+            }
+            pool.add(LootItem.lootTableItem(ModItems.LORE_BOOK.get()).setWeight(1)
+                    .apply(SetComponentsFunction.setComponent(ModDataComponents.LORE_BOOK.get(), book.id()))
+                    .apply(SetComponentsFunction.setComponent(DataComponents.WRITTEN_BOOK_CONTENT, LoreBooks.content(book))));
+        }
+        return pool;
     }
 
     private static LootPoolSingletonContainer.Builder<?> item(ItemLike item, int weight, int min, int max) {

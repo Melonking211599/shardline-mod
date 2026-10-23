@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:dirt",
+    "minecraft:coarse_dirt",
+    "minecraft:rooted_dirt",
+    "minecraft:mud",
+    "minecraft:dirt_path",
+    "minecraft:farmland"
+  ]
+}

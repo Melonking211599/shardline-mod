@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/chapter_6",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.purity_anchor.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:purity_anchor"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.purity_anchor.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

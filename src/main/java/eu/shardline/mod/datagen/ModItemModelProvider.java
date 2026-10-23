@@ -29,7 +29,8 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.LUMINOUS_BERRY.get(), ModItems.SHARD_KEY.get(), ModItems.COLOSSUS_SUMMONING_CRYSTAL.get(),
                 ModItems.COLOSSUS_CORE.get(), ModItems.COLOSSUS_UPGRADE_SMITHING_TEMPLATE.get(), ModItems.HEART_OF_THE_EXPANSE.get(),
                 ModItems.SHARD_HELMET.get(), ModItems.SHARD_CHESTPLATE.get(), ModItems.SHARD_LEGGINGS.get(), ModItems.SHARD_BOOTS.get(),
-                ModItems.COLOSSUS_HELMET.get(), ModItems.COLOSSUS_CHESTPLATE.get(), ModItems.COLOSSUS_LEGGINGS.get(), ModItems.COLOSSUS_BOOTS.get()}) {
+                ModItems.COLOSSUS_HELMET.get(), ModItems.COLOSSUS_CHESTPLATE.get(), ModItems.COLOSSUS_LEGGINGS.get(), ModItems.COLOSSUS_BOOTS.get(),
+                ModItems.LORE_BOOK.get(), ModItems.PURIFICATION_ESSENCE.get(), ModItems.BREACH_CORE.get()}) {
             basicItem(item);
         }
 

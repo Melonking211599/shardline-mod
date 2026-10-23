@@ -1,0 +1,11 @@
+{
+  "values": [
+    "#minecraft:base_stone_overworld",
+    "minecraft:cobblestone",
+    "minecraft:mossy_cobblestone",
+    "minecraft:cobbled_deepslate",
+    "minecraft:calcite",
+    "shardline:shardstone",
+    "shardline:cracked_shardstone_bricks"
+  ]
+}

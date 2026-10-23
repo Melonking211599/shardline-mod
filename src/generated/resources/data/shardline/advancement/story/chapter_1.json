@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "background": "shardline:textures/gui/advancements/backgrounds/story.png",
+    "description": {
+      "translate": "advancements.shardline.story.chapter_1.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_fragment"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.chapter_1.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,10 @@
+{
+  "values": [
+    "shardline:infected_stone",
+    "shardline:infected_dirt",
+    "shardline:infected_grass",
+    "shardline:infected_log",
+    "shardline:infected_leaves",
+    "shardline:infected_sand"
+  ]
+}

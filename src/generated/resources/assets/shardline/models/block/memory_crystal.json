@@ -1,0 +1,168 @@
+{
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        }
+      },
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        2,
+        13
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#crystal"
+        },
+        "east": {
+          "texture": "#crystal"
+        },
+        "north": {
+          "texture": "#crystal"
+        },
+        "south": {
+          "texture": "#crystal"
+        },
+        "up": {
+          "texture": "#crystal"
+        },
+        "west": {
+          "texture": "#crystal"
+        }
+      },
+      "from": [
+        6,
+        2,
+        6
+      ],
+      "neoforge_data": {
+        "block_light": 12,
+        "sky_light": 12
+      },
+      "to": [
+        10,
+        15,
+        10
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#crystal"
+        },
+        "east": {
+          "texture": "#crystal"
+        },
+        "north": {
+          "texture": "#crystal"
+        },
+        "south": {
+          "texture": "#crystal"
+        },
+        "up": {
+          "texture": "#crystal"
+        },
+        "west": {
+          "texture": "#crystal"
+        }
+      },
+      "from": [
+        4,
+        2,
+        7
+      ],
+      "neoforge_data": {
+        "block_light": 12,
+        "sky_light": 12
+      },
+      "rotation": {
+        "angle": 22.5,
+        "axis": "z",
+        "origin": [
+          5,
+          2,
+          8
+        ]
+      },
+      "to": [
+        6,
+        10,
+        9
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#crystal"
+        },
+        "east": {
+          "texture": "#crystal"
+        },
+        "north": {
+          "texture": "#crystal"
+        },
+        "south": {
+          "texture": "#crystal"
+        },
+        "up": {
+          "texture": "#crystal"
+        },
+        "west": {
+          "texture": "#crystal"
+        }
+      },
+      "from": [
+        10,
+        2,
+        7
+      ],
+      "neoforge_data": {
+        "block_light": 12,
+        "sky_light": 12
+      },
+      "rotation": {
+        "angle": -22.5,
+        "axis": "z",
+        "origin": [
+          11,
+          2,
+          8
+        ]
+      },
+      "to": [
+        12,
+        9,
+        9
+      ]
+    }
+  ],
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "base": "shardline:block/shardstone_bricks",
+    "crystal": "shardline:block/memory_crystal",
+    "particle": "shardline:block/memory_crystal"
+  }
+}

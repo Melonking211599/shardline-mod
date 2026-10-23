@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/chapter_3",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.lore_book.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:lore_book"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.lore_book.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

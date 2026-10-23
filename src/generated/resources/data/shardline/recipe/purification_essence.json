@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "shardline:heart_of_the_expanse"
+    },
+    {
+      "item": "shardline:glowbloom"
+    },
+    {
+      "item": "shardline:glowbloom"
+    },
+    {
+      "item": "shardline:glowbloom"
+    },
+    {
+      "item": "shardline:shard_ingot"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "id": "shardline:purification_essence"
+  }
+}

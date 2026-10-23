@@ -51,7 +51,7 @@ public final class DataGenerators {
                 new LootTableProvider.SubProviderEntry(ModEntityLootProvider::new, LootContextParamSets.ENTITY),
                 new LootTableProvider.SubProviderEntry(ModChestLootProvider::new, LootContextParamSets.CHEST)), lookup));
         generator.addProvider(server, new ModRecipeProvider(output, lookup));
-        generator.addProvider(server, new AdvancementProvider(output, fullLookup, fileHelper, List.of(new ModAdvancements())));
+        generator.addProvider(server, new AdvancementProvider(output, fullLookup, fileHelper, List.of(new ModAdvancements(), new ModStoryAdvancements())));
         generator.addProvider(server, new ModDataMapProvider(output, lookup));
     }
 }

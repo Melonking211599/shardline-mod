@@ -13,13 +13,13 @@ Du brauchst ein JDK 21. Im Ordner `.tools/jdk-21` liegt ein portables JDK, alter
 | `gradlew runGameTestServer` | führt die automatischen Rauchtests aus |
 | `gradlew runClient` / `gradlew runServer` | startet Client bzw. Server in der Entwicklungsumgebung |
 
-**Server-Rauchtest mit echter Splitterweite:** Kopiere `tools/devtest_datapack` nach `run/world/datapacks/shardline_devtest` und starte `gradlew runServer`. Der Server führt alle GameTests in einer echten Welt aus, schreibt Ergebnisse mit `[GameTest]` ins Log und stoppt nach 60 Sekunden. Danach löschst du `run/world`, sonst stoppt jeder weitere Start ebenfalls. Fehlgeschlagene Tests erscheinen als `ERROR … failed`. Die EULA in `run/eula.txt` ist für diese lokale Testumgebung bereits akzeptiert.
+**Server-Rauchtest mit echter Splitterweite:** Lösche zuerst `run/world`, denn eine vom GameTest-Server angelegte Welt hat eine falsch eingerichtete Splitterweite. Kopiere dann `tools/devtest_datapack` nach `run/world/datapacks/shardline_devtest` und starte `gradlew runServer`. Der Server führt alle GameTests in einer echten Welt aus, schreibt Ergebnisse mit `[GameTest]` ins Log und stoppt nach 60 Sekunden. Danach löschst du `run/world`, sonst stoppt jeder weitere Start ebenfalls. Fehlgeschlagene Tests erscheinen als `ERROR … failed`. Die EULA in `run/eula.txt` ist für diese lokale Testumgebung bereits akzeptiert.
 
 Abhängigkeiten:
 - **Pflicht:** GeckoLib (4.9.3 oder neuer)
 - **Optional:** JEI oder EMI. Beide zeigen die Rezepte und zusätzlich Infoseiten.
 
-Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Schaden, Set-Boni) und in `config/shardline-client.toml` (Nebel, Portal-Overlay).
+Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Schaden, Set-Boni, Story, Shardvirus, Ende, Fähigkeiten) und in `config/shardline-client.toml` (Nebel, Portal-Overlay, Virus-Atmosphäre, Bildschirmeffekte).
 
 ## Fortschrittspfad
 
@@ -29,5 +29,6 @@ Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Sch
 4. **Kristallkoloss:** Gesplitterte Ritter in den Ruinen-Türmen lassen Ritterwappen fallen, daraus entsteht der Erweckungskristall. Diesen setzt du auf den Altar einer Kristallwald-Arena. Die Karte zur Arena verkauft der Splitterhändler.
 5. **Kolossrüstung:** Netherit-Teil, Koloss-Schmiedevorlage und Kolosskern ergeben am Schmiedetisch ein Kolossteil. Set-Bonus: Rückstoßimmunität, 4 zusätzliche Herzen und der Kristallschild auf Taste V.
 6. **Splitterkönigin:** Lege einen Kolosskern auf den Thron im Zentrum der Splitterweite bei den Koordinaten 0 / 0.
+7. **Der Bruch und das Ende:** Der Tod der Königin setzt den Shardvirus frei. Danach gilt es, ihn einzudämmen, drei Virusherzen zu zerstören und am Thron zu entscheiden: versiegeln oder beherrschen. Alles dazu steht in [STORY.md](STORY.md).
 
 Eine Liste aller Texturen und Modelle steht in [ASSETS.md](ASSETS.md).

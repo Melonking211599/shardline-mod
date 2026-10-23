@@ -1,0 +1,95 @@
+{
+  "parent": "minecraft:block/block",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "cullface": "down",
+          "texture": "#bottom"
+        },
+        "east": {
+          "cullface": "east",
+          "texture": "#side"
+        },
+        "north": {
+          "cullface": "north",
+          "texture": "#side"
+        },
+        "south": {
+          "cullface": "south",
+          "texture": "#side"
+        },
+        "up": {
+          "cullface": "up",
+          "texture": "#top"
+        },
+        "west": {
+          "cullface": "west",
+          "texture": "#side"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "cullface": "down",
+          "texture": "#glow_top"
+        },
+        "east": {
+          "cullface": "east",
+          "texture": "#glow_side"
+        },
+        "north": {
+          "cullface": "north",
+          "texture": "#glow_side"
+        },
+        "south": {
+          "cullface": "south",
+          "texture": "#glow_side"
+        },
+        "up": {
+          "cullface": "up",
+          "texture": "#glow_top"
+        },
+        "west": {
+          "cullface": "west",
+          "texture": "#glow_side"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "to": [
+        16,
+        16,
+        16
+      ]
+    }
+  ],
+  "render_type": "minecraft:solid",
+  "textures": {
+    "bottom": "shardline:block/infected_stone",
+    "glow_side": "shardline:block/infected_stone_glow",
+    "glow_top": "shardline:block/infected_stone_glow",
+    "particle": "shardline:block/infected_stone",
+    "side": "shardline:block/infected_stone",
+    "top": "shardline:block/infected_stone"
+  }
+}

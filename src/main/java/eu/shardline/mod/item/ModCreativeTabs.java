@@ -2,6 +2,7 @@ package eu.shardline.mod.item;
 
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.story.lore.LoreBooks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -27,7 +28,9 @@ public final class ModCreativeTabs {
                 ModBlocks.BLOCK_ITEMS.forEach(item -> output.accept(item.get()));
                 ModItems.ITEMS.getEntries().forEach(holder -> {
                     Item item = holder.get();
-                    if (!(item instanceof BlockItem) && !(item instanceof SpawnEggItem)) {
+                    if (item == ModItems.LORE_BOOK.get()) {
+                        LoreBooks.ALL.forEach(book -> output.accept(LoreBooks.create(book)));
+                    } else if (!(item instanceof BlockItem) && !(item instanceof SpawnEggItem)) {
                         output.accept(item);
                     }
                 });

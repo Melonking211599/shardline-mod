@@ -65,6 +65,25 @@ public class ShardParticle extends TextureSheetParticle {
         }
     }
 
+    /** Virussporen: leuchtend violett, steigen langsam auf. */
+    public static class SporeProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public SporeProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
+            ShardParticle particle = new ShardParticle(level, x, y, z, dx, dy, dz, this.sprites, true);
+            float shade = 0.8F + particle.random.nextFloat() * 0.2F;
+            particle.setColor(0.72F * shade, 0.32F * shade, 1.0F * shade);
+            particle.setLifetime(40 + particle.random.nextInt(30));
+            particle.quadSize *= 0.7F;
+            return particle;
+        }
+    }
+
     public static class VoidProvider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
 

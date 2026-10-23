@@ -4,6 +4,9 @@ import eu.shardline.mod.Shardline;
 import eu.shardline.mod.entity.boss.CrystalColossusEntity;
 import eu.shardline.mod.entity.boss.QueenCloneEntity;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
+import eu.shardline.mod.entity.boss.VirusHeartEntity;
+import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
+import eu.shardline.mod.entity.infected.ShardZombieEntity;
 import eu.shardline.mod.entity.misc.CrystalPillarEntity;
 import eu.shardline.mod.entity.misc.VoidZoneEntity;
 import eu.shardline.mod.entity.mob.AshWalkerEntity;
@@ -59,6 +62,17 @@ public final class ModEntities {
                     .fireImmune().clientTrackingRange(12));
     public static final DeferredHolder<EntityType<?>, EntityType<QueenCloneEntity>> QUEEN_CLONE = register("queen_clone",
             EntityType.Builder.of(QueenCloneEntity::new, MobCategory.MONSTER).sized(1.0F, 2.6F).eyeHeight(2.2F)
+                    .fireImmune().clientTrackingRange(10));
+
+    // --- Infizierte (Shardvirus) ---
+    public static final DeferredHolder<EntityType<?>, EntityType<ShardZombieEntity>> SHARD_ZOMBIE = register("shard_zombie",
+            EntityType.Builder.of(ShardZombieEntity::new, MobCategory.MONSTER).sized(0.6F, 1.95F).eyeHeight(1.74F)
+                    .passengerAttachments(2.0125F).ridingOffset(-0.7F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedCowEntity>> CRYSTALLIZED_COW = register("crystallized_cow",
+            EntityType.Builder.of(CrystallizedCowEntity::new, MobCategory.CREATURE).sized(0.9F, 1.4F).eyeHeight(1.3F)
+                    .passengerAttachments(1.36875F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<VirusHeartEntity>> VIRUS_HEART = register("virus_heart",
+            EntityType.Builder.of(VirusHeartEntity::new, MobCategory.MONSTER).sized(1.8F, 2.4F).eyeHeight(1.6F)
                     .fireImmune().clientTrackingRange(10));
 
     // --- Projektile & Effekte ---

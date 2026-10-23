@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "shardline:block/purity_anchor"
+    }
+  }
+}

@@ -1,11 +1,14 @@
 package eu.shardline.mod.client;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.client.story.StoryClientState;
 import eu.shardline.mod.config.ShardlineClientConfig;
+import eu.shardline.mod.network.AbilityPayload;
 import eu.shardline.mod.network.CrystalShieldPayload;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -29,7 +32,25 @@ public final class ClientGameEvents {
                 PacketDistributor.sendToServer(new CrystalShieldPayload());
             }
         }
+        while (KeyBindings.SHARD_CALL.consumeClick()) {
+            useAbility(minecraft, AbilityPayload.SHARD_CALL);
+        }
+        while (KeyBindings.CRYSTAL_WAVE.consumeClick()) {
+            useAbility(minecraft, AbilityPayload.CRYSTAL_WAVE);
+        }
         PortalOverlay.tick(minecraft);
+    }
+
+    /** Faehigkeiten des Splitterherrschers; der Server prueft Status und Abklingzeit erneut. */
+    private static void useAbility(Minecraft minecraft, int ability) {
+        if (minecraft.player == null || minecraft.getConnection() == null) {
+            return;
+        }
+        if (!StoryClientState.isRuler()) {
+            minecraft.player.displayClientMessage(Component.translatable("message.shardline.ability.ruler_only"), true);
+            return;
+        }
+        PacketDistributor.sendToServer(new AbilityPayload(ability));
     }
 
     private static boolean inSplitterweite(Minecraft minecraft) {

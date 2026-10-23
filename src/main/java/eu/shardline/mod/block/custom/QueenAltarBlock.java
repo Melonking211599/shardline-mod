@@ -5,16 +5,24 @@ import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
 import eu.shardline.mod.item.ModItems;
+import eu.shardline.mod.story.ending.EndingManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * Thron der Splitterweite im Zentrum der Dimension. Ein Kolosskern ruft die Splitterkoenigin.
@@ -29,6 +37,20 @@ public class QueenAltarBlock extends BossAltarBlock {
     @Override
     protected MapCodec<? extends Block> codec() {
         return CODEC;
+    }
+
+    /** Der Kern des Bruchs startet am Thron die Endentscheidung. */
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.is(ModItems.BREACH_CORE.get())) {
+            if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+                EndingManager.onCoreUsed(serverLevel, pos, serverPlayer, stack);
+                serverLevel.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5, 60, 0.6, 1.0, 0.6, 0.08);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override

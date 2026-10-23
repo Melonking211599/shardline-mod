@@ -4,9 +4,14 @@ import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.custom.ColossusAltarBlock;
 import eu.shardline.mod.block.custom.CrystalSaplingBlock;
 import eu.shardline.mod.block.custom.CrystalWebBlock;
+import eu.shardline.mod.block.custom.InfectedBlock;
+import eu.shardline.mod.block.custom.InfectedPillarBlock;
+import eu.shardline.mod.block.custom.MemoryCrystalBlock;
 import eu.shardline.mod.block.custom.MothLightBlock;
+import eu.shardline.mod.block.custom.PurityAnchorBlock;
 import eu.shardline.mod.block.custom.QueenAltarBlock;
 import eu.shardline.mod.block.custom.ShardFlowerBlock;
+import eu.shardline.mod.block.custom.ShardOreBlock;
 import eu.shardline.mod.block.custom.ShardPlantBlock;
 import eu.shardline.mod.block.custom.ShardPortalBlock;
 import eu.shardline.mod.block.custom.TrophyBlock;
@@ -23,7 +28,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -63,12 +67,12 @@ public final class ModBlocks {
             () -> new WallBlock(stone(MapColor.COLOR_PURPLE, 2.0F).forceSolidOn()));
 
     // --- Erze & Rohstoffbloecke ---
-    public static final DeferredBlock<DropExperienceBlock> SHARD_ORE = registerWithItem("shard_ore",
-            () -> new DropExperienceBlock(UniformInt.of(2, 5), stone(MapColor.COLOR_PURPLE, 3.0F).lightLevel(state -> 3)));
-    public static final DeferredBlock<DropExperienceBlock> DEEPSLATE_SHARD_ORE = registerWithItem("deepslate_shard_ore",
-            () -> new DropExperienceBlock(UniformInt.of(2, 5), BlockBehaviour.Properties.of()
+    public static final DeferredBlock<ShardOreBlock> SHARD_ORE = registerWithItem("shard_ore",
+            () -> new ShardOreBlock(UniformInt.of(2, 5), stone(MapColor.COLOR_PURPLE, 3.0F).lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<ShardOreBlock> DEEPSLATE_SHARD_ORE = registerWithItem("deepslate_shard_ore",
+            () -> new ShardOreBlock(UniformInt.of(2, 5), BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE).lightLevel(state -> 3)));
+                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE).lightLevel(state -> 3).randomTicks()));
     public static final DeferredBlock<Block> SHARD_BLOCK = registerWithItem("shard_block",
             () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
                     .requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.AMETHYST)));
@@ -120,7 +124,7 @@ public final class ModBlocks {
                     .requiresCorrectToolForDrops().strength(25.0F, 1200.0F).sound(SoundType.AMETHYST).lightLevel(state -> 4)));
     public static final DeferredBlock<ShardPortalBlock> SHARD_PORTAL = BLOCKS.register("shard_portal",
             () -> new ShardPortalBlock(BlockBehaviour.Properties.of().noCollission().strength(-1.0F).sound(SoundType.GLASS)
-                    .lightLevel(state -> 11).pushReaction(PushReaction.BLOCK).noLootTable()));
+                    .lightLevel(state -> 11).pushReaction(PushReaction.BLOCK).noLootTable().randomTicks()));
 
     // --- Boss-Altaere & Trophaeen ---
     public static final DeferredBlock<ColossusAltarBlock> COLOSSUS_ALTAR = registerWithItem("colossus_altar",
@@ -131,6 +135,43 @@ public final class ModBlocks {
             () -> new TrophyBlock(trophy()), new Item.Properties().rarity(Rarity.EPIC).fireResistant());
     public static final DeferredBlock<TrophyBlock> QUEEN_TROPHY = registerWithItem("queen_trophy",
             () -> new TrophyBlock(trophy()), new Item.Properties().rarity(Rarity.EPIC).fireResistant());
+
+
+    // --- Story ---
+    public static final DeferredBlock<MemoryCrystalBlock> MEMORY_CRYSTAL = registerWithItem("memory_crystal",
+            () -> new MemoryCrystalBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0F, 3600000.0F)
+                    .sound(SoundType.AMETHYST_CLUSTER).lightLevel(state -> 10).noOcclusion().noLootTable()),
+            new Item.Properties().rarity(Rarity.RARE));
+
+    // --- Shardvirus: infizierte Bloecke (mit leuchtender Overlay-Schicht) ---
+    public static final DeferredBlock<InfectedBlock> INFECTED_STONE = registerWithItem("infected_stone",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops().strength(1.8F, 6.0F).sound(SoundType.CALCITE).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_DIRT = registerWithItem("infected_dirt",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(0.6F)
+                    .sound(SoundType.ROOTED_DIRT).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_GRASS = registerWithItem("infected_grass",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).strength(0.7F)
+                    .sound(SoundType.NYLIUM).randomTicks()));
+    public static final DeferredBlock<InfectedPillarBlock> INFECTED_LOG = registerWithItem("infected_log",
+            () -> new InfectedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).instrument(NoteBlockInstrument.BASS)
+                    .strength(2.0F).sound(SoundType.STEM).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_LEAVES = registerWithItem("infected_leaves",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).strength(0.2F)
+                    .randomTicks().sound(SoundType.AZALEA_LEAVES).noOcclusion()
+                    .isValidSpawn((state, level, pos, type) -> false)
+                    .isSuffocating((state, level, pos) -> false)
+                    .isViewBlocking((state, level, pos) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false)));
+    public static final DeferredBlock<InfectedBlock> INFECTED_SAND = registerWithItem("infected_sand",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK).strength(0.6F)
+                    .sound(SoundType.SAND).randomTicks()));
+
+    // --- Gegenmittel ---
+    public static final DeferredBlock<PurityAnchorBlock> PURITY_ANCHOR = registerWithItem("purity_anchor",
+            () -> new PurityAnchorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).requiresCorrectToolForDrops()
+                    .strength(5.0F, 1200.0F).sound(SoundType.AMETHYST).lightLevel(state -> 15).noOcclusion()),
+            new Item.Properties().rarity(Rarity.RARE));
 
     // --- Hilfsbloecke ohne Item ---
     public static final DeferredBlock<CrystalWebBlock> CRYSTAL_WEB = BLOCKS.register("crystal_web",

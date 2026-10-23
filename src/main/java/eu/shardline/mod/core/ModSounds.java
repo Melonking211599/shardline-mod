@@ -92,6 +92,29 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> HEART_BLINK = register("item.heart_of_the_expanse.blink", "entity.enderman.teleport");
     public static final DeferredHolder<SoundEvent, SoundEvent> SHARDBLADE_VOLLEY = register("item.queens_shardblade.volley", "entity.breeze.shoot");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_SPLITTERWEITE = register("music.splitterweite", "music.end");
+    // Story
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORY_CHAPTER = register("story.chapter", "ui.toast.challenge_complete");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MEMORY_CRYSTAL_VISION = register("block.memory_crystal.vision", "block.beacon.activate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LORE_BOOK_OPEN = register("item.lore_book.open", "item.book.page_turn");
+    // Virus
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_OUTBREAK = register("event.virus_outbreak", "entity.wither.spawn");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_SEALED = register("event.virus_sealed", "block.beacon.power_select");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_DOMINATED = register("event.virus_dominated", "entity.warden.emerge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> PURITY_ANCHOR_ACTIVATE = register("block.purity_anchor.activate", "block.conduit.activate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> PURIFICATION_ESSENCE_USE = register("item.purification_essence.use", "block.amethyst_block.resonate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_ZOMBIE_AMBIENT = register("entity.shard_zombie.ambient", "entity.zombie.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_ZOMBIE_HURT = register("entity.shard_zombie.hurt", "entity.zombie.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_ZOMBIE_DEATH = register("entity.shard_zombie.death", "entity.zombie.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_COW_AMBIENT = register("entity.crystallized_cow.ambient", "entity.cow.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_COW_HURT = register("entity.crystallized_cow.hurt", "entity.cow.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_COW_DEATH = register("entity.crystallized_cow.death", "entity.cow.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_AMBIENT = register("entity.virus_heart.ambient", "entity.warden.heartbeat");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_HURT = register("entity.virus_heart.hurt", "block.amethyst_block.break");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_DEATH = register("entity.virus_heart.death", "block.respawn_anchor.deplete");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_PULSE = register("entity.virus_heart.pulse", "entity.warden.sonic_charge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_SHARD_CALL = register("ability.shard_call", "entity.evoker.prepare_summon");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_CRYSTAL_WAVE = register("ability.crystal_wave", "entity.warden.sonic_boom");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_INFECTED = register("music.infected", "music.nether.soul_sand_valley");
 
     private ModSounds() {
     }

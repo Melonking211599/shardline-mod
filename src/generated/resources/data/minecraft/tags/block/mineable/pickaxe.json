@@ -13,6 +13,8 @@
     "shardline:glow_crystal_cluster",
     "shardline:shard_portal_frame",
     "shardline:colossus_trophy",
-    "shardline:queen_trophy"
+    "shardline:queen_trophy",
+    "shardline:infected_stone",
+    "shardline:purity_anchor"
   ]
 }

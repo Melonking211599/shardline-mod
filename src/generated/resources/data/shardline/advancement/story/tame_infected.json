@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/ending_dominate",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.tame_infected.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:crystallized_cow_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.tame_infected.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

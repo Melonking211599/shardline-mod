@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "shardline:block/infected_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "shardline:block/infected_log"
+    },
+    "axis=z": {
+      "model": "shardline:block/infected_log",
+      "x": 90
+    }
+  }
+}

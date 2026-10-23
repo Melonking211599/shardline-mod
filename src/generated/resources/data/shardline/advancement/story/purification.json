@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/chapter_6",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.purification.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:purification_essence"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.purification.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -13,6 +13,12 @@ public final class KeyBindings {
 
     public static final KeyMapping CRYSTAL_SHIELD = new KeyMapping("key.shardline.crystal_shield", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    /** Splitterherrscher: Splitterruf. */
+    public static final KeyMapping SHARD_CALL = new KeyMapping("key.shardline.shard_call", KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
+    /** Splitterherrscher: Kristallwelle. */
+    public static final KeyMapping CRYSTAL_WAVE = new KeyMapping("key.shardline.crystal_wave", KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_H, CATEGORY);
 
     private KeyBindings() {
     }

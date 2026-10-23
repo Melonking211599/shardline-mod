@@ -3,16 +3,21 @@ package eu.shardline.mod.client;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.client.particle.ShardParticle;
 import eu.shardline.mod.client.renderer.CrystalGolemRenderer;
+import eu.shardline.mod.client.renderer.InfectedRenderers;
+import eu.shardline.mod.client.renderer.KeeperCapeLayer;
 import eu.shardline.mod.client.renderer.QueenCloneRenderer;
 import eu.shardline.mod.client.renderer.ShardCreeperRenderer;
 import eu.shardline.mod.client.renderer.ShardlineGeoRenderer;
 import eu.shardline.mod.client.renderer.VoidRayRenderer;
 import eu.shardline.mod.client.sky.SplitterweiteEffects;
+import eu.shardline.mod.client.story.StoryScreenEffects;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -73,17 +78,32 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.SHARD_PROJECTILE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_PILLAR.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_pillar", 0.0F, true));
         event.registerEntityRenderer(ModEntities.VOID_ZONE.get(), NoopRenderer::new);
+        event.registerEntityRenderer(ModEntities.SHARD_ZOMBIE.get(), InfectedRenderers.ShardZombieRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_COW.get(), InfectedRenderers.CrystallizedCowRenderer::new);
+        event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "virus_heart", 1.2F, true));
+    }
+
+    @SubscribeEvent
+    static void addLayers(EntityRenderersEvent.AddLayers event) {
+        for (PlayerSkin.Model skin : event.getSkins()) {
+            if (event.getSkin(skin) instanceof PlayerRenderer renderer) {
+                renderer.addLayer(new KeeperCapeLayer(renderer));
+            }
+        }
     }
 
     @SubscribeEvent
     static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticles.SHARD_SPARKLE.get(), ShardParticle.SparkleProvider::new);
         event.registerSpriteSet(ModParticles.VOID_MOTE.get(), ShardParticle.VoidProvider::new);
+        event.registerSpriteSet(ModParticles.VIRUS_SPORE.get(), ShardParticle.SporeProvider::new);
     }
 
     @SubscribeEvent
     static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(KeyBindings.CRYSTAL_SHIELD);
+        event.register(KeyBindings.SHARD_CALL);
+        event.register(KeyBindings.CRYSTAL_WAVE);
     }
 
     @SubscribeEvent
@@ -94,5 +114,6 @@ public final class ShardlineClient {
     @SubscribeEvent
     static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("shard_portal_overlay"), PortalOverlay::render);
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("story_effects"), StoryScreenEffects::render);
     }
 }

@@ -16,6 +16,12 @@ public final class ModAttachments {
     /** Spielzeit (Game-Time), ab der der Kristallschild wieder benutzt werden darf. */
     public static final Supplier<AttachmentType<Long>> CRYSTAL_SHIELD_READY_AT = ATTACHMENT_TYPES.register("crystal_shield_ready_at",
             () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).copyOnDeath().build());
+    /** Splitterherrscher: Spielzeit, ab der der Splitterruf wieder bereit ist. */
+    public static final Supplier<AttachmentType<Long>> SHARD_CALL_READY_AT = ATTACHMENT_TYPES.register("shard_call_ready_at",
+            () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).copyOnDeath().build());
+    /** Splitterherrscher: Spielzeit, ab der die Kristallwelle wieder bereit ist. */
+    public static final Supplier<AttachmentType<Long>> CRYSTAL_WAVE_READY_AT = ATTACHMENT_TYPES.register("crystal_wave_ready_at",
+            () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).copyOnDeath().build());
 
     private ModAttachments() {
     }

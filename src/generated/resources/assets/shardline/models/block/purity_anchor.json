@@ -1,0 +1,110 @@
+{
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        }
+      },
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        }
+      },
+      "from": [
+        4,
+        3,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#crystal"
+        },
+        "east": {
+          "texture": "#crystal"
+        },
+        "north": {
+          "texture": "#crystal"
+        },
+        "south": {
+          "texture": "#crystal"
+        },
+        "up": {
+          "texture": "#crystal"
+        },
+        "west": {
+          "texture": "#crystal"
+        }
+      },
+      "from": [
+        5,
+        12,
+        5
+      ],
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "to": [
+        11,
+        16,
+        11
+      ]
+    }
+  ],
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "crystal": "shardline:block/purity_anchor_crystal",
+    "particle": "shardline:block/purity_anchor",
+    "side": "shardline:block/purity_anchor"
+  }
+}

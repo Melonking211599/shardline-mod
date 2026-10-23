@@ -1,7 +1,9 @@
 package eu.shardline.mod.world.structure;
 
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.custom.MemoryCrystalBlock;
 import eu.shardline.mod.core.ModLootTables;
+import eu.shardline.mod.story.lore.Visions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -128,6 +130,10 @@ public class ColossusArenaPiece extends ShardlinePiece {
             this.set(level, chunkBox, cx, oy + 1, cz,
                     ModBlocks.GLOW_CRYSTAL_CLUSTER.get().defaultBlockState().setValue(AmethystClusterBlock.FACING, Direction.UP));
         }
+
+        // Erinnerungskristall zwischen zwei Saeulen
+        this.set(level, chunkBox, ox - 10, oy + 1, oz + 10, ModBlocks.MEMORY_CRYSTAL.get().defaultBlockState()
+                .setValue(MemoryCrystalBlock.VISION, Visions.COLOSSUS_VISION));
 
         // Vorratstruhe am Rand
         this.chest(level, chunkBox, random, ox, oy + 1, oz - RADIUS + 2, Direction.SOUTH, ModLootTables.COLOSSUS_ARENA_CHEST);

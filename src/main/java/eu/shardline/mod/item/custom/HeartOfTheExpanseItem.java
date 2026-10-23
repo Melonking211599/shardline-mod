@@ -38,6 +38,17 @@ public class HeartOfTheExpanseItem extends Item {
         return true;
     }
 
+    /** Das Herz dient beim Herstellen der Reinigungsessenz nur als Katalysator und bleibt erhalten. */
+    @Override
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getCraftingRemainingItem(ItemStack stack) {
+        return stack.copyWithCount(1);
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);

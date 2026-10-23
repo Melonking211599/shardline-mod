@@ -1,6 +1,9 @@
 {
   "values": [
     "shardline:crystal_moss",
-    "shardline:ash_block"
+    "shardline:ash_block",
+    "shardline:infected_dirt",
+    "shardline:infected_grass",
+    "shardline:infected_sand"
   ]
 }

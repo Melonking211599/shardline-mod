@@ -66,6 +66,77 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         simpleBlock(ModBlocks.MOTH_LIGHT.get(), models().getBuilder("moth_light")
                 .texture("particle", modLoc("block/glow_crystal_block")));
+
+        // --- Shardvirus: Grundtextur + leuchtende Overlay-Schicht (<name>_glow.png) ---
+        infected(ModBlocks.INFECTED_STONE.get(), "infected_stone", "solid");
+        infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "solid");
+        infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "solid");
+        infected(ModBlocks.INFECTED_LEAVES.get(), "infected_leaves", "cutout_mipped");
+        simpleBlockWithItem(ModBlocks.INFECTED_GRASS.get(), overlayModel("infected_grass",
+                modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top"), modLoc("block/infected_dirt"),
+                modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top_glow"), "cutout"));
+        ModelFile log = overlayModel("infected_log", modLoc("block/infected_log"), modLoc("block/infected_log_top"),
+                modLoc("block/infected_log_top"), modLoc("block/infected_log_glow"), modLoc("block/infected_log_top_glow"), "cutout");
+        axisBlock(ModBlocks.INFECTED_LOG.get(), log, log);
+        simpleBlockItem(ModBlocks.INFECTED_LOG.get(), log);
+
+        memoryCrystal();
+        purityAnchor();
+    }
+
+    private void infected(Block block, String name, String renderType) {
+        ResourceLocation base = modLoc("block/" + name);
+        ResourceLocation glow = modLoc("block/" + name + "_glow");
+        BlockModelBuilder model = overlayModel(name, base, base, base, glow, glow, renderType);
+        simpleBlockWithItem(block, model);
+    }
+
+    /**
+     * Wuerfel aus zwei deckungsgleichen Elementen: unten die Grundtextur, darueber die
+     * Leuchtschicht mit voller Eigenhelligkeit (leuchtet auch im Dunkeln, ohne Licht abzugeben).
+     */
+    private BlockModelBuilder overlayModel(String name, ResourceLocation side, ResourceLocation top, ResourceLocation bottom,
+                                           ResourceLocation glowSide, ResourceLocation glowTop, String renderType) {
+        BlockModelBuilder model = models().withExistingParent(name, mcLoc("block/block"))
+                .texture("particle", side).texture("side", side).texture("top", top).texture("bottom", bottom)
+                .texture("glow_side", glowSide).texture("glow_top", glowTop)
+                .renderType(renderType);
+        model.element().from(0, 0, 0).to(16, 16, 16)
+                .allFaces((dir, face) -> face.texture(dir == Direction.UP ? "#top" : dir == Direction.DOWN ? "#bottom" : "#side").cullface(dir))
+                .end();
+        model.element().from(0, 0, 0).to(16, 16, 16).shade(false).emissivity(15, 15)
+                .allFaces((dir, face) -> face.texture(dir.getAxis() == Direction.Axis.Y ? "#glow_top" : "#glow_side").cullface(dir))
+                .end();
+        return model;
+    }
+
+    /** Erinnerungskristall: Sockel und drei leuchtende Kristallspitzen. */
+    private void memoryCrystal() {
+        ResourceLocation texture = modLoc("block/memory_crystal");
+        ResourceLocation base = modLoc("block/shardstone_bricks");
+        BlockModelBuilder model = models().getBuilder("memory_crystal").texture("particle", texture).texture("crystal", texture)
+                .texture("base", base).renderType("cutout");
+        model.element().from(3, 0, 3).to(13, 2, 13).allFaces((dir, face) -> face.texture("#base")).end();
+        model.element().from(6, 2, 6).to(10, 15, 10).emissivity(12, 12).allFaces((dir, face) -> face.texture("#crystal")).end();
+        model.element().from(4, 2, 7).to(6, 10, 9).emissivity(12, 12)
+                .rotation().angle(22.5F).axis(Direction.Axis.Z).origin(5, 2, 8).end()
+                .allFaces((dir, face) -> face.texture("#crystal")).end();
+        model.element().from(10, 2, 7).to(12, 9, 9).emissivity(12, 12)
+                .rotation().angle(-22.5F).axis(Direction.Axis.Z).origin(11, 2, 8).end()
+                .allFaces((dir, face) -> face.texture("#crystal")).end();
+        simpleBlockWithItem(ModBlocks.MEMORY_CRYSTAL.get(), model);
+    }
+
+    /** Reinheitsanker: Sockel, Saeule und schwebender Kristall. */
+    private void purityAnchor() {
+        ResourceLocation side = modLoc("block/purity_anchor");
+        ResourceLocation crystal = modLoc("block/purity_anchor_crystal");
+        BlockModelBuilder model = models().getBuilder("purity_anchor").texture("particle", side).texture("side", side)
+                .texture("crystal", crystal).renderType("cutout");
+        model.element().from(1, 0, 1).to(15, 3, 15).allFaces((dir, face) -> face.texture("#side")).end();
+        model.element().from(4, 3, 4).to(12, 12, 12).allFaces((dir, face) -> face.texture("#side")).end();
+        model.element().from(5, 12, 5).to(11, 16, 11).emissivity(15, 15).allFaces((dir, face) -> face.texture("#crystal")).end();
+        simpleBlockWithItem(ModBlocks.PURITY_ANCHOR.get(), model);
     }
 
     private void cube(Block block) {

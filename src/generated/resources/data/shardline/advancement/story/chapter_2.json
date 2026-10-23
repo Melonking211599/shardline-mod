@@ -1,0 +1,27 @@
+{
+  "parent": "shardline:story/chapter_1",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.chapter_2.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_portal_frame"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.chapter_2.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -56,6 +56,27 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 ModBlocks.DEEPSLATE_SHARD_ORE.get(), ModBlocks.GLOW_CRYSTAL_BLOCK.get(), ModBlocks.GLOW_CRYSTAL_CLUSTER.get(),
                 ModBlocks.SHARDSTONE_BRICKS.get(), ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
 
+        // --- Shardvirus ---
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.INFECTED_STONE.get(), ModBlocks.PURITY_ANCHOR.get());
+        tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.INFECTED_DIRT.get(), ModBlocks.INFECTED_GRASS.get(), ModBlocks.INFECTED_SAND.get());
+        tag(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.INFECTED_LOG.get());
+        tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.INFECTED_LEAVES.get());
+        tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.PURITY_ANCHOR.get());
+        tag(BlockTags.DRAGON_IMMUNE).add(ModBlocks.MEMORY_CRYSTAL.get());
+        tag(BlockTags.WITHER_IMMUNE).add(ModBlocks.MEMORY_CRYSTAL.get());
+        tag(ModTags.Blocks.INFECTED).add(ModBlocks.INFECTED_STONE.get(), ModBlocks.INFECTED_DIRT.get(), ModBlocks.INFECTED_GRASS.get(),
+                ModBlocks.INFECTED_LOG.get(), ModBlocks.INFECTED_LEAVES.get(), ModBlocks.INFECTED_SAND.get());
+        tag(ModTags.Blocks.INFECTABLE_STONE).addTag(BlockTags.BASE_STONE_OVERWORLD)
+                .add(Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE, Blocks.COBBLED_DEEPSLATE, Blocks.CALCITE,
+                        ModBlocks.SHARDSTONE.get(), ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
+        tag(ModTags.Blocks.INFECTABLE_GRASS).add(Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.MOSS_BLOCK,
+                ModBlocks.CRYSTAL_MOSS.get());
+        tag(ModTags.Blocks.INFECTABLE_DIRT).add(Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.ROOTED_DIRT, Blocks.MUD, Blocks.DIRT_PATH,
+                Blocks.FARMLAND);
+        tag(ModTags.Blocks.INFECTABLE_SAND).addTag(BlockTags.SAND).add(Blocks.GRAVEL, ModBlocks.ASH_BLOCK.get());
+        tag(ModTags.Blocks.INFECTABLE_LOG).addTag(BlockTags.OVERWORLD_NATURAL_LOGS).addTag(ModTags.Blocks.CRYSTAL_LOGS);
+        tag(ModTags.Blocks.INFECTABLE_LEAVES).addTag(BlockTags.LEAVES);
+
         tag(ModTags.Blocks.ORES_SHARD).add(ModBlocks.SHARD_ORE.get(), ModBlocks.DEEPSLATE_SHARD_ORE.get());
         tag(Tags.Blocks.ORES).addTag(ModTags.Blocks.ORES_SHARD);
         tag(ModTags.Blocks.STORAGE_BLOCKS_SHARD).add(ModBlocks.SHARD_BLOCK.get());

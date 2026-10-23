@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:story/breach_core",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.ending_dominate.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_zombie_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.ending_dominate.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "rewards": {
+    "experience": 1000
+  },
+  "sends_telemetry_event": true
+}

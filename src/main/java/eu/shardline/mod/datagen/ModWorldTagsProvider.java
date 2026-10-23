@@ -54,8 +54,8 @@ public final class ModWorldTagsProvider {
         @Override
         protected void addTags(HolderLookup.Provider provider) {
             tag(DamageTypeTags.IS_PROJECTILE).add(ModDamageTypes.SHARD);
-            tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.VOID_ZONE);
-            tag(DamageTypeTags.NO_KNOCKBACK).add(ModDamageTypes.VOID_ZONE);
+            tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.VOID_ZONE, ModDamageTypes.SHARD_FEVER);
+            tag(DamageTypeTags.NO_KNOCKBACK).add(ModDamageTypes.VOID_ZONE, ModDamageTypes.SHARD_FEVER);
             tag(DamageTypeTags.BYPASSES_SHIELD).add(ModDamageTypes.VOID_ZONE, ModDamageTypes.CRYSTAL_PILLAR);
         }
     }

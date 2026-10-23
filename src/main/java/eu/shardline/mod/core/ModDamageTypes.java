@@ -20,6 +20,10 @@ public final class ModDamageTypes {
     public static final ResourceKey<DamageType> VOID_ZONE = ResourceKey.create(Registries.DAMAGE_TYPE, Shardline.id("void_zone"));
     /** Kristallsaeulen des Kolosses. */
     public static final ResourceKey<DamageType> CRYSTAL_PILLAR = ResourceKey.create(Registries.DAMAGE_TYPE, Shardline.id("crystal_pillar"));
+    /** Splitterfieber (Statuseffekt des Shardvirus). */
+    public static final ResourceKey<DamageType> SHARD_FEVER = ResourceKey.create(Registries.DAMAGE_TYPE, Shardline.id("shard_fever"));
+    /** Pulswelle eines Virusherzens. */
+    public static final ResourceKey<DamageType> VIRUS_PULSE = ResourceKey.create(Registries.DAMAGE_TYPE, Shardline.id("virus_pulse"));
 
     private ModDamageTypes() {
     }
@@ -28,6 +32,8 @@ public final class ModDamageTypes {
         context.register(SHARD, new DamageType("shardline.shard", 0.1F));
         context.register(VOID_ZONE, new DamageType("shardline.void_zone", 0.0F));
         context.register(CRYSTAL_PILLAR, new DamageType("shardline.crystal_pillar", 0.1F));
+        context.register(SHARD_FEVER, new DamageType("shardline.shard_fever", 0.0F));
+        context.register(VIRUS_PULSE, new DamageType("shardline.virus_pulse", 0.1F));
     }
 
     public static DamageSource source(Level level, ResourceKey<DamageType> type, @Nullable Entity direct, @Nullable Entity causing) {

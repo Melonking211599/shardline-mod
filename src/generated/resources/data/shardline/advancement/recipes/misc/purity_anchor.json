@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_purification_essence": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:purification_essence"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shardline:purity_anchor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_purification_essence"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shardline:purity_anchor"
+    ]
+  }
+}

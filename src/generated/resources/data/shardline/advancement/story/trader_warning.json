@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/chapter_4",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.trader_warning.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_trader_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.trader_warning.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

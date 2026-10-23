@@ -84,4 +84,66 @@ Blockstates sowie Block- und Item-Modelle entstehen per Datengenerator in `src/g
 
 ## Sounds
 
-Alle 60 Sound-Events stehen in `src/generated/resources/assets/shardline/sounds.json` und verweisen vorerst auf passende Vanilla-Sounds. Für eigene Sounds legst du `.ogg`-Dateien unter `assets/shardline/sounds/` ab und trägst sie in [ModSoundDefinitionsProvider](src/main/java/eu/shardline/mod/datagen/ModSoundDefinitionsProvider.java) ein. Den Musik-Slot der Splitterweite bildet `music.splitterweite`.
+Alle 81 Sound-Events stehen in `src/generated/resources/assets/shardline/sounds.json` und verweisen vorerst auf passende Vanilla-Sounds. Für eigene Sounds legst du `.ogg`-Dateien unter `assets/shardline/sounds/` ab und trägst sie in [ModSoundDefinitionsProvider](src/main/java/eu/shardline/mod/datagen/ModSoundDefinitionsProvider.java) ein. Den Musik-Slot der Splitterweite bildet `music.splitterweite`, infizierte Gebiete nutzen `music.infected`.
+
+## Story und Shardvirus
+
+Auch diese Dateien existieren schon als Platzhalter. Alles Weitere zur Story steht in [STORY.md](STORY.md).
+
+### Wesen
+
+| Name | Modell | Textur | Leuchtmaske | Animationen |
+|---|---|---|---|---|
+| `virus_heart` | GeckoLib: `geo/entity/virus_heart.geo.json`, `animations/entity/virus_heart.animation.json` | `textures/entity/virus_heart.png` (128×128) | ja | idle, walk, pulse, summon |
+| `shard_zombie` | Vanilla-Zombiemodell | `textures/entity/shard_zombie.png` (64×64, Zombie-Layout) | ja, `shard_zombie_glowmask.png` | – |
+| `crystallized_cow` | Vanilla-Kuhmodell | `textures/entity/crystallized_cow.png` (64×32, Kuh-Layout) | ja, `crystallized_cow_glowmask.png` | – |
+
+Der Umhang der Hüter liegt unter `textures/entity/keeper_cape.png` (64×32, Vanilla-Umhang-Layout, Vorderseite bei 1,1 bis 11,17).
+
+### Blöcke (`textures/block/`, 16×16)
+
+Jeder infizierte Block besteht aus einer Grundtextur und einer **Leuchtschicht** `<name>_glow.png`. Die Leuchtschicht ist transparent bis auf die leuchtenden Adern und Funken. Sie wird mit voller Eigenhelligkeit über die Grundtextur gelegt.
+
+| Dateien | Verwendung |
+|---|---|
+| `infected_stone.png`, `infected_stone_glow.png` | Infizierter Stein |
+| `infected_dirt.png`, `infected_dirt_glow.png` | Infizierte Erde (auch Unterseite des Grasblocks) |
+| `infected_grass_top.png`, `infected_grass_top_glow.png`, `infected_grass_side.png`, `infected_grass_side_glow.png` | Infizierter Grasblock |
+| `infected_log.png`, `infected_log_glow.png`, `infected_log_top.png`, `infected_log_top_glow.png` | Infiziertes Holz Seite / Stirnseite |
+| `infected_leaves.png`, `infected_leaves_glow.png` | Infiziertes Laub (cutout_mipped) |
+| `infected_sand.png`, `infected_sand_glow.png` | Infizierter Sand |
+| `memory_crystal.png` | Erinnerungskristall (Element-Modell, Sockel aus `shardstone_bricks.png`) |
+| `purity_anchor.png`, `purity_anchor_crystal.png` | Reinheitsanker: Sockel und Säule / leuchtender Kristall |
+
+### Items (`textures/item/`, 16×16)
+
+`lore_book`, `purification_essence`, `breach_core`
+
+### Weitere Texturen
+
+| Datei | Größe | Verwendung |
+|---|---|---|
+| `textures/mob_effect/shard_fever.png` | 18×18 (16×16 geht auch) | Symbol des Splitterfiebers |
+| `textures/particle/virus_spore_0..3.png` | 8×8 | Virussporen (4 Frames, werden violett eingefärbt) |
+| `textures/misc/breach_overlay.png` | 256×256 | Risse beim Virusausbruch (transparent, Mitte frei) |
+| `textures/gui/advancements/backgrounds/story.png` | 16×16 | Hintergrund des Tabs „Shardline: Chronik“ |
+
+Die Vignette der Bildschirmeffekte nutzt die Vanilla-Textur `minecraft:textures/misc/vignette.png`.
+
+### Neue Sounds (Platzhalter → Vanilla)
+
+| Sound-Event | Platzhalter |
+|---|---|
+| `story.chapter` | `ui.toast.challenge_complete` |
+| `block.memory_crystal.vision` | `block.beacon.activate` |
+| `item.lore_book.open` | `item.book.page_turn` |
+| `event.virus_outbreak` | `entity.wither.spawn` |
+| `event.virus_sealed` | `block.beacon.power_select` |
+| `event.virus_dominated` | `entity.warden.emerge` |
+| `block.purity_anchor.activate` | `block.conduit.activate` |
+| `item.purification_essence.use` | `block.amethyst_block.resonate` |
+| `entity.shard_zombie.ambient` / `hurt` / `death` | Zombie |
+| `entity.crystallized_cow.ambient` / `hurt` / `death` | Kuh |
+| `entity.virus_heart.ambient` / `hurt` / `death` / `pulse` | Warden-Herzschlag, Amethyst, Seelenanker, Warden-Aufladung |
+| `ability.shard_call` / `ability.crystal_wave` | Magier-Beschwörung / Warden-Schallwelle |
+| `music.infected` | `music.nether.soul_sand_valley` |

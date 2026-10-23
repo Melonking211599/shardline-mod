@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "shardline:shardstone_bricks"
+    },
+    "E": {
+      "item": "shardline:purification_essence"
+    },
+    "G": {
+      "item": "shardline:glow_crystal_block"
+    },
+    "S": {
+      "item": "shardline:shard_block"
+    }
+  },
+  "pattern": [
+    " E ",
+    "GSG",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "shardline:purity_anchor"
+  }
+}

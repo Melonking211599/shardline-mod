@@ -136,6 +136,19 @@ public class ModRecipeProvider extends RecipeProvider {
         colossusUpgrade(output, Items.NETHERITE_AXE, ModItems.COLOSSUS_AXE.get(), RecipeCategory.TOOLS);
         colossusUpgrade(output, Items.NETHERITE_SHOVEL, ModItems.COLOSSUS_SHOVEL.get(), RecipeCategory.TOOLS);
 
+        // --- Gegenmittel gegen den Shardvirus (das Herz bleibt als Katalysator erhalten) ---
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.PURIFICATION_ESSENCE.get(), 3)
+                .requires(ModItems.HEART_OF_THE_EXPANSE.get()).requires(ModBlocks.GLOWBLOOM.get(), 3)
+                .requires(ModItems.SHARD_INGOT.get()).requires(Items.GLASS_BOTTLE)
+                .unlockedBy(getHasName(ModItems.HEART_OF_THE_EXPANSE.get()), has(ModItems.HEART_OF_THE_EXPANSE.get()))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.PURITY_ANCHOR.get())
+                .pattern(" E ").pattern("GSG").pattern("BBB")
+                .define('E', ModItems.PURIFICATION_ESSENCE.get()).define('G', ModBlocks.GLOW_CRYSTAL_BLOCK.get())
+                .define('S', ModBlocks.SHARD_BLOCK.get()).define('B', ModBlocks.SHARDSTONE_BRICKS.get())
+                .unlockedBy(getHasName(ModItems.PURIFICATION_ESSENCE.get()), has(ModItems.PURIFICATION_ESSENCE.get()))
+                .save(output);
+
         // --- Nebenprodukte ---
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.LEATHER)
                 .requires(ModItems.SHADOW_PELT.get())

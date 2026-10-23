@@ -154,6 +154,120 @@
         "max": 6.0,
         "min": 4.0
       }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_seal"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_seal"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_shattering"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_breach_core"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_breach_core"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "shardline:chests/queen_arena"

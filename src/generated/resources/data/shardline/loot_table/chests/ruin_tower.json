@@ -165,6 +165,226 @@
         "max": 7.0,
         "min": 4.0
       }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "wanderer_notes"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "crystal_kingdom"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "keepers_oath"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_resonance"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "first_infection"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "traders_ledger"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "shardline:chests/ruin_tower"

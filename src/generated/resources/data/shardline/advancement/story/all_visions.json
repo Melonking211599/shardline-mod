@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:story/vision",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.all_visions.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "shardline:memory_crystal"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.all_visions.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "rewards": {
+    "experience": 250
+  },
+  "sends_telemetry_event": true
+}

@@ -88,6 +88,23 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
 
         // Klone lassen nichts fallen.
         add(ModEntities.QUEEN_CLONE.get(), LootTable.lootTable());
+
+        // --- Shardvirus ---
+        add(ModEntities.SHARD_ZOMBIE.get(), LootTable.lootTable()
+                .withPool(drop(Items.ROTTEN_FLESH, 0, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
+                .withPool(rare(ModItems.RAW_SHARD.get(), 0.1F, 0.03F)));
+
+        add(ModEntities.CRYSTALLIZED_COW.get(), LootTable.lootTable()
+                .withPool(drop(Items.BEEF, 1, 3))
+                .withPool(drop(Items.AMETHYST_SHARD, 0, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 1)));
+
+        add(ModEntities.VIRUS_HEART.get(), LootTable.lootTable()
+                .withPool(guaranteed(ModItems.SHARD_FRAGMENT.get(), 6, 12))
+                .withPool(guaranteed(ModItems.SHARD_INGOT.get(), 1, 3))
+                .withPool(guaranteed(ModBlocks.GLOW_CRYSTAL_BLOCK.get(), 2, 4))
+                .withPool(rare(Items.ENDER_PEARL, 0.5F, 0.1F)));
     }
 
     @Override

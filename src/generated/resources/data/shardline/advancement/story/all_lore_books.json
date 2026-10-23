@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:story/lore_book",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.all_lore_books.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "shardline:lore_book"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.all_lore_books.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "rewards": {
+    "experience": 250
+  },
+  "sends_telemetry_event": true
+}

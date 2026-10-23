@@ -1,0 +1,27 @@
+{
+  "parent": "shardline:story/chapter_2",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.chapter_3.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "shardline:memory_crystal"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.chapter_3.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

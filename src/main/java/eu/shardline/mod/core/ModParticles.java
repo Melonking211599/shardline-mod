@@ -16,6 +16,9 @@ public final class ModParticles {
     /** Dunkle Void-Partikel (Void-Zonen der Koenigin, Void-Rochen). */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> VOID_MOTE =
             PARTICLE_TYPES.register("void_mote", () -> new SimpleParticleType(false));
+    /** Leuchtende Sporen des Shardvirus (infizierte Bloecke und Mobs). */
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> VIRUS_SPORE =
+            PARTICLE_TYPES.register("virus_spore", () -> new SimpleParticleType(false));
 
     private ModParticles() {
     }

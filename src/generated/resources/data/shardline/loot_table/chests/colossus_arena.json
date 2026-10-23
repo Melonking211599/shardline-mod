@@ -128,6 +128,121 @@
         "max": 5.0,
         "min": 3.0
       }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_colossus"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_colossus"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_last_knights"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_breach_core"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.3\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_breach_core"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "shardline:chests/colossus_arena"

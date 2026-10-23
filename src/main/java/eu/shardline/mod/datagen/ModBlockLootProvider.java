@@ -7,6 +7,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -39,6 +41,18 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
             this.dropSelf(block);
         }
 
+        this.dropSelf(ModBlocks.PURITY_ANCHOR.get());
+
+        // Infizierte Bloecke: mit Behutsamkeit der Block selbst, sonst das gereinigte Material.
+        infected(ModBlocks.INFECTED_STONE.get(), Items.COBBLESTONE);
+        infected(ModBlocks.INFECTED_DIRT.get(), Items.DIRT);
+        infected(ModBlocks.INFECTED_GRASS.get(), Items.DIRT);
+        infected(ModBlocks.INFECTED_LOG.get(), Items.OAK_LOG);
+        infected(ModBlocks.INFECTED_SAND.get(), Items.SAND);
+        this.add(ModBlocks.INFECTED_LEAVES.get(), block -> this.createSilkTouchDispatchTable(block,
+                this.applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK)
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
+
         this.add(ModBlocks.SHARDSTONE_BRICK_SLAB.get(), this::createSlabItemTable);
         this.add(ModBlocks.SHARD_ORE.get(), block -> this.createOreDrop(block, ModItems.RAW_SHARD.get()));
         this.add(ModBlocks.DEEPSLATE_SHARD_ORE.get(), block -> this.createOreDrop(block, ModItems.RAW_SHARD.get()));
@@ -59,6 +73,10 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
                         .add(LootItem.lootTableItem(ModItems.LUMINOUS_BERRY.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 3.0F)))
                                 .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE)))))));
+    }
+
+    private void infected(Block block, ItemLike cleanDrop) {
+        this.add(block, b -> this.createSilkTouchDispatchTable(b, this.applyExplosionCondition(b, LootItem.lootTableItem(cleanDrop))));
     }
 
     @Override
