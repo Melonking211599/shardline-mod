@@ -260,7 +260,7 @@ public final class ShardlineConfig {
                 .define("spreadPaused", false);
         VIRUS_SPREAD_CHANCE = b.comment("Chance (0-1), dass ein infizierter Block bei einem Random Tick versucht, sich auszubreiten.")
                 .translation(key("virus_spread_chance"))
-                .defineInRange("spreadChance", 0.6, 0.0, 1.0);
+                .defineInRange("spreadChance", 0.75, 0.0, 1.0);
         VIRUS_SPREAD_ATTEMPTS = b.comment("Wie viele Nachbarbloecke pro Ausbreitungsversuch geprueft werden.")
                 .translation(key("virus_spread_attempts"))
                 .defineInRange("spreadAttempts", 2, 1, 8);
@@ -272,22 +272,22 @@ public final class ShardlineConfig {
                 .defineInRange("maxRange", 0, 0, 1000000);
         VIRUS_MAX_BLOCKS_PER_TICK = b.comment("Hoechstens so viele Bloecke werden pro Tick und Dimension umgewandelt (Performance).")
                 .translation(key("virus_max_blocks_per_tick"))
-                .defineInRange("maxBlocksPerTick", 64, 1, 4096);
+                .defineInRange("maxBlocksPerTick", 80, 1, 4096);
         VIRUS_QUEUE_LIMIT = b.comment("Groesse der Warteschlange fuer Umwandlungen pro Dimension. Ueberschuss wird verworfen.")
                 .translation(key("virus_queue_limit"))
                 .defineInRange("queueLimit", 8192, 64, 262144);
         VIRUS_ORE_SEED_CHANCE = b.comment("Chance (0-1) pro Random Tick, dass Shard-Erz seine Umgebung infiziert.")
                 .translation(key("virus_ore_seed_chance"))
-                .defineInRange("oreSeedChance", 0.15, 0.0, 1.0);
+                .defineInRange("oreSeedChance", 0.2, 0.0, 1.0);
         VIRUS_PORTAL_SEED_CHANCE = b.comment("Chance (0-1) pro Random Tick, dass ein Splitterportal in der Oberwelt seine Umgebung infiziert.")
                 .translation(key("virus_portal_seed_chance"))
-                .defineInRange("portalSeedChance", 0.6, 0.0, 1.0);
+                .defineInRange("portalSeedChance", 0.75, 0.0, 1.0);
         VIRUS_PORTAL_SEED_RADIUS = b.comment("Radius um Splitterportale, in dem neue Infektionen entstehen.")
                 .translation(key("virus_portal_seed_radius"))
                 .defineInRange("portalSeedRadius", 6, 1, 32);
         INFECTED_MOB_SEED_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass ein infizierter Mob den Boden unter sich infiziert.")
                 .translation(key("infected_mob_seed_chance"))
-                .defineInRange("infectedMobSeedChance", 0.05, 0.0, 1.0);
+                .defineInRange("infectedMobSeedChance", 0.065, 0.0, 1.0);
         MOB_CONVERSION_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass Zombies, Kuehe und Dorfbewohner auf infiziertem Boden kristallisieren.")
                 .translation(key("mob_conversion_chance"))
                 .defineInRange("mobConversionChance", 0.02, 0.0, 1.0);

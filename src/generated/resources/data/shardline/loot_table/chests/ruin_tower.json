@@ -195,6 +195,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -230,6 +242,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -265,6 +289,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -300,6 +336,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_resonance.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -335,6 +383,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.first_infection.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -370,6 +430,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.7\"}"
                     }
                   ],
                   "resolved": true,

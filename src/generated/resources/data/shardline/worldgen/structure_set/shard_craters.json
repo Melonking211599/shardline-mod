@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 8812634,
+    "separation": 14,
+    "spacing": 40
+  },
+  "structures": [
+    {
+      "structure": "shardline:shard_crater",
+      "weight": 1
+    }
+  ]
+}

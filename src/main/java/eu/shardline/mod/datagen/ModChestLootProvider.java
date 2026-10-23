@@ -95,6 +95,71 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(LootItem.lootTableItem(Items.BOOK).setWeight(4)
                         .apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, UniformGenerator.between(25.0F, 39.0F)))))
                 .withPool(loreBooks(1, "the_seal", "the_shattering", "the_breach_core")));
+
+        output.accept(ModLootTables.KEEPER_SHRINE_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(3.0F, 5.0F))
+                .add(item(ModBlocks.GLOWBLOOM.get(), 10, 1, 4))
+                .add(item(ModItems.LUMINOUS_BERRY.get(), 10, 2, 6))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 12, 2, 6))
+                .add(item(ModItems.SHARD_INGOT.get(), 6, 1, 2))
+                .add(item(ModBlocks.GLOW_CRYSTAL_BLOCK.get(), 6, 1, 4))
+                .add(item(Items.EXPERIENCE_BOTTLE, 6, 2, 5))
+                .add(LootItem.lootTableItem(Items.POTION).setWeight(5)
+                        .apply(SetPotionFunction.setPotion(Potions.REGENERATION)))
+                .add(LootItem.lootTableItem(Items.BOOK).setWeight(4)
+                        .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries))))
+                .withPool(loreBooks(2, "keepers_oath", "crystal_kingdom", "queen_selvaine")));
+
+        output.accept(ModLootTables.TRADER_OUTPOST_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(4.0F, 6.0F))
+                .add(item(ModItems.LUMINOUS_BERRY.get(), 14, 3, 8))
+                .add(item(Items.BREAD, 10, 2, 5))
+                .add(item(Items.COOKED_MUTTON, 6, 2, 4))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 14, 3, 10))
+                .add(item(ModItems.RAW_SHARD.get(), 8, 1, 3))
+                .add(item(Items.EMERALD, 6, 1, 4))
+                .add(item(Items.PAPER, 6, 2, 6))
+                .add(item(Items.TORCH, 6, 4, 12))
+                .add(item(ModItems.SHARD_KEY.get(), 2, 1, 1)))
+                .withPool(loreBooks(2, "traders_ledger", "wanderer_notes")));
+
+        output.accept(ModLootTables.ASH_CRYPT_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(3.0F, 6.0F))
+                .add(item(ModItems.ASH_DUST.get(), 14, 2, 8))
+                .add(item(Items.BONE, 12, 2, 6))
+                .add(item(ModItems.SHARD_INGOT.get(), 8, 1, 3))
+                .add(item(ModItems.KNIGHT_CREST.get(), 5, 1, 1))
+                .add(item(Items.GOLD_INGOT, 6, 2, 5))
+                .add(item(Items.DIAMOND, 3, 1, 2))
+                .add(enchanted(ModItems.SHARD_SWORD.get(), 2))
+                .add(enchanted(ModItems.SHARD_HELMET.get(), 2))
+                .add(enchanted(ModItems.SHARD_BOOTS.get(), 2))
+                .add(item(ModItems.COLOSSUS_SUMMONING_CRYSTAL.get(), 1, 1, 1)))
+                .withPool(loreBooks(3, "the_last_knights", "the_shattering", "first_infection")));
+
+        output.accept(ModLootTables.CRYSTAL_GEODE_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(3.0F, 5.0F))
+                .add(item(ModItems.RAW_SHARD.get(), 14, 2, 6))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 12, 4, 12))
+                .add(item(ModItems.SHARD_INGOT.get(), 6, 1, 3))
+                .add(item(ModBlocks.GLOW_CRYSTAL_BLOCK.get(), 8, 2, 6))
+                .add(item(Items.AMETHYST_SHARD, 8, 2, 8))
+                .add(item(Items.LAPIS_LAZULI, 6, 4, 10))
+                .add(item(Items.DIAMOND, 3, 1, 2))
+                .add(enchanted(ModItems.SHARD_PICKAXE.get(), 3)))
+                .withPool(loreBooks(4, "the_resonance", "first_infection")));
+
+        output.accept(ModLootTables.SHARD_CRATER_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(3.0F, 5.0F))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 16, 2, 6))
+                .add(item(ModItems.RAW_SHARD.get(), 10, 1, 3))
+                .add(item(ModBlocks.SHARD_PORTAL_FRAME.get(), 6, 1, 3))
+                .add(item(Items.BREAD, 8, 1, 4))
+                .add(item(Items.IRON_INGOT, 8, 1, 4))
+                .add(item(Items.COMPASS, 3, 1, 1))
+                .add(item(Items.OBSIDIAN, 4, 1, 3))
+                .add(item(ModItems.SHARD_KEY.get(), 2, 1, 1)))
+                .withPool(loreBooks(1, "wanderer_notes")));
     }
 
     /** Ein Lore-Buch aus der Liste oder (mit Gewicht {@code emptyWeight}) keines. */

@@ -17,11 +17,16 @@ import eu.shardline.mod.virus.VirusSpreadManager;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import eu.shardline.mod.world.noise.ModNoiseSettings;
 import eu.shardline.mod.world.portal.ShardPortalShape;
+import eu.shardline.mod.world.structure.AshCryptPiece;
 import eu.shardline.mod.world.structure.ColossusArenaPiece;
+import eu.shardline.mod.world.structure.CrystalGeodePiece;
+import eu.shardline.mod.world.structure.KeeperShrinePiece;
 import eu.shardline.mod.world.structure.ModStructures;
 import eu.shardline.mod.world.structure.QueenArenaPiece;
 import eu.shardline.mod.world.structure.RuinTowerPiece;
+import eu.shardline.mod.world.structure.ShardCraterPiece;
 import eu.shardline.mod.world.structure.ShardlinePiece;
+import eu.shardline.mod.world.structure.TraderOutpostPiece;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +123,7 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
-    /** Alle drei Bauwerke einmal vollstaendig errichten und Schluesselbloecke pruefen. */
+    /** Alle Bauwerke einmal vollstaendig errichten und Schluesselbloecke pruefen. */
     @GameTest(template = EMPTY, timeoutTicks = 100)
     public static void structurePieces(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -141,6 +146,36 @@ public final class ShardlineGameTests {
         expect(helper, level, arena.offset(-10, 1, 10), ModBlocks.MEMORY_CRYSTAL.get());
         expect(helper, level, throne.offset(0, 1, 7), ModBlocks.MEMORY_CRYSTAL.get());
         expect(helper, level, throne.offset(0, 1, -7), ModBlocks.MEMORY_CRYSTAL.get());
+
+        BlockPos shrine = new BlockPos(base.getX() + 500, 120, base.getZ());
+        BlockPos outpost = new BlockPos(base.getX() + 560, 120, base.getZ());
+        BlockPos crypt = new BlockPos(base.getX() + 620, 120, base.getZ());
+        BlockPos geode = new BlockPos(base.getX() + 680, 120, base.getZ());
+        BlockPos crater = new BlockPos(base.getX() + 740, 120, base.getZ());
+        build(level, new KeeperShrinePiece(shrine, 4L));
+        build(level, new TraderOutpostPiece(outpost, 5L));
+        build(level, new AshCryptPiece(crypt, 6L));
+        build(level, new CrystalGeodePiece(geode, 7L));
+        build(level, new ShardCraterPiece(crater, 8L));
+
+        expect(helper, level, shrine.above(2), ModBlocks.MEMORY_CRYSTAL.get());
+        expect(helper, level, shrine.offset(0, 1, 2), Blocks.CHEST);
+        expect(helper, level, outpost.offset(2, 1, 2), Blocks.CHEST);
+        expect(helper, level, outpost.offset(3, 1, 3), ModBlocks.CRYSTAL_LOG.get());
+        expect(helper, level, outpost.offset(0, 5, 0), ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        expect(helper, level, crypt.offset(4, -7, 4), Blocks.CHEST);
+        expect(helper, level, crypt.offset(-4, -7, 4), Blocks.CHEST);
+        expect(helper, level, crypt.offset(0, -7, 4), ModBlocks.MEMORY_CRYSTAL.get());
+        expect(helper, level, crypt.offset(0, -7, -4), Blocks.LADDER);
+        expect(helper, level, crypt.offset(0, 0, -4), Blocks.LADDER);
+        expect(helper, level, geode.offset(0, -1, 2), Blocks.CHEST);
+        expect(helper, level, geode.offset(0, -6, 0), ModBlocks.SHARDSTONE.get(), ModBlocks.SHARD_ORE.get());
+        expect(helper, level, geode.offset(0, 0, -7), Blocks.AIR);
+        expect(helper, level, crater.offset(0, -3, 0), ModBlocks.SHARDSTONE.get(), ModBlocks.SHARD_ORE.get(), ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        expect(helper, level, crater.offset(0, -1, 0), ModBlocks.GLOW_CRYSTAL_CLUSTER.get());
+        boolean craterChest = BlockPos.betweenClosedStream(crater.offset(-7, -4, -7), crater.offset(7, 1, 7))
+                .anyMatch(pos -> level.getBlockState(pos).is(Blocks.CHEST));
+        helper.assertTrue(craterChest, "Keine Truhe im Splitterkrater");
         helper.succeed();
     }
 
@@ -212,6 +247,13 @@ public final class ShardlineGameTests {
         BlockPos tower = locate(helper, level, ModStructures.RUIN_TOWER_KEY, ModBlocks.SHARDSTONE_BRICKS.get(),
                 ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
         BlockPos altar = locate(helper, level, ModStructures.COLOSSUS_ARENA_KEY, ModBlocks.COLOSSUS_ALTAR.get());
+        BlockPos shrine = locate(helper, level, ModStructures.KEEPER_SHRINE_KEY, ModBlocks.MEMORY_CRYSTAL.get());
+        BlockPos outpost = locate(helper, level, ModStructures.TRADER_OUTPOST_KEY, ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        BlockPos crypt = locate(helper, level, ModStructures.ASH_CRYPT_KEY, ModBlocks.SHARDSTONE_BRICKS.get(),
+                ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
+        BlockPos geode = locate(helper, level, ModStructures.CRYSTAL_GEODE_KEY, ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        Shardline.LOGGER.info("[GameTest] Splitterweite: Schrein bei {}, Handelsposten bei {}, Gruft bei {}, Geode bei {}",
+                shrine, outpost, crypt, geode);
         Shardline.LOGGER.info("[GameTest] Splitterweite: Thron bei {}, Ruinen-Turm bei {}, Koloss-Altar bei {}", floor.above(3), tower, altar);
 
         // Spawnregeln: jeder Bodenmob muss auf dem Arenaboden, jeder Flieger in der Luft darueber spawnen koennen.

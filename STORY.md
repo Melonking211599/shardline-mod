@@ -35,17 +35,17 @@ Die Bücher sind schreibgeschützt. Ihr Text steht in den Sprachdateien, deshalb
 
 | Nr. | ID | Titel | Autor | Fundort |
 |---|---|---|---|---|
-| 1 | `wanderer_notes` | Notizen eines Wanderers | ein namenloser Wanderer | Ruinen-Turm (Truhe) |
-| 2 | `crystal_kingdom` | Das Kristallreich Aurelis | Chronist Veyl | Ruinen-Turm (Truhe) |
-| 3 | `keepers_oath` | Der Eid der Hüter | Orden der Hüter | Ruinen-Turm (Truhe) |
-| 4 | `the_resonance` | Über die Resonanz | Magister Orrin | Ruinen-Turm (Truhe) |
-| 5 | `first_infection` | Die erste Ansteckung | Heilerin Maelis | Ruinen-Turm (Truhe) |
+| 1 | `wanderer_notes` | Notizen eines Wanderers | ein namenloser Wanderer | Ruinen-Turm (Truhe), Splitterkrater, Handelsposten |
+| 2 | `crystal_kingdom` | Das Kristallreich Aurelis | Chronist Veyl | Ruinen-Turm (Truhe), Hüter-Schrein |
+| 3 | `keepers_oath` | Der Eid der Hüter | Orden der Hüter | Ruinen-Turm (Truhe), Hüter-Schrein |
+| 4 | `the_resonance` | Über die Resonanz | Magister Orrin | Ruinen-Turm (Truhe), Kristallgeode |
+| 5 | `first_infection` | Die erste Ansteckung | Heilerin Maelis | Ruinen-Turm (Truhe), Aschegruft, Kristallgeode |
 | 6 | `the_colossus` | Bauplan des Wächters | Schmiedemeister Duran | Turm-Schatz, Koloss-Arena |
-| 7 | `the_last_knights` | Die letzten Ritter | Hauptmann Kael | Turm-Schatz, Koloss-Arena |
-| 8 | `queen_selvaine` | Selvaine, die Glasgekrönte | Chronist Veyl | Turm-Schatz |
+| 7 | `the_last_knights` | Die letzten Ritter | Hauptmann Kael | Turm-Schatz, Koloss-Arena, Aschegruft |
+| 8 | `queen_selvaine` | Selvaine, die Glasgekrönte | Chronist Veyl | Turm-Schatz, Hüter-Schrein |
 | 9 | `the_seal` | Das Siegel | Selvaine | Königinnen-Arena |
-| 10 | `the_shattering` | Der Tag des Zerspringens | unbekannt | Turm-Schatz, Königinnen-Arena |
-| 11 | `traders_ledger` | Kassenbuch des Händlers | der Splitterhändler | Ruinen-Turm (Truhe) |
+| 10 | `the_shattering` | Der Tag des Zerspringens | unbekannt | Turm-Schatz, Königinnen-Arena, Aschegruft |
+| 11 | `traders_ledger` | Kassenbuch des Händlers | der Splitterhändler | Ruinen-Turm (Truhe), Handelsposten |
 | 12 | `the_breach_core` | Vom Kern des Bruchs | Magister Orrin | Koloss-Arena, Königinnen-Arena |
 
 Das erste Lesen eines Buchs zählt mit, zum Beispiel „Lore-Buch gelesen (5/12)“. Wer alle zwölf gelesen hat, erhält ein Advancement. Mit `/shardline lore give <buch|all>` lassen sich Bücher ausgeben.
@@ -56,7 +56,8 @@ Der Block `shardline:memory_crystal[vision=0..7]` ist unzerstörbar. Ein Rechtsk
 
 | Vision | Titel | Fundort |
 |---|---|---|
-| 0, 1, 2, 4, 6 | Aurelis, Der falsche Ton, Der Rat der Hüter, Das Zerspringen, Die letzten Ritter | Erdgeschoss der Ruinen-Türme (eine zufällige pro Turm) |
+| 0, 1, 2, 4, 6 | Aurelis, Der falsche Ton, Der Rat der Hüter, Das Zerspringen, Die letzten Ritter | Erdgeschoss der Ruinen-Türme und Hüter-Schreine (eine zufällige pro Bauwerk) |
+| 4 oder 6 | Das Zerspringen, Die letzten Ritter | Aschegruft |
 | 5 | Der Wächter | Koloss-Arena |
 | 3 | Das Ritual | Königinnen-Arena, vor dem Thron |
 | 7 | Die Warnung | Königinnen-Arena, hinter dem Thron |
@@ -95,7 +96,7 @@ Ist das Ende bereits „versiegelt“, meldet der Server nur, dass das Siegel h�
   - im Spiel: Reinheitsanker, Reinigungsessenz, Virusherzen besiegen oder das Ende „versiegeln“
 
 **Performance:** Alle Quellen schlagen nur Positionen vor. Diese landen in einer Warteschlange pro Dimension, gruppiert nach Chunk.
-- **Pro Tick:** Am Tickende werden höchstens `maxBlocksPerTick` Positionen (Standard 64) Chunk für Chunk abgearbeitet. Positionen in inzwischen entladenen Chunks werden verworfen.
+- **Pro Tick:** Am Tickende werden höchstens `maxBlocksPerTick` Positionen (Standard 80) Chunk für Chunk abgearbeitet. Positionen in inzwischen entladenen Chunks werden verworfen.
 - **Keine Chunk-Ladungen:** Gelesen wird nur über `getChunkNow`, es wird also nie ein Chunk geladen.
 - **Nur in Spielernähe:** Random Ticks gibt es nur in geladenen Chunks in Spielernähe.
 - **Große Reinigungen:** Sie laufen als Hintergrundauftrag, pro Tick werden höchstens 12 Chunk-Abschnitte bearbeitet. Abschnitte ohne infizierte Blöcke werden über die Palette übersprungen.
@@ -207,7 +208,7 @@ Alle Befehle außer `story vote` brauchen Operator-Rechte (Stufe 2).
 | Abschnitt | Schlüssel (Standard) |
 |---|---|
 | `story` | `chapterTitles` (true), `traderDialogue` (true), `dialogueLineDelayTicks` (50) |
-| `virus` | `enabled` (true), `spreadPaused` (false), `spreadChance` (0.6), `spreadAttempts` (2), `spreadRange` (2), `maxRange` (0 = unbegrenzt), `maxBlocksPerTick` (64), `queueLimit` (8192), `oreSeedChance` (0.15), `portalSeedChance` (0.6), `portalSeedRadius` (6), `infectedMobSeedChance` (0.05), `mobConversionChance` (0.02), `villagersFlee` (true), `villagersTransform` (true), `feverChanceOnInfectedBlock` (0.04), `feverDurationSeconds` (30), `feverDamage` (1.0), `feverCanKill` (false), `feverCuredByMilk` (false) |
+| `virus` | `enabled` (true), `spreadPaused` (false), `spreadChance` (0.75), `spreadAttempts` (2), `spreadRange` (2), `maxRange` (0 = unbegrenzt), `maxBlocksPerTick` (80), `queueLimit` (8192), `oreSeedChance` (0.2), `portalSeedChance` (0.75), `portalSeedRadius` (6), `infectedMobSeedChance` (0.065), `mobConversionChance` (0.02), `villagersFlee` (true), `villagersTransform` (true), `feverChanceOnInfectedBlock` (0.04), `feverDurationSeconds` (30), `feverDamage` (1.0), `feverCanKill` (false), `feverCuredByMilk` (false) |
 | `remedies` | `anchorRadius` (24), `anchorPurifyPerPulse` (24), `essenceRadius` (6), `heartPurifyRadius` (40), `virusHeartHealth` (200), `heartSpawnThreshold` (160), `heartSpawnCooldownMinutes` (8), `heartsForCore` (3) |
 | `ending` | `mode` (VOTE / FIRST_PLAYER), `voteDurationSeconds` (120), `titlePrefix` (true) |
 | `abilities` | `shardCallCooldownSeconds` (90), `shardCallMaxMobs` (3), `shardCallStrengthSeconds` (10), `crystalWaveCooldownSeconds` (45), `crystalWaveRadius` (6), `crystalWaveDamage` (8), `crystalWaveFeverSeconds` (4), `virusRun` (true) |

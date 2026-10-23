@@ -31,4 +31,17 @@ Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Sch
 6. **Splitterkönigin:** Lege einen Kolosskern auf den Thron im Zentrum der Splitterweite bei den Koordinaten 0 / 0.
 7. **Der Bruch und das Ende:** Der Tod der Königin setzt den Shardvirus frei. Danach gilt es, ihn einzudämmen, drei Virusherzen zu zerstören und am Thron zu entscheiden: versiegeln oder beherrschen. Alles dazu steht in [STORY.md](STORY.md).
 
+## Strukturen
+
+| Struktur | Wo | Inhalt |
+|---|---|---|
+| Splitterkrater | Oberwelt: Ebenen, Savannen, Wüsten, Tafelberge, Wiesen | Mulde aus Asche mit einem Brocken voller Shard-Erz, verstreute Portalrahmen-Blöcke, Truhe eines Wanderers (selten Shard-Schlüssel) |
+| Ruinen-Turm | Splitterweite, alle Biome | 3 Stockwerke, Truhen, Gesplitterte Ritter, Erinnerungskristall, manchmal ein gefangener Händler |
+| Hüter-Schrein | Kristallwälder | Säulenkreis mit Erinnerungskristall, Opfertruhe, Leuchtmotten |
+| Handelsposten | Splitterweite, alle Biome | Kristallholz-Hütte mit Splitterhändler und Vorratstruhe |
+| Aschegruft | Aschefelder | Vergrabene Grabkammer: Schacht mit Leiter, Sarkophag, 2 Truhen, Aschewandler und Kristallspinne |
+| Kristallgeode | Leuchtende Höhlen | Halb vergrabene Hohlkugel aus Leuchtkristall mit Shard-Erz, Kristallspinnen und Truhe |
+| Koloss-Arena | Kristallwälder | Altar für den Kristallkoloss |
+| Thron der Königin | Zentrum (0 / 0) | Arena der Splitterkönigin |
+
 Eine Liste aller Texturen und Modelle steht in [ASSETS.md](ASSETS.md).

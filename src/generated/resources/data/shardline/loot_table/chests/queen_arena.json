@@ -183,6 +183,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_seal.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -218,6 +230,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_shattering.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -253,6 +277,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_breach_core.page.7\"}"
                     }
                   ],
                   "resolved": true,

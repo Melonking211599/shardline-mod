@@ -13,6 +13,11 @@ public final class ModLootTables {
     public static final ResourceKey<LootTable> RUIN_TOWER_TREASURE = key("chests/ruin_tower_treasure");
     public static final ResourceKey<LootTable> COLOSSUS_ARENA_CHEST = key("chests/colossus_arena");
     public static final ResourceKey<LootTable> QUEEN_ARENA_CHEST = key("chests/queen_arena");
+    public static final ResourceKey<LootTable> KEEPER_SHRINE_CHEST = key("chests/keeper_shrine");
+    public static final ResourceKey<LootTable> TRADER_OUTPOST_CHEST = key("chests/trader_outpost");
+    public static final ResourceKey<LootTable> ASH_CRYPT_CHEST = key("chests/ash_crypt");
+    public static final ResourceKey<LootTable> CRYSTAL_GEODE_CHEST = key("chests/crystal_geode");
+    public static final ResourceKey<LootTable> SHARD_CRATER_CHEST = key("chests/shard_crater");
 
     private ModLootTables() {
     }

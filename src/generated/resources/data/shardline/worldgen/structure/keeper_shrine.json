@@ -1,0 +1,6 @@
+{
+  "type": "shardline:keeper_shrine",
+  "biomes": "#shardline:has_structure/keeper_shrine",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

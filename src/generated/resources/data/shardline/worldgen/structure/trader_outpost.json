@@ -1,0 +1,6 @@
+{
+  "type": "shardline:trader_outpost",
+  "biomes": "#shardline:has_structure/trader_outpost",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

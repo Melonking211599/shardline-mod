@@ -53,6 +53,11 @@ public final class ModTags {
         public static final TagKey<Biome> HAS_RUIN_TOWER = TagKey.create(Registries.BIOME, Shardline.id("has_structure/ruin_tower"));
         public static final TagKey<Biome> HAS_COLOSSUS_ARENA = TagKey.create(Registries.BIOME, Shardline.id("has_structure/colossus_arena"));
         public static final TagKey<Biome> HAS_QUEEN_ARENA = TagKey.create(Registries.BIOME, Shardline.id("has_structure/queen_arena"));
+        public static final TagKey<Biome> HAS_KEEPER_SHRINE = TagKey.create(Registries.BIOME, Shardline.id("has_structure/keeper_shrine"));
+        public static final TagKey<Biome> HAS_TRADER_OUTPOST = TagKey.create(Registries.BIOME, Shardline.id("has_structure/trader_outpost"));
+        public static final TagKey<Biome> HAS_ASH_CRYPT = TagKey.create(Registries.BIOME, Shardline.id("has_structure/ash_crypt"));
+        public static final TagKey<Biome> HAS_CRYSTAL_GEODE = TagKey.create(Registries.BIOME, Shardline.id("has_structure/crystal_geode"));
+        public static final TagKey<Biome> HAS_SHARD_CRATER = TagKey.create(Registries.BIOME, Shardline.id("has_structure/shard_crater"));
 
         private Biomes() {
         }
