@@ -195,3 +195,16 @@ def save_png(tex: Tex, relative: str):
 def write_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+# ---------------------------------------------------------------- Story-Paletten (Erweiterung)
+# Viruspalette: krankes Magenta, giftiges Pink, fast schwarzes Violett. VGLOW ist die pulsierende Adernschicht.
+VIRUS = [hx(c) for c in ("#0d0412", "#240a2c", "#481044", "#7c1a68", "#b8268f")]
+VGLOW = [hx(c) for c in ("#a3208a", "#e03cc0", "#ff6fdc", "#ffb3f0", "#fff0fb")]
+TOXIC = hx("#ff3fb4")
+# Reinheitspalette: warmes Gold, Weiss und sanftes Hellblau als klarer Gegenpol zum Virus.
+GOLD = [hx(c) for c in ("#4a2c08", "#8a5a14", "#cf9425", "#f4c95a", "#fff1b0")]
+IVORY = [hx(c) for c in ("#6f6a82", "#9f9ab4", "#cdc9dd", "#ecebf6", "#ffffff")]
+SKYB = [hx(c) for c in ("#4879ad", "#79b0e0", "#acd6f5", "#d8eeff", "#f4fbff")]
+# Leder / Pergament fuer Haendlernotizen
+LEATHER = [hx(c) for c in ("#2a1810", "#46281a", "#6b4128", "#93603a", "#bf8a55")]
