@@ -72,26 +72,42 @@ class Ent:
         return clashes
 
 
-# ====================================================================== Materialien
+# ====================================================================== Materialien (Stufe 2, neu)
 def _lit(face, fx, fy, fw, fh, bias=2.0):
-    return bias + FACE_LIGHT[face] + edge_light(fx, fy, fw, fh)
+    return bias + 0.35 + FACE_LIGHT[face] * 1.35 + edge_light(fx, fy, fw, fh) * 1.2
+
+
+def tone(face, fx, fy, fw, fh, seed, cw=0, ch=0, lo=0.2, hi=0.8, shift_rows=True):
+    """Zusammenhaengendes Cluster-Rauschen: -1 (dunkler), 0, +1 (heller) in Bloecken von cw x ch Pixeln.
+
+    Die Blockgroesse waechst mit der Flaechengroesse (kleine Mobs 2x2, grosse Bosse 3x3 oder 4x4). Jede zweite Blockreihe
+    ist versetzt, damit kein Gitter sichtbar wird. So entstehen Vanilla-artige Flecken statt Pixelrauschen.
+    """
+    if cw == 0:
+        cw = 2 if fw < 16 else (3 if fw < 40 else 4)
+    if ch == 0:
+        ch = 2 if fh < 16 else (3 if fh < 40 else 4)
+    off = FACE_ID[face] * 17
+    cy = fy // ch
+    cx = (fx + ((cy % 2) * (cw // 2) if shift_rows else 0) + off) // cw
+    h = nz(cx, cy, seed)
+    return 1 if h > hi else (-1 if h < lo else 0)
 
 
 def M_stone(r, seed, rough=0.5, crack=None, crack_glow=False, bias=2.0, strata=False, crack_w=0.028):
-    """Rauer Stein mit optionalen, zusammenhaengenden Rissen (Value-Noise-Kamm)."""
+    """Stein: ruhiger Grundton, Cluster-Flecken, optional waagerechte Schichten und lange, zusammenhaengende Risse."""
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 13
-        idx = _lit(face, fx, fy, fw, fh, bias) + ordered(fx + off, fy + off) * rough * 1.5
         if strata:
-            idx += (vnoise(fx / 7.0 + off, fy / 1.4, seed + 5) - 0.5) * 0.7
+            t = tone(face, fx, fy, fw, fh, seed, cw=max(4, fw // 3), ch=1)
         else:
-            idx += (vnoise(fx / 4.0 + off, fy / 4.0, seed + 5) - 0.5) * 0.6
-        col = ramp(r, idx)
+            t = tone(face, fx, fy, fw, fh, seed)
+        idx = _lit(face, fx, fy, fw, fh, bias) + t * (0.55 + rough)
         if crack is not None:
             ridge = abs(vnoise(fx / 6.0 + off, fy / 6.0, seed + 9) - 0.5)
             if ridge < crack_w * 0.55 and 0 < fx < fw - 1 and 0 < fy < fh - 1:
                 return (crack, True) if crack_glow else crack
-        return col
+        return ramp(r, idx)
     return p
 
 
@@ -100,7 +116,7 @@ def M_crystal(r, seed, glow_from=2.0):
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 5
         band = ((fx + fy * 2 + off) // 2) % 3
-        idx = 0.7 + band * 0.75 + FACE_LIGHT[face] * 0.7 + 0.0
+        idx = 0.9 + band * 0.8 + FACE_LIGHT[face] * 0.9
         if fx == 0 or fy == 0:
             idx += 1.0
         if fx == fw - 1 or fy == fh - 1:
@@ -111,15 +127,12 @@ def M_crystal(r, seed, glow_from=2.0):
 
 
 def M_fur(r, seed, bias=2.0):
-    """Fell: senkrechte Straehnen mit helleren Spitzen."""
+    """Fell: senkrechte Straehnen (2 Pixel breit) mit helleren Spitzen alle drei Zeilen."""
     def p(face, fx, fy, fw, fh):
-        off = FACE_ID[face] * 11
-        strand = nz(fx + off, fy // 3, seed)
-        idx = bias + FACE_LIGHT[face] * 0.8 + (strand - 0.5) * 1.0
+        t = tone(face, fx, fy, fw, fh, seed, cw=2, ch=4, shift_rows=False)
+        idx = bias + 0.35 + FACE_LIGHT[face] * 1.2 + t * 0.9
         if fy % 3 == 0:
             idx += 0.5
-        if nz(fx + off, fy, seed + 3) > 0.95:
-            idx += 1.1
         return ramp(r, idx)
     return p
 
@@ -128,9 +141,8 @@ def M_cloth(r, seed, bias=2.0):
     """Stoff: weiche senkrechte Falten."""
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 7
-        fold = math.sin((fx + off) * 1.7) * 0.45
-        idx = bias + FACE_LIGHT[face] * 0.7 + fold + ordered(fx + off, fy) * 0.35
-        idx += edge_light(fx, fy, fw, fh) * 0.4
+        fold = math.sin((fx + off) * 1.7) * 0.5
+        idx = bias + 0.35 + FACE_LIGHT[face] * 1.1 + fold + edge_light(fx, fy, fw, fh) * 0.6
         return ramp(r, idx)
     return p
 
@@ -142,7 +154,7 @@ def M_chitin(r, seed, bias=2.0):
         row = fy // 3
         cx = (fx + (row % 2) * 1 + off) % 4
         cy = fy % 3
-        idx = bias + FACE_LIGHT[face] * 0.8 + (nz(fx // 2 + off, row, seed) - 0.5) * 0.45
+        idx = bias + 0.35 + FACE_LIGHT[face] * 1.2 + (nz(fx // 2 + off, row, seed) - 0.5) * 0.45
         if cx == 0 or cy == 2:
             idx -= 1.0
         elif cx == 1 and cy == 0:
@@ -152,10 +164,10 @@ def M_chitin(r, seed, bias=2.0):
 
 
 def M_plate(r, seed, rivets=None, bias=2.0, seam_every=0):
-    """Gebuerstetes Plattenmetall mit Nieten und Fugen."""
+    """Plattenmetall: Kantenlicht, Cluster-Toene, Nieten und Fugen."""
     def p(face, fx, fy, fw, fh):
-        off = FACE_ID[face] * 9
-        idx = _lit(face, fx, fy, fw, fh, bias) + ordered(fx + off, fy + off) * 0.45
+        t = tone(face, fx, fy, fw, fh, seed, lo=0.12, hi=0.88)
+        idx = _lit(face, fx, fy, fw, fh, bias) + t * 0.7
         if seam_every and fy % seam_every == seam_every - 1:
             idx -= 1.0
         if rivets and fx % rivets == 1 and fy % rivets == 1 and 0 < fx < fw - 1:
@@ -169,10 +181,10 @@ def M_flat(color, glow=False):
 
 
 def M_membrane(r, seed, vein=None, vein_glow=False, bias=1.6):
-    """Haeutige Flaeche mit radial verlaufenden Adern."""
+    """Haeutige Flaeche mit weichen Toenen und radial verlaufenden Adern."""
     def p(face, fx, fy, fw, fh):
-        off = FACE_ID[face] * 7
-        idx = bias + FACE_LIGHT[face] * 0.5 + (vnoise(fx / 3.5 + off, fy / 3.5, seed) - 0.5) * 1.0 + ordered(fx + off, fy) * 0.4
+        t = tone(face, fx, fy, fw, fh, seed, cw=3, ch=3, lo=0.25, hi=0.75)
+        idx = bias + 0.3 + FACE_LIGHT[face] * 0.9 + t * 0.7
         col = ramp(r, idx)
         if vein is not None:
             if (fx * 2 + fy) % 9 == 0 or (fx - fy * 2) % 13 == 0:

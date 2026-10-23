@@ -156,7 +156,7 @@ def breach_overlay() -> Tex:
 # ------------------------------------------------------------------ Advancement-Hintergrund
 def story_background() -> Tex:
     """16x16 kachelnder, infizierter Stein: sehr dunkel (Advancement-Hintergrund wird gross gekachelt)."""
-    from virus_blocks import infected_stone
+    from fresh_virus import infected_stone
     base, glow = infected_stone()
     t = Tex(16, 16)
     for y in range(16):

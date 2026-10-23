@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import math
 
-from blocks import SHARDSTONE
+from fresh_blocks import SHARDSTONE
 from clean import ordered
 from common import (ASH, BONE, COL, CYAN, LILAC, MAGENTA, SHARD, SLATE, TEAL, VIOLET, Tex, clamp, hx, mix, nz,
                     ramp, vnoise)

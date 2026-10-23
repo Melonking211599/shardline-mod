@@ -12,30 +12,30 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import anims
 import armor
 import armor_extras
-import blocks
+import fresh_blocks
 import bosses
 import effects_gui
 import entities
 import geo_prep
 import gui
 import infected_entities
-import items
+import fresh_items
 import story_items
-import virus_blocks
+import fresh_virus
 
 
 def main():
     geo_prep.main()
     anims.main()
-    blocks.main()
-    items.main()
+    fresh_blocks.main()
+    fresh_items.main()
     armor.main()
     armor_extras.main()
     entities.main()
     bosses.main()
     gui.main()
     # Story-Erweiterung
-    virus_blocks.main()
+    fresh_virus.main()
     story_items.main()
     infected_entities.main()
     effects_gui.main()
