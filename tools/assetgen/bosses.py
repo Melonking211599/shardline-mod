@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import math
 
+from clean import ordered
 from common import ASH, BONE, COL, CYAN, LILAC, MAGENTA, SHARD, SLATE, VIOLET, hx, mix, nz, ramp, vnoise
 from ent import Ent, M_cloth, M_crystal, M_flat, M_fur, M_plate, M_stone, art_face, overlay
 from uvlib import FACE_LIGHT, edge_light
@@ -76,7 +77,7 @@ pppppppppppp
             if fx in (4, 5) and 6 < fy < 26 and fy % 5 != 0:
                 return (CYAN[2] if fx == 4 else CYAN[1], G)
             if fy >= 27:
-                return ramp(COLO_DARK, 1.2 + FACE_LIGHT[face] * 0.8 + (nz(fx, fy, 2003) - 0.5) * 0.6 + (0.9 if fy == 27 else 0))
+                return ramp(COLO_DARK, 1.2 + FACE_LIGHT[face] * 0.8 + ordered(fx, fy) * 0.54 + (0.9 if fy == 27 else 0))
             if fy in (11, 12):
                 return COLO[0]
         return None
@@ -98,7 +99,7 @@ pppppppppppp
             if fx in (4, 5) and 3 < fy < 12:
                 return (CYAN[2], G)
             if fy >= 19:
-                return ramp(COLO_DARK, 1.3 + FACE_LIGHT[face] * 0.8 + (nz(fx, fy, 2007) - 0.5) * 0.6 + (0.9 if fy == 19 else 0))
+                return ramp(COLO_DARK, 1.3 + FACE_LIGHT[face] * 0.8 + ordered(fx, fy) * 0.54 + (0.9 if fy == 19 else 0))
         return None
 
     e.paint("right_leg", overlay(stone, leg))
@@ -233,7 +234,7 @@ hhhhhhhh
             # Federn: diagonale Splitter, nach aussen laenger, Kanten leuchten
             stripe = (fx + fy // 2) % 5
             edge = (fx - fy // 2 + 40) % 5 == 0
-            n = nz(fx, fy, 3007)
+            n = ordered(fx, fy) * 0.8 + 0.5
             if stripe == 0:
                 return (accent[3], G) if fy % 2 == 0 else (accent[2], G)
             if fx == 0 or fy == 0 or fy == fh - 1:

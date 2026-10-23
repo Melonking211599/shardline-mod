@@ -16,6 +16,7 @@ import json
 import math
 
 import geofix
+from clean import ordered
 from common import ANIM, GEO, TEX, VGLOW, VIRUS, Tex, clamp, hx, mix, nz, ramp, vnoise
 from ent import FACE_ID, Ent
 from uvlib import FACE_LIGHT, edge_light, paint_box
@@ -175,7 +176,7 @@ def flesh(r, seed, vein_w=0.045, bias=2.0, vein_col=None, fibers=True):
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 13
         idx = bias + FACE_LIGHT[face] * 0.7 + edge_light(fx, fy, fw, fh) * 0.6
-        idx += (vnoise(fx / 2.5 + off, fy / 2.5, seed) - 0.5) * 1.7
+        idx += (vnoise(fx / 3.5 + off, fy / 3.5, seed) - 0.5) * 1.0
         if fibers:
             idx += math.sin((fx * 0.9 + fy * 0.4 + off) * 1.1) * 0.35
         ridge = abs(vnoise(fx / 3.2 + off, fy / 3.2, seed + 9) - 0.5)
@@ -190,7 +191,7 @@ def crystal(r, seed, glow_from=2.6):
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 5
         band = ((fx + fy * 2 + off) // 2) % 3
-        idx = 0.0 + band * 0.9 + FACE_LIGHT[face] * 0.6 + (nz(fx, fy, seed + off) - 0.5) * 0.15
+        idx = 0.0 + band * 0.9 + FACE_LIGHT[face] * 0.6 + ordered(fx, fy) * 0.14
         if fx == 0 or fy == 0:
             idx += 0.9
         if fx == fw - 1 or fy == fh - 1:
@@ -254,7 +255,7 @@ def heart_texture():
         base_idx = 1.5 + FACE_LIGHT[face] * 0.6 + edge_light(fx, fy, fw, fh) * 0.5
         if long_x and fy == fh // 2 and fh >= 2 or (not long_x and fx == fw // 2):
             return (VGLOW[1] if (fx + fy) % 2 else VGLOW[2], True)
-        return ramp(HEART, base_idx + (nz(fx, fy, 7011) - 0.5) * 0.6)
+        return ramp(HEART, base_idx + ordered(fx, fy) * 0.54)
 
     def tip(face, fx, fy, fw, fh):
         return (ramp(VGLOW, 3.3 - (fx + fy) * 0.4), True)
@@ -276,7 +277,7 @@ Z_RLEG, Z_LLEG = (0, 16, 4, 12, 4), (16, 48, 4, 12, 4)
 
 def skin(seed, bias=2.3):
     def p(face, fx, fy, fw, fh):
-        idx = bias + FACE_LIGHT[face] * 0.7 + edge_light(fx, fy, fw, fh) * 0.4 + (nz(fx, fy, seed + FACE_ID[face]) - 0.5) * 0.5
+        idx = bias + FACE_LIGHT[face] * 0.7 + edge_light(fx, fy, fw, fh) * 0.4 + ordered(fx, fy) * 0.45
         return ramp(ZSKIN, idx)
     return p
 
@@ -284,7 +285,7 @@ def skin(seed, bias=2.3):
 def cloth(r, seed, bias=2.1):
     def p(face, fx, fy, fw, fh):
         fold = math.sin((fx + FACE_ID[face] * 3) * 1.6) * 0.35
-        idx = bias + FACE_LIGHT[face] * 0.7 + fold + (nz(fx, fy, seed + FACE_ID[face]) - 0.5) * 0.4 + edge_light(fx, fy, fw, fh) * 0.3
+        idx = bias + FACE_LIGHT[face] * 0.7 + fold + ordered(fx, fy) * 0.36 + edge_light(fx, fy, fw, fh) * 0.3
         return ramp(r, idx)
     return p
 
@@ -349,7 +350,7 @@ def zombie_body():
 
     def p(face, fx, fy, fw, fh):
         if face in ("north", "south") and (fx, fy) in tears:
-            idx = 1.6 + (nz(fx, fy, 7123) - 0.5) * 0.6
+            idx = 1.6 + ordered(fx, fy) * 0.54
             return ramp(ZSKIN, idx - (0.5 if fy == 11 else 0))
         if face == "north":
             c = chest.get((fx, fy))
@@ -428,9 +429,9 @@ def hide(seed, patch_thr=0.58):
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 17
         n = vnoise(fx / 3.5 + off, fy / 3.5, seed)
-        idx = 2.3 + FACE_LIGHT[face] * 0.6 + edge_light(fx, fy, fw, fh) * 0.4 + (nz(fx, fy, seed + 1) - 0.5) * 0.6
+        idx = 2.3 + FACE_LIGHT[face] * 0.6 + edge_light(fx, fy, fw, fh) * 0.4 + ordered(fx, fy) * 0.54
         if n > patch_thr:
-            return ramp(CPATCH, 0.9 + (n - patch_thr) * 5 + FACE_LIGHT[face] * 0.5 + (nz(fx, fy, seed + 2) - 0.5) * 0.4)
+            return ramp(CPATCH, 0.9 + (n - patch_thr) * 5 + FACE_LIGHT[face] * 0.5 + ordered(fx, fy) * 0.36)
         return ramp(CHIDE, idx)
     return p
 
@@ -447,7 +448,7 @@ def cow_head():
             if fy == 4 and fx in (1, 6):
                 return CHIDE[1]
             if fy >= 5 and 2 <= fx <= 5:                    # Maul
-                c = ramp(CSNOUT, 2.0 + FACE_LIGHT[face] + (nz(fx, fy, 7203) - 0.5) * 0.5 - (0.5 if fy == 7 else 0))
+                c = ramp(CSNOUT, 2.0 + FACE_LIGHT[face] + ordered(fx, fy) * 0.45 - (0.5 if fy == 7 else 0))
                 if fy == 6 and fx in (3, 4):
                     return CSNOUT[0]
                 return c

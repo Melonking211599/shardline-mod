@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 
+from clean import ordered
 from common import (BONE, GOLD, IVORY, LEATHER, SHARD, SKYB, SLATE, TEX, VGLOW, VIRUS, Tex, clamp, hx, mix, nz, ramp,
                     save_png)
 
@@ -109,7 +110,7 @@ def tablet(stone, glyph, emblem: str, epal: dict, cracks=False, seed=0) -> Tex:
         for x in range(2, 14):
             if (x, y) in ((2, 1), (13, 1), (2, 14), (13, 14)) or (seed % 2 and (x, y) in ((3, 1), (13, 2))):
                 continue
-            idx = 2.4 + (nz(x, y, 7100 + seed) - 0.5) * 0.9
+            idx = 2.4 + ordered(x, y) * 0.81
             if y <= 2 or x <= 3:
                 idx += 0.6
             if y >= 13 or x >= 12:

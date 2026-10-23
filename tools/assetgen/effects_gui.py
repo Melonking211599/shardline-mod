@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import math
 
+from clean import ordered
 from common import CLEAR, OUTLINE, TEX, VGLOW, VIRUS, Tex, clamp, hx, mix, nz, ramp, save_png, vnoise
 
 CRY = [hx(c) for c in ("#3a0c3a", "#7a1a68", "#c42c9e", "#ff6fdc", "#ffd0f4")]
@@ -46,7 +47,7 @@ def shard_fever() -> Tex:
         for x in range(18):
             d = abs(x - cx) / 8.2 + abs(y - cy) / 8.2
             if d <= 1.0:
-                idx = 1.0 + (1 - d) * 2.2 + (0.7 if x + y < 17 else -0.2) + (nz(x, y, 8801) - 0.5) * 0.5
+                idx = 1.0 + (1 - d) * 2.2 + (0.7 if x + y < 17 else -0.2) + ordered(x, y) * 0.45
                 if d > 0.88:
                     idx = 0.4 + (0.6 if x + y < 17 else 0)
                 t.set(x, y, ramp(CRY, idx))

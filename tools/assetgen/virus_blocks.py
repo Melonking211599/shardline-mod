@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import math
 
+import clean
 from common import (CYAN, GOLD, IVORY, SKYB, SLATE, TEX, VGLOW, VIRUS, Tex, clamp, hx, mix, nz, ramp, save_png)
 
 N = 16
@@ -167,6 +168,13 @@ def infect(base: Tex, seed: int, veins: set, shards=3, vein_cols=(1, 2), spores=
 
 
 # ------------------------------------------------------------------ Bloecke
+def _soft_ground(seed: int, r, bias: float, pebbles: int = 6) -> Tex:
+    """Ruhiger Untergrund: feines, gleichmaessiges Korn mit ein paar klar gezeichneten Steinchen."""
+    t = clean.soft(seed, r, bias=bias, amp=0.6, cells=3, detail=0.35, dither=1.0)
+    clean.pebbles(t, seed + 1, r, pebbles, base=bias, wide=True)
+    return t
+
+
 def infected_stone():
     from blocks import stone_tile
     base = stone_tile(6001, INF_STONE, bias=2.0, spread=1.5)
@@ -177,24 +185,22 @@ def infected_stone():
 
 def infected_dirt():
     from blocks import stone_tile
-    base = stone_tile(6101, INF_DIRT, bias=1.9, spread=1.3)
+    base = _soft_ground(6101, INF_DIRT, 1.9)
     veins = vein_walk(6103, paths=5, length=8, turn=0.5, branch=0.10)
     return infect(base, 6105, veins, shards=2, spores=4)
 
 
 def _grass_blades(base: Tex, seed: int, r, rows=range(N), top=True):
+    ground = clean.soft(seed, r, bias=1.8, amp=0.6, cells=3, detail=0.35, dither=1.0)
     for y in rows:
         for x in range(N):
-            n = tn(x + 0.5, y + 0.5, 8, 8, seed)
-            idx = 1.7 + (n - 0.5) * 2.4 + (nz(x, y, seed + 2) - 0.5) * 0.8
-            base.set(x, y, ramp(r, idx))
-    # Halme: kurze helle Striche mit Spitze
-    for y in rows:
-        for x in range(N):
-            if nz(x, y, seed + 5) > 0.83:
-                base.set(x, y, ramp(r, 3.4))
-                if (y - 1) in rows or y - 1 >= 0:
-                    base.set(x, (y - 1) % N, ramp(r, 2.6))
+            base.set(x, y, ground.get(x, y))
+    # Halme: kurze helle Striche mit Spitze, gleichmaessig verteilt
+    for (x, y) in clean._spots(seed + 5, 9, N, 2.8):
+        if y in rows:
+            base.set(x, y, ramp(r, 3.4))
+            base.set(x, (y + 1) % N, ramp(r, 2.7))
+            base.set((x + 1) % N, (y + 1) % N, ramp(r, 1.3))
 
 
 def infected_grass_top():
@@ -208,13 +214,12 @@ def infected_grass_side():
     base = new()
     # unten: kranke Erde, oben: Grasschopf mit unregelmaessigem Saum
     from blocks import stone_tile
-    dirt = stone_tile(6301, INF_DIRT, bias=1.9, spread=1.3)
+    dirt = _soft_ground(6301, INF_DIRT, 1.9, pebbles=5)
     fringe = [3 + (1 if nz(x, 0, 6303) > 0.45 else 0) + (1 if nz(x, 1, 6303) > 0.8 else 0) for x in range(N)]
     for y in range(N):
         for x in range(N):
             if y < fringe[x]:
-                n = tn(x + 0.5, y + 0.5, 8, 4, 6305)
-                idx = 1.8 + (n - 0.5) * 2.0 - (0.5 if y == fringe[x] - 1 else 0) + (0.4 if y == 0 else 0)
+                idx = 1.9 + clean.ordered(x, y) * 0.8 - (0.9 if y == fringe[x] - 1 else 0) + (0.7 if y == 0 else 0)
                 base.set(x, y, ramp(INF_GRASS, idx))
             else:
                 base.set(x, y, dirt.get(x, y))
@@ -231,15 +236,7 @@ def infected_grass_side():
 
 
 def infected_log():
-    base = new()
-    for y in range(N):
-        for x in range(N):
-            streak = nz(x, 0, 6401)
-            n = tn(x + 0.5, y + 0.5, 8, 2, 6403)
-            idx = 1.9 + (streak - 0.5) * 1.5 + (n - 0.5) * 1.6
-            if (x % 4) == 0:
-                idx -= 0.9  # Rindenfurche
-            base.set(x, y, ramp(INF_BARK, idx))
+    base = clean.bark(6401, INF_BARK, strips=(0, 4, 8, 12), bias=1.9, hi=0.8)
     veins = vein_walk(6405, paths=5, length=9, turn=0.2, branch=0.08, start_dirs=(1, 3))
     return infect(base, 6407, veins, shards=2, spores=3)
 
@@ -251,12 +248,12 @@ def infected_log_top():
         for x in range(N):
             d = math.hypot(x - cx, y - cy)
             if d > 6.4:
-                idx = 1.3 + (nz(x, y, 6501) - 0.5) * 1.2  # Rinde
+                idx = 1.3 + clean.ordered(x, y) * 0.5  # Rinde
                 if max(abs(x - cx), abs(y - cy)) > 7:
                     idx -= 0.6
             else:
                 ring = math.sin(d * 1.75 + 0.6)
-                idx = 2.7 + ring * 1.0 + (nz(x, y, 6503) - 0.5) * 0.5
+                idx = 2.7 + ring * 1.0 + clean.ordered(x, y) * 0.25
             base.set(x, y, ramp(INF_BARK, idx))
     veins = set()
     # drei Risse laufen vom Kern nach aussen
@@ -272,26 +269,28 @@ def infected_log_top():
     return infect(base, 6505, veins, shards=1, spores=2, vein_cols=(1, 3))
 
 
+_LEAF_BASE = None
+
+
+def _leaf_base() -> Tex:
+    global _LEAF_BASE
+    if _LEAF_BASE is None:
+        back = (INF_LEAF[2], INF_LEAF[1], INF_LEAF[0])
+        fronts = ((INF_LEAF[4], INF_LEAF[3], INF_LEAF[2]), (INF_LEAF[3], INF_LEAF[2], INF_LEAF[1]))
+        _LEAF_BASE = clean.leaf_cluster(6601, back, fronts)
+    return _LEAF_BASE
+
+
 def _leaf_alpha(x, y):
-    a = tn(x + 0.5, y + 0.5, 8, 8, 6601)
-    b = tn(x + 0.5, y + 0.5, 4, 4, 6603)
-    return a * 0.65 + b * 0.35 > 0.36
+    return _leaf_base().get(x % N, y % N)[3] > 0
 
 
 def infected_leaves():
+    leaf = _leaf_base()
     base = new()
     for y in range(N):
         for x in range(N):
-            if not _leaf_alpha(x, y):
-                continue
-            n = tn(x + 0.5, y + 0.5, 8, 8, 6605)
-            idx = 1.7 + (n - 0.5) * 2.4 + (nz(x, y, 6607) - 0.5) * 0.7
-            # Lichtkante oben links des Blattbuschs
-            if not _leaf_alpha(x - 1, y) or not _leaf_alpha(x, y - 1):
-                idx += 0.7
-            if not _leaf_alpha(x + 1, y) or not _leaf_alpha(x, y + 1):
-                idx -= 0.7
-            base.set(x, y, ramp(INF_LEAF, idx))
+            base.set(x, y, leaf.get(x, y))
     opaque = lambda x, y: _leaf_alpha(x, y)
     veins = vein_walk(6609, paths=6, length=7, turn=0.5, branch=0.12, allow=_leaf_alpha)
     return infect(base, 6611, veins, shards=2, spores=4, opaque=opaque)
@@ -302,7 +301,7 @@ def infected_sand():
     for y in range(N):
         for x in range(N):
             ripple = math.sin(2 * math.pi * (x + 2 * y) / N) * 0.55
-            idx = 2.3 + ripple + (nz(x, y, 6701) - 0.5) * 1.1 + (tn(x + 0.5, y + 0.5, 4, 4, 6703) - 0.5) * 0.9
+            idx = 2.3 + ripple + clean.ordered(x, y) * 0.6 + (tn(x + 0.5, y + 0.5, 3, 3, 6703) - 0.5) * 0.5
             base.set(x, y, ramp(INF_SAND, idx))
     veins = vein_walk(6705, paths=5, length=8, turn=0.5, branch=0.10)
     return infect(base, 6707, veins, shards=2, spores=3, tint=0.45)

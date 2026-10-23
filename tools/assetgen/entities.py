@@ -8,6 +8,7 @@ from __future__ import annotations
 import math
 
 from blocks import SHARDSTONE
+from clean import ordered
 from common import (ASH, BONE, COL, CYAN, LILAC, MAGENTA, SHARD, SLATE, TEAL, VIOLET, Tex, clamp, hx, mix, nz,
                     ramp, vnoise)
 from ent import (Ent, M_chitin, M_cloth, M_crystal, M_flat, M_fur, M_membrane, M_plate, M_stone, art_face, overlay)
@@ -131,7 +132,7 @@ E.E
     def wing(mirror):
         def p(face, fx, fy, fw, fh):
             ax = (fw - 1 - fx) if mirror else fx  # Abstand zum Koerper = ax
-            n = nz(fx, fy, 311)
+            n = ordered(fx, fy) * 0.8 + 0.5
             if face == "up":
                 # Flugelrand leuchtet, Adern faecherfoermig, Augenfleck
                 if ax >= fw - 1 or fy == 0 or fy == fh - 1:
@@ -193,28 +194,28 @@ def void_ray():
     e = Ent("void_ray")
 
     def dorsal(face, fx, fy, fw, fh):
-        n = nz(fx, fy, 601)
+        n = ordered(fx, fy) * 0.8 + 0.5
         if face == "up":
             if fx in (fw // 2, fw // 2 - 1):
                 return ramp(MEMB, 3.0 - (fy % 4) * 0.35)
             if (fx % 4 == 1 and fy % 5 == 2) or (fx % 4 == 3 and fy % 5 == 0):
                 return (CYAN[2], G)
-            return ramp(MEMB, 1.1 + (vnoise(fx / 3.0, fy / 3.0, 603) - 0.5) * 1.6)
+            return ramp(MEMB, 1.1 + (vnoise(fx / 3.5, fy / 3.5, 603) - 0.5) * 1.0)
         if face == "down":
             return ramp(LILAC[:2] + [LILAC[2]], 0.2 + n * 1.5) if False else ramp(
-                [VIOLET[2], VIOLET[3], LILAC[0], LILAC[1]], 0.8 + (vnoise(fx / 3.0, fy / 2.0, 605) - 0.5) * 1.6 + n * 0.5)
+                [VIOLET[2], VIOLET[3], LILAC[0], LILAC[1]], 0.8 + (vnoise(fx / 3.5, fy / 3.0, 605) - 0.5) * 1.0 + n * 0.5)
         return ramp(MEMB, 0.8 + n)
 
     e.paint("body", dorsal)
 
     def wing(face, fx, fy, fw, fh):
-        n = nz(fx, fy, 611)
+        n = ordered(fx, fy) * 0.8 + 0.5
         if face == "up":
             if fy == fh - 1 or fx == fw - 1:
                 return (CYAN[2] if (fx + fy) % 3 == 0 else CYAN[0], (fx + fy) % 3 == 0)
             if (fx * 3 - fy) % 8 == 0 or (fx - fy * 2) % 11 == 0:
                 return ramp(MEMB, 4)
-            return ramp(MEMB, 1.0 + (vnoise(fx / 3.0, fy / 3.0, 613) - 0.5) * 1.5)
+            return ramp(MEMB, 1.0 + (vnoise(fx / 3.5, fy / 3.5, 613) - 0.5) * 0.9)
         if face == "down":
             return ramp([VIOLET[1], VIOLET[2], VIOLET[3], LILAC[0]], 1.2 + (n - 0.5) * 1.2)
         return ramp(MEMB, 1.5)
@@ -258,7 +259,7 @@ def crystal_spider():
         seg = fx // 7
         if fx % 7 == 6 and face in ("north", "south", "up", "down"):
             return (CYAN[1], G)
-        return ramp(CHITIN, 1.5 + FACE_LIGHT[face] * 0.8 + (fx % 7) * 0.12 + (nz(fx, fy, 705) - 0.5) * 0.4)
+        return ramp(CHITIN, 1.5 + FACE_LIGHT[face] * 0.8 + (fx % 7) * 0.12 + ordered(fx, fy) * 0.36)
 
     for b in ("leg_left_1", "leg_left_2", "leg_left_3", "leg_left_4", "leg_right_1", "leg_right_2", "leg_right_3", "leg_right_4"):
         e.paint(b, leg)

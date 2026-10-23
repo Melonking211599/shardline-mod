@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import math
 
+import clean
 from common import (ASH, BONE, CLEAR, CWOOD, CYAN, LILAC, MAGENTA, OUTLINE, SHARD, SLATE, TEAL, VIOLET,
                     Tex, clamp, hx, mix, nz, nz_tile, ramp, save_png, vnoise, with_alpha, TEX)
 
@@ -26,15 +27,8 @@ def stone_base(t: Tex, seed: int, r, bias=2.0, spread=1.6, ox=0, oy=0, w=16, h=1
 
 
 def stone_tile(seed: int, r, bias=2.0, spread=1.6) -> Tex:
-    t = Tex(16, 16)
-    for y in range(16):
-        for x in range(16):
-            # periodisches Value-Noise: Gitter 4x4 ueber 16 Pixel
-            coarse = vnoise(x / 4.0, y / 4.0, seed, period=4)
-            fine = nz_tile(x, y, 16, seed + 7)
-            v = bias + (coarse - 0.5) * spread * 1.8 + (fine - 0.5) * 1.0
-            t.set(x, y, ramp(r, v))
-    return t
+    """Kantige Bruchplatten (kachelnd). spread steuert den Tonunterschied zwischen den Platten."""
+    return clean.plates(seed, r, cells=3, bias=bias, tone=0.28 * spread, tilt=0.8, grain=0.2)
 
 
 def crystal_glints(t: Tex, seed: int, count: int, color_a, color_b=None):
@@ -88,7 +82,7 @@ def brick_pattern(t: Tex, r, seed: int, mortar=MORTAR):
         off = 0 if row % 2 == 0 else 4
         for bx in range(-1, 3):
             x0 = bx * 8 + off
-            tone = 1.6 + nz(bx + 5, row, seed) * 1.5
+            tone = 1.8 + nz(bx + 5, row, seed) * 1.1
             for j in range(4):
                 for i in range(8):
                     x, y = x0 + i, y0 + j
@@ -97,7 +91,7 @@ def brick_pattern(t: Tex, r, seed: int, mortar=MORTAR):
                     if j == 3 or i == 7:
                         t.set(x, y, mortar)
                         continue
-                    v = tone + (nz_tile(x, y, 16, seed + 3) - 0.5) * 0.9
+                    v = tone + clean.ordered(x, y) * 0.5
                     if j == 0:
                         v += 0.8
                     if i == 0:
@@ -201,12 +195,7 @@ def shard_ore():
 
 
 def deepslate_shard_ore():
-    t = Tex(16, 16)
-    for y in range(16):
-        for x in range(16):
-            band = vnoise(x / 8.0, y / 1.6, 41, period=2) if False else vnoise(x / 4.0, y / 1.5, 41, period=4)
-            fine = nz_tile(x, y, 16, 43)
-            t.set(x, y, ramp(DEEPSLATE, 1.7 + (band - 0.5) * 2.6 + (fine - 0.5) * 0.9))
+    t = clean.plates(41, DEEPSLATE, cells=3, bias=1.75, tone=0.45, tilt=0.7, grain=0.2, edge_hi=0.9, edge_lo=0.8)
     ore_clusters(t, [(1, 3), (8, 2), (4, 9), (11, 8), (9, 12)], SHARD)
     return t
 
@@ -228,11 +217,8 @@ def glow_crystal_block():
 
 
 def ash_block():
-    t = stone_tile(71, ASH, bias=1.9, spread=1.3)
-    for (x, y) in ((2, 2), (9, 4), (5, 11), (12, 9), (14, 14), (1, 8)):
-        t.set(x, y, ASH[4])
-    for (x, y) in ((6, 3), (13, 6), (3, 13), (10, 12)):
-        t.set(x, y, ASH[0])
+    t = clean.soft(71, ASH, bias=2.0, amp=1.0, cells=3, detail=0.4, dither=0.7)
+    clean.pebbles(t, 72, ASH, 10, base=2.0, wide=True)
     for (x, y) in ((8, 8), (12, 1)):
         t.set(x, y, MAGENTA[0])
     return t
@@ -240,14 +226,8 @@ def ash_block():
 
 # ------------------------------------------------------------------ Moos
 def crystal_moss():
-    t = Tex(16, 16)
-    for y in range(16):
-        for x in range(16):
-            coarse = vnoise(x / 4.0, y / 4.0, 81, period=4)
-            fine = nz_tile(x, y, 16, 83)
-            t.set(x, y, ramp(TEAL, 2.0 + (coarse - 0.5) * 2.4 + (fine - 0.5) * 1.3))
-    for (x, y) in ((3, 4), (11, 2), (7, 10), (13, 12), (1, 13)):
-        t.set(x, y, TEAL[4])
+    t = clean.soft(81, TEAL, bias=2.0, amp=0.5, cells=3, detail=0.3, dither=1.0)
+    clean.tufts(t, 82, TEAL, 7, base=2.0)
     for (x, y) in ((5, 7), (12, 7)):
         t.set(x, y, CYAN[3])
     return t
@@ -256,13 +236,13 @@ def crystal_moss():
 def crystal_moss_side():
     t = stone_tile(31, SHARDSTONE, bias=1.7)
     for x in range(16):
-        depth = 3 + int(nz(x, 9, 91) * 3.4)
+        depth = 3 + int(nz(x, 9, 91) * 3.0)
         if x % 5 == 2:
             depth += 1
         for y in range(depth):
-            v = 2.4 + (nz(x, y, 93) - 0.5) * 1.6 - y * 0.12
+            v = 2.0 + clean.ordered(x, y) * 0.7 + (0.9 if y == 0 else 0.0)
             t.set(x, y, ramp(TEAL, v))
-        t.set(x, depth, TEAL[0] if nz(x, 5, 95) > 0.35 else TEAL[1])
+        t.set(x, depth, TEAL[1] if x % 2 == 0 else TEAL[0])
     for (x, y) in ((4, 1), (11, 2)):
         t.set(x, y, TEAL[4])
     return t
@@ -270,23 +250,11 @@ def crystal_moss_side():
 
 # ------------------------------------------------------------------ Kristallholz
 def crystal_log():
-    t = Tex(16, 16)
-    grooves = (0, 4, 8, 12, 15)
-    for x in range(16):
-        for y in range(16):
-            colvar = nz(x, 0, 101)
-            v = 2.0 + (colvar - 0.5) * 1.2 + (nz_tile(x, y, 16, 103) - 0.5) * 1.0
-            if x in grooves:
-                v = 0.4 + nz(x, y, 105) * 0.8
-            elif x - 1 in grooves:
-                v += 0.9
-            elif x + 1 in grooves:
-                v -= 0.5
-            t.set(x, y, ramp(BARK, v))
-    for (x, y) in ((4, 3), (4, 4), (8, 10), (8, 11), (12, 6), (0, 13)):
+    t = clean.bark(101, BARK, strips=(0, 4, 8, 12), bias=2.0, hi=0.9)
+    for (x, y) in ((5, 3), (5, 4), (9, 10), (9, 11), (13, 6), (1, 13)):
         t.set(x, y, CYAN[1])
-    t.set(4, 3, CYAN[2])
-    t.set(8, 10, CYAN[2])
+    t.set(5, 3, CYAN[2])
+    t.set(9, 10, CYAN[2])
     return t
 
 
@@ -297,12 +265,12 @@ def crystal_log_top():
             dx, dy = x - 7.5, y - 7.5
             d = max(abs(dx), abs(dy))  # quadratische Ringe wie bei Vanilla
             if d >= 6.5:
-                v = 1.6 + (nz_tile(x, y, 16, 111) - 0.5) * 1.2
+                v = 1.6 + clean.ordered(x, y) * 0.5
                 t.set(x, y, ramp(BARK, v))
                 continue
             ring = int(math.hypot(dx, dy) * 0.9)
             base = 2.3 if ring % 2 == 0 else 1.5
-            base += (nz_tile(x, y, 16, 113) - 0.5) * 0.6
+            base += clean.ordered(x, y) * 0.25
             base += 0.8 if (dx + dy) < 0 else 0
             t.set(x, y, ramp(CWOOD, base))
     t.set(7, 7, CYAN[3])
@@ -326,7 +294,7 @@ def crystal_planks():
         for j in range(4):
             for i in range(16):
                 y = y0 + j
-                v = tone + (nz_tile(i // 3 + board * 5, y, 16, 123) - 0.5) * 0.8
+                v = tone + (nz(i // 5 + board * 3, 0, 123) - 0.5) * 0.5 + clean.ordered(i, y) * 0.3
                 if j == 0:
                     v += 0.9
                 if j == 3:
@@ -342,26 +310,9 @@ def crystal_planks():
 
 
 def crystal_leaves():
-    t = Tex(16, 16)
-    pal = [VIOLET[2], VIOLET[3], LILAC[0], MAGENTA[2], MAGENTA[3]]
-    for y in range(16):
-        for x in range(16):
-            blob = vnoise(x / 2.6, y / 2.6, 131, period=6)
-            hole = nz_tile(x, y, 16, 133)
-            if blob < 0.22 or (blob < 0.32 and hole < 0.45):
-                continue
-            v = 1.2 + (blob - 0.4) * 5.0 + (nz_tile(x, y, 16, 135) - 0.5) * 1.2
-            t.set(x, y, ramp(pal, v))
-    # Kontur: deckende Pixel mit transparentem unteren/rechten Nachbarn werden dunkler
-    src = t.img.copy().load()
-    for y in range(16):
-        for x in range(16):
-            if src[x, y][3] == 0:
-                continue
-            below = src[x, (y + 1) % 16][3] == 0
-            right = src[(x + 1) % 16, y][3] == 0
-            if below or right:
-                t.set(x, y, VIOLET[1] if nz(x, y, 137) > 0.4 else VIOLET[0])
+    back = (VIOLET[2], VIOLET[1], VIOLET[0])
+    fronts = ((LILAC[0], VIOLET[3], VIOLET[2]), (VIOLET[4], VIOLET[3], VIOLET[2]), (MAGENTA[3], MAGENTA[2], MAGENTA[1]))
+    t = clean.leaf_cluster(131, back, fronts, back_count=16, front_count=12)
     for (x, y) in ((3, 3), (10, 6), (6, 11), (13, 13)):
         if t.get(x, y)[3]:
             t.set(x, y, MAGENTA[4])
