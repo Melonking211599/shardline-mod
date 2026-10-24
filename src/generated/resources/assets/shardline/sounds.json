@@ -800,6 +800,15 @@
     ],
     "subtitle": "subtitles.shardline.entity.void_ray.hurt"
   },
+  "event.aftershock": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.warden.dig"
+      }
+    ],
+    "subtitle": "subtitles.shardline.event.aftershock"
+  },
   "event.virus_dominated": {
     "sounds": [
       {
@@ -914,5 +923,68 @@
       }
     ],
     "subtitle": "subtitles.shardline.story.chapter"
+  },
+  "story.epilogue": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "music_disc.otherside"
+      }
+    ],
+    "subtitle": "subtitles.shardline.story.epilogue"
+  },
+  "ui.dialogue.choice": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "ui.button.click"
+      }
+    ],
+    "subtitle": "subtitles.shardline.ui.dialogue.choice"
+  },
+  "ui.dialogue.close": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "item.book.put"
+      }
+    ],
+    "subtitle": "subtitles.shardline.ui.dialogue.close"
+  },
+  "ui.dialogue.open": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "item.book.page_turn"
+      }
+    ],
+    "subtitle": "subtitles.shardline.ui.dialogue.open"
+  },
+  "ui.dialogue.type": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.hit"
+      }
+    ],
+    "subtitle": "subtitles.shardline.ui.dialogue.type"
+  },
+  "ui.quest.complete": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "ui.toast.challenge_complete"
+      }
+    ],
+    "subtitle": "subtitles.shardline.ui.quest.complete"
+  },
+  "ui.quest.update": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.experience_orb.pickup"
+      }
+    ],
+    "subtitle": "subtitles.shardline.ui.quest.update"
   }
 }

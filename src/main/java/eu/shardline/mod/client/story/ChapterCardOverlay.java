@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.item.custom.ChapterEmblemItem;
 import eu.shardline.mod.story.StoryChapter;
+import eu.shardline.mod.story.StoryEnding;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -35,8 +36,9 @@ public final class ChapterCardOverlay {
     private ChapterCardOverlay() {
     }
 
-    public static void show(int number) {
-        chapter = number;
+    /** @param value Emblem-Wert (Kapitel plus Zweig, {@link StoryChapter#emblemValue}) */
+    public static void show(int value) {
+        chapter = value;
         shownAt = Util.getMillis();
     }
 
@@ -45,7 +47,8 @@ public final class ChapterCardOverlay {
             return;
         }
         long t = Util.getMillis() - shownAt;
-        StoryChapter current = StoryChapter.byNumber(chapter);
+        StoryChapter current = StoryChapter.byEmblemValue(chapter);
+        StoryEnding branch = StoryChapter.branchOfEmblemValue(chapter);
         if (current == null || t > FADE_IN + HOLD + FADE_OUT || Minecraft.getInstance().options.hideGui) {
             if (t > FADE_IN + HOLD + FADE_OUT) {
                 shownAt = -1L;
@@ -67,7 +70,7 @@ public final class ChapterCardOverlay {
             graphics.pose().pushPose();
             graphics.pose().translate(x + 18, y + 20, 0.0F);
             graphics.pose().scale(2.0F, 2.0F, 1.0F);
-            graphics.renderItem(ChapterEmblemItem.of(current), 0, 0);
+            graphics.renderItem(ChapterEmblemItem.of(current, branch), 0, 0);
             graphics.pose().popPose();
         }
 
@@ -77,9 +80,9 @@ public final class ChapterCardOverlay {
         graphics.pose().pushPose();
         graphics.pose().translate(textX, y + 22, 0.0F);
         graphics.pose().scale(1.5F, 1.5F, 1.0F);
-        graphics.drawString(font, current.title(), 0, 0, 0xF0E4FF | a, true);
+        graphics.drawString(font, current.title(branch), 0, 0, 0xF0E4FF | a, true);
         graphics.pose().popPose();
-        List<FormattedCharSequence> summary = font.split(current.summary(), CARD_W - 70 - 12);
+        List<FormattedCharSequence> summary = font.split(current.summary(branch), CARD_W - 70 - 12);
         int lineY = y + 40;
         for (int i = 0; i < summary.size() && i < 3; i++) {
             graphics.drawString(font, summary.get(i), textX, lineY, 0xB9A9D6 | a, false);

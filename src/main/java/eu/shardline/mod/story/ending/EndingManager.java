@@ -10,6 +10,7 @@ import eu.shardline.mod.story.ShardlineWorldData;
 import eu.shardline.mod.story.StoryChapter;
 import eu.shardline.mod.story.StoryEnding;
 import eu.shardline.mod.story.StoryManager;
+import eu.shardline.mod.story.StoryScheduler;
 import eu.shardline.mod.virus.VirusSpreadManager;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -314,6 +315,8 @@ public final class EndingManager {
         if (ending == StoryEnding.SEALED) {
             VirusSpreadManager.clearQueues();
         }
+        // Wer Kapitel 6 erreicht hat, beginnt jetzt Kapitel 7 ("Das Echo der Wunde"); Nachzuegler beim naechsten Login
+        StoryScheduler.schedule(120, () -> server.getPlayerList().getPlayers().forEach(StoryManager::checkAftermath));
 
         boolean sealed = ending == StoryEnding.SEALED;
         Component title = Component.translatable(sealed ? "message.shardline.ending.sealed.title" : "message.shardline.ending.dominated.title")

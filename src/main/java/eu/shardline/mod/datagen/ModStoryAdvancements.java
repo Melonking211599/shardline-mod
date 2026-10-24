@@ -5,6 +5,7 @@ import eu.shardline.mod.block.ModBlocks;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.item.custom.ChapterEmblemItem;
 import eu.shardline.mod.story.StoryChapter;
+import eu.shardline.mod.story.StoryEnding;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.Advancement;
@@ -55,6 +56,12 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
 
         AdvancementHolder chapter5 = chapter(chapter4, StoryChapter.THE_BREACH);
         AdvancementHolder chapter6 = chapter(chapter5, StoryChapter.CONTAINMENT);
+        // Nach dem Ausbruch: Kapitel 7, dann je Ende ein eigener Strang fuer 8 und 9
+        AdvancementHolder chapter7 = chapter(chapter6, StoryChapter.ECHO_OF_THE_WOUND);
+        for (StoryEnding branch : java.util.List.of(StoryEnding.SEALED, StoryEnding.DOMINATED)) {
+            AdvancementHolder chapter8 = branchChapter(chapter7, StoryChapter.AFTERMATH, branch);
+            branchChapter(chapter8, StoryChapter.THE_LAST_TONE, branch);
+        }
         task(chapter6, "purity_anchor", ModBlocks.PURITY_ANCHOR.get(), AdvancementType.TASK, 0);
         AdvancementHolder purification = task(chapter6, "purification", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);
         task(purification, "cure_villager", ModItems.CRYSTALLIZED_VILLAGER_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
@@ -74,6 +81,16 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         builder.display(ChapterEmblemItem.of(chapter), title("chapter_" + chapter.number()), description("chapter_" + chapter.number()),
                 null, AdvancementType.GOAL, true, true, false).addCriterion("story", impossible());
         return builder.save(this.saver, Shardline.id("story/chapter_" + chapter.number()), this.fileHelper);
+    }
+
+    /** Kapitel 8/9 im Zweig: story/chapter_8_seal, story/chapter_8_dominate ... mit dem Zweig-Emblem. */
+    private AdvancementHolder branchChapter(AdvancementHolder parent, StoryChapter chapter, StoryEnding branch) {
+        String id = chapter.advancementId(branch);
+        String key = id.substring("story/".length());
+        return Advancement.Builder.advancement().parent(parent)
+                .display(ChapterEmblemItem.of(chapter, branch), title(key), description(key), null, AdvancementType.GOAL, true, true, false)
+                .addCriterion("story", impossible())
+                .save(this.saver, Shardline.id(id), this.fileHelper);
     }
 
     private AdvancementHolder task(AdvancementHolder parent, String id, ItemLike icon, AdvancementType type, int experience) {

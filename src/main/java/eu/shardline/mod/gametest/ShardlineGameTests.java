@@ -692,17 +692,19 @@ public final class ShardlineGameTests {
         List<net.minecraft.network.chat.Component> lines = eu.shardline.mod.command.ShardlineCommands.statusLines(server, java.util.UUID.randomUUID());
         helper.assertTrue(lines.size() >= 5, "Status hat zu wenige Zeilen: " + lines.size());
         Language language = Language.getInstance();
-        for (int chapter = 0; chapter <= StoryChapter.MAX; chapter++) {
-            helper.assertTrue(language.has("story.shardline.next." + chapter), "Ziel-Text fehlt fuer Kapitel " + chapter);
-        }
         for (StoryChapter chapter : StoryChapter.values()) {
-            var holder = server.getAdvancements().get(Shardline.id(chapter.advancementId()));
-            helper.assertTrue(holder != null && holder.value().display().isPresent(), "Advancement fehlt: " + chapter.advancementId());
-            net.minecraft.world.item.ItemStack icon = holder.value().display().get().getIcon();
-            helper.assertTrue(icon.is(eu.shardline.mod.item.ModItems.CHAPTER_EMBLEM.get())
-                    && icon.getOrDefault(eu.shardline.mod.core.ModDataComponents.CHAPTER.get(), 0) == chapter.number(),
-                    "Kapitel " + chapter.number() + " hat nicht das eigene Emblem als Icon");
+            for (StoryEnding branch : branchesOf(chapter)) {
+                String next = eu.shardline.mod.command.ShardlineCommands.nextKey(chapter.number(), branch, "");
+                helper.assertTrue(language.has(next), "Ziel-Text fehlt: " + next);
+                var holder = server.getAdvancements().get(Shardline.id(chapter.advancementId(branch)));
+                helper.assertTrue(holder != null && holder.value().display().isPresent(), "Advancement fehlt: " + chapter.advancementId(branch));
+                net.minecraft.world.item.ItemStack icon = holder.value().display().get().getIcon();
+                helper.assertTrue(icon.is(eu.shardline.mod.item.ModItems.CHAPTER_EMBLEM.get())
+                        && icon.getOrDefault(eu.shardline.mod.core.ModDataComponents.CHAPTER.get(), 0) == chapter.emblemValue(branch),
+                        "Kapitel " + chapter.number() + " hat nicht das eigene Emblem als Icon");
+            }
         }
+        helper.assertTrue(language.has("story.shardline.next.0"), "Ziel-Text fehlt fuer Kapitel 0");
         helper.succeed();
     }
 
@@ -936,7 +938,11 @@ public final class ShardlineGameTests {
         for (StoryChapter chapter : StoryChapter.values()) {
             keys.add("story.shardline.chapter." + chapter.id());
             keys.add("story.shardline.chapter." + chapter.id() + ".summary");
-            keys.add("advancements.shardline.story.chapter_" + chapter.number() + ".title");
+            for (StoryEnding branch : branchesOf(chapter)) {
+                keys.add(((net.minecraft.network.chat.contents.TranslatableContents) chapter.title(branch).getContents()).getKey());
+                keys.add(((net.minecraft.network.chat.contents.TranslatableContents) chapter.summary(branch).getContents()).getKey());
+                keys.add("advancements.shardline." + chapter.advancementId(branch).replace('/', '.') + ".title");
+            }
         }
         for (StoryEnding ending : StoryEnding.values()) {
             keys.add("story.shardline.ending." + ending.id());
@@ -956,7 +962,7 @@ public final class ShardlineGameTests {
             }
         }
         List<String> stages = new ArrayList<>(List.of("sealed", "dominated"));
-        for (int chapter = 0; chapter <= StoryChapter.MAX; chapter++) {
+        for (int chapter = 0; chapter <= StoryChapter.BEFORE_ENDING; chapter++) {
             stages.add("chapter_" + chapter);
         }
         for (String stage : stages) {
@@ -1034,5 +1040,204 @@ public final class ShardlineGameTests {
             data.rulers().remove(player.getUUID());
             helper.getLevel().getServer().getPlayerList().remove(player);
         }
+    }
+
+    // ================================================================== Nach dem Ausbruch: Dialoge, Auftraege, Kapitel 7-9
+
+    private static com.google.gson.JsonObject json(String text) {
+        return com.google.gson.JsonParser.parseString(text).getAsJsonObject();
+    }
+
+    private static final String TEST_DIALOGUE = """
+            {"speaker": "rhea",
+             "start": [{"if": [{"flag": "test:met"}], "node": "again"}, {"node": "hello"}],
+             "nodes": {
+               "hello": {"portrait": "happy", "text": ["dialogue.shardline.test.hello.1"], "do": [{"set_flag": "test:met"}],
+                 "choices": [
+                   {"text": "dialogue.shardline.test.hello.c1", "next": "gift", "do": [{"give_item": {"item": "minecraft:bread", "count": 2}}]},
+                   {"text": "dialogue.shardline.test.hello.c2", "next": "END", "if": [{"chapter_min": 9}], "show_locked": true},
+                   {"text": "dialogue.shardline.test.hello.c3", "next": "END", "if": [{"chapter_min": 9}]}
+                 ]},
+               "gift": {"text": ["dialogue.shardline.test.gift.1"], "next": "thanks"},
+               "thanks": {"text": ["dialogue.shardline.test.thanks.1"],
+                 "choices": [{"text": "dialogue.shardline.test.thanks.c1", "next": "END", "do": [{"take_item": {"item": "minecraft:bread", "count": 1}}]}]},
+               "again": {"text": ["dialogue.shardline.test.again.1"]}
+             }}""";
+
+    /** Dialog-Engine: Startknoten nach Bedingung, gesperrte und versteckte Antworten, Aktionen, Weiter-Knoten, Ende. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void dialogueEngine(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("test");
+            var dialogue = eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("test"), json(TEST_DIALOGUE), problems);
+            helper.assertTrue(problems.ok(), "Testdialog hat Fehler: " + problems.errors());
+            var context = new eu.shardline.mod.story.dialogue.DialogueContext(player, null);
+            var start = eu.shardline.mod.story.dialogue.Dialogues.startNode(dialogue, context);
+            helper.assertTrue(start != null && start.name().equals("hello"), "Startknoten muss 'hello' sein");
+            eu.shardline.mod.story.dialogue.Dialogues.enter(start, context);
+            helper.assertTrue(data.hasFlag(player.getUUID(), "test:met"), "Aktion beim Betreten hat das Flag nicht gesetzt");
+            var visible = eu.shardline.mod.story.dialogue.Dialogues.visibleChoices(start, context);
+            helper.assertTrue(visible.size() == 2 && visible.get(0).enabled() && !visible.get(1).enabled(),
+                    "Erwartet: eine freie und eine gesperrte Antwort, die dritte versteckt");
+            helper.assertFalse(eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, start, context, 1).accepted(),
+                    "Gesperrte Antwort darf nicht angenommen werden");
+            helper.assertFalse(eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, start, context, 7).accepted(),
+                    "Ungueltiger Index darf nicht angenommen werden");
+            var outcome = eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, start, context, 0);
+            helper.assertTrue(outcome.accepted() && outcome.next() != null && outcome.next().name().equals("gift"), "Antwort 1 fuehrt zu 'gift'");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.countItem(player, "minecraft:bread") == 2, "give_item hat kein Brot gegeben");
+            var thanks = eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, outcome.next(), context, 0);
+            helper.assertTrue(thanks.next() != null && thanks.next().name().equals("thanks"), "Knoten ohne Antworten fuehrt mit 'Weiter' zu 'next'");
+            var end = eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, thanks.next(), context, 0);
+            helper.assertTrue(end.accepted() && end.next() == null, "END beendet den Dialog");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.countItem(player, "minecraft:bread") == 1, "take_item hat kein Brot genommen");
+            var again = eu.shardline.mod.story.dialogue.Dialogues.startNode(dialogue, context);
+            helper.assertTrue(again != null && again.name().equals("again"), "Mit gesetztem Flag startet 'again'");
+            helper.succeed();
+        } finally {
+            data.removeFlag(player.getUUID(), "test:met");
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Validierung: fehlende Knoten, unbekannte Bedingungen/Aktionen/Items, Endlosschleifen, zu viele Antworten, kein Rueckfall. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    public static void dialogueValidation(GameTestHelper helper) {
+        var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("broken");
+        eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("broken"), json("""
+                {"speaker": "rhea", "start": [{"if": [{"flag": "x"}], "node": "a"}],
+                 "nodes": {
+                   "a": {"text": ["k"], "choices": [{"text": "k", "next": "missing"}, {"text": "k", "if": [{"moon_phase": 3}]},
+                         {"text": "k", "do": [{"explode": true}]}, {"text": "k", "do": [{"give_item": "minecraft:not_an_item"}]},
+                         {"text": "k"}]},
+                   "b": {"text": ["k"], "next": "c"},
+                   "c": {"text": ["k"], "next": "b"},
+                   "d": {"text": ["k"], "do": [{"run_command_safe": "op @a"}], "portrait": "grinning"}
+                 }}"""), problems);
+        String all = String.join("\n", problems.errors());
+        for (String expected : List.of("unbekannter Knoten 'missing'", "unbekannte Bedingung 'moon_phase'", "unbekannte Aktion 'explode'",
+                "unbekanntes Item 'minecraft:not_an_item'", "Endlosschleife", "hoechstens 4 Antworten", "Rueckfall", "Befehl abgelehnt",
+                "unbekannte Pose 'grinning'")) {
+            helper.assertTrue(all.contains(expected), "Fehlermeldung fehlt: " + expected + "\n" + all);
+        }
+        var questProblems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("refs");
+        eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("refs"), json("""
+                {"speaker": "rhea", "start": [{"node": "a"}], "nodes": {"a": {"text": ["k"], "do": [{"start_quest": "no_such_quest"}]}}}"""),
+                questProblems);
+        eu.shardline.mod.story.dialogue.DialogueParser.checkQuestRefs(questProblems, java.util.Set.of("camp_wood"));
+        helper.assertTrue(String.join("\n", questProblems.errors()).contains("unbekannter Auftrag 'no_such_quest'"), "Auftragsverweis nicht geprueft");
+        helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueParser.unsafeReason("effect give @s minecraft:regeneration 5 0") == null,
+                "Erlaubter Befehl abgelehnt");
+        for (String bad : List.of("effect give @a minecraft:speed", "execute as @s run op @s", "op @s", "/effect give @s x", "say hi; op @s")) {
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueParser.unsafeReason(bad) != null, "Unsicherer Befehl erlaubt: " + bad);
+        }
+        helper.succeed();
+    }
+
+    /** Auftrag: Annehmen, Sammelschritt per Inventarpruefung, Gespraechsschritt per Aktion, Belohnung, Flag, keine Wiederholung. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void questFlow(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var saved = new java.util.LinkedHashMap<String, eu.shardline.mod.story.quest.QuestDefinition>();
+        eu.shardline.mod.story.quest.Quests.all().forEach(quest -> saved.put(quest.id(), quest));
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("quest");
+            var quest = eu.shardline.mod.story.dialogue.DialogueParser.parseQuest("test_wood", json("""
+                    {"giver": "rhea", "steps": [{"type": "collect", "target": "minecraft:oak_planks", "count": 4}, {"type": "talk", "target": "rhea"}],
+                     "rewards": [{"item": "minecraft:bread", "count": 3}], "flags": ["test:wood_done"]}"""), problems);
+            helper.assertTrue(problems.ok(), "Testauftrag hat Fehler: " + problems.errors());
+            var map = new java.util.LinkedHashMap<>(saved);
+            map.put(quest.id(), quest);
+            eu.shardline.mod.story.quest.Quests.setDefinitions(map);
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "test_wood"), "Auftrag liess sich nicht annehmen");
+            helper.assertFalse(eu.shardline.mod.story.quest.Quests.start(player, "test_wood"), "Aktiver Auftrag doppelt angenommen");
+            player.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 4));
+            eu.shardline.mod.story.quest.Quests.check(player);
+            var progress = data.quest(player.getUUID(), "test_wood");
+            helper.assertTrue(progress != null && progress.active() && progress.step() == 1, "Sammelschritt nicht erkannt");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "talk", "ilsa");
+            helper.assertTrue(progress.step() == 1 && progress.active(), "Falscher Gespraechspartner zaehlt mit");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "talk", "rhea");
+            helper.assertTrue(!progress.active() && progress.everCompleted(), "Auftrag nicht abgeschlossen");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.countItem(player, "minecraft:bread") == 3, "Belohnung fehlt");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "test:wood_done") && data.hasFlag(player.getUUID(), "quest_done:test_wood"),
+                    "Flags nach Abschluss fehlen");
+            helper.assertFalse(eu.shardline.mod.story.quest.Quests.start(player, "test_wood"), "Nicht wiederholbarer Auftrag erneut angenommen");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.quest.Quests.reset(player, "test_wood");
+            data.removeFlag(player.getUUID(), "test:wood_done");
+            eu.shardline.mod.story.quest.Quests.setDefinitions(saved);
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Kapitel 7-9: kein Kapitel 7 ohne Ende, nie springen, Zweig wird mit Kapitel 8 festgelegt, Advancements im Zweig. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void aftermathChapters(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        net.minecraft.server.MinecraftServer server = helper.getLevel().getServer();
+        ShardlineWorldData data = StoryManager.data(server);
+        StoryEnding ending = data.ending();
+        try {
+            data.setEnding(StoryEnding.NONE);
+            data.setChapter(player.getUUID(), 6);
+            StoryManager.checkAftermath(player);
+            helper.assertTrue(data.chapter(player.getUUID()) == 6, "Ohne Ende darf Kapitel 7 nicht beginnen");
+            data.setEnding(StoryEnding.SEALED);
+            helper.assertFalse(StoryManager.advance(player, 8), "Kapitel duerfen nicht uebersprungen werden");
+            StoryManager.checkAftermath(player);
+            helper.assertTrue(data.chapter(player.getUUID()) == 7, "Mit Ende muss Kapitel 7 beginnen");
+            helper.assertTrue(StoryManager.advance(player, 8), "Kapitel 8 nicht erreicht");
+            helper.assertTrue(data.branch(player.getUUID()) == StoryEnding.SEALED, "Zweig nicht festgelegt");
+            data.setEnding(StoryEnding.DOMINATED);
+            helper.assertTrue(StoryManager.advance(player, 9) && data.branch(player.getUUID()) == StoryEnding.SEALED,
+                    "Ein spaeter geaendertes Ende darf den Zweig nicht kippen");
+            var holder = server.getAdvancements().get(Shardline.id("story/chapter_9_seal"));
+            helper.assertTrue(holder != null && player.getAdvancements().getOrStartProgress(holder).isDone(), "Zweig-Advancement fehlt");
+            helper.assertFalse(StoryManager.advance(player, 10), "Kapitel 10 gibt es nicht");
+            helper.succeed();
+        } finally {
+            data.setEnding(ending);
+            data.setChapter(player.getUUID(), 0);
+            data.setBranch(player.getUUID(), StoryEnding.NONE);
+            server.getPlayerList().remove(player);
+        }
+    }
+
+    /** Alte Welten laden ohne die neuen Felder (Standardwerte); neue Felder ueberstehen Speichern und Laden. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void aftermathSaveData(GameTestHelper helper) {
+        var registries = helper.getLevel().registryAccess();
+        java.util.UUID uuid = java.util.UUID.randomUUID();
+        net.minecraft.nbt.CompoundTag old = new net.minecraft.nbt.CompoundTag();
+        net.minecraft.nbt.CompoundTag players = new net.minecraft.nbt.CompoundTag();
+        net.minecraft.nbt.CompoundTag entry = new net.minecraft.nbt.CompoundTag();
+        entry.putInt("Chapter", 6);
+        players.put(uuid.toString(), entry);
+        old.put("Players", players);
+        old.putString("Ending", "seal");
+        ShardlineWorldData loaded = ShardlineWorldData.load(old, registries);
+        helper.assertTrue(loaded.chapter(uuid) == 6 && loaded.branch(uuid) == StoryEnding.NONE && loaded.epilogue(uuid).isEmpty()
+                && loaded.quests(uuid).isEmpty(), "Alte Welt laedt nicht mit Standardwerten");
+
+        loaded.setBranch(uuid, StoryEnding.DOMINATED);
+        loaded.setEpilogue(uuid, "truce");
+        loaded.questOrCreate(uuid, "camp_wood");
+        ShardlineWorldData again = ShardlineWorldData.load(loaded.save(new net.minecraft.nbt.CompoundTag(), registries), registries);
+        helper.assertTrue(again.branch(uuid) == StoryEnding.DOMINATED && again.epilogue(uuid).equals("truce")
+                && again.quest(uuid, "camp_wood") != null, "Zweig, Epilog oder Auftrag nicht gespeichert");
+        helper.succeed();
+    }
+
+    /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
+    private static List<StoryEnding> branchesOf(StoryChapter chapter) {
+        return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);
     }
 }

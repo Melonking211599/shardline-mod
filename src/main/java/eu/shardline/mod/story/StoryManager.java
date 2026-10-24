@@ -55,6 +55,9 @@ public final class StoryManager {
         if (current >= chapter.number()) {
             return false;
         }
+        if (chapter.number() > StoryChapter.BEFORE_ENDING) {
+            return advance(player, chapter.number());   // ab Kapitel 7 nur Schritt fuer Schritt
+        }
         data.setChapter(player.getUUID(), chapter.number());
         for (int number = current + 1; number <= chapter.number(); number++) {
             StoryChapter passed = StoryChapter.byNumber(number);
@@ -67,14 +70,66 @@ public final class StoryManager {
         return true;
     }
 
+    /**
+     * Kapitel 7-9: genau ein Kapitel weiter, nie springen. Ab Kapitel 7 braucht die Welt ein Ende; beim Eintritt in
+     * Kapitel 8 wird der Zweig des Spielers festgelegt (das Ende der Welt zu diesem Zeitpunkt).
+     *
+     * @return true, wenn der Spieler das Kapitel {@code target} jetzt erreicht hat
+     */
+    public static boolean advance(ServerPlayer player, int target) {
+        ShardlineWorldData data = data(player.server);
+        UUID uuid = player.getUUID();
+        StoryChapter chapter = StoryChapter.byNumber(target);
+        if (chapter == null || data.chapter(uuid) != target - 1) {
+            return false;
+        }
+        if (target > StoryChapter.BEFORE_ENDING && data.ending() == StoryEnding.NONE) {
+            return false;
+        }
+        if (target == StoryChapter.AFTERMATH.number() && data.branch(uuid) == StoryEnding.NONE) {
+            data.setBranch(uuid, data.ending());
+        }
+        data.setChapter(uuid, target);
+        award(player, chapter.advancementId(data.branch(uuid)));
+        announceChapter(player, chapter);
+        sync(player);
+        return true;
+    }
+
+    /**
+     * Kapitel 7 beginnt von selbst, sobald ein Spieler Kapitel 6 erreicht hat und die Welt ein Ende hat (Login,
+     * Dimensionswechsel, Endentscheidung).
+     */
+    public static void checkAftermath(ServerPlayer player) {
+        if (chapter(player) == StoryChapter.BEFORE_ENDING && data(player.server).ending() != StoryEnding.NONE) {
+            advance(player, StoryChapter.ECHO_OF_THE_WOUND.number());
+        }
+    }
+
+    /** Epilog nach Kapitel 9 setzen (Dialogaktion {@code set_epilogue}). */
+    public static void setEpilogue(ServerPlayer player, String epilogue) {
+        data(player.server).setEpilogue(player.getUUID(), epilogue);
+        if (!epilogue.isEmpty()) {
+            award(player, "story/epilogue_" + epilogue);
+            player.playNotifySound(ModSounds.STORY_EPILOGUE.get(), SoundSource.MASTER, 0.8F, 1.0F);
+        }
+        sync(player);
+    }
+
     /** Setzt das Kapitel exakt (Befehl). Bereits erhaltene Advancements bleiben bestehen. */
     public static void setChapter(ServerPlayer player, int chapter) {
         ShardlineWorldData data = data(player.server);
         data.setChapter(player.getUUID(), chapter);
+        if (chapter < StoryChapter.AFTERMATH.number()) {
+            data.setBranch(player.getUUID(), StoryEnding.NONE);
+        } else if (data.branch(player.getUUID()) == StoryEnding.NONE) {
+            data.setBranch(player.getUUID(), data.ending());
+        }
+        StoryEnding branch = data.branch(player.getUUID());
         for (int number = 1; number <= chapter; number++) {
             StoryChapter passed = StoryChapter.byNumber(number);
             if (passed != null) {
-                award(player, passed.advancementId());
+                award(player, passed.advancementId(branch));
             }
         }
         StoryChapter target = StoryChapter.byNumber(chapter);
@@ -85,20 +140,22 @@ public final class StoryManager {
     }
 
     private static void announceChapter(ServerPlayer player, StoryChapter chapter) {
+        StoryEnding branch = data(player.server).branch(player.getUUID());
         if (ShardlineConfig.CHAPTER_TITLES.get()) {
             if (player.connection != null && player.connection.hasChannel(ChapterCardPayload.TYPE)) {
-                send(player, new ChapterCardPayload(chapter.number()));
-            } else {
+                // Der Wert traegt den Zweig mit (StoryChapter#emblemValue), damit der Client den richtigen Titel zeigt
+                send(player, new ChapterCardPayload(chapter.emblemValue(branch)));
+            } else if (player.connection != null) {
                 player.connection.send(new ClientboundSetTitlesAnimationPacket(15, 70, 25));
-                player.connection.send(new ClientboundSetSubtitleTextPacket(chapter.title().copy().withStyle(ChatFormatting.LIGHT_PURPLE)));
+                player.connection.send(new ClientboundSetSubtitleTextPacket(chapter.title(branch).copy().withStyle(ChatFormatting.LIGHT_PURPLE)));
                 player.connection.send(new ClientboundSetTitleTextPacket(chapter.label().copy().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD)));
             }
         }
         player.sendSystemMessage(Component.empty()
-                .append(Component.translatable("story.shardline.chapter_reached", chapter.label(), chapter.title())
+                .append(Component.translatable("story.shardline.chapter_reached", chapter.label(), chapter.title(branch))
                         .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD))
                 .append(Component.literal(" "))
-                .append(chapter.summary().copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)));
+                .append(chapter.summary(branch).copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)));
         player.playNotifySound(ModSounds.STORY_CHAPTER.get(), SoundSource.MASTER, 0.8F, 1.0F);
     }
 

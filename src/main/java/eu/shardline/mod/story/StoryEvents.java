@@ -58,6 +58,7 @@ public final class StoryEvents {
             StoryManager.applyTitleTeam(player);
             StoryManager.sync(player);
             StoryManager.syncTitles(player);
+            StoryManager.checkAftermath(player);
         }
     }
 
@@ -97,8 +98,11 @@ public final class StoryEvents {
 
     @SubscribeEvent
     static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getTo() == ModDimensions.SPLITTERWEITE_LEVEL) {
-            StoryManager.reach(player, StoryChapter.THE_GATE);
+        if (event.getEntity() instanceof ServerPlayer player) {
+            if (event.getTo() == ModDimensions.SPLITTERWEITE_LEVEL) {
+                StoryManager.reach(player, StoryChapter.THE_GATE);
+            }
+            StoryManager.checkAftermath(player);
         }
     }
 

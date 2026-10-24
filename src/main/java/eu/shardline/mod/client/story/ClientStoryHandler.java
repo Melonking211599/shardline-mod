@@ -39,7 +39,8 @@ public final class ClientStoryHandler {
 
     /** Kapitelkarte einblenden; ist sie abgeschaltet, die schlichten Vanilla-Titel zeigen. */
     public static void showChapterCard(ChapterCardPayload payload) {
-        StoryChapter chapter = StoryChapter.byNumber(payload.chapter());
+        // payload.chapter() ist ein Emblem-Wert: Kapitel plus Zweig (StoryChapter#emblemValue)
+        StoryChapter chapter = StoryChapter.byEmblemValue(payload.chapter());
         if (chapter == null) {
             return;
         }
@@ -47,7 +48,8 @@ public final class ClientStoryHandler {
             ChapterCardOverlay.show(payload.chapter());
         } else {
             Minecraft.getInstance().gui.setTimes(15, 70, 25);
-            Minecraft.getInstance().gui.setSubtitle(chapter.title().copy().withStyle(ChatFormatting.LIGHT_PURPLE));
+            Minecraft.getInstance().gui.setSubtitle(chapter.title(StoryChapter.branchOfEmblemValue(payload.chapter()))
+                    .copy().withStyle(ChatFormatting.LIGHT_PURPLE));
             Minecraft.getInstance().gui.setTitle(chapter.label().copy().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD));
         }
     }

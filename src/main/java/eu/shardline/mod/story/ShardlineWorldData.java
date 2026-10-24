@@ -1,5 +1,6 @@
 package eu.shardline.mod.story;
 
+import eu.shardline.mod.story.quest.QuestProgress;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
@@ -14,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -46,6 +48,12 @@ public class ShardlineWorldData extends SavedData {
     /** Einmalige Ereignisse pro Spieler: gelesene Buecher, gesehene Visionen, gehoerte Dialoge. */
     private final Map<UUID, Set<String>> flags = new HashMap<>();
     private final Map<UUID, Integer> heartsDefeated = new HashMap<>();
+    /** Zweig ab Kapitel 8 (Ende der Welt beim Eintritt), damit ein spaeter zurueckgesetztes Ende den Weg nicht kippt. */
+    private final Map<UUID, StoryEnding> branches = new HashMap<>();
+    /** Gewaehlter Epilog nach Kapitel 9 (z. B. "stillness", "chronicle", "truce", "dominion"); leer = keiner. */
+    private final Map<UUID, String> epilogues = new HashMap<>();
+    /** Auftragsstand pro Spieler und Auftrag. */
+    private final Map<UUID, Map<String, QuestProgress>> quests = new HashMap<>();
 
     // --- Virus ---
     private boolean infected;
@@ -102,6 +110,58 @@ public class ShardlineWorldData extends SavedData {
         return result;
     }
 
+    // ------------------------------------------------------------------ Nach dem Ausbruch: Zweig, Epilog, Auftraege
+
+    public StoryEnding branch(UUID player) {
+        return this.branches.getOrDefault(player, StoryEnding.NONE);
+    }
+
+    public void setBranch(UUID player, StoryEnding branch) {
+        if (branch == StoryEnding.NONE) {
+            this.branches.remove(player);
+        } else {
+            this.branches.put(player, branch);
+        }
+        this.setDirty();
+    }
+
+    public String epilogue(UUID player) {
+        return this.epilogues.getOrDefault(player, "");
+    }
+
+    public void setEpilogue(UUID player, String epilogue) {
+        if (epilogue.isEmpty()) {
+            this.epilogues.remove(player);
+        } else {
+            this.epilogues.put(player, epilogue);
+        }
+        this.setDirty();
+    }
+
+    /** Auftragsstand oder null, wenn der Auftrag nie begonnen wurde. */
+    @Nullable
+    public QuestProgress quest(UUID player, String quest) {
+        Map<String, QuestProgress> map = this.quests.get(player);
+        return map == null ? null : map.get(quest);
+    }
+
+    public Map<String, QuestProgress> quests(UUID player) {
+        return this.quests.getOrDefault(player, Map.of());
+    }
+
+    /** Legt den Auftragsstand an (oder liefert den vorhandenen). */
+    public QuestProgress questOrCreate(UUID player, String quest) {
+        this.setDirty();
+        return this.quests.computeIfAbsent(player, uuid -> new HashMap<>()).computeIfAbsent(quest, id -> new QuestProgress());
+    }
+
+    public void removeQuest(UUID player, String quest) {
+        Map<String, QuestProgress> map = this.quests.get(player);
+        if (map != null && map.remove(quest) != null) {
+            this.setDirty();
+        }
+    }
+
     // ------------------------------------------------------------------ Flags
 
     public boolean hasFlag(UUID player, String flag) {
@@ -130,6 +190,13 @@ public class ShardlineWorldData extends SavedData {
             }
         }
         return count;
+    }
+
+    public void removeFlag(UUID player, String flag) {
+        Set<String> set = this.flags.get(player);
+        if (set != null && set.remove(flag)) {
+            this.setDirty();
+        }
     }
 
     public void clearFlags(UUID player, String prefix) {
@@ -375,10 +442,25 @@ public class ShardlineWorldData extends SavedData {
         Set<UUID> all = new HashSet<>(this.chapters.keySet());
         all.addAll(this.flags.keySet());
         all.addAll(this.heartsDefeated.keySet());
+        all.addAll(this.branches.keySet());
+        all.addAll(this.epilogues.keySet());
+        all.addAll(this.quests.keySet());
         for (UUID uuid : all) {
             CompoundTag player = new CompoundTag();
             player.putInt("Chapter", this.chapter(uuid));
             player.putInt("Hearts", this.heartsDefeated(uuid));
+            if (this.branches.containsKey(uuid)) {
+                player.putString("Branch", this.branches.get(uuid).id());
+            }
+            if (this.epilogues.containsKey(uuid)) {
+                player.putString("Epilogue", this.epilogues.get(uuid));
+            }
+            Map<String, QuestProgress> questMap = this.quests.get(uuid);
+            if (questMap != null && !questMap.isEmpty()) {
+                CompoundTag questTag = new CompoundTag();
+                questMap.forEach((id, progress) -> questTag.put(id, progress.save()));
+                player.put("Quests", questTag);
+            }
             ListTag flagList = new ListTag();
             this.flags.getOrDefault(uuid, Set.of()).forEach(flag -> flagList.add(StringTag.valueOf(flag)));
             player.put("Flags", flagList);
@@ -449,6 +531,18 @@ public class ShardlineWorldData extends SavedData {
             }
             if (player.getInt("Hearts") > 0) {
                 data.heartsDefeated.put(uuid, player.getInt("Hearts"));
+            }
+            // Felder ab "Nach dem Ausbruch": fehlen sie (alte Welt), bleiben die Standardwerte
+            StoryEnding branch = StoryEnding.byId(player.getString("Branch"));
+            if (branch != StoryEnding.NONE) {
+                data.branches.put(uuid, branch);
+            }
+            if (!player.getString("Epilogue").isEmpty()) {
+                data.epilogues.put(uuid, player.getString("Epilogue"));
+            }
+            CompoundTag questTag = player.getCompound("Quests");
+            for (String quest : questTag.getAllKeys()) {
+                data.quests.computeIfAbsent(uuid, id -> new HashMap<>()).put(quest, QuestProgress.load(questTag.getCompound(quest)));
             }
             ListTag flagList = player.getList("Flags", Tag.TAG_STRING);
             if (!flagList.isEmpty()) {

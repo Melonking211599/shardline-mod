@@ -56,7 +56,8 @@ public final class TraderDialogue {
         if (data.ending() == StoryEnding.DOMINATED) {
             return "dominated";
         }
-        return "chapter_" + data.chapter(player.getUUID());
+        // Kapitel 7-9 gibt es nur mit einem Ende, dann gelten "sealed"/"dominated"; per Befehl gesetzt, spricht er wie in Kapitel 6
+        return "chapter_" + Math.min(data.chapter(player.getUUID()), StoryChapter.BEFORE_ENDING);
     }
 
     /**

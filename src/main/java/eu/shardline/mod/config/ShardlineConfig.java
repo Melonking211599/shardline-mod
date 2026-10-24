@@ -64,6 +64,9 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue TRADER_DIALOGUE;
     public static final ModConfigSpec.IntValue DIALOGUE_LINE_DELAY_TICKS;
     public static final ModConfigSpec.IntValue LORE_PAGE_PRICE;
+    public static final ModConfigSpec.DoubleValue DIALOGUE_MAX_DISTANCE;
+    public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> DIALOGUE_COMMAND_WHITELIST;
+    public static final ModConfigSpec.IntValue QUEST_CHECK_TICKS;
 
     // Virus
     public static final ModConfigSpec.BooleanValue VIRUS_ENABLED;
@@ -289,6 +292,18 @@ public final class ShardlineConfig {
         LORE_PAGE_PRICE = b.comment("Shard-Splitter, die der Splitterhaendler fuer eine lose Lore-Seite zahlt.")
                 .translation(key("lore_page_price"))
                 .defineInRange("lorePagePrice", 2, 0, 64);
+        b.pop();
+
+        b.translation(key("dialogue")).push("dialogue");
+        DIALOGUE_MAX_DISTANCE = b.comment("Groesster Abstand zum NPC in Bloecken, bevor ein Dialog abbricht.")
+                .translation(key("dialogue_max_distance"))
+                .defineInRange("maxDistance", 8.0, 2.0, 32.0);
+        DIALOGUE_COMMAND_WHITELIST = b.comment("Befehlsanfaenge, die Dialoge mit run_command_safe ausfuehren duerfen (nur Ziel @s, kein execute).")
+                .translation(key("dialogue_command_whitelist"))
+                .defineListAllowEmpty("commandWhitelist", java.util.List.of("effect give @s ", "particle ", "playsound "), () -> "", o -> o instanceof String);
+        QUEST_CHECK_TICKS = b.comment("Alle wie viele Ticks Sammel- und Ortsschritte von Auftraegen geprueft werden.")
+                .translation(key("quest_check_ticks"))
+                .defineInRange("questCheckTicks", 40, 10, 400);
         b.pop();
 
         b.translation(key("virus")).push("virus");

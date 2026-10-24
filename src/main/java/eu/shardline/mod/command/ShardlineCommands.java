@@ -109,7 +109,7 @@ public final class ShardlineCommands {
             StoryManager.setChapter(player, chapter);
         }
         Component chapterName = chapter == 0 ? Component.translatable("story.shardline.chapter.none")
-                : StoryChapter.byNumber(chapter).title();
+                : StoryChapter.byNumber(chapter).title(StoryManager.data(context.getSource().getServer()).ending());
         context.getSource().sendSuccess(() -> Component.translatable("commands.shardline.story.set", targets.size(), chapter, chapterName), true);
         return targets.size();
     }
@@ -117,7 +117,8 @@ public final class ShardlineCommands {
     private static int info(CommandSourceStack source, ServerPlayer player) {
         ShardlineWorldData data = StoryManager.data(source.getServer());
         int chapter = data.chapter(player.getUUID());
-        Component chapterName = chapter == 0 ? Component.translatable("story.shardline.chapter.none") : StoryChapter.byNumber(chapter).title();
+        Component chapterName = chapter == 0 ? Component.translatable("story.shardline.chapter.none")
+                : StoryChapter.byNumber(chapter).title(data.branch(player.getUUID()));
         source.sendSuccess(() -> Component.translatable("commands.shardline.story.info", player.getDisplayName(), chapter, chapterName,
                 data.countFlags(player.getUUID(), "book:"), LoreBooks.ALL.size(),
                 data.countFlags(player.getUUID(), "vision:"), eu.shardline.mod.story.lore.Visions.COUNT,
@@ -125,6 +126,14 @@ public final class ShardlineCommands {
                 data.isKeeper(player.getUUID()) ? Component.translatable("title.shardline.keeper")
                         : data.isRuler(player.getUUID()) ? Component.translatable("title.shardline.ruler")
                         : Component.translatable("title.shardline.none")), false);
+        // Nach dem Ausbruch: Zweig, Epilog und Auftraege
+        StoryEnding branch = data.branch(player.getUUID());
+        String epilogue = data.epilogue(player.getUUID());
+        long active = data.quests(player.getUUID()).values().stream().filter(eu.shardline.mod.story.quest.QuestProgress::active).count();
+        long done = data.quests(player.getUUID()).values().stream().filter(eu.shardline.mod.story.quest.QuestProgress::everCompleted).count();
+        source.sendSuccess(() -> Component.translatable("commands.shardline.story.info.aftermath", branch.title(),
+                epilogue.isEmpty() ? Component.translatable("story.shardline.epilogue.none") : Component.translatable("story.shardline.epilogue." + epilogue),
+                active, done), false);
         return chapter;
     }
 
@@ -136,10 +145,21 @@ public final class ShardlineCommands {
         return StoryManager.data(source.getServer()).chapter(player.getUUID());
     }
 
+    /** Schluessel des naechsten Ziels: story.shardline.next.&lt;kapitel&gt;[.&lt;zweig&gt;], nach dem Epilog story.shardline.next.epilogue. */
+    public static String nextKey(int chapter, StoryEnding branch, String epilogue) {
+        if (!epilogue.isEmpty()) {
+            return "story.shardline.next.epilogue";
+        }
+        StoryChapter current = StoryChapter.byNumber(chapter);
+        return current != null && current.branched() && branch != StoryEnding.NONE
+                ? "story.shardline.next." + chapter + "." + branch.id() : "story.shardline.next." + chapter;
+    }
+
     /** Zeilen fuer {@code /shardline story status} (auch fuer Tests). */
     public static List<Component> statusLines(net.minecraft.server.MinecraftServer server, java.util.UUID player) {
         ShardlineWorldData data = StoryManager.data(server);
         int chapter = data.chapter(player);
+        StoryEnding branch = data.branch(player);
         List<Component> lines = new java.util.ArrayList<>();
         lines.add(Component.translatable("commands.shardline.story.status.header").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
         // Kapitelleiste: erreichte Kapitel golden, das aktuelle hervorgehoben, kommende grau
@@ -148,7 +168,7 @@ public final class ShardlineCommands {
             ChatFormatting color = step.number() < chapter ? ChatFormatting.GOLD : step.number() == chapter ? ChatFormatting.YELLOW : ChatFormatting.DARK_GRAY;
             bar.append(Component.literal(step.number() <= chapter ? "\u25C6" : "\u25C7").withStyle(color)
                     .withStyle(style -> style.withHoverEvent(new net.minecraft.network.chat.HoverEvent(
-                            net.minecraft.network.chat.HoverEvent.Action.SHOW_TEXT, step.label().copy().append(": ").append(step.title())))));
+                            net.minecraft.network.chat.HoverEvent.Action.SHOW_TEXT, step.label().copy().append(": ").append(step.title(branch))))));
             if (step.number() < StoryChapter.MAX) {
                 bar.append(Component.literal("\u2500").withStyle(step.number() < chapter ? ChatFormatting.GOLD : ChatFormatting.DARK_GRAY));
             }
@@ -156,13 +176,13 @@ public final class ShardlineCommands {
         lines.add(Component.empty().append(bar).append(Component.literal("  " + chapter + "/" + StoryChapter.MAX).withStyle(ChatFormatting.GRAY)));
         StoryChapter current = StoryChapter.byNumber(chapter);
         lines.add(current == null ? Component.translatable("commands.shardline.story.status.none").withStyle(ChatFormatting.GRAY)
-                : Component.translatable("commands.shardline.story.status.chapter", current.label(), current.title()).withStyle(ChatFormatting.GOLD));
+                : Component.translatable("commands.shardline.story.status.chapter", current.label(), current.title(branch)).withStyle(ChatFormatting.GOLD));
         if (current != null) {
-            lines.add(current.summary().copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            lines.add(current.summary(branch).copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
-        lines.add(Component.translatable("commands.shardline.story.status.next",
-                Component.translatable(data.ending() != StoryEnding.NONE ? "story.shardline.next.ended" : "story.shardline.next." + chapter))
-                .withStyle(ChatFormatting.AQUA));
+        String next = chapter == StoryChapter.BEFORE_ENDING && data.ending() != StoryEnding.NONE ? "story.shardline.next.ended"
+                : nextKey(chapter, branch, data.epilogue(player));
+        lines.add(Component.translatable("commands.shardline.story.status.next", Component.translatable(next)).withStyle(ChatFormatting.AQUA));
         lines.add(Component.translatable("commands.shardline.story.status.collection",
                 data.countFlags(player, "book:"), LoreBooks.ALL.size(),
                 data.countFlags(player, "vision:"), eu.shardline.mod.story.lore.Visions.COUNT,

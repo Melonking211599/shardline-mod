@@ -137,6 +137,15 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_SHARD_CALL = register("ability.shard_call", "entity.evoker.prepare_summon");
     public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_CRYSTAL_WAVE = register("ability.crystal_wave", "entity.warden.sonic_boom");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_INFECTED = register("music.infected", "music.nether.soul_sand_valley");
+    // Nach dem Ausbruch: Dialoge, Auftraege, Kapitel 7-9
+    public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_OPEN = register("ui.dialogue.open", "item.book.page_turn");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_CLOSE = register("ui.dialogue.close", "item.book.put");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_TYPE = register("ui.dialogue.type", "block.amethyst_block.hit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_CHOICE = register("ui.dialogue.choice", "ui.button.click");
+    public static final DeferredHolder<SoundEvent, SoundEvent> QUEST_UPDATE = register("ui.quest.update", "entity.experience_orb.pickup");
+    public static final DeferredHolder<SoundEvent, SoundEvent> QUEST_COMPLETE = register("ui.quest.complete", "ui.toast.challenge_complete");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STORY_EPILOGUE = register("story.epilogue", "music_disc.otherside");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AFTERSHOCK = register("event.aftershock", "entity.warden.dig");
 
     private ModSounds() {
     }
