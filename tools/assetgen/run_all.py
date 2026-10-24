@@ -13,6 +13,7 @@ import anims
 import armor
 import armor_extras
 import dialogue_gui
+import npc_assets
 import fresh_blocks
 import bosses
 import bossbars
@@ -54,6 +55,7 @@ def main():
     story2_assets.main()
     # Nach dem Ausbruch
     dialogue_gui.main()
+    npc_assets.main()
     print("Fertig.")
 
 

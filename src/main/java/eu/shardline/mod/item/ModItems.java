@@ -160,6 +160,7 @@ public final class ModItems {
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_PIG_SPAWN_EGG = spawnEgg("crystallized_pig", ModEntities.CRYSTALLIZED_PIG, 0x6B4A62, 0xE03CC0);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_VILLAGER_SPAWN_EGG = spawnEgg("crystallized_villager", ModEntities.CRYSTALLIZED_VILLAGER, 0x2C2138, 0xC933B8);
     public static final DeferredItem<DeferredSpawnEggItem> VIRUS_HEART_SPAWN_EGG = spawnEgg("virus_heart", ModEntities.VIRUS_HEART, 0x240A3A, 0xE040FF);
+    public static final DeferredItem<DeferredSpawnEggItem> RHEA_SPAWN_EGG = spawnEgg("rhea", ModEntities.RHEA, 0x36506E, 0xC06A3C);
 
     private ModItems() {
     }

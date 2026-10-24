@@ -42,6 +42,7 @@ public final class ModEntityEvents {
         event.put(ModEntities.CRYSTAL_GOLEM.get(), CrystalGolemEntity.createAttributes().build());
         event.put(ModEntities.GLOW_MOTH.get(), GlowMothEntity.createAttributes().build());
         event.put(ModEntities.CRYSTAL_SNAIL.get(), CrystalSnailEntity.createAttributes().build());
+        event.put(ModEntities.RHEA.get(), eu.shardline.mod.entity.npc.AftermathNpcEntity.createAttributes().build());
         event.put(ModEntities.ASH_WALKER.get(), AshWalkerEntity.createAttributes().build());
         event.put(ModEntities.SHARD_SCOUT.get(), ShardScoutEntity.createAttributes().build());
         event.put(ModEntities.VOID_RAY.get(), VoidRayEntity.createAttributes().build());

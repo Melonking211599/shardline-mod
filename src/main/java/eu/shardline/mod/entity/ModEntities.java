@@ -104,6 +104,10 @@ public final class ModEntities {
     private ModEntities() {
     }
 
+    // Nach dem Ausbruch: NPCs (keine natuerlichen Spawns; Lager, Spawn-Ei)
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.npc.RheaEntity>> RHEA = register("rhea",
+            EntityType.Builder.of(eu.shardline.mod.entity.npc.RheaEntity::new, MobCategory.MISC).sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10));
+
     private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String name, EntityType.Builder<T> builder) {
         return ENTITY_TYPES.register(name, () -> builder.build(Shardline.MODID + ":" + name));
     }

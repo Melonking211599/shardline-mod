@@ -16,9 +16,9 @@ def need(path, size=None):
 
 ENT = {"shard_creeper": 64, "crystal_golem": 128, "glow_moth": 64, "ash_walker": 64, "shard_scout": 64, "void_ray": 128,
        "crystal_spider": 64, "shard_trader": 64, "shadow_fox": 64, "shattered_knight": 64, "crystal_colossus": 256,
-       "shard_queen": 128, "crystal_pillar": 64, "crystal_snail": 64}
+       "shard_queen": 128, "crystal_pillar": 64, "crystal_snail": 64, "rhea": 64}
 GLOW = {"shard_creeper", "crystal_golem", "glow_moth", "shard_scout", "void_ray", "crystal_spider", "shadow_fox",
-        "shattered_knight", "crystal_colossus", "shard_queen", "crystal_pillar", "crystal_snail"}
+        "shattered_knight", "crystal_colossus", "shard_queen", "crystal_pillar", "crystal_snail", "rhea"}
 for n, s in ENT.items():
     need(TEX / "entity" / f"{n}.png", (s, s))
     if n in GLOW: need(TEX / "entity" / f"{n}_glowmask.png", (s, s))
@@ -117,6 +117,13 @@ for name, size in (("dialogue/frame", (32, 32)), ("dialogue/portrait_frame", (80
     need(TEX / "gui" / f"{name}.png", size)
 for portrait in sorted((TEX / "gui" / "portraits").glob("*.png")):
     need(portrait, (64, 64))
+for npc in ("rhea",):
+    for pose in ("neutral", "happy", "sad", "angry"):
+        need(TEX / "gui" / "portraits" / f"{npc}_{pose}.png", (64, 64))
+    clips = json.loads((ANIM / f"{npc}.animation.json").read_text(encoding="utf-8"))["animations"]
+    for clip in ("idle", "walk", "talk", "hurt", "sleep", "death"):
+        if clip not in clips: errors.append(f"{npc}: Animation {clip} fehlt")
+    if clips.get("death", {}).get("loop") != "hold_on_last_frame": errors.append(f"{npc}: death muss den letzten Frame halten")
 
 # ---- Polish-Pruefungen: Entity-Texturen und Kachelbloecke
 def opaque(img):

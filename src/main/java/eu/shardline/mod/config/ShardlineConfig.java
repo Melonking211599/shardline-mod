@@ -67,6 +67,8 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.DoubleValue DIALOGUE_MAX_DISTANCE;
     public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> DIALOGUE_COMMAND_WHITELIST;
     public static final ModConfigSpec.IntValue QUEST_CHECK_TICKS;
+    public static final ModConfigSpec.IntValue NPC_CAMP_RADIUS;
+    public static final ModConfigSpec.BooleanValue NPC_SLEEP;
 
     // Virus
     public static final ModConfigSpec.BooleanValue VIRUS_ENABLED;
@@ -304,6 +306,15 @@ public final class ShardlineConfig {
         QUEST_CHECK_TICKS = b.comment("Alle wie viele Ticks Sammel- und Ortsschritte von Auftraegen geprueft werden.")
                 .translation(key("quest_check_ticks"))
                 .defineInRange("questCheckTicks", 40, 10, 400);
+        b.pop();
+
+        b.translation(key("aftermath")).push("aftermath");
+        NPC_CAMP_RADIUS = b.comment("Umkreis um den Heimatpunkt eines Lager-NPCs, in dem er unverwundbar ist (Bloecke).")
+                .translation(key("npc_camp_radius"))
+                .defineInRange("campRadius", 32, 0, 256);
+        NPC_SLEEP = b.comment("Lager-NPCs gehen nachts zu ihrem Platz und schlafen (dann nur schleichend ansprechbar).")
+                .translation(key("npc_sleep"))
+                .define("npcSleep", true);
         b.pop();
 
         b.translation(key("virus")).push("virus");

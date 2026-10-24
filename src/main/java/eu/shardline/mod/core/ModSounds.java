@@ -138,6 +138,9 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_CRYSTAL_WAVE = register("ability.crystal_wave", "entity.warden.sonic_boom");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_INFECTED = register("music.infected", "music.nether.soul_sand_valley");
     // Nach dem Ausbruch: Dialoge, Auftraege, Kapitel 7-9
+    public static final DeferredHolder<SoundEvent, SoundEvent> RHEA_VOICE = register("entity.rhea.voice", "entity.villager.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RHEA_HURT = register("entity.rhea.hurt", "entity.player.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RHEA_DEATH = register("entity.rhea.death", "entity.player.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_OPEN = register("ui.dialogue.open", "item.book.page_turn");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_CLOSE = register("ui.dialogue.close", "item.book.put");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_TYPE = register("ui.dialogue.type", "block.amethyst_block.hit");

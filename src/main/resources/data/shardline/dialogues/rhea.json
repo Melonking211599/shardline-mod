@@ -1,0 +1,80 @@
+{
+  "speaker": "rhea",
+  "start": [
+    {"if": [{"chapter_max": 6}], "node": "too_early"},
+    {"if": [{"not_flag": "rhea:met"}], "node": "first_meeting"},
+    {"if": [{"quest_step": {"quest": "camp_wood", "step": 3}}], "node": "wood_turn_in"},
+    {"if": [{"quest_active": "camp_wood"}], "node": "wood_waiting"},
+    {"node": "idle"}
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.rhea.too_early.1", "dialogue.shardline.rhea.too_early.2"]
+    },
+    "first_meeting": {
+      "portrait": "neutral",
+      "do": [{"set_flag": "rhea:met"}],
+      "text": ["dialogue.shardline.rhea.first_meeting.1", "dialogue.shardline.rhea.first_meeting.2", "dialogue.shardline.rhea.first_meeting.3"],
+      "choices": [
+        {"text": "dialogue.shardline.rhea.first_meeting.c1", "next": "camp"},
+        {"text": "dialogue.shardline.rhea.first_meeting.c2", "next": "help", "if": [{"quest_new": "camp_wood"}]},
+        {"text": "dialogue.shardline.rhea.first_meeting.c3", "next": "END"}
+      ]
+    },
+    "camp": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.rhea.camp.1", "dialogue.shardline.rhea.camp.2"],
+      "choices": [
+        {"text": "dialogue.shardline.rhea.camp.c1", "next": "marked"},
+        {"text": "dialogue.shardline.rhea.camp.c2", "next": "help", "if": [{"quest_new": "camp_wood"}]},
+        {"text": "dialogue.shardline.rhea.camp.c3", "next": "END"}
+      ]
+    },
+    "marked": {
+      "portrait": "angry",
+      "text": ["dialogue.shardline.rhea.marked.1", "dialogue.shardline.rhea.marked.2"],
+      "next": "idle"
+    },
+    "help": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.rhea.help.1", "dialogue.shardline.rhea.help.2"],
+      "choices": [
+        {"text": "dialogue.shardline.rhea.help.c1", "next": "help_accepted", "do": [{"start_quest": "camp_wood"}]},
+        {"text": "dialogue.shardline.rhea.help.c2", "next": "END"}
+      ]
+    },
+    "help_accepted": {
+      "portrait": "happy",
+      "text": ["dialogue.shardline.rhea.help_accepted.1"]
+    },
+    "wood_waiting": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.rhea.wood_waiting.1", "dialogue.shardline.rhea.wood_waiting.2"]
+    },
+    "wood_turn_in": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.rhea.wood_turn_in.1"],
+      "choices": [
+        {"text": "dialogue.shardline.rhea.wood_turn_in.c1", "next": "wood_thanks", "show_locked": true,
+         "locked_hint": "dialogue.shardline.rhea.wood_turn_in.locked",
+         "if": [{"has_item": {"item": "shardline:crystal_planks", "count": 32}}, {"has_item": {"item": "shardline:shard_lantern", "count": 4}}],
+         "do": [{"take_item": {"item": "shardline:crystal_planks", "count": 32}}, {"take_item": {"item": "shardline:shard_lantern", "count": 4}},
+                {"complete_quest_step": "camp_wood"}]},
+        {"text": "dialogue.shardline.rhea.wood_turn_in.c2", "next": "END"}
+      ]
+    },
+    "wood_thanks": {
+      "portrait": "happy",
+      "text": ["dialogue.shardline.rhea.wood_thanks.1", "dialogue.shardline.rhea.wood_thanks.2"]
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.rhea.idle.1"],
+      "choices": [
+        {"text": "dialogue.shardline.rhea.idle.c1", "next": "camp"},
+        {"text": "dialogue.shardline.rhea.idle.c2", "next": "END"}
+      ]
+    }
+  }
+}

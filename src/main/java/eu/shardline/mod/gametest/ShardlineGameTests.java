@@ -1293,6 +1293,67 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
+    /** Mitgelieferte Dialoge und Auftraege laden ohne Fehler; jeder Text-, Antwort-, Hinweis- und Auftragsschluessel existiert. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void storyDataFiles(GameTestHelper helper) {
+        helper.assertTrue(eu.shardline.mod.story.dialogue.Dialogues.errors().isEmpty(), "Ladefehler: " + eu.shardline.mod.story.dialogue.Dialogues.errors());
+        helper.assertTrue(eu.shardline.mod.story.dialogue.Dialogues.get(Shardline.id("rhea")) != null, "Dialog rhea nicht geladen");
+        Language language = Language.getInstance();
+        List<String> missing = new ArrayList<>();
+        for (var dialogue : eu.shardline.mod.story.dialogue.Dialogues.all()) {
+            for (var node : dialogue.nodes().values()) {
+                java.util.List<String> keys = new ArrayList<>(node.text());
+                keys.add("npc.shardline." + node.speaker());
+                node.choices().forEach(choice -> {
+                    keys.add(choice.text());
+                    if (!choice.lockedHint().isEmpty()) {
+                        keys.add(choice.lockedHint());
+                    }
+                });
+                keys.stream().filter(key -> !language.has(key)).forEach(key -> missing.add(dialogue.id() + "/" + node.name() + ": " + key));
+            }
+        }
+        for (var quest : eu.shardline.mod.story.quest.Quests.all()) {
+            List<String> keys = new ArrayList<>(List.of(quest.langKey() + ".title", quest.langKey() + ".description"));
+            for (int i = 1; i <= quest.steps().size(); i++) {
+                keys.add(quest.langKey() + ".step." + i);
+            }
+            keys.stream().filter(key -> !language.has(key)).forEach(key -> missing.add("quest " + quest.id() + ": " + key));
+        }
+        helper.assertTrue(missing.isEmpty(), "Fehlende Texte: " + missing);
+        helper.succeed();
+    }
+
+    /** Rhea: Rechtsklick startet ihren Dialog, im Lager unverwundbar, ausserhalb bricht sie zusammen statt zu sterben. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void rheaNpc(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var rhea = helper.spawn(eu.shardline.mod.entity.ModEntities.RHEA.get(), new BlockPos(1, 2, 1));
+        try {
+            rhea.setHome(rhea.blockPosition());
+            player.moveTo(rhea.getX() + 1.5, rhea.getY(), rhea.getZ());
+            data.setChapter(player.getUUID(), 7);
+            rhea.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("first_meeting"), "Rhea startet nicht mit 'first_meeting'");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "rhea:met"), "Rhea setzt 'rhea:met' nicht");
+            float health = rhea.getHealth();
+            helper.assertFalse(rhea.hurt(rhea.damageSources().generic(), 5.0F), "Im Lager darf Rhea keinen Schaden nehmen");
+            rhea.setHome(rhea.blockPosition().offset(500, 0, 0));
+            rhea.hurt(rhea.damageSources().generic(), 1000.0F);
+            helper.assertTrue(rhea.isAlive() && rhea.getHealth() >= 1.0F && rhea.getHealth() < health, "Rhea muss zusammenbrechen statt sterben");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            data.setChapter(player.getUUID(), 0);
+            data.removeFlag(player.getUUID(), "rhea:met");
+            rhea.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

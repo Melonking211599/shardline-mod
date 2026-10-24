@@ -422,6 +422,33 @@
     ],
     "subtitle": "subtitles.shardline.entity.infected.cured"
   },
+  "entity.rhea.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.player.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.rhea.death"
+  },
+  "entity.rhea.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.player.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.rhea.hurt"
+  },
+  "entity.rhea.voice": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.villager.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.rhea.voice"
+  },
   "entity.shadow_fox.ambient": {
     "sounds": [
       {

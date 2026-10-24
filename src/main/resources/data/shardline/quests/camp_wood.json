@@ -1,0 +1,15 @@
+{
+  "chapter_min": 7,
+  "giver": "rhea",
+  "steps": [
+    {"type": "collect", "target": "shardline:crystal_planks", "count": 32},
+    {"type": "collect", "target": "shardline:shard_lantern", "count": 4},
+    {"type": "talk", "target": "rhea"}
+  ],
+  "rewards": [
+    {"item": "shardline:berry_tart", "count": 4},
+    {"item": "shardline:shard_fragment", "count": 8}
+  ],
+  "xp": 60,
+  "flags": ["camp:walls"]
+}
