@@ -704,16 +704,16 @@
   "music.infected": {
     "sounds": [
       {
-        "type": "event",
-        "name": "music.nether.soul_sand_valley"
+        "name": "shardline:music/infected",
+        "stream": true
       }
     ]
   },
   "music.splitterweite": {
     "sounds": [
       {
-        "type": "event",
-        "name": "music.end"
+        "name": "shardline:music/splitterweite",
+        "stream": true
       }
     ]
   },
