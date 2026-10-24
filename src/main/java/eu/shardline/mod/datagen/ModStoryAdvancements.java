@@ -58,9 +58,16 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         AdvancementHolder chapter6 = chapter(chapter5, StoryChapter.CONTAINMENT);
         // Nach dem Ausbruch: Kapitel 7, dann je Ende ein eigener Strang fuer 8 und 9
         AdvancementHolder chapter7 = chapter(chapter6, StoryChapter.ECHO_OF_THE_WOUND);
+        task(chapter7, "festering_node", ModBlocks.FESTERING_NODE.get(), AdvancementType.TASK, 0);
         for (StoryEnding branch : java.util.List.of(StoryEnding.SEALED, StoryEnding.DOMINATED)) {
             AdvancementHolder chapter8 = branchChapter(chapter7, StoryChapter.AFTERMATH, branch);
-            branchChapter(chapter8, StoryChapter.THE_LAST_TONE, branch);
+            AdvancementHolder chapter9 = branchChapter(chapter8, StoryChapter.THE_LAST_TONE, branch);
+            boolean sealed = branch == StoryEnding.SEALED;
+            AdvancementHolder boss = task(chapter9, sealed ? "echo_queen" : "festering_heart",
+                    sealed ? ModItems.ECHO_QUEEN_SPAWN_EGG.get() : ModItems.FESTERING_HEART_SPAWN_EGG.get(), AdvancementType.GOAL, 200);
+            for (String epilogue : sealed ? java.util.List.of("stillness", "chronicle") : java.util.List.of("truce", "dominion")) {
+                task(boss, "epilogue_" + epilogue, ModItems.ECHO_SHARD.get(), AdvancementType.CHALLENGE, 300);
+            }
         }
         task(chapter6, "purity_anchor", ModBlocks.PURITY_ANCHOR.get(), AdvancementType.TASK, 0);
         AdvancementHolder purification = task(chapter6, "purification", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);

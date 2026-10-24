@@ -38,7 +38,7 @@ public final class DialogueParser {
     public static final Set<String> CONDITIONS = Set.of("chapter_min", "chapter_max", "ending", "branch", "title", "has_item", "flag",
             "not_flag", "quest_active", "quest_done", "quest_new", "quest_step", "epilogue", "any", "not");
     public static final Set<String> ACTIONS = Set.of("give_item", "take_item", "set_flag", "clear_flag", "advance_chapter", "start_quest",
-            "complete_quest_step", "open_trade", "play_sound", "run_command_safe", "set_epilogue", "give_xp", "npc_state");
+            "complete_quest_step", "open_trade", "play_sound", "run_command_safe", "set_epilogue", "give_xp", "npc_state", "summon_encounter");
     /** Zustaende fuer {@code npc_state} (siehe {@link DialogueNpc#applyState}). */
     public static final Set<String> NPC_STATES = Set.of("follow", "stay", "healed");
     private static final Set<String> ENDINGS = Set.of("none", "seal", "dominate");
@@ -379,6 +379,14 @@ public final class DialogueParser {
                             npc.openTrade(context.player());
                         }
                     };
+                }
+                case "summon_encounter" -> {
+                    String encounter = value.getAsString();
+                    if (!eu.shardline.mod.story.Encounters.TYPES.contains(encounter)) {
+                        problems.error(where, "unbekannte Begegnung '" + encounter + "', erlaubt: " + eu.shardline.mod.story.Encounters.TYPES);
+                        return context -> { };
+                    }
+                    return context -> eu.shardline.mod.story.Encounters.summon(encounter, context.player(), context.npc());
                 }
                 case "npc_state" -> {
                     String state = value.getAsString();

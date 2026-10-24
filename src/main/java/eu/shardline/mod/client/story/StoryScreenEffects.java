@@ -114,6 +114,7 @@ public final class StoryScreenEffects {
                 drawVignette(graphics, 0.5F, 0.6F, 1.0F, fade, width, height);
             }
             case ScreenEffectPayload.PURIFY -> drawVignette(graphics, 0.7F, 1.0F, 0.9F, value, width, height);
+            case ScreenEffectPayload.AFTERSHOCK -> drawVignette(graphics, 0.5F, 0.1F, 0.7F, value * 0.6F, width, height);
             default -> {
             }
         }
@@ -179,6 +180,7 @@ public final class StoryScreenEffects {
             case ScreenEffectPayload.OUTBREAK -> 5.0F;
             case ScreenEffectPayload.DOMINATED -> 3.0F;
             case ScreenEffectPayload.SEALED -> 1.5F;
+            case ScreenEffectPayload.AFTERSHOCK -> 2.0F;
             default -> 0.0F;
         };
         if (strength <= 0.0F) {

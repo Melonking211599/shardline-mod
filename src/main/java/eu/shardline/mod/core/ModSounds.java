@@ -156,6 +156,11 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> KESH_VOICE = register("entity.kesh.voice", "entity.zombie_villager.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> KESH_HURT = register("entity.kesh.hurt", "entity.player.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> KESH_DEATH = register("entity.kesh.death", "entity.player.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FESTERING_NODE_HUM = register("block.festering_node.hum", "block.sculk_catalyst.bloom");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FESTERING_NODE_PURIFY = register("block.festering_node.purify", "block.amethyst_block.resonate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FESTERING_NODE_BIND = register("block.festering_node.bind", "block.respawn_anchor.charge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FESTERING_NODE_SCREAM = register("block.festering_node.scream", "block.sculk_shrieker.shriek");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUNING_FORK_RING = register("item.keeper_tuning_fork.ring", "block.bell.resonate");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_OPEN = register("ui.dialogue.open", "item.book.page_turn");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_CLOSE = register("ui.dialogue.close", "item.book.put");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_TYPE = register("ui.dialogue.type", "block.amethyst_block.hit");

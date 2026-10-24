@@ -1,0 +1,13 @@
+{
+  "chapter_min": 8,
+  "giver": "rhea",
+  "steps": [
+    {"type": "kill", "target": "shardline:shattered_knight", "count": 5},
+    {"type": "talk", "target": "rhea"}
+  ],
+  "rewards": [
+    {"item": "shardline:knight_crest", "count": 2},
+    {"item": "shardline:shard_fragment", "count": 16}
+  ],
+  "xp": 180
+}

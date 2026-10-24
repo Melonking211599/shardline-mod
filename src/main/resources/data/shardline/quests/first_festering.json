@@ -1,0 +1,16 @@
+{
+  "chapter_min": 7,
+  "giver": "rhea",
+  "steps": [
+    {"type": "talk", "target": "kesh"},
+    {"type": "custom", "target": "shardline:festering_node"},
+    {"type": "escort", "target": "shardline:kesh"},
+    {"type": "talk", "target": "rhea"}
+  ],
+  "rewards": [
+    {"item": "shardline:purification_essence", "count": 1},
+    {"item": "shardline:shard_fragment", "count": 12}
+  ],
+  "xp": 120,
+  "flags": ["festering:first"]
+}

@@ -61,6 +61,8 @@ public class ShardlineWorldData extends SavedData {
     private boolean paused;
     private long lastHeartSpawn;
     private final Map<ResourceKey<Level>, LongSet> anchors = new HashMap<>();
+    /** Schwaeren (Kapitel 7-9) je Dimension, damit Stimmgabel, Kompass und Nachbeben keine Welt absuchen muessen. */
+    private final Map<ResourceKey<Level>, LongSet> festeringNodes = new HashMap<>();
     /** Spielzeit, zu der ein Anker gesetzt wurde (fuer den wachsenden Schutzradius). Fehlt sie, gilt der volle Radius. */
     private final Map<ResourceKey<Level>, Long2LongOpenHashMap> anchorSince = new HashMap<>();
     private final Map<ResourceKey<Level>, LongList> herds = new HashMap<>();
@@ -255,6 +257,22 @@ public class ShardlineWorldData extends SavedData {
 
     public LongSet anchors(ResourceKey<Level> dimension) {
         return this.anchors.computeIfAbsent(dimension, key -> new LongOpenHashSet());
+    }
+
+    public LongSet festeringNodes(ResourceKey<Level> dimension) {
+        return this.festeringNodes.computeIfAbsent(dimension, key -> new LongOpenHashSet());
+    }
+
+    public void addFesteringNode(ResourceKey<Level> dimension, BlockPos pos) {
+        if (this.festeringNodes(dimension).add(pos.asLong())) {
+            this.setDirty();
+        }
+    }
+
+    public void removeFesteringNode(ResourceKey<Level> dimension, BlockPos pos) {
+        if (this.festeringNodes(dimension).remove(pos.asLong())) {
+            this.setDirty();
+        }
     }
 
     public void addAnchor(ResourceKey<Level> dimension, BlockPos pos) {
@@ -478,6 +496,7 @@ public class ShardlineWorldData extends SavedData {
         keys.addAll(this.anchorSince.keySet());
         keys.addAll(this.herds.keySet());
         keys.addAll(this.chunkInfection.keySet());
+        keys.addAll(this.festeringNodes.keySet());
         for (ResourceKey<Level> key : keys) {
             CompoundTag dimension = new CompoundTag();
             dimension.put("Anchors", new LongArrayTag(this.anchors(key).toLongArray()));
@@ -490,6 +509,7 @@ public class ShardlineWorldData extends SavedData {
             }
             dimension.put("AnchorSince", new LongArrayTag(sincePairs));
             dimension.put("Herds", new LongArrayTag(this.herds(key).toLongArray()));
+            dimension.put("FesteringNodes", new LongArrayTag(this.festeringNodes(key).toLongArray()));
             Long2IntOpenHashMap infection = this.chunkInfection(key);
             long[] chunkKeys = new long[infection.size()];
             int[] chunkValues = new int[infection.size()];
@@ -573,6 +593,7 @@ public class ShardlineWorldData extends SavedData {
                 data.anchorSince(dimensionKey).put(sincePairs[s], sincePairs[s + 1]);
             }
             data.herds(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("Herds")));
+            data.festeringNodes(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("FesteringNodes")));
             long[] chunkKeys = dimension.getLongArray("InfectionChunks");
             int[] chunkValues = dimension.getIntArray("InfectionCounts");
             Long2IntOpenHashMap infection = data.chunkInfection(dimensionKey);

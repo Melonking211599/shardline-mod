@@ -33,7 +33,8 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.COLOSSUS_HELMET.get(), ModItems.COLOSSUS_CHESTPLATE.get(), ModItems.COLOSSUS_LEGGINGS.get(), ModItems.COLOSSUS_BOOTS.get(),
                 ModItems.LORE_BOOK.get(), ModItems.LORE_PAGE.get(), ModItems.PURIFICATION_ESSENCE.get(), ModItems.BREACH_CORE.get(),
                 ModItems.CRYSTAL_SLIME.get(), ModItems.GLOWCAP_STEW.get(), ModItems.CRYSTAL_CANDY.get(), ModItems.BERRY_TART.get(),
-                ModItems.RESONANCE_COMPASS.get(), ModBlocks.CRYSTAL_DOOR.get().asItem(), ModBlocks.SHARD_LANTERN.get().asItem()}) {
+                ModItems.RESONANCE_COMPASS.get(), ModBlocks.CRYSTAL_DOOR.get().asItem(), ModBlocks.SHARD_LANTERN.get().asItem(),
+                ModItems.ECHO_SHARD.get()}) {
             basicItem(item);
         }
 
@@ -41,7 +42,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         for (Item item : new Item[] {
                 ModItems.SHARD_SWORD.get(), ModItems.SHARD_PICKAXE.get(), ModItems.SHARD_AXE.get(), ModItems.SHARD_SHOVEL.get(),
                 ModItems.COLOSSUS_SWORD.get(), ModItems.COLOSSUS_PICKAXE.get(), ModItems.COLOSSUS_AXE.get(), ModItems.COLOSSUS_SHOVEL.get(),
-                ModItems.QUEENS_SHARDBLADE.get(), ModItems.COLOSSUS_GAUNTLET.get()}) {
+                ModItems.QUEENS_SHARDBLADE.get(), ModItems.COLOSSUS_GAUNTLET.get(), ModItems.KEEPER_TUNING_FORK.get()}) {
             handheldItem(item);
         }
 
@@ -76,13 +77,24 @@ public class ModItemModelProvider extends ItemModelProvider {
         bow.override().predicate(mcLoc("pulling"), 1.0F).predicate(mcLoc("pull"), 0.9F).model(pulling[2]).end();
     }
 
-    /** Kapitel-Emblem: Grundmodell = Kapitel 1, Overrides ueber die Eigenschaft shardline:chapter (0.1-0.6). */
+    /**
+     * Kapitel-Emblem: Grundmodell = Kapitel 1, Overrides ueber die Eigenschaft shardline:chapter (Emblem-Wert / 10).
+     * Kapitel 1-7 als 0.1-0.7, die Zweige von 8 und 9 als 1.8/1.9 (versiegelt) und 2.8/2.9 (beherrscht), siehe
+     * StoryChapter#emblemValue. Minecraft nimmt das letzte passende Override, daher aufsteigend sortiert.
+     */
     private void chapterEmblem() {
         ItemModelBuilder base = withExistingParent("chapter_emblem", mcLoc("item/generated")).texture("layer0", modLoc("item/chapter_emblem_1"));
-        for (int chapter = 2; chapter <= 6; chapter++) {
-            ModelFile variant = withExistingParent("chapter_emblem_" + chapter, mcLoc("item/generated"))
-                    .texture("layer0", modLoc("item/chapter_emblem_" + chapter));
-            base.override().predicate(modLoc("chapter"), chapter / 10.0F - 0.05F).model(variant).end();
+        java.util.List<java.util.Map.Entry<Integer, String>> variants = new java.util.ArrayList<>();
+        for (int chapter = 2; chapter <= 7; chapter++) {
+            variants.add(java.util.Map.entry(chapter, "chapter_emblem_" + chapter));
+        }
+        variants.add(java.util.Map.entry(18, "chapter_emblem_8_seal"));
+        variants.add(java.util.Map.entry(19, "chapter_emblem_9_seal"));
+        variants.add(java.util.Map.entry(28, "chapter_emblem_8_dominate"));
+        variants.add(java.util.Map.entry(29, "chapter_emblem_9_dominate"));
+        for (var variant : variants) {
+            ModelFile model = withExistingParent(variant.getValue(), mcLoc("item/generated")).texture("layer0", modLoc("item/" + variant.getValue()));
+            base.override().predicate(modLoc("chapter"), variant.getKey() / 10.0F - 0.05F).model(model).end();
         }
     }
 }

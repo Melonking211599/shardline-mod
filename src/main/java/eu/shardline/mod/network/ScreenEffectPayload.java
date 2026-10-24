@@ -15,6 +15,8 @@ public record ScreenEffectPayload(int effect, int duration) implements CustomPac
     public static final int DOMINATED = 2;
     public static final int VISION = 3;
     public static final int PURIFY = 4;
+    /** Nachbeben (Kapitel 7-9): kurzes Wackeln, violetter Rand. */
+    public static final int AFTERSHOCK = 5;
 
     public static final Type<ScreenEffectPayload> TYPE = new Type<>(Shardline.id("screen_effect"));
     public static final StreamCodec<ByteBuf, ScreenEffectPayload> STREAM_CODEC = StreamCodec.composite(

@@ -53,6 +53,14 @@ public class LorePageItem extends Item {
         }
         if (player instanceof ServerPlayer serverPlayer) {
             int page = Math.min(pageNumber(stack), book.pages());
+            // Auftragsschritt "read_lore": jede Seite zaehlt nur einmal (Ziel "any" oder die Buch-ID)
+            var data = StoryManager.data(serverPlayer.server);
+            String readFlag = "lore_read:" + book.id() + ":" + page;
+            if (!data.hasFlag(serverPlayer.getUUID(), readFlag)) {
+                data.addFlag(serverPlayer.getUUID(), readFlag);
+                eu.shardline.mod.story.quest.Quests.trigger(serverPlayer, "read_lore",
+                        target -> target.equals("any") || target.equals(book.id()), 1);
+            }
             level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LORE_BOOK_OPEN.get(), SoundSource.PLAYERS, 0.7F, 1.3F);
             player.getCooldowns().addCooldown(this, 10);
             if (serverPlayer.connection != null && serverPlayer.connection.hasChannel(OpenLorePagePayload.TYPE)) {

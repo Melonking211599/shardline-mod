@@ -74,7 +74,7 @@ public final class ShardlineClient {
             });
             ItemProperties.register(ModItems.CRYSTAL_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"),
                     (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
-            // Kapitel-Emblem: Kapitel 1-6 als 0.1-0.6 fuer die Modell-Overrides
+            // Kapitel-Emblem: Emblem-Wert / 10 fuer die Modell-Overrides (Kapitel 1-7: 0.1-0.7, Zweige 8/9: 1.8-2.9)
             ItemProperties.register(ModItems.CHAPTER_EMBLEM.get(), Shardline.id("chapter"),
                     (stack, level, entity, seed) -> stack.getOrDefault(ModDataComponents.CHAPTER.get(), 1) / 10.0F);
         });
@@ -111,6 +111,8 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_SHEEP.get(), InfectedRenderers.CrystallizedSheepRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIG.get(), InfectedRenderers.CrystallizedPigRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_VILLAGER.get(), InfectedRenderers.CrystallizedVillagerRenderer::new);
+        event.registerEntityRenderer(ModEntities.ECHO_QUEEN.get(), eu.shardline.mod.client.renderer.NpcRenderers.EchoQueenRenderer::new);
+        event.registerEntityRenderer(ModEntities.FESTERING_HEART.get(), eu.shardline.mod.client.renderer.NpcRenderers.FesteringHeartRenderer::new);
         // Kein Umkippen beim Tod: Der Clip "death" laesst das Herz an Ort und Stelle zerfallen.
         event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<VirusHeartEntity>(ctx, "virus_heart", 1.2F, true) {
             @Override

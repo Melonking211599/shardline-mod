@@ -60,6 +60,8 @@ public final class ModTags {
     }
 
     public static final class EntityTypes {
+        /** Ziele des wiederholbaren Auftrags "Nachtwache". */
+        public static final TagKey<EntityType<?>> NIGHT_WATCH_TARGETS = TagKey.create(Registries.ENTITY_TYPE, Shardline.id("night_watch_targets"));
         /** Wesen, gegen die Splitterbann zusaetzlichen Schaden macht. */
         public static final TagKey<EntityType<?>> SENSITIVE_TO_SHARD_BANE = TagKey.create(Registries.ENTITY_TYPE, Shardline.id("sensitive_to_shard_bane"));
         /** Wesen der Splitterweite, die nach dem Ende "Beherrschen" die Splitterherrscher nicht angreifen. */

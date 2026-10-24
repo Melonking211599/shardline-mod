@@ -53,9 +53,24 @@ public final class InfectedMobs {
         mob.setSummonTicks(tag.getInt("SummonTicks"));
     }
 
+    /** Persistente Markierung der Befallenen einer Schwaere in der beherrschten Welt ("Gegengesang"). */
+    private static final String COUNTER_SONG = "ShardlineCounterSong";
+
+    public static void markCounterSong(Mob mob) {
+        mob.getPersistentData().putBoolean(COUNTER_SONG, true);
+    }
+
+    /** Befallene des Gegengesangs greifen auch Splitterherrscher an und gehorchen ihnen nicht. */
+    public static boolean isCounterSong(Mob mob) {
+        return mob.getPersistentData().getBoolean(COUNTER_SONG);
+    }
+
     /** Ein Lebewesen, das ein infizierter Mob nicht angreifen soll. */
     public static boolean isFriendly(Mob self, LivingEntity other) {
         UUID owner = ((InfectedMob) self).getOwnerUUID();
+        if (owner == null && isCounterSong(self) && other instanceof ServerPlayer) {
+            return false;
+        }
         if (other instanceof InfectedMob them) {
             // Gleiche Herde: beide wild oder beide vom selben Spieler gezaehmt.
             return Objects.equals(owner, them.getOwnerUUID());
@@ -93,6 +108,10 @@ public final class InfectedMobs {
             serverPlayer.displayClientMessage(Component.translatable("message.shardline.tame_requires_ruler"), true);
             return InteractionResult.CONSUME;
         }
+        if (isCounterSong(mob)) {
+            serverPlayer.displayClientMessage(Component.translatable("message.shardline.tame_counter_song"), true);
+            return InteractionResult.CONSUME;
+        }
         stack.consume(1, player);
         infected.setOwnerUUID(player.getUUID());
         mob.setTarget(null);
@@ -103,6 +122,8 @@ public final class InfectedMobs {
         serverPlayer.displayClientMessage(Component.translatable("message.shardline.tamed_infected", mob.getDisplayName()), true);
         StoryManager.award(serverPlayer, "story/tame_infected");
         recordHerd(serverPlayer, mob.getType());
+        eu.shardline.mod.story.quest.Quests.trigger(serverPlayer, "tame",
+                target -> target.equals("any") || eu.shardline.mod.story.quest.Quests.matchesEntity(mob.getType(), target), 1);
         return InteractionResult.CONSUME;
     }
 

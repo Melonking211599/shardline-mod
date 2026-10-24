@@ -121,7 +121,7 @@ public class KeshEntity extends AftermathNpcEntity {
     /** Bei Rhea angekommen: Auftragsschritt "escort" fuer den gefolgten Spieler, Kesh bleibt im Lager. */
     public void checkArrival() {
         ServerPlayer player = this.followedPlayer();
-        if (player == null) {
+        if (player == null || !Quests.hasActiveStep(player, "escort", ESCORT_TARGET)) {
             return;
         }
         List<RheaEntity> rhea = this.level().getEntitiesOfClass(RheaEntity.class, this.getBoundingBox().inflate(ARRIVAL));

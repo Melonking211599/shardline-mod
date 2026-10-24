@@ -95,6 +95,13 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<VirusHeartEntity>> VIRUS_HEART = register("virus_heart",
             EntityType.Builder.of(VirusHeartEntity::new, MobCategory.MONSTER).sized(1.8F, 2.4F).eyeHeight(1.6F)
                     .fireImmune().clientTrackingRange(10));
+    // Nach dem Ausbruch: Kapitel-9-Gegner
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.boss.EchoQueenEntity>> ECHO_QUEEN = register("echo_queen",
+            EntityType.Builder.of(eu.shardline.mod.entity.boss.EchoQueenEntity::new, MobCategory.MONSTER).sized(1.2F, 3.0F).eyeHeight(2.6F)
+                    .fireImmune().clientTrackingRange(12));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.boss.FesteringHeartEntity>> FESTERING_HEART =
+            register("festering_heart", EntityType.Builder.of(eu.shardline.mod.entity.boss.FesteringHeartEntity::new, MobCategory.MONSTER)
+                    .sized(1.8F, 2.4F).eyeHeight(1.6F).fireImmune().clientTrackingRange(10));
 
     // --- Projektile & Effekte ---
     public static final DeferredHolder<EntityType<?>, EntityType<ShardProjectileEntity>> SHARD_PROJECTILE = register("shard_projectile",

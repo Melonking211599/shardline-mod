@@ -105,6 +105,7 @@ public class PurityAnchorBlock extends Block implements EntityBlock {
         if (placer instanceof ServerPlayer player) {
             StoryManager.award(player, "story/purity_anchor");
             StoryEvents.onContainmentAction(player);
+            eu.shardline.mod.story.quest.Quests.trigger(player, "place_anchor", "shardline:purity_anchor");
         }
     }
 

@@ -97,7 +97,14 @@ public final class ModWorldTagsProvider {
                     ModEntities.SHARD_QUEEN.get(), ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(),
                     ModEntities.CRYSTALLIZED_COW.get(), ModEntities.CRYSTALLIZED_SHEEP.get(), ModEntities.CRYSTALLIZED_PIG.get(),
                     ModEntities.CRYSTALLIZED_VILLAGER.get(), ModEntities.VIRUS_HEART.get(), ModEntities.CRYSTALLIZED_PIGLIN.get(),
-                    ModEntities.CRYSTALLIZED_ENDERMAN.get());
+                    ModEntities.CRYSTALLIZED_ENDERMAN.get(), ModEntities.ECHO_QUEEN.get(), ModEntities.FESTERING_HEART.get());
+            tag(ModTags.EntityTypes.NIGHT_WATCH_TARGETS).add(net.minecraft.world.entity.EntityType.ZOMBIE,
+                    net.minecraft.world.entity.EntityType.HUSK, net.minecraft.world.entity.EntityType.DROWNED,
+                    net.minecraft.world.entity.EntityType.SKELETON, net.minecraft.world.entity.EntityType.STRAY,
+                    net.minecraft.world.entity.EntityType.SPIDER, net.minecraft.world.entity.EntityType.CREEPER,
+                    net.minecraft.world.entity.EntityType.WITCH, ModEntities.SHARD_ZOMBIE.get(), ModEntities.CRYSTALLIZED_PIGLIN.get(),
+                    ModEntities.CRYSTALLIZED_ENDERMAN.get(), ModEntities.SHARD_CREEPER.get(), ModEntities.ASH_WALKER.get(),
+                    ModEntities.CRYSTAL_SPIDER.get());
             tag(ModTags.EntityTypes.OBEYS_RULER).add(ModEntities.SHARD_CREEPER.get(), ModEntities.CRYSTAL_GOLEM.get(),
                     ModEntities.ASH_WALKER.get(), ModEntities.SHARD_SCOUT.get(), ModEntities.CRYSTAL_SPIDER.get(),
                     ModEntities.SHADOW_FOX.get(), ModEntities.SHATTERED_KNIGHT.get(), ModEntities.VOID_RAY.get(),

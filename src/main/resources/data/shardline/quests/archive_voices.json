@@ -1,0 +1,15 @@
+{
+  "chapter_min": 8,
+  "branch": "seal",
+  "giver": "veyl",
+  "steps": [
+    {"type": "read_lore", "target": "any", "count": 3},
+    {"type": "collect", "target": "shardline:echo_shard", "count": 2},
+    {"type": "talk", "target": "veyl"}
+  ],
+  "rewards": [
+    {"item": "shardline:purification_essence", "count": 2}
+  ],
+  "xp": 160,
+  "flags": ["archive:voices"]
+}

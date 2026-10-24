@@ -108,6 +108,15 @@ for name, (_fn, variants, animate) in virus_strains.BLOCKS.items():
 for n, size in (("crystallized_piglin", (64, 64)), ("crystallized_enderman", (64, 32))):
     for part in ("", "_glowmask", "_collar"):
         need(TEX / "entity" / f"{n}{part}.png", size)
+# ---- Nach dem Ausbruch: Kapitel 7-9 (aftermath_assets.py)
+for i in ("echo_shard", "keeper_tuning_fork", "chronicle_journal"):
+    need(TEX / "item" / f"{i}.png", (16, 16)); items.append(i)
+for key in ("7", "8_seal", "8_dominate", "9_seal", "9_dominate"):
+    need(TEX / "item" / f"chapter_emblem_{key}.png", (16, 16)); items.append(f"chapter_emblem_{key}")
+need(TEX / "block" / "festering_node.png", (16, 16)); need(TEX / "block" / "festering_node_glow.png", (16, 64))
+need(TEX / "block" / "festering_node_glow.png.mcmeta")
+for n, size in (("echo_queen", (128, 128)), ("festering_heart", (128, 128))):
+    need(TEX / "entity" / f"{n}.png", size); need(TEX / "entity" / f"{n}_glowmask.png", size)
 story2_blocks = """decision_altar_side decision_altar_side_glow decision_altar_top decision_altar_top_glow decision_altar_bottom
 keeper_ruin_bricks keeper_ruin_pillar keeper_ruin_pillar_top keeper_rune_slab keeper_rune_slab_glow keeper_rune_slab_side""".split()
 for b in story2_blocks: need(TEX / "block" / f"{b}.png", (16, 16))

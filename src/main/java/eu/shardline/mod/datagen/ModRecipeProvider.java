@@ -120,6 +120,13 @@ public class ModRecipeProvider extends RecipeProvider {
         stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARDSTONE_BRICKS.get(), 1);
         stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARDSTONE.get(), 1);
 
+        // --- Nach dem Ausbruch: Stimmgabel der Hueter ---
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.KEEPER_TUNING_FORK.get())
+                .pattern("I I").pattern(" G ").pattern(" S ")
+                .define('I', ModItems.SHARD_INGOT.get()).define('G', Items.GOLD_INGOT).define('S', Items.STICK)
+                .unlockedBy(getHasName(ModItems.SHARD_INGOT.get()), has(ModItems.SHARD_INGOT.get()))
+                .save(output);
+
         // --- Hueter-Ruinen: heller Hueterstein aus Calcit, Runen mit Glowstone-Staub ---
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUIN_BRICKS.get(), 4)
                 .pattern("CC").pattern("CC")

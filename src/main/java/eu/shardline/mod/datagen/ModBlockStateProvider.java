@@ -85,6 +85,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         ModelFile nylium = overlayModel("infected_nylium", modLoc("block/infected_nylium_side"), modLoc("block/infected_nylium_top"),
                 modLoc("block/infected_netherrack"), modLoc("block/infected_nylium_side_glow"), modLoc("block/infected_nylium_top_glow"), "solid");
         simpleBlockWithItem(ModBlocks.INFECTED_NYLIUM.get(), nylium);
+        ResourceLocation node = modLoc("block/festering_node");
+        simpleBlockWithItem(ModBlocks.FESTERING_NODE.get(), overlayModel("festering_node", node, node, node,
+                modLoc("block/festering_node_glow"), modLoc("block/festering_node_glow"), "cutout"));
         withVariants(ModBlocks.INFECTED_GRASS.get(), 3, suffix -> overlayModel("infected_grass" + suffix,
                 modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top" + suffix), modLoc("block/infected_dirt"),
                 modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top" + suffix + "_glow"), "cutout"));

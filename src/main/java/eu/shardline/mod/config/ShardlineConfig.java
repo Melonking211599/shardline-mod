@@ -69,6 +69,10 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.IntValue QUEST_CHECK_TICKS;
     public static final ModConfigSpec.IntValue NPC_CAMP_RADIUS;
     public static final ModConfigSpec.BooleanValue NPC_SLEEP;
+    public static final ModConfigSpec.IntValue AFTERSHOCK_MINUTES;
+    public static final ModConfigSpec.IntValue MAX_NODES_NEAR_PLAYER;
+    public static final ModConfigSpec.DoubleValue ECHO_QUEEN_HEALTH;
+    public static final ModConfigSpec.DoubleValue FESTERING_HEART_HEALTH;
 
     // Virus
     public static final ModConfigSpec.BooleanValue VIRUS_ENABLED;
@@ -324,6 +328,18 @@ public final class ShardlineConfig {
         NPC_SLEEP = b.comment("Lager-NPCs gehen nachts zu ihrem Platz und schlafen (dann nur schleichend ansprechbar).")
                 .translation(key("npc_sleep"))
                 .define("npcSleep", true);
+        AFTERSHOCK_MINUTES = b.comment("Alle so viele Minuten bebt die Weite fuer Spieler ab Kapitel 7; dabei kann eine Schwaere entstehen (0 = aus).")
+                .translation(key("aftershock_minutes"))
+                .defineInRange("aftershockMinutes", 8, 0, 1440);
+        MAX_NODES_NEAR_PLAYER = b.comment("Hoechstens so viele Schwaeren im Umkreis von 96 Bloecken um einen Spieler, bevor keine neuen entstehen.")
+                .translation(key("max_nodes_near_player"))
+                .defineInRange("maxNodesNearPlayer", 3, 0, 32);
+        ECHO_QUEEN_HEALTH = b.comment("Lebenspunkte des Nachhalls (Kapitel 9, versiegelt).")
+                .translation(key("echo_queen_health"))
+                .defineInRange("echoQueenHealth", 320.0, 1.0, 100000.0);
+        FESTERING_HEART_HEALTH = b.comment("Lebenspunkte des Schwaerenherzens (Kapitel 9, beherrscht).")
+                .translation(key("festering_heart_health"))
+                .defineInRange("festeringHeartHealth", 320.0, 1.0, 100000.0);
         b.pop();
 
         b.translation(key("virus")).push("virus");

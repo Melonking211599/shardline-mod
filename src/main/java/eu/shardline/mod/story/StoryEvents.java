@@ -148,6 +148,8 @@ public final class StoryEvents {
             for (ServerPlayer player : creditedPlayers(level, entity, killer, BOSS_CREDIT_RADIUS)) {
                 StoryManager.reach(player, StoryChapter.HEART_OF_THE_EXPANSE);
             }
+        } else if (entity instanceof eu.shardline.mod.entity.boss.EchoQueenEntity) {
+            Encounters.onBossDefeated(level, entity, killer, Encounters.ECHO_QUEEN);
         } else if (entity instanceof ShardQueenEntity queen) {
             VirusOutbreak.onQueenDeath(level, entity.blockPosition(), killer);
             if (StoryManager.data(level.getServer()).ending() == StoryEnding.NONE) {
@@ -193,7 +195,7 @@ public final class StoryEvents {
         }
     }
 
-    private static Set<ServerPlayer> creditedPlayers(ServerLevel level, LivingEntity boss, ServerPlayer killer, double radius) {
+    static Set<ServerPlayer> creditedPlayers(ServerLevel level, LivingEntity boss, ServerPlayer killer, double radius) {
         Set<ServerPlayer> players = new LinkedHashSet<>();
         if (killer != null) {
             players.add(killer);

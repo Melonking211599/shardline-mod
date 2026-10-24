@@ -112,6 +112,22 @@ public final class Quests {
         return true;
     }
 
+    /** Ob ein aktiver Auftrag des Spielers gerade auf einem Schritt dieses Typs mit diesem Ziel steht. */
+    public static boolean hasActiveStep(ServerPlayer player, String type, String target) {
+        ShardlineWorldData data = StoryManager.data(player.server);
+        for (Map.Entry<String, QuestProgress> entry : data.quests(player.getUUID()).entrySet()) {
+            QuestDefinition quest = get(entry.getKey());
+            QuestProgress progress = entry.getValue();
+            if (quest != null && progress.active() && progress.step() < quest.steps().size()) {
+                QuestDefinition.Step step = quest.steps().get(progress.step());
+                if (step.type().equals(type) && step.target().equals(target)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /** Ereignis melden, z. B. trigger(spieler, "kill", "shardline:shard_zombie"). */
     public static void trigger(ServerPlayer player, String type, String target) {
         trigger(player, type, target::equals, 1);

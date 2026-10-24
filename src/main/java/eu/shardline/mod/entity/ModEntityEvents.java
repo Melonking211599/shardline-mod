@@ -64,6 +64,8 @@ public final class ModEntityEvents {
         event.put(ModEntities.CRYSTALLIZED_PIG.get(), CrystallizedPigEntity.createAttributes().build());
         event.put(ModEntities.CRYSTALLIZED_VILLAGER.get(), CrystallizedVillagerEntity.createAttributes().build());
         event.put(ModEntities.VIRUS_HEART.get(), VirusHeartEntity.createAttributes().build());
+        event.put(ModEntities.ECHO_QUEEN.get(), ShardQueenEntity.createAttributes().build());
+        event.put(ModEntities.FESTERING_HEART.get(), VirusHeartEntity.createAttributes().build());
     }
 
     @SubscribeEvent

@@ -30,6 +30,36 @@
       "predicate": {
         "shardline:chapter": 0.55
       }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_7",
+      "predicate": {
+        "shardline:chapter": 0.65
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_8_seal",
+      "predicate": {
+        "shardline:chapter": 1.75
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_9_seal",
+      "predicate": {
+        "shardline:chapter": 1.85
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_8_dominate",
+      "predicate": {
+        "shardline:chapter": 2.75
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_9_dominate",
+      "predicate": {
+        "shardline:chapter": 2.8500001
+      }
     }
   ],
   "textures": {

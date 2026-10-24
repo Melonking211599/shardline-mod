@@ -24,7 +24,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 /**
- * Ilsa Morgenrot, Tueftlerin und Alchemistin aus Birkenfurt. Baut Laternen, braut Reinigungsessenz und handelt gegen
+ * Ilsa Brandt, Schmiedin und Alchemistin aus Birkenfurt. Baut Laternen, braut Reinigungsessenz und handelt gegen
  * Shard-Splitter (Aktion {@code open_trade} im Dialog). Im versiegelten Ende hilft sie beim Wiederaufbau, im
  * beherrschten Ende fuehrt sie heimlich die Stimmlosen an. Die Angebote fuellen sich jeden Morgen wieder auf.
  */

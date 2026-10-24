@@ -374,8 +374,18 @@ public class VirusHeartEntity extends Monster implements GeoEntity {
         super.die(source);
         if (this.level() instanceof ServerLevel level) {
             this.triggerAnim(ShardlineAnimations.ACTION_CONTROLLER, "death");
-            StoryEvents.onVirusHeartDefeated(level, this, source);
+            this.onDefeated(level, source);
         }
+    }
+
+    /** Folgen des Siegs (Reinigung, Fortschritt zum Kern des Bruchs); Unterklassen (Schwaerenherz) ersetzen sie. */
+    protected void onDefeated(ServerLevel level, DamageSource source) {
+        StoryEvents.onVirusHeartDefeated(level, this, source);
+    }
+
+    /** Fuer Unterklassen (Schwaerenherz): Name und Farbe der Bossleiste. */
+    protected ServerBossEvent bossEvent() {
+        return this.bossEvent;
     }
 
     /** Der Koerper bleibt fuer den Clip {@code death} stehen (2,2 s statt der ueblichen 1 s). */

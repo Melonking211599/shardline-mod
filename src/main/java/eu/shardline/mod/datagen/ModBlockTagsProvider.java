@@ -81,6 +81,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 ModBlocks.INFECTED_BLACKSTONE.get(), ModBlocks.INFECTED_NYLIUM.get(), ModBlocks.INFECTED_END_STONE.get(),
                 ModBlocks.INFECTED_PURPUR.get());
         tag(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.INFECTED_PLANKS.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.FESTERING_NODE.get());
         tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.INFECTED_SOUL_SOIL.get());
         tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.INFECTED_WART_BLOCK.get());
         tag(BlockTags.INFINIBURN_NETHER).add(ModBlocks.INFECTED_NETHERRACK.get());

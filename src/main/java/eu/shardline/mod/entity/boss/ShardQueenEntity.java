@@ -420,6 +420,11 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
 
     // --- Bossleiste ---
 
+    /** Fuer Unterklassen (Nachhall): Name und Farbe der Bossleiste. */
+    protected ServerBossEvent bossEvent() {
+        return this.bossEvent;
+    }
+
     @Override
     public void startSeenByPlayer(ServerPlayer player) {
         super.startSeenByPlayer(player);

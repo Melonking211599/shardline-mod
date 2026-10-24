@@ -95,6 +95,10 @@ public final class ModItems {
             new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<PurificationEssenceItem> PURIFICATION_ESSENCE = ITEMS.registerItem("purification_essence",
             PurificationEssenceItem::new, new Item.Properties().stacksTo(16).rarity(Rarity.RARE));
+    // Nach dem Ausbruch
+    public static final DeferredItem<Item> ECHO_SHARD = ITEMS.registerSimpleItem("echo_shard", new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<eu.shardline.mod.item.custom.KeeperTuningForkItem> KEEPER_TUNING_FORK = ITEMS.registerItem("keeper_tuning_fork",
+            eu.shardline.mod.item.custom.KeeperTuningForkItem::new, new Item.Properties().durability(64).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<BreachCoreItem> BREACH_CORE = ITEMS.registerItem("breach_core", BreachCoreItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 
@@ -161,6 +165,8 @@ public final class ModItems {
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_ENDERMAN_SPAWN_EGG = spawnEgg("crystallized_enderman", ModEntities.CRYSTALLIZED_ENDERMAN, 0x100D17, 0x5FD6AC);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_PIG_SPAWN_EGG = spawnEgg("crystallized_pig", ModEntities.CRYSTALLIZED_PIG, 0x6B4A62, 0xE03CC0);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_VILLAGER_SPAWN_EGG = spawnEgg("crystallized_villager", ModEntities.CRYSTALLIZED_VILLAGER, 0x2C2138, 0xC933B8);
+    public static final DeferredItem<DeferredSpawnEggItem> ECHO_QUEEN_SPAWN_EGG = spawnEgg("echo_queen", ModEntities.ECHO_QUEEN, 0x6C8098, 0xB8F4FA);
+    public static final DeferredItem<DeferredSpawnEggItem> FESTERING_HEART_SPAWN_EGG = spawnEgg("festering_heart", ModEntities.FESTERING_HEART, 0x341A06, 0xFFD060);
     public static final DeferredItem<DeferredSpawnEggItem> VIRUS_HEART_SPAWN_EGG = spawnEgg("virus_heart", ModEntities.VIRUS_HEART, 0x240A3A, 0xE040FF);
     public static final DeferredItem<DeferredSpawnEggItem> RHEA_SPAWN_EGG = spawnEgg("rhea", ModEntities.RHEA, 0x36506E, 0xC06A3C);
     public static final DeferredItem<DeferredSpawnEggItem> VEYL_SPAWN_EGG = spawnEgg("veyl", ModEntities.VEYL, 0xD8D4E6, 0x7FE6F2);

@@ -1563,6 +1563,216 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
+    // ------------------------------------------------------------------ Nach dem Ausbruch: Kapitel 7-9
+
+    /** Story-Zustand eines Testspielers zuruecksetzen (Kapitel, Zweig, Epilog, Auftraege, Flaggen). */
+    private static void resetStory(ShardlineWorldData data, net.minecraft.server.level.ServerPlayer player) {
+        java.util.UUID uuid = player.getUUID();
+        data.setChapter(uuid, 0);
+        data.setBranch(uuid, StoryEnding.NONE);
+        data.setEpilogue(uuid, "");
+        for (String quest : new ArrayList<>(data.quests(uuid).keySet())) {
+            eu.shardline.mod.story.quest.Quests.reset(player, quest);
+        }
+        for (String flag : List.of("rhea:met", "kesh:met", "veyl:met", "ilsa:met", "boss:echo_queen", "boss:festering_heart", "festering:first")) {
+            data.removeFlag(uuid, flag);
+        }
+    }
+
+    /** Schwaeren aus Welt und Liste entfernen, die ein Test in der Naehe erzeugt hat. */
+    private static void clearNodes(ServerLevel level, BlockPos center, int radius) {
+        var nodes = StoryManager.data(level.getServer()).festeringNodes(level.dimension());
+        for (long packed : nodes.toLongArray()) {
+            BlockPos pos = BlockPos.of(packed);
+            if (pos.distSqr(center) <= (double) radius * radius) {
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                nodes.remove(packed);
+            }
+        }
+    }
+
+    /**
+     * Kapitel 7 bis 8 im versiegelten Ende, ueber die echten Dialoge: Kesh fuehrt zur Schwaere und folgt, die Schwaere
+     * wird gereinigt, Kesh meldet bei Rhea den Begleitschritt, Rhea schliesst ab und Kapitel 8 (versiegelt) beginnt.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void aftermathFlowSeal(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        var rhea = helper.spawn(ModEntities.RHEA.get(), new BlockPos(1, 1, 1));
+        var kesh = helper.spawn(ModEntities.KESH.get(), new BlockPos(4, 1, 1));
+        BlockPos nodePos = helper.absolutePos(new BlockPos(7, 0, 7));
+        try {
+            rhea.setHome(rhea.blockPosition());
+            kesh.setHome(kesh.blockPosition());
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 7);
+            data.addFlag(player.getUUID(), "rhea:met");
+            data.addFlag(player.getUUID(), "kesh:met");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "first_festering"), "Erste Schwaere liess sich nicht annehmen");
+
+            player.moveTo(kesh.getX() + 1.5, kesh.getY(), kesh.getZ());
+            kesh.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("festering_lead"), "Kesh fuehrt nicht zur Schwaere");
+            helper.assertTrue(data.quest(player.getUUID(), "first_festering").step() == 1, "Gespraech mit Kesh zaehlt nicht");
+            helper.assertTrue(player.getUUID().equals(kesh.following()), "Kesh folgt nicht");
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+
+            level.setBlock(nodePos, ModBlocks.FESTERING_NODE.get().defaultBlockState(), 3);
+            helper.assertTrue(data.festeringNodes(level.dimension()).contains(nodePos.asLong()), "Schwaere nicht gespeichert");
+            eu.shardline.mod.block.custom.FesteringNodeBlock.silence(level, nodePos, player);
+            helper.assertTrue(level.getBlockState(nodePos).isAir() && !data.festeringNodes(level.dimension()).contains(nodePos.asLong()),
+                    "Schwaere nicht entfernt");
+            helper.assertTrue(!level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(nodePos).inflate(2),
+                    item -> item.getItem().is(eu.shardline.mod.item.ModItems.ECHO_SHARD.get())).isEmpty(), "Keine Echosplitter");
+            helper.assertTrue(data.quest(player.getUUID(), "first_festering").step() == 2, "Reinigung zaehlt nicht");
+
+            kesh.checkArrival();
+            helper.assertTrue(kesh.following() == null && data.quest(player.getUUID(), "first_festering").step() == 3,
+                    "Begleitschritt bei Rhea nicht erkannt");
+
+            player.moveTo(rhea.getX() + 1.5, rhea.getY(), rhea.getZ());
+            rhea.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("festering_turn_in"), "Rhea nimmt den Bericht nicht an");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "quest_done:first_festering"), "Erste Schwaere nicht abgeschlossen");
+            helper.assertTrue(data.chapter(player.getUUID()) == 8 && data.branch(player.getUUID()) == StoryEnding.SEALED,
+                    "Kapitel 8 (versiegelt) nicht erreicht");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            clearNodes(level, kesh.blockPosition(), 48);
+            resetStory(data, player);
+            data.setEnding(ending);
+            rhea.discard();
+            kesh.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /**
+     * Kapitel-9-Gegner: Nachhall und Schwaerenherz erscheinen ueber die Dialogaktion (nie doppelt), ihr Tod setzt die
+     * Boss-Flaggen ohne Ausbruch oder Entscheidungsaltar; danach fuehrt Veyl zur Epilog-Entscheidung.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void aftermathBossesAndEpilogue(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        boolean infected = data.isInfected();
+        long outbreak = data.outbreakTime();
+        var veyl = helper.spawn(ModEntities.VEYL.get(), new BlockPos(2, 1, 2));
+        List<Entity> spawned = new ArrayList<>();
+        try {
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 9);
+            data.setBranch(player.getUUID(), StoryEnding.SEALED);
+            player.moveTo(veyl.getX() + 1.5, veyl.getY(), veyl.getZ());
+            helper.assertTrue(eu.shardline.mod.story.Encounters.summon(eu.shardline.mod.story.Encounters.ECHO_QUEEN, player, veyl),
+                    "Nachhall erscheint nicht");
+            helper.assertFalse(eu.shardline.mod.story.Encounters.summon(eu.shardline.mod.story.Encounters.ECHO_QUEEN, player, veyl),
+                    "Nachhall darf nicht doppelt erscheinen");
+            helper.assertTrue(eu.shardline.mod.story.Encounters.summon(eu.shardline.mod.story.Encounters.FESTERING_HEART, player, veyl),
+                    "Schwaerenherz erscheint nicht");
+            var queens = level.getEntitiesOfClass(eu.shardline.mod.entity.boss.EchoQueenEntity.class, new net.minecraft.world.phys.AABB(veyl.blockPosition()).inflate(32));
+            var hearts = level.getEntitiesOfClass(eu.shardline.mod.entity.boss.FesteringHeartEntity.class, new net.minecraft.world.phys.AABB(veyl.blockPosition()).inflate(32));
+            helper.assertTrue(queens.size() == 1 && hearts.size() == 1, "Bosse nicht gefunden");
+            spawned.addAll(queens);
+            spawned.addAll(hearts);
+            helper.assertTrue(queens.get(0).getMaxHealth() == eu.shardline.mod.config.ShardlineConfig.ECHO_QUEEN_HEALTH.get().floatValue(),
+                    "Nachhall hat nicht das eigene Leben");
+            queens.get(0).kill();
+            hearts.get(0).kill();
+            helper.assertTrue(data.hasFlag(player.getUUID(), "boss:echo_queen") && data.hasFlag(player.getUUID(), "boss:festering_heart"),
+                    "Boss-Flaggen fehlen");
+            helper.assertTrue(data.ending() == StoryEnding.SEALED && data.isInfected() == infected, "Nachhall hat den Weltzustand veraendert");
+
+            data.addFlag(player.getUUID(), "veyl:met");
+            veyl.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("decision"), "Veyl bietet die Entscheidung nicht an");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 1);
+            helper.assertTrue(data.epilogue(player.getUUID()).equals("chronicle"), "Epilog nicht gesetzt");
+            var advancement = level.getServer().getAdvancements().get(Shardline.id("story/epilogue_chronicle"));
+            helper.assertTrue(advancement != null && player.getAdvancements().getOrStartProgress(advancement).isDone(), "Epilog-Advancement fehlt");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            spawned.forEach(Entity::discard);
+            level.getEntitiesOfClass(eu.shardline.mod.entity.boss.QueenCloneEntity.class, new net.minecraft.world.phys.AABB(veyl.blockPosition()).inflate(64))
+                    .forEach(Entity::discard);
+            resetStory(data, player);
+            data.setEnding(ending);
+            data.setInfected(infected, outbreak);
+            veyl.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Schwaere im beherrschten Ende: Stimmgabel findet sie, ein Herrscher bindet sie; Gegengesang-Befallene greifen Herrscher an. */
+    @GameTest(template = EMPTY, timeoutTicks = 40, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void festeringNodeDominated(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        boolean wasRuler = data.isRuler(player.getUUID());
+        BlockPos nodePos = helper.absolutePos(new BlockPos(4, 0, 4));
+        var zombie = helper.spawn(ModEntities.SHARD_ZOMBIE.get(), new BlockPos(1, 1, 1));
+        try {
+            data.setEnding(StoryEnding.DOMINATED);
+            data.addRuler(player.getUUID());
+            data.setChapter(player.getUUID(), 8);
+            data.setBranch(player.getUUID(), StoryEnding.DOMINATED);
+            level.setBlock(nodePos, ModBlocks.FESTERING_NODE.get().defaultBlockState(), 3);
+            helper.assertTrue(nodePos.equals(eu.shardline.mod.item.custom.KeeperTuningForkItem.nearestNode(level, nodePos.above(5))),
+                    "Stimmgabel findet die Schwaere nicht");
+            helper.assertTrue(eu.shardline.mod.entity.infected.InfectedMobs.isFriendly(zombie, player), "Wilder Befallener greift den Herrscher an");
+            eu.shardline.mod.entity.infected.InfectedMobs.markCounterSong(zombie);
+            helper.assertFalse(eu.shardline.mod.entity.infected.InfectedMobs.isFriendly(zombie, player), "Gegengesang schont den Herrscher");
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("quest");
+            var quest = eu.shardline.mod.story.dialogue.DialogueParser.parseQuest("test_bind", json("""
+                    {"steps": [{"type": "bind_node", "target": "shardline:festering_node"}]}"""), problems);
+            var saved = new java.util.LinkedHashMap<String, eu.shardline.mod.story.quest.QuestDefinition>();
+            eu.shardline.mod.story.quest.Quests.all().forEach(q -> saved.put(q.id(), q));
+            var map = new java.util.LinkedHashMap<>(saved);
+            map.put(quest.id(), quest);
+            eu.shardline.mod.story.quest.Quests.setDefinitions(map);
+            try {
+                eu.shardline.mod.story.quest.Quests.start(player, "test_bind");
+                eu.shardline.mod.block.custom.FesteringNodeBlock.silence(level, nodePos, player);
+                helper.assertTrue(data.hasFlag(player.getUUID(), "quest_done:test_bind"), "Herrscher hat die Schwaere nicht gebunden");
+            } finally {
+                eu.shardline.mod.story.quest.Quests.reset(player, "test_bind");
+                eu.shardline.mod.story.quest.Quests.setDefinitions(saved);
+            }
+            BlockPos spawnedNode = eu.shardline.mod.story.Encounters.spawnNodeNear(level, helper.absolutePos(new BlockPos(4, 1, 4)), 2, 3,
+                    level.getRandom());
+            helper.assertTrue(spawnedNode != null && level.getBlockState(spawnedNode).is(ModBlocks.FESTERING_NODE.get()), "Schwaere entsteht nicht");
+            helper.assertTrue(eu.shardline.mod.story.Encounters.nodesNear(level, spawnedNode, 4) >= 1, "Schwaere wird nicht gezaehlt");
+            helper.succeed();
+        } finally {
+            clearNodes(level, nodePos, 16);
+            resetStory(data, player);
+            data.setEnding(ending);
+            if (!wasRuler) {
+                data.rulers().remove(player.getUUID());
+            }
+            zombie.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

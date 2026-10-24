@@ -44,6 +44,42 @@
     ],
     "subtitle": "subtitles.shardline.block.decision_altar.use"
   },
+  "block.festering_node.bind": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.respawn_anchor.charge"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.festering_node.bind"
+  },
+  "block.festering_node.hum": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.sculk_catalyst.bloom"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.festering_node.hum"
+  },
+  "block.festering_node.purify": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.resonate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.festering_node.purify"
+  },
+  "block.festering_node.scream": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.sculk_shrieker.shriek"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.festering_node.scream"
+  },
   "block.memory_crystal.vision": {
     "sounds": [
       {
@@ -1024,6 +1060,15 @@
       }
     ],
     "subtitle": "subtitles.shardline.item.heart_of_the_expanse.blink"
+  },
+  "item.keeper_tuning_fork.ring": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.bell.resonate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.item.keeper_tuning_fork.ring"
   },
   "item.lore_book.open": {
     "sounds": [

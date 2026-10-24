@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/chapter_7",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.festering_node.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:festering_node"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.festering_node.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

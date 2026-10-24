@@ -251,6 +251,13 @@ public final class ModBlocks {
                     .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.STONE)
                     .randomTicks()));
 
+    // Nach dem Ausbruch: Schwaere (Kapitel 7-9)
+    public static final DeferredBlock<eu.shardline.mod.block.custom.FesteringNodeBlock> FESTERING_NODE = registerWithItem("festering_node",
+            () -> new eu.shardline.mod.block.custom.FesteringNodeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
+                    .requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.SCULK_CATALYST).lightLevel(state -> 7)
+                    .randomTicks().noLootTable()),
+            new Item.Properties().rarity(Rarity.UNCOMMON));
+
     // --- Gegenmittel ---
     // --- Hueter-Ruinen ---
     public static final DeferredBlock<Block> KEEPER_RUIN_BRICKS = registerWithItem("keeper_ruin_bricks",
