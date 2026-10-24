@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "shardline:shardstone_bricks"
+  },
+  "result": {
+    "count": 1,
+    "id": "shardline:chiseled_shardstone_bricks"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "shardline:block/shard_lantern"
+    },
+    "hanging=true": {
+      "model": "shardline:block/shard_lantern_hanging"
+    }
+  }
+}

@@ -83,6 +83,82 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy(getHasName(ModItems.SHARD_FRAGMENT.get()), has(ModItems.SHARD_FRAGMENT.get()))
                 .save(output);
 
+        // --- Splitterhandwerk: Kristallholz-Bauset ---
+        Ingredient planks = Ingredient.of(ModBlocks.CRYSTAL_PLANKS.get());
+        String hasPlanks = getHasName(ModBlocks.CRYSTAL_PLANKS.get());
+        stairBuilder(ModBlocks.CRYSTAL_STAIRS.get(), planks).group("crystal_wood")
+                .unlockedBy(hasPlanks, has(ModBlocks.CRYSTAL_PLANKS.get())).save(output);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CRYSTAL_SLAB.get(), ModBlocks.CRYSTAL_PLANKS.get());
+        fenceBuilder(ModBlocks.CRYSTAL_FENCE.get(), planks).group("crystal_wood")
+                .unlockedBy(hasPlanks, has(ModBlocks.CRYSTAL_PLANKS.get())).save(output);
+        fenceGateBuilder(ModBlocks.CRYSTAL_FENCE_GATE.get(), planks).group("crystal_wood")
+                .unlockedBy(hasPlanks, has(ModBlocks.CRYSTAL_PLANKS.get())).save(output);
+        doorBuilder(ModBlocks.CRYSTAL_DOOR.get(), planks).group("crystal_wood")
+                .unlockedBy(hasPlanks, has(ModBlocks.CRYSTAL_PLANKS.get())).save(output);
+        trapdoorBuilder(ModBlocks.CRYSTAL_TRAPDOOR.get(), planks).group("crystal_wood")
+                .unlockedBy(hasPlanks, has(ModBlocks.CRYSTAL_PLANKS.get())).save(output);
+        buttonBuilder(ModBlocks.CRYSTAL_BUTTON.get(), planks).group("crystal_wood")
+                .unlockedBy(hasPlanks, has(ModBlocks.CRYSTAL_PLANKS.get())).save(output);
+        pressurePlate(output, ModBlocks.CRYSTAL_PRESSURE_PLATE.get(), ModBlocks.CRYSTAL_PLANKS.get());
+
+        // --- Splitterhandwerk: Splitterstein-Varianten (glatt wie Glattstein: im Ofen oder an der Steinsaege) ---
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ModBlocks.SHARDSTONE.get()), RecipeCategory.BUILDING_BLOCKS,
+                        ModBlocks.POLISHED_SHARDSTONE.get(), 0.1F, 200)
+                .unlockedBy(getHasName(ModBlocks.SHARDSTONE.get()), has(ModBlocks.SHARDSTONE.get()))
+                .save(output);
+        stairBuilder(ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), Ingredient.of(ModBlocks.POLISHED_SHARDSTONE.get()))
+                .unlockedBy(getHasName(ModBlocks.POLISHED_SHARDSTONE.get()), has(ModBlocks.POLISHED_SHARDSTONE.get()))
+                .save(output);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), ModBlocks.POLISHED_SHARDSTONE.get());
+        chiseledBuilder(RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(),
+                        Ingredient.of(ModBlocks.SHARDSTONE_BRICK_SLAB.get()))
+                .unlockedBy(getHasName(ModBlocks.SHARDSTONE_BRICKS.get()), has(ModBlocks.SHARDSTONE_BRICKS.get()))
+                .save(output);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.POLISHED_SHARDSTONE.get(), ModBlocks.SHARDSTONE.get(), 1);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), ModBlocks.POLISHED_SHARDSTONE.get(), 1);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), ModBlocks.POLISHED_SHARDSTONE.get(), 2);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARDSTONE_BRICKS.get(), 1);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARDSTONE.get(), 1);
+
+        // --- Splitterhandwerk: Licht & Glas ---
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.SHARD_LANTERN.get())
+                .pattern("NNN").pattern("NFN").pattern("NNN")
+                .define('N', Items.IRON_NUGGET).define('F', ModItems.SHARD_FRAGMENT.get())
+                .unlockedBy(getHasName(ModItems.SHARD_FRAGMENT.get()), has(ModItems.SHARD_FRAGMENT.get()))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.CRYSTAL_GLASS.get(), 8)
+                .pattern("GGG").pattern("GSG").pattern("GGG")
+                .define('G', Items.GLASS).define('S', ModItems.CRYSTAL_SLIME.get())
+                .unlockedBy(getHasName(ModItems.CRYSTAL_SLIME.get()), has(ModItems.CRYSTAL_SLIME.get()))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CRYSTAL_GLASS_PANE.get(), 16)
+                .pattern("GGG").pattern("GGG")
+                .define('G', ModBlocks.CRYSTAL_GLASS.get())
+                .unlockedBy(getHasName(ModBlocks.CRYSTAL_GLASS.get()), has(ModBlocks.CRYSTAL_GLASS.get()))
+                .save(output);
+
+        // --- Splitterhandwerk: Essen ---
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.GLOWCAP_STEW.get())
+                .requires(Items.BOWL).requires(ModBlocks.GLOWCAP.get(), 2).requires(Items.BROWN_MUSHROOM)
+                .unlockedBy(getHasName(ModBlocks.GLOWCAP.get()), has(ModBlocks.GLOWCAP.get()))
+                .save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.CRYSTAL_CANDY.get(), 3)
+                .requires(Items.SUGAR, 2).requires(ModItems.CRYSTAL_SLIME.get())
+                .unlockedBy(getHasName(ModItems.CRYSTAL_SLIME.get()), has(ModItems.CRYSTAL_SLIME.get()))
+                .save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ModItems.BERRY_TART.get())
+                .requires(ModItems.LUMINOUS_BERRY.get(), 3).requires(Items.WHEAT).requires(Items.SUGAR).requires(Items.EGG)
+                .unlockedBy(getHasName(ModItems.LUMINOUS_BERRY.get()), has(ModItems.LUMINOUS_BERRY.get()))
+                .save(output);
+
+        // --- Splitterhandwerk: Resonanzkompass ---
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.RESONANCE_COMPASS.get())
+                .pattern(" F ").pattern("ICI").pattern(" S ")
+                .define('F', ModItems.SHARD_FRAGMENT.get()).define('I', ModItems.SHARD_INGOT.get())
+                .define('C', Items.COMPASS).define('S', ModItems.CRYSTAL_SLIME.get())
+                .unlockedBy(getHasName(ModItems.CRYSTAL_SLIME.get()), has(ModItems.CRYSTAL_SLIME.get()))
+                .save(output);
+
         // --- Portal ---
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SHARD_PORTAL_FRAME.get())
                 .pattern(" F ").pattern("FOF").pattern(" F ")

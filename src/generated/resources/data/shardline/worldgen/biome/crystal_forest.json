@@ -69,6 +69,12 @@
         "weight": 6
       },
       {
+        "type": "shardline:crystal_snail",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 10
+      },
+      {
         "type": "shardline:void_ray",
         "maxCount": 2,
         "minCount": 1,

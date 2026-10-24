@@ -44,4 +44,30 @@ Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Sch
 | Koloss-Arena | Kristallwälder | Altar für den Kristallkoloss |
 | Thron der Königin | Zentrum (0 / 0) | Arena der Splitterkönigin |
 
+## Splitterhandwerk
+
+Bauen, Licht, Essen und Werkzeuge rund um die Splitterweite.
+
+| Inhalt | Herstellung | Hinweis |
+|---|---|---|
+| Kristallholz-Treppe, -Stufe, -Zaun, -Zauntor, -Tür, -Falltür, -Knopf, -Druckplatte | wie Vanilla-Holz aus Kristallholzbrettern | Tür und Falltür aus Glas mit Kristallholzrahmen |
+| Polierter Splitterstein (+ Treppe, Stufe) | Splitterstein im Ofen oder an der Steinsäge | |
+| Gemeißelte Splitterstein-Ziegel | 2 Splitterstein-Ziegelstufen übereinander oder Steinsäge | |
+| Splitterlaterne | 8 Eisennuggets um einen Shard-Splitter | Licht 15, steht oder hängt |
+| Kristallglas (8) / Kristallglasscheibe (16) | 8 Glas um Kristallschleim / 6 Kristallglas | nur mit Behutsamkeit abbaubar |
+| Leuchtkappen-Eintopf | Schüssel, 2 Leuchtkappen, brauner Pilz | 6 Hunger, 60 s Nachtsicht |
+| Kristallbonbon (3) | 2 Zucker, Kristallschleim | schnell gegessen, 15 s Tempo, auch satt essbar |
+| Leuchtbeeren-Törtchen | 3 Leuchtbeeren, Weizen, Zucker, Ei | 8 Hunger, 6 s Regeneration |
+| Resonanzkompass | Shard-Splitter, 2 Shard-Barren, Kompass, Kristallschleim | siehe unten |
+
+**Kristallschnecke:** friedliches Wesen im Kristallwald und in den Leuchtenden Höhlen. Sie folgt Leuchtbeeren und hinterlässt alle 5 bis 10 Minuten einen Kristallschleim. Bei einem Treffer zieht sie sich 5 Sekunden in ihr Haus zurück und nimmt dann nur ein Fünftel des Schadens.
+
+**Resonanzkompass:** Rechtsklick sucht das nächste Bauwerk des gewählten Typs und zeigt Richtung und Entfernung an; eine Lichtspur weist kurz den Weg. Schleichen und Rechtsklick wechselt das Ziel. In der Splitterweite stehen alle Bauwerke der Weite zur Wahl, in der Oberwelt der Splitterkrater.
+
+**Verzauberungen** (Zaubertisch, Handel und Beute):
+- **Splitterbann I–V** (Schwert und Axt): +2,5 Schaden je Stufe gegen Splitterwesen, Bosse und Infizierte. Schließt Schärfe, Bann und Nemesis der Gliederfüßer aus.
+- **Kristallwehr I–IV** (Rüstung): Schutz gegen Splitterschaden, also Shard-Geschosse, Leerzonen, Kristallsäulen, Splitterfieber und Viruspulse. Schließt die anderen Schutz-Verzauberungen aus.
+
+Neue Advancements im Tab „Shardline“: *Langsam, aber glänzend*, *Echo im Stein*, *Kristallhandwerker* und *Leuchten von innen*.
+
 Eine Liste aller Texturen und Modelle steht in [ASSETS.md](ASSETS.md).

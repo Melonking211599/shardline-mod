@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_luminous_berry": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:luminous_berry"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shardline:berry_tart"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_luminous_berry"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shardline:berry_tart"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "crystal_wood",
+  "ingredients": [
+    {
+      "item": "shardline:crystal_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "shardline:crystal_button"
+  }
+}

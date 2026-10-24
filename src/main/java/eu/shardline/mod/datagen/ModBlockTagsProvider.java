@@ -77,6 +77,26 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModTags.Blocks.INFECTABLE_LOG).addTag(BlockTags.OVERWORLD_NATURAL_LOGS).addTag(ModTags.Blocks.CRYSTAL_LOGS);
         tag(ModTags.Blocks.INFECTABLE_LEAVES).addTag(BlockTags.LEAVES);
 
+        // --- Splitterhandwerk ---
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.POLISHED_SHARDSTONE.get(), ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(),
+                ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARD_LANTERN.get());
+        tag(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.CRYSTAL_STAIRS.get(), ModBlocks.CRYSTAL_SLAB.get(), ModBlocks.CRYSTAL_FENCE.get(),
+                ModBlocks.CRYSTAL_FENCE_GATE.get(), ModBlocks.CRYSTAL_DOOR.get(), ModBlocks.CRYSTAL_TRAPDOOR.get(),
+                ModBlocks.CRYSTAL_BUTTON.get(), ModBlocks.CRYSTAL_PRESSURE_PLATE.get());
+        tag(BlockTags.STAIRS).add(ModBlocks.POLISHED_SHARDSTONE_STAIRS.get());
+        tag(BlockTags.SLABS).add(ModBlocks.POLISHED_SHARDSTONE_SLAB.get());
+        tag(BlockTags.WOODEN_STAIRS).add(ModBlocks.CRYSTAL_STAIRS.get());
+        tag(BlockTags.WOODEN_SLABS).add(ModBlocks.CRYSTAL_SLAB.get());
+        tag(BlockTags.WOODEN_FENCES).add(ModBlocks.CRYSTAL_FENCE.get());
+        tag(BlockTags.FENCE_GATES).add(ModBlocks.CRYSTAL_FENCE_GATE.get());
+        tag(BlockTags.WOODEN_DOORS).add(ModBlocks.CRYSTAL_DOOR.get());
+        tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.CRYSTAL_TRAPDOOR.get());
+        tag(BlockTags.WOODEN_BUTTONS).add(ModBlocks.CRYSTAL_BUTTON.get());
+        tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.CRYSTAL_PRESSURE_PLATE.get());
+        tag(BlockTags.IMPERMEABLE).add(ModBlocks.CRYSTAL_GLASS.get());
+        tag(Tags.Blocks.GLASS_BLOCKS).add(ModBlocks.CRYSTAL_GLASS.get());
+        tag(Tags.Blocks.GLASS_PANES).add(ModBlocks.CRYSTAL_GLASS_PANE.get());
+
         tag(ModTags.Blocks.ORES_SHARD).add(ModBlocks.SHARD_ORE.get(), ModBlocks.DEEPSLATE_SHARD_ORE.get());
         tag(Tags.Blocks.ORES).addTag(ModTags.Blocks.ORES_SHARD);
         tag(ModTags.Blocks.STORAGE_BLOCKS_SHARD).add(ModBlocks.SHARD_BLOCK.get());

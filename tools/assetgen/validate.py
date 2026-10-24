@@ -16,9 +16,9 @@ def need(path, size=None):
 
 ENT = {"shard_creeper": 64, "crystal_golem": 128, "glow_moth": 64, "ash_walker": 64, "shard_scout": 64, "void_ray": 128,
        "crystal_spider": 64, "shard_trader": 64, "shadow_fox": 64, "shattered_knight": 64, "crystal_colossus": 256,
-       "shard_queen": 128, "crystal_pillar": 64}
+       "shard_queen": 128, "crystal_pillar": 64, "crystal_snail": 64}
 GLOW = {"shard_creeper", "crystal_golem", "glow_moth", "shard_scout", "void_ray", "crystal_spider", "shadow_fox",
-        "shattered_knight", "crystal_colossus", "shard_queen", "crystal_pillar"}
+        "shattered_knight", "crystal_colossus", "shard_queen", "crystal_pillar", "crystal_snail"}
 for n, s in ENT.items():
     need(TEX / "entity" / f"{n}.png", (s, s))
     if n in GLOW: need(TEX / "entity" / f"{n}_glowmask.png", (s, s))
@@ -79,5 +79,14 @@ hb = {b["name"] for b in hg["bones"]}
 ha = json.loads((ANIM / "virus_heart.animation.json").read_text(encoding="utf-8"))["animations"]
 for clip in ("idle", "spawn", "attack_tendrils", "summon_infected", "hurt", "death"):
     if clip not in ha: errors.append(f"virus_heart: Clip {clip} fehlt")
+
+# ---- Splitterhandwerk
+craft_blocks = """polished_shardstone chiseled_shardstone_bricks crystal_door_top crystal_door_bottom crystal_trapdoor crystal_glass
+crystal_glass_pane_top shard_lantern""".split()
+for b in craft_blocks: need(TEX / "block" / f"{b}.png", (16, 16))
+craft_items = "crystal_door shard_lantern crystal_slime glowcap_stew crystal_candy berry_tart resonance_compass".split()
+for i in craft_items: need(TEX / "item" / f"{i}.png", (16, 16))
+blocks += craft_blocks
+items += craft_items
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

@@ -42,6 +42,10 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
         add(ModEntities.GLOW_MOTH.get(), LootTable.lootTable()
                 .withPool(drop(Items.GLOWSTONE_DUST, 0, 1)));
 
+        add(ModEntities.CRYSTAL_SNAIL.get(), LootTable.lootTable()
+                .withPool(drop(ModItems.CRYSTAL_SLIME.get(), 1, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 1)));
+
         add(ModEntities.ASH_WALKER.get(), LootTable.lootTable()
                 .withPool(drop(ModItems.ASH_DUST.get(), 1, 3))
                 .withPool(drop(Items.BONE, 0, 1))

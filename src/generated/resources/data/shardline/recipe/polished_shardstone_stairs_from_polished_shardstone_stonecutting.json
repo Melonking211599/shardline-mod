@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "shardline:polished_shardstone"
+  },
+  "result": {
+    "count": 1,
+    "id": "shardline:polished_shardstone_stairs"
+  }
+}

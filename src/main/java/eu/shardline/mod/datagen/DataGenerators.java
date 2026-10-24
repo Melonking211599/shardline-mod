@@ -45,6 +45,8 @@ public final class DataGenerators {
         generator.addProvider(server, new ModWorldTagsProvider.Biomes(output, fullLookup, fileHelper));
         generator.addProvider(server, new ModWorldTagsProvider.Structures(output, fullLookup, fileHelper));
         generator.addProvider(server, new ModWorldTagsProvider.DamageTypes(output, fullLookup, fileHelper));
+        generator.addProvider(server, new ModWorldTagsProvider.EntityTypes(output, lookup, fileHelper));
+        generator.addProvider(server, new ModWorldTagsProvider.Enchantments(output, fullLookup, fileHelper));
 
         generator.addProvider(server, new LootTableProvider(output, Set.of(), List.of(
                 new LootTableProvider.SubProviderEntry(ModBlockLootProvider::new, LootContextParamSets.BLOCK),

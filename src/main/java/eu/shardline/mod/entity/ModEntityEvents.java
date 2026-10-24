@@ -9,6 +9,7 @@ import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
 import eu.shardline.mod.entity.infected.ShardZombieEntity;
 import eu.shardline.mod.entity.mob.AshWalkerEntity;
 import eu.shardline.mod.entity.mob.CrystalGolemEntity;
+import eu.shardline.mod.entity.mob.CrystalSnailEntity;
 import eu.shardline.mod.entity.mob.CrystalSpiderEntity;
 import eu.shardline.mod.entity.mob.GlowMothEntity;
 import eu.shardline.mod.entity.mob.ShadowFoxEntity;
@@ -37,6 +38,7 @@ public final class ModEntityEvents {
         event.put(ModEntities.SHARD_CREEPER.get(), ShardCreeperEntity.createAttributes().build());
         event.put(ModEntities.CRYSTAL_GOLEM.get(), CrystalGolemEntity.createAttributes().build());
         event.put(ModEntities.GLOW_MOTH.get(), GlowMothEntity.createAttributes().build());
+        event.put(ModEntities.CRYSTAL_SNAIL.get(), CrystalSnailEntity.createAttributes().build());
         event.put(ModEntities.ASH_WALKER.get(), AshWalkerEntity.createAttributes().build());
         event.put(ModEntities.SHARD_SCOUT.get(), ShardScoutEntity.createAttributes().build());
         event.put(ModEntities.VOID_RAY.get(), VoidRayEntity.createAttributes().build());
@@ -68,6 +70,8 @@ public final class ModEntityEvents {
 
         event.register(ModEntities.CRYSTAL_GOLEM.get(), SpawnPlacementTypes.ON_GROUND, ground,
                 (type, level, spawnType, pos, random) -> ModSpawnRules.splitterweiteGround("crystal_golem", type, level, spawnType, pos, random), replace);
+        event.register(ModEntities.CRYSTAL_SNAIL.get(), SpawnPlacementTypes.ON_GROUND, ground,
+                (type, level, spawnType, pos, random) -> ModSpawnRules.splitterweiteGround("crystal_snail", type, level, spawnType, pos, random), replace);
         event.register(ModEntities.SHARD_TRADER.get(), SpawnPlacementTypes.ON_GROUND, ground,
                 (type, level, spawnType, pos, random) -> ModSpawnRules.splitterweiteGround("shard_trader", type, level, spawnType, pos, random), replace);
         event.register(ModEntities.SHATTERED_KNIGHT.get(), SpawnPlacementTypes.ON_GROUND, ground,

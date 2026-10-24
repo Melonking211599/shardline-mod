@@ -153,3 +153,38 @@ Die Vignette der Bildschirmeffekte nutzt die Vanilla-Textur `minecraft:textures/
 | `entity.virus_heart.ambient` / `hurt` / `death` / `pulse` | Warden-Herzschlag, Amethyst, Seelenanker, Warden-Aufladung |
 | `ability.shard_call` / `ability.crystal_wave` | Magier-Beschwörung / Warden-Schallwelle |
 | `music.infected` | `music.nether.soul_sand_valley` |
+
+## Splitterhandwerk
+
+Alle Dateien erzeugt `tools/assetgen/fresh_update.py` (Blöcke, Items) und `tools/assetgen/snail.py` (Kristallschnecke); `run_all.py` ruft beide auf.
+
+### Wesen
+
+| Name | Modell | Textur | Leuchtmaske | Animationen |
+|---|---|---|---|---|
+| `crystal_snail` | GeckoLib: `geo/entity/crystal_snail.geo.json`, `animations/entity/crystal_snail.animation.json` | `textures/entity/crystal_snail.png` (64×64) | ja | idle, walk, hide (hält den letzten Frame) |
+
+### Blöcke (`textures/block/`, 16×16)
+
+| Dateien | Verwendung |
+|---|---|
+| `polished_shardstone.png` | Polierter Splitterstein, Treppe und Stufe |
+| `chiseled_shardstone_bricks.png` | Gemeißelte Splitterstein-Ziegel |
+| `crystal_door_top.png`, `crystal_door_bottom.png` | Kristallholztür (cutout) |
+| `crystal_trapdoor.png` | Kristallholz-Falltür (cutout) |
+| `crystal_glass.png`, `crystal_glass_pane_top.png` | Kristallglas und Scheibe (cutout) |
+| `shard_lantern.png` | Splitterlaterne (Vanilla-Laternen-Layout) |
+
+Treppe, Stufe, Zaun, Zauntor, Knopf und Druckplatte aus Kristallholz verwenden `crystal_planks.png`.
+
+### Items (`textures/item/`, 16×16)
+
+`crystal_door`, `shard_lantern`, `crystal_slime`, `glowcap_stew`, `crystal_candy`, `berry_tart`, `resonance_compass`
+
+### Neue Sounds (Platzhalter → Vanilla)
+
+| Sound-Event | Platzhalter |
+|---|---|
+| `entity.crystal_snail.ambient` | `block.amethyst_cluster.step` |
+| `entity.crystal_snail.hurt` / `death` | kleiner Schleim |
+| `entity.crystal_snail.hide` | `block.amethyst_block.place` |

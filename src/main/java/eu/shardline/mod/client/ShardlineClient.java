@@ -82,6 +82,7 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.VOID_RAY.get(), VoidRayRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTAL_SPIDER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_spider", 0.8F, true));
         event.registerEntityRenderer(ModEntities.SHARD_TRADER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_trader", 0.5F, false));
+        event.registerEntityRenderer(ModEntities.CRYSTAL_SNAIL.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_snail", 0.35F, true));
         event.registerEntityRenderer(ModEntities.SHADOW_FOX.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shadow_fox", 0.4F, true));
         event.registerEntityRenderer(ModEntities.SHATTERED_KNIGHT.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shattered_knight", 0.6F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_COLOSSUS.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_colossus", 1.6F, true));

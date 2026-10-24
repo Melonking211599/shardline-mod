@@ -4,6 +4,8 @@ import eu.shardline.mod.Shardline;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -45,6 +47,22 @@ public final class ModTags {
         public static final TagKey<Item> STORAGE_BLOCKS_SHARD = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "storage_blocks/shard"));
 
         private Items() {
+        }
+    }
+
+    public static final class EntityTypes {
+        /** Wesen, gegen die Splitterbann zusaetzlichen Schaden macht. */
+        public static final TagKey<EntityType<?>> SENSITIVE_TO_SHARD_BANE = TagKey.create(Registries.ENTITY_TYPE, Shardline.id("sensitive_to_shard_bane"));
+
+        private EntityTypes() {
+        }
+    }
+
+    public static final class DamageTypes {
+        /** Schaden aus Splittern, Kristallen und dem Shardvirus (Kristallschutz wirkt dagegen). */
+        public static final TagKey<DamageType> SHARD_DAMAGE = TagKey.create(Registries.DAMAGE_TYPE, Shardline.id("shard_damage"));
+
+        private DamageTypes() {
         }
     }
 

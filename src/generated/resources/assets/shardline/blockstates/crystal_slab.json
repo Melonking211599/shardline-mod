@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shardline:block/crystal_slab"
+    },
+    "type=double": {
+      "model": "shardline:block/crystal_planks"
+    },
+    "type=top": {
+      "model": "shardline:block/crystal_slab_top"
+    }
+  }
+}

@@ -26,16 +26,29 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -65,6 +78,14 @@ public final class ModBlocks {
             () -> new SlabBlock(stone(MapColor.COLOR_PURPLE, 2.0F)));
     public static final DeferredBlock<WallBlock> SHARDSTONE_BRICK_WALL = registerWithItem("shardstone_brick_wall",
             () -> new WallBlock(stone(MapColor.COLOR_PURPLE, 2.0F).forceSolidOn()));
+    public static final DeferredBlock<Block> POLISHED_SHARDSTONE = registerWithItem("polished_shardstone",
+            () -> new Block(stone(MapColor.COLOR_PURPLE, 2.0F)));
+    public static final DeferredBlock<StairBlock> POLISHED_SHARDSTONE_STAIRS = registerWithItem("polished_shardstone_stairs",
+            () -> new StairBlock(POLISHED_SHARDSTONE.get().defaultBlockState(), stone(MapColor.COLOR_PURPLE, 2.0F)));
+    public static final DeferredBlock<SlabBlock> POLISHED_SHARDSTONE_SLAB = registerWithItem("polished_shardstone_slab",
+            () -> new SlabBlock(stone(MapColor.COLOR_PURPLE, 2.0F)));
+    public static final DeferredBlock<Block> CHISELED_SHARDSTONE_BRICKS = registerWithItem("chiseled_shardstone_bricks",
+            () -> new Block(stone(MapColor.COLOR_PURPLE, 2.0F).lightLevel(state -> 4)));
 
     // --- Erze & Rohstoffbloecke ---
     public static final DeferredBlock<ShardOreBlock> SHARD_ORE = registerWithItem("shard_ore",
@@ -105,6 +126,22 @@ public final class ModBlocks {
                     .isViewBlocking((state, level, pos) -> false)
                     .pushReaction(PushReaction.DESTROY)
                     .isRedstoneConductor((state, level, pos) -> false)));
+    public static final DeferredBlock<StairBlock> CRYSTAL_STAIRS = registerWithItem("crystal_stairs",
+            () -> new StairBlock(CRYSTAL_PLANKS.get().defaultBlockState(), wood()));
+    public static final DeferredBlock<SlabBlock> CRYSTAL_SLAB = registerWithItem("crystal_slab", () -> new SlabBlock(wood()));
+    public static final DeferredBlock<FenceBlock> CRYSTAL_FENCE = registerWithItem("crystal_fence", () -> new FenceBlock(wood()));
+    public static final DeferredBlock<FenceGateBlock> CRYSTAL_FENCE_GATE = registerWithItem("crystal_fence_gate",
+            () -> new FenceGateBlock(WoodType.CHERRY, wood().forceSolidOn()));
+    public static final DeferredBlock<DoorBlock> CRYSTAL_DOOR = registerDoor("crystal_door",
+            () -> new DoorBlock(BlockSetType.CHERRY, wood().strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<TrapDoorBlock> CRYSTAL_TRAPDOOR = registerWithItem("crystal_trapdoor",
+            () -> new TrapDoorBlock(BlockSetType.CHERRY, wood().strength(3.0F).noOcclusion().isValidSpawn(Blocks::never)));
+    public static final DeferredBlock<ButtonBlock> CRYSTAL_BUTTON = registerWithItem("crystal_button",
+            () -> new ButtonBlock(BlockSetType.CHERRY, 30, BlockBehaviour.Properties.of().noCollission().strength(0.5F)
+                    .pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<PressurePlateBlock> CRYSTAL_PRESSURE_PLATE = registerWithItem("crystal_pressure_plate",
+            () -> new PressurePlateBlock(BlockSetType.CHERRY, wood().forceSolidOn().noCollission().strength(0.5F)
+                    .pushReaction(PushReaction.DESTROY)));
     public static final DeferredBlock<CrystalSaplingBlock> CRYSTAL_SAPLING = registerWithItem("crystal_sapling",
             () -> new CrystalSaplingBlock(CRYSTAL_TREE_GROWER, plant(MapColor.COLOR_PINK, 5).randomTicks()));
 
@@ -117,6 +154,18 @@ public final class ModBlocks {
             () -> new ShardPlantBlock(plant(MapColor.COLOR_LIGHT_BLUE, 12)));
     public static final DeferredBlock<ShardPlantBlock> LUMINOUS_BERRY_BUSH = registerWithItem("luminous_berry_bush",
             () -> new ShardPlantBlock(plant(MapColor.COLOR_MAGENTA, 6).offsetType(BlockBehaviour.OffsetType.XZ)));
+
+    // --- Licht & Glas ---
+    public static final DeferredBlock<LanternBlock> SHARD_LANTERN = registerWithItem("shard_lantern",
+            () -> new LanternBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).forceSolidOn()
+                    .requiresCorrectToolForDrops().strength(3.5F).sound(SoundType.LANTERN).lightLevel(state -> 15)
+                    .noOcclusion().pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<TransparentBlock> CRYSTAL_GLASS = registerWithItem("crystal_glass",
+            () -> new TransparentBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .lightLevel(state -> 3)));
+    public static final DeferredBlock<IronBarsBlock> CRYSTAL_GLASS_PANE = registerWithItem("crystal_glass_pane",
+            () -> new IronBarsBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS_PANE).mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .lightLevel(state -> 2)));
 
     // --- Portal ---
     public static final DeferredBlock<Block> SHARD_PORTAL_FRAME = registerWithItem("shard_portal_frame",
@@ -189,6 +238,11 @@ public final class ModBlocks {
                 .requiresCorrectToolForDrops().strength(hardness, 6.0F).sound(SoundType.CALCITE);
     }
 
+    private static BlockBehaviour.Properties wood() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).instrument(NoteBlockInstrument.BASS)
+                .strength(2.0F, 3.0F).sound(SoundType.CHERRY_WOOD).ignitedByLava();
+    }
+
     private static BlockBehaviour.Properties plant(MapColor color, int light) {
         return BlockBehaviour.Properties.of().mapColor(color).noCollission().instabreak().sound(SoundType.AZALEA)
                 .lightLevel(state -> light).pushReaction(PushReaction.DESTROY);
@@ -202,6 +256,13 @@ public final class ModBlocks {
     private static BlockBehaviour.Properties trophy() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(3.0F, 1200.0F)
                 .sound(SoundType.AMETHYST).lightLevel(state -> 10).noOcclusion();
+    }
+
+    /** Tueren brauchen ein Doppelblock-Item (setzt beide Haelften und raeumt Wasser korrekt). */
+    private static <B extends Block> DeferredBlock<B> registerDoor(String name, Supplier<B> block) {
+        DeferredBlock<B> holder = BLOCKS.register(name, block);
+        BLOCK_ITEMS.add(ModItems.ITEMS.<BlockItem>register(name, () -> new DoubleHighBlockItem(holder.get(), new Item.Properties())));
+        return holder;
     }
 
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Supplier<B> block) {

@@ -43,6 +43,20 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
 
         this.dropSelf(ModBlocks.PURITY_ANCHOR.get());
 
+        // --- Splitterhandwerk ---
+        for (Block block : new Block[] {
+                ModBlocks.POLISHED_SHARDSTONE.get(), ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(),
+                ModBlocks.CRYSTAL_STAIRS.get(), ModBlocks.CRYSTAL_FENCE.get(), ModBlocks.CRYSTAL_FENCE_GATE.get(),
+                ModBlocks.CRYSTAL_TRAPDOOR.get(), ModBlocks.CRYSTAL_BUTTON.get(), ModBlocks.CRYSTAL_PRESSURE_PLATE.get(),
+                ModBlocks.SHARD_LANTERN.get()}) {
+            this.dropSelf(block);
+        }
+        this.add(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), this::createSlabItemTable);
+        this.add(ModBlocks.CRYSTAL_SLAB.get(), this::createSlabItemTable);
+        this.add(ModBlocks.CRYSTAL_DOOR.get(), this::createDoorTable);
+        this.dropWhenSilkTouch(ModBlocks.CRYSTAL_GLASS.get());
+        this.dropWhenSilkTouch(ModBlocks.CRYSTAL_GLASS_PANE.get());
+
         // Infizierte Bloecke: mit Behutsamkeit der Block selbst, sonst das gereinigte Material.
         infected(ModBlocks.INFECTED_STONE.get(), Items.COBBLESTONE);
         infected(ModBlocks.INFECTED_DIRT.get(), Items.DIRT);

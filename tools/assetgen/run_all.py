@@ -20,7 +20,9 @@ import entities
 import geo_prep
 import gui
 import infected_entities
+import snail
 import fresh_items
+import fresh_update
 import story_items
 import fresh_virus
 
@@ -41,6 +43,9 @@ def main():
     story_items.main()
     infected_entities.main()
     effects_gui.main()
+    # Splitterhandwerk
+    fresh_update.main()
+    snail.main()
     print("Fertig.")
 
 

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "F": {
+      "item": "shardline:shard_fragment"
+    },
+    "I": {
+      "item": "shardline:shard_ingot"
+    },
+    "S": {
+      "item": "shardline:crystal_slime"
+    }
+  },
+  "pattern": [
+    " F ",
+    "ICI",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "shardline:resonance_compass"
+  }
+}

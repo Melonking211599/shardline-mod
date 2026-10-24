@@ -17,6 +17,10 @@ public final class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> LORE_BOOK = DATA_COMPONENTS.registerComponentType(
             "lore_book", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
+    /** Gewaehltes Ziel des Resonanzkompasses (Index in der Zielliste der aktuellen Dimension). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RESONANCE_TARGET = DATA_COMPONENTS.registerComponentType(
+            "resonance_target", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     private ModDataComponents() {
     }
 }

@@ -14,7 +14,7 @@ public final class ShardlineConfig {
     /** IDs aller Mobs, deren Spawnrate einzeln konfigurierbar ist. */
     public static final List<String> SPAWNING_MOBS = List.of(
             "shard_creeper", "crystal_golem", "glow_moth", "ash_walker", "shard_scout",
-            "void_ray", "crystal_spider", "shard_trader", "shadow_fox", "shattered_knight");
+            "void_ray", "crystal_spider", "shard_trader", "shadow_fox", "shattered_knight", "crystal_snail");
 
     // Spawns
     public static final ModConfigSpec.BooleanValue OVERWORLD_SPAWNS;

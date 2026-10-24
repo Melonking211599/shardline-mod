@@ -62,6 +62,11 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> SHADOW_FOX_HURT = register("entity.shadow_fox.hurt", "entity.fox.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> SHADOW_FOX_DEATH = register("entity.shadow_fox.death", "entity.fox.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> SHADOW_FOX_VANISH = register("entity.shadow_fox.vanish", "entity.illusioner.mirror_move");
+    // Kristallschnecke
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTAL_SNAIL_AMBIENT = register("entity.crystal_snail.ambient", "block.amethyst_cluster.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTAL_SNAIL_HURT = register("entity.crystal_snail.hurt", "entity.slime.hurt_small");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTAL_SNAIL_DEATH = register("entity.crystal_snail.death", "entity.slime.death_small");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTAL_SNAIL_HIDE = register("entity.crystal_snail.hide", "block.amethyst_block.place");
     // Gesplitterter Ritter
     public static final DeferredHolder<SoundEvent, SoundEvent> SHATTERED_KNIGHT_AMBIENT = register("entity.shattered_knight.ambient", "entity.wither_skeleton.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> SHATTERED_KNIGHT_HURT = register("entity.shattered_knight.hurt", "entity.wither_skeleton.hurt");

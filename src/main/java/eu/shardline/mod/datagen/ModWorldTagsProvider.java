@@ -2,6 +2,8 @@ package eu.shardline.mod.datagen;
 
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.core.ModDamageTypes;
+import eu.shardline.mod.core.ModEnchantments;
+import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.core.ModTags;
 import eu.shardline.mod.world.biome.ModBiomes;
 import eu.shardline.mod.world.structure.ModStructures;
@@ -10,8 +12,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
+import net.minecraft.data.tags.EnchantmentTagsProvider;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.StructureTagsProvider;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -73,6 +78,39 @@ public final class ModWorldTagsProvider {
             tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.VOID_ZONE, ModDamageTypes.SHARD_FEVER);
             tag(DamageTypeTags.NO_KNOCKBACK).add(ModDamageTypes.VOID_ZONE, ModDamageTypes.SHARD_FEVER);
             tag(DamageTypeTags.BYPASSES_SHIELD).add(ModDamageTypes.VOID_ZONE, ModDamageTypes.CRYSTAL_PILLAR);
+            tag(ModTags.DamageTypes.SHARD_DAMAGE).add(ModDamageTypes.SHARD, ModDamageTypes.VOID_ZONE, ModDamageTypes.CRYSTAL_PILLAR,
+                    ModDamageTypes.SHARD_FEVER, ModDamageTypes.VIRUS_PULSE);
+        }
+    }
+
+    public static class EntityTypes extends EntityTypeTagsProvider {
+        public EntityTypes(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, ExistingFileHelper fileHelper) {
+            super(output, lookup, Shardline.MODID, fileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            tag(ModTags.EntityTypes.SENSITIVE_TO_SHARD_BANE).add(ModEntities.SHARD_CREEPER.get(), ModEntities.CRYSTAL_GOLEM.get(),
+                    ModEntities.ASH_WALKER.get(), ModEntities.SHARD_SCOUT.get(), ModEntities.CRYSTAL_SPIDER.get(),
+                    ModEntities.SHADOW_FOX.get(), ModEntities.SHATTERED_KNIGHT.get(), ModEntities.CRYSTAL_COLOSSUS.get(),
+                    ModEntities.SHARD_QUEEN.get(), ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(),
+                    ModEntities.CRYSTALLIZED_COW.get(), ModEntities.VIRUS_HEART.get());
+        }
+    }
+
+    public static class Enchantments extends EnchantmentTagsProvider {
+        public Enchantments(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, ExistingFileHelper fileHelper) {
+            super(output, lookup, Shardline.MODID, fileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            tag(EnchantmentTags.IN_ENCHANTING_TABLE).add(ModEnchantments.SHARD_BANE, ModEnchantments.CRYSTAL_WARD);
+            tag(EnchantmentTags.NON_TREASURE).add(ModEnchantments.SHARD_BANE, ModEnchantments.CRYSTAL_WARD);
+            tag(EnchantmentTags.TRADEABLE).add(ModEnchantments.SHARD_BANE, ModEnchantments.CRYSTAL_WARD);
+            tag(EnchantmentTags.ON_RANDOM_LOOT).add(ModEnchantments.SHARD_BANE, ModEnchantments.CRYSTAL_WARD);
+            tag(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT).add(ModEnchantments.SHARD_BANE, ModEnchantments.CRYSTAL_WARD);
+            tag(EnchantmentTags.ON_TRADED_EQUIPMENT).add(ModEnchantments.SHARD_BANE, ModEnchantments.CRYSTAL_WARD);
         }
     }
 }

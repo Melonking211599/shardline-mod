@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LanternBlock;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
@@ -82,6 +83,42 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         memoryCrystal();
         purityAnchor();
+
+        // --- Splitterhandwerk ---
+        cube(ModBlocks.POLISHED_SHARDSTONE.get());
+        cube(ModBlocks.CHISELED_SHARDSTONE_BRICKS.get());
+        ResourceLocation polished = blockTexture(ModBlocks.POLISHED_SHARDSTONE.get());
+        stairsBlock(ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), polished);
+        slabBlock(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), polished, polished);
+        simpleBlockItem(ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), models().getExistingFile(modLoc("block/polished_shardstone_stairs")));
+        simpleBlockItem(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), models().getExistingFile(modLoc("block/polished_shardstone_slab")));
+
+        ResourceLocation planks = blockTexture(ModBlocks.CRYSTAL_PLANKS.get());
+        stairsBlock(ModBlocks.CRYSTAL_STAIRS.get(), planks);
+        slabBlock(ModBlocks.CRYSTAL_SLAB.get(), planks, planks);
+        fenceBlock(ModBlocks.CRYSTAL_FENCE.get(), planks);
+        fenceGateBlock(ModBlocks.CRYSTAL_FENCE_GATE.get(), planks);
+        doorBlockWithRenderType(ModBlocks.CRYSTAL_DOOR.get(), modLoc("block/crystal_door_bottom"), modLoc("block/crystal_door_top"), "cutout");
+        trapdoorBlockWithRenderType(ModBlocks.CRYSTAL_TRAPDOOR.get(), modLoc("block/crystal_trapdoor"), true, "cutout");
+        buttonBlock(ModBlocks.CRYSTAL_BUTTON.get(), planks);
+        pressurePlateBlock(ModBlocks.CRYSTAL_PRESSURE_PLATE.get(), planks);
+        simpleBlockItem(ModBlocks.CRYSTAL_STAIRS.get(), models().getExistingFile(modLoc("block/crystal_stairs")));
+        simpleBlockItem(ModBlocks.CRYSTAL_SLAB.get(), models().getExistingFile(modLoc("block/crystal_slab")));
+        simpleBlockItem(ModBlocks.CRYSTAL_FENCE_GATE.get(), models().getExistingFile(modLoc("block/crystal_fence_gate")));
+        simpleBlockItem(ModBlocks.CRYSTAL_TRAPDOOR.get(), models().getExistingFile(modLoc("block/crystal_trapdoor_bottom")));
+        simpleBlockItem(ModBlocks.CRYSTAL_PRESSURE_PLATE.get(), models().getExistingFile(modLoc("block/crystal_pressure_plate")));
+
+        ResourceLocation lanternTexture = modLoc("block/shard_lantern");
+        ModelFile lantern = models().withExistingParent("shard_lantern", mcLoc("block/template_lantern"))
+                .texture("lantern", lanternTexture).renderType("cutout");
+        ModelFile hanging = models().withExistingParent("shard_lantern_hanging", mcLoc("block/template_hanging_lantern"))
+                .texture("lantern", lanternTexture).renderType("cutout");
+        getVariantBuilder(ModBlocks.SHARD_LANTERN.get()).forAllStatesExcept(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(LanternBlock.HANGING) ? hanging : lantern).build(), LanternBlock.WATERLOGGED);
+
+        simpleBlockWithItem(ModBlocks.CRYSTAL_GLASS.get(), models().cubeAll("crystal_glass",
+                blockTexture(ModBlocks.CRYSTAL_GLASS.get())).renderType("cutout"));
+        paneBlockWithRenderType(ModBlocks.CRYSTAL_GLASS_PANE.get(), modLoc("block/crystal_glass"), modLoc("block/crystal_glass_pane_top"), "cutout");
     }
 
     private void infected(Block block, String name, String renderType) {

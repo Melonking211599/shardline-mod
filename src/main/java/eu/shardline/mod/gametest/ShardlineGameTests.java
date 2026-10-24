@@ -3,7 +3,10 @@ package eu.shardline.mod.gametest;
 import com.mojang.datafixers.util.Pair;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.core.ModDamageTypes;
+import eu.shardline.mod.core.ModEnchantments;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.entity.mob.CrystalSnailEntity;
 import eu.shardline.mod.story.ShardlineWorldData;
 import eu.shardline.mod.story.StoryChapter;
 import eu.shardline.mod.story.StoryEnding;
@@ -37,6 +40,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -46,8 +50,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -345,7 +356,7 @@ public final class ShardlineGameTests {
                 ModEntities.CRYSTAL_SPIDER.get(), ModEntities.SHARD_TRADER.get(), ModEntities.SHADOW_FOX.get(),
                 ModEntities.SHATTERED_KNIGHT.get(), ModEntities.CRYSTAL_COLOSSUS.get(), ModEntities.SHARD_QUEEN.get(),
                 ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(), ModEntities.CRYSTALLIZED_COW.get(),
-                ModEntities.VIRUS_HEART.get())) {
+                ModEntities.VIRUS_HEART.get(), ModEntities.CRYSTAL_SNAIL.get())) {
             // Mit Abstand erzeugen, damit grosse Wesen kleinere nicht in Bloecke schieben.
             BlockPos spawn = origin.offset((index % 5) * 8, 0, (index / 5) * 8);
             index++;
@@ -363,6 +374,108 @@ public final class ShardlineGameTests {
             }
             helper.succeed();
         });
+    }
+
+    // ------------------------------------------------------------------ Splitterhandwerk
+
+    /** Kristallschnecke: zieht sich bei Treffern ins Haus zurueck, nimmt dann deutlich weniger Schaden und kommt wieder heraus. */
+    @GameTest(template = EMPTY, timeoutTicks = 200)
+    public static void crystalSnailHides(GameTestHelper helper) {
+        // Freiraum schaffen: Bauwerke anderer Tests koennen in die Testflaeche ragen (sonst Erstickungsschaden).
+        for (BlockPos pos : BlockPos.betweenClosed(-2, 0, -2, 4, 4, 4)) {
+            helper.setBlock(pos, pos.getY() == 0 ? Blocks.STONE : Blocks.AIR);
+        }
+        CrystalSnailEntity snail = helper.spawn(ModEntities.CRYSTAL_SNAIL.get(), new BlockPos(1, 1, 1));
+        helper.assertFalse(snail.isHiding(), "Schnecke darf anfangs nicht versteckt sein");
+        float[] firstHit = new float[1];
+        helper.runAfterDelay(2, () -> {
+            float before = snail.getHealth();
+            snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
+            firstHit[0] = before - snail.getHealth();
+            helper.assertTrue(firstHit[0] > 0.0F, "Erster Treffer hat keinen Schaden gemacht");
+            helper.assertTrue(snail.isHiding(), "Schnecke versteckt sich nach einem Treffer nicht");
+        });
+        helper.runAfterDelay(25, () -> {
+            float before = snail.getHealth();
+            snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
+            float secondHit = before - snail.getHealth();
+            helper.assertTrue(secondHit < firstHit[0] * 0.5F, "Versteckte Schnecke nimmt zu viel Schaden: " + secondHit + " statt < " + firstHit[0] * 0.5F);
+            helper.assertTrue(snail.isHiding(), "Schnecke sollte noch versteckt sein");
+        });
+        helper.runAfterDelay(140, () -> {
+            helper.assertFalse(snail.isHiding(), "Schnecke kommt nicht wieder aus dem Haus");
+            helper.assertTrue(snail.isAlive(), "Schnecke ist gestorben");
+            snail.discard();
+            helper.succeed();
+        });
+    }
+
+    /** Splitterbann trifft nur Splitterwesen, Kristallwehr schuetzt nur vor Splitterschaden. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void shardEnchantments(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        net.minecraft.core.Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Holder<Enchantment> bane = registry.getHolderOrThrow(ModEnchantments.SHARD_BANE);
+        Holder<Enchantment> ward = registry.getHolderOrThrow(ModEnchantments.CRYSTAL_WARD);
+
+        ItemStack sword = new ItemStack(Items.IRON_SWORD);
+        sword.enchant(bane, 3);
+        Entity zombie = ModEntities.SHARD_ZOMBIE.get().create(level);
+        Entity cow = EntityType.COW.create(level);
+        net.minecraft.world.damagesource.DamageSource generic = level.damageSources().generic();
+        float vsZombie = EnchantmentHelper.modifyDamage(level, sword, zombie, generic, 5.0F);
+        float vsCow = EnchantmentHelper.modifyDamage(level, sword, cow, generic, 5.0F);
+        helper.assertTrue(Math.abs(vsZombie - 12.5F) < 0.01F, "Splitterbann III gegen Splitterzombie: " + vsZombie + " statt 12.5");
+        helper.assertTrue(Math.abs(vsCow - 5.0F) < 0.01F, "Splitterbann darf normale Tiere nicht staerker treffen: " + vsCow);
+
+        ArmorStand stand = EntityType.ARMOR_STAND.create(level);
+        ItemStack chest = new ItemStack(Items.IRON_CHESTPLATE);
+        chest.enchant(ward, 4);
+        stand.setItemSlot(EquipmentSlot.CHEST, chest);
+        float vsShard = EnchantmentHelper.getDamageProtection(level, stand, ModDamageTypes.source(level, ModDamageTypes.SHARD, null));
+        float vsGeneric = EnchantmentHelper.getDamageProtection(level, stand, generic);
+        helper.assertTrue(Math.abs(vsShard - 8.0F) < 0.01F, "Kristallwehr IV gegen Splitterschaden: " + vsShard + " statt 8");
+        helper.assertTrue(vsGeneric == 0.0F, "Kristallwehr darf nicht vor normalem Schaden schuetzen: " + vsGeneric);
+        zombie.discard();
+        cow.discard();
+        stand.discard();
+        helper.succeed();
+    }
+
+    /** Neue Rezepte sind geladen und jedes Item, Wesen, Bauwerk und jede Verzauberung der Mod hat einen Namen. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void craftingContentComplete(GameTestHelper helper) {
+        net.minecraft.world.item.crafting.RecipeManager recipes = helper.getLevel().getRecipeManager();
+        for (String id : List.of("crystal_stairs", "crystal_door", "crystal_trapdoor", "crystal_fence_gate", "polished_shardstone",
+                "chiseled_shardstone_bricks", "shard_lantern", "crystal_glass", "crystal_glass_pane", "glowcap_stew", "crystal_candy",
+                "berry_tart", "resonance_compass")) {
+            helper.assertTrue(recipes.byKey(Shardline.id(id)).isPresent(), "Rezept fehlt: " + id);
+        }
+        Language language = Language.getInstance();
+        List<String> keys = new ArrayList<>();
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Shardline.MODID)) {
+                keys.add(item.getDescriptionId());
+            }
+        }
+        for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+            if (EntityType.getKey(type).getNamespace().equals(Shardline.MODID)) {
+                keys.add(type.getDescriptionId());
+            }
+        }
+        for (ResourceKey<Structure> key : List.of(ModStructures.SHARD_CRATER_KEY, ModStructures.RUIN_TOWER_KEY, ModStructures.KEEPER_SHRINE_KEY,
+                ModStructures.TRADER_OUTPOST_KEY, ModStructures.ASH_CRYPT_KEY, ModStructures.CRYSTAL_GEODE_KEY,
+                ModStructures.COLOSSUS_ARENA_KEY, ModStructures.QUEEN_ARENA_KEY)) {
+            keys.add("structure.shardline." + key.location().getPath());
+        }
+        keys.add("enchantment.shardline.shard_bane");
+        keys.add("enchantment.shardline.crystal_ward");
+        for (String dir : List.of("n", "ne", "e", "se", "s", "sw", "w", "nw")) {
+            keys.add("item.shardline.resonance_compass.dir." + dir);
+        }
+        List<String> missing = keys.stream().filter(key -> !language.has(key)).toList();
+        helper.assertTrue(missing.isEmpty(), "Fehlende Namen: " + missing);
+        helper.succeed();
     }
 
     // ------------------------------------------------------------------ Story & Shardvirus

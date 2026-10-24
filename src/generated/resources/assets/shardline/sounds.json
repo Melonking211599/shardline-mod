@@ -179,6 +179,42 @@
     ],
     "subtitle": "subtitles.shardline.entity.crystal_golem.hurt"
   },
+  "entity.crystal_snail.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_cluster.step"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_snail.ambient"
+  },
+  "entity.crystal_snail.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.slime.death_small"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_snail.death"
+  },
+  "entity.crystal_snail.hide": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.place"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_snail.hide"
+  },
+  "entity.crystal_snail.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.slime.hurt_small"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystal_snail.hurt"
+  },
   "entity.crystal_spider.ambient": {
     "sounds": [
       {

@@ -1,0 +1,43 @@
+{
+  "parent": "shardline:crystal_slime",
+  "criteria": {
+    "crystal_craftsman": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:crystal_door"
+          },
+          {
+            "items": "shardline:crystal_glass"
+          },
+          {
+            "items": "shardline:shard_lantern"
+          },
+          {
+            "items": "shardline:chiseled_shardstone_bricks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.crystal_craftsman.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "shardline:shard_lantern"
+    },
+    "title": {
+      "translate": "advancements.shardline.crystal_craftsman.title"
+    }
+  },
+  "requirements": [
+    [
+      "crystal_craftsman"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

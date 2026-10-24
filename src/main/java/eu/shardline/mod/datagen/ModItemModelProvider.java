@@ -30,7 +30,9 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.COLOSSUS_CORE.get(), ModItems.COLOSSUS_UPGRADE_SMITHING_TEMPLATE.get(), ModItems.HEART_OF_THE_EXPANSE.get(),
                 ModItems.SHARD_HELMET.get(), ModItems.SHARD_CHESTPLATE.get(), ModItems.SHARD_LEGGINGS.get(), ModItems.SHARD_BOOTS.get(),
                 ModItems.COLOSSUS_HELMET.get(), ModItems.COLOSSUS_CHESTPLATE.get(), ModItems.COLOSSUS_LEGGINGS.get(), ModItems.COLOSSUS_BOOTS.get(),
-                ModItems.LORE_BOOK.get(), ModItems.PURIFICATION_ESSENCE.get(), ModItems.BREACH_CORE.get()}) {
+                ModItems.LORE_BOOK.get(), ModItems.PURIFICATION_ESSENCE.get(), ModItems.BREACH_CORE.get(),
+                ModItems.CRYSTAL_SLIME.get(), ModItems.GLOWCAP_STEW.get(), ModItems.CRYSTAL_CANDY.get(), ModItems.BERRY_TART.get(),
+                ModItems.RESONANCE_COMPASS.get(), ModBlocks.CRYSTAL_DOOR.get().asItem(), ModBlocks.SHARD_LANTERN.get().asItem()}) {
             basicItem(item);
         }
 
@@ -56,6 +58,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
 
         wallInventory("shardstone_brick_wall", modLoc("block/shardstone_bricks"));
+        fenceInventory("crystal_fence", modLoc("block/crystal_planks"));
+        buttonInventory("crystal_button", modLoc("block/crystal_planks"));
+        withExistingParent("crystal_glass_pane", mcLoc("item/generated")).texture("layer0", modLoc("block/crystal_glass"));
     }
 
     private void crystalBow() {

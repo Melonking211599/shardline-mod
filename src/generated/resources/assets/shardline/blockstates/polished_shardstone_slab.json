@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shardline:block/polished_shardstone_slab"
+    },
+    "type=double": {
+      "model": "shardline:block/polished_shardstone"
+    },
+    "type=top": {
+      "model": "shardline:block/polished_shardstone_slab_top"
+    }
+  }
+}

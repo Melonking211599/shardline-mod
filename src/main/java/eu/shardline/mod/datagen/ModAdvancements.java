@@ -15,6 +15,7 @@ import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.ChangeDimensionTrigger;
+import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -73,6 +74,17 @@ public class ModAdvancements implements AdvancementProvider.AdvancementGenerator
                 "traded", TradeTrigger.TriggerInstance.tradedWithVillager(EntityPredicate.Builder.entity().of(ModEntities.SHARD_TRADER.get())));
         task(enter, "crystal_bow", ModItems.CRYSTAL_BOW.get(), AdvancementType.TASK,
                 "crystal_bow", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CRYSTAL_BOW.get()));
+
+        // Splitterhandwerk
+        AdvancementHolder slime = task(enter, "crystal_slime", ModItems.CRYSTAL_SLIME.get(), AdvancementType.TASK,
+                "crystal_slime", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CRYSTAL_SLIME.get()));
+        task(slime, "resonance_compass", ModItems.RESONANCE_COMPASS.get(), AdvancementType.TASK,
+                "resonance_compass", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.RESONANCE_COMPASS.get()));
+        task(slime, "crystal_craftsman", ModBlocks.SHARD_LANTERN.get(), AdvancementType.GOAL,
+                "crystal_craftsman", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.CRYSTAL_DOOR.get(),
+                        ModBlocks.CRYSTAL_GLASS.get(), ModBlocks.SHARD_LANTERN.get(), ModBlocks.CHISELED_SHARDSTONE_BRICKS.get()));
+        task(enter, "glowcap_stew", ModItems.GLOWCAP_STEW.get(), AdvancementType.TASK,
+                "eaten", ConsumeItemTrigger.TriggerInstance.usedItem(ModItems.GLOWCAP_STEW.get()));
 
         AdvancementHolder knight = task(shardArmor, "kill_shattered_knight", ModItems.KNIGHT_CREST.get(), AdvancementType.TASK,
                 "killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(ModEntities.SHATTERED_KNIGHT.get())));

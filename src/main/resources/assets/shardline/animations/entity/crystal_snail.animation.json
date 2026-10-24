@@ -1,0 +1,161 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "idle": {
+      "loop": true,
+      "animation_length": 3,
+      "bones": {
+        "eye_left": {
+          "rotation": [
+            "math.sin(query.anim_time * 120) * 8",
+            0,
+            "math.sin(query.anim_time * 90) * 6"
+          ]
+        },
+        "eye_right": {
+          "rotation": [
+            "math.sin(query.anim_time * 120 + 60) * 8",
+            0,
+            "math.sin(query.anim_time * 90 + 45) * -6"
+          ]
+        },
+        "head": {
+          "rotation": [
+            "math.sin(query.anim_time * 60) * 3",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "walk": {
+      "loop": true,
+      "animation_length": 1.2,
+      "bones": {
+        "body": {
+          "scale": [
+            1,
+            1,
+            "1 + math.sin(query.anim_time * 300) * 0.06"
+          ]
+        },
+        "head": {
+          "position": [
+            0,
+            0,
+            "math.sin(query.anim_time * 300) * -0.4"
+          ]
+        },
+        "shell": {
+          "rotation": [
+            0,
+            0,
+            "math.sin(query.anim_time * 300) * 2"
+          ]
+        },
+        "eye_left": {
+          "rotation": [
+            "-12 + math.sin(query.anim_time * 300) * 6",
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "rotation": [
+            "-12 + math.sin(query.anim_time * 300 + 40) * 6",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "hide": {
+      "loop": false,
+      "animation_length": 0.4,
+      "bones": {
+        "head": {
+          "position": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.4": [
+              0,
+              -0.5,
+              4
+            ]
+          },
+          "scale": {
+            "0.0": [
+              1,
+              1,
+              1
+            ],
+            "0.4": [
+              0.2,
+              0.2,
+              0.2
+            ]
+          }
+        },
+        "eye_left": {
+          "scale": {
+            "0.0": [
+              1,
+              1,
+              1
+            ],
+            "0.25": [
+              1,
+              0.1,
+              1
+            ]
+          }
+        },
+        "eye_right": {
+          "scale": {
+            "0.0": [
+              1,
+              1,
+              1
+            ],
+            "0.25": [
+              1,
+              0.1,
+              1
+            ]
+          }
+        },
+        "shell": {
+          "position": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "0.4": [
+              0,
+              -0.5,
+              -0.5
+            ]
+          }
+        },
+        "body": {
+          "scale": {
+            "0.0": [
+              1,
+              1,
+              1
+            ],
+            "0.4": [
+              1,
+              1,
+              0.75
+            ]
+          }
+        }
+      }
+    }
+  }
+}
