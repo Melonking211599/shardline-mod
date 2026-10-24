@@ -1,3 +1,4 @@
+```java
 package eu.shardline.mod.datagen;
 
 import eu.shardline.mod.Shardline;
@@ -9,11 +10,16 @@ import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
 /**
- * Erzeugt assets/shardline/sounds.json. Events mit eigener Datei ({@link ModSounds#FILES}) spielen
- * assets/shardline/sounds/&lt;datei&gt;.ogg, alle anderen verweisen auf ein passendes Vanilla-Event.
+ * Erzeugt assets/shardline/sounds.json.
+ * Eigene Musikdateien werden aus assets/shardline/sounds/ geladen.
+ * Alle anderen Sounds verwenden passende Vanilla-Events.
  */
 public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
-    public ModSoundDefinitionsProvider(PackOutput output, ExistingFileHelper fileHelper) {
+
+    public ModSoundDefinitionsProvider(
+            PackOutput output,
+            ExistingFileHelper fileHelper
+    ) {
         super(output, Shardline.MODID, fileHelper);
     }
 
@@ -22,13 +28,41 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
         ModSounds.PLACEHOLDERS.forEach((holder, placeholder) -> {
             String path = holder.getId().getPath();
             String file = ModSounds.FILES.get(holder);
-            SoundDefinition definition = definition().with(file != null
-                    ? sound(Shardline.id(file), SoundDefinition.SoundType.SOUND)
-                    : sound(ResourceLocation.withDefaultNamespace(placeholder), SoundDefinition.SoundType.EVENT));
-            if (!path.startsWith("music.")) {
-                definition.subtitle("subtitles.shardline." + path);
+
+            // Eigene Musikdateien, falls sie nicht bereits in FILES stehen.
+            if (file == null) {
+                if (path.equals("music.splitterweite")) {
+                    file = "music/splitterweite";
+                } else if (path.equals("music.infected")) {
+                    file = "music/infected";
+                }
             }
+
+            SoundDefinition definition;
+
+            if (file != null) {
+                // Eigene Datei unter assets/shardline/sounds/<file>.ogg
+                definition = definition()
+                        .with(sound(
+                                Shardline.id(file),
+                                SoundDefinition.SoundType.SOUND
+                        ))
+                        .subtitleIfAbsent(path);
+            } else {
+                // Vanilla-Sound als Platzhalter für andere Sound-Events
+                definition = definition()
+                        .with(sound(
+                                ResourceLocation.withDefaultNamespace(placeholder),
+                                SoundDefinition.SoundType.EVENT
+                        ));
+
+                if (!path.startsWith("music.")) {
+                    definition.subtitle("subtitles.shardline." + path);
+                }
+            }
+
             add(holder, definition);
         });
     }
 }
+```

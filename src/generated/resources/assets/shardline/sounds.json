@@ -1061,19 +1061,19 @@
     ],
     "subtitle": "subtitles.shardline.item.shard_key.use"
   },
-  "music.infected": {
-    "sounds": [
-      {
-        "type": "event",
-        "name": "music.nether.soul_sand_valley"
-      }
-    ]
-  },
+"music.infected": {
+  "sounds": [
+    {
+      "name": "shardline:music/infected",
+      "stream": true
+    }
+  ]
+},
   "music.splitterweite": {
     "sounds": [
       {
-        "type": "event",
-        "name": "music.end"
+        "name": "shardline:music/splitterweite",
+        "stream": true
       }
     ]
   },
