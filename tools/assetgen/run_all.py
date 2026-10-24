@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import anims
 import armor
 import armor_extras
+import dialogue_gui
 import fresh_blocks
 import bosses
 import bossbars
@@ -51,6 +52,8 @@ def main():
     # Story-Erweiterung 2
     infected_animals.main()
     story2_assets.main()
+    # Nach dem Ausbruch
+    dialogue_gui.main()
     print("Fertig.")
 
 

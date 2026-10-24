@@ -1006,5 +1006,29 @@
   "subtitles.shardline.ui.quest.update": "Auftrag aktualisiert",
   "subtitles.shardline.ui.quest.complete": "Auftrag abgeschlossen",
   "subtitles.shardline.story.epilogue": "Epilog beginnt",
-  "subtitles.shardline.event.aftershock": "Die Weite bebt"
+  "subtitles.shardline.event.aftershock": "Die Weite bebt",
+
+  "screen.shardline.dialogue.title": "Gespräch",
+  "screen.shardline.dialogue.hints": "Enter/Leertaste weiter · 1–4 Antwort · L Verlauf · Esc schließen",
+  "screen.shardline.dialogue.close": "Schließen",
+  "screen.shardline.dialogue.history": "Verlauf",
+  "screen.shardline.dialogue.locked": "Bedingung nicht erfüllt",
+  "npc.shardline.unknown": "Fremde Gestalt",
+  "shardline.configuration.dialogue_typewriter": "Schreibmaschinen-Text",
+  "shardline.configuration.dialogue_text_speed": "Textgeschwindigkeit (Zeichen/s)",
+  "shardline.configuration.dialogue_type_sound": "Tippgeräusch",
+  "shardline.configuration.dialogue_auto_advance": "Seiten automatisch weiter",
+  "shardline.configuration.dialogue_auto_advance_seconds": "Pause vor dem Weiterblättern (s)",
+  "commands.shardline.dialogue.unknown": "Kein Dialog %2$s für Sprecher %1$s",
+  "commands.shardline.dialogue.no_start": "Dialog %s hat keinen passenden Startknoten",
+  "commands.shardline.dialogue.reloaded": "%s Dialoge und %s Aufträge neu geladen (%s Fehler, siehe Log)",
+  "commands.shardline.quest.unknown": "Unbekannter Auftrag: %s",
+  "commands.shardline.quest.start": "Auftrag %s für %s Spieler begonnen",
+  "commands.shardline.quest.complete": "Aktueller Schritt von %s für %s Spieler abgeschlossen",
+  "commands.shardline.quest.reset": "Auftrag %s für %s Spieler zurückgesetzt",
+  "commands.shardline.quest.list": "Aufträge von %s:",
+  "commands.shardline.quest.list.active": "(Schritt %s/%s, Stand %s)",
+  "commands.shardline.quest.list.done": "(%s× abgeschlossen)",
+
+  "screen.shardline.dialogue.hints_short": "Enter · 1–4 · L · Esc"
 }

@@ -110,6 +110,14 @@ need(TEX / "gui" / "lore_page.png", (256, 256))
 need(TEX / "gui" / "ending_choice.png", (512, 256))
 for i in range(4): need(TEX / "particle" / f"purity_mote_{i}.png", (8, 8))
 need(RESOURCE_ROOT / "assets" / "shardline" / "particles" / "purity_mote.json")
+# ---- Nach dem Ausbruch: Dialog- und Journal-GUI, Porträts
+for name, size in (("dialogue/frame", (32, 32)), ("dialogue/portrait_frame", (80, 80)), ("dialogue/nameplate", (48, 16)),
+                   ("dialogue/button", (64, 80)), ("dialogue/icons", (32, 16)), ("journal/background", (256, 192)),
+                   ("journal/tabs", (128, 56)), ("portraits/unknown", (64, 64))):
+    need(TEX / "gui" / f"{name}.png", size)
+for portrait in sorted((TEX / "gui" / "portraits").glob("*.png")):
+    need(portrait, (64, 64))
+
 # ---- Polish-Pruefungen: Entity-Texturen und Kachelbloecke
 def opaque(img):
     px = img.convert("RGBA").load()

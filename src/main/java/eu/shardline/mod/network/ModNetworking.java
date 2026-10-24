@@ -1,9 +1,11 @@
 package eu.shardline.mod.network;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.client.story.ClientDialogue;
 import eu.shardline.mod.client.story.ClientStoryHandler;
 import eu.shardline.mod.event.CrystalShieldHandler;
 import eu.shardline.mod.story.StoryEnding;
+import eu.shardline.mod.story.dialogue.DialogueSessions;
 import eu.shardline.mod.story.ending.EndingManager;
 import eu.shardline.mod.story.ending.RulerAbilities;
 import eu.shardline.mod.story.lore.TraderDialogue;
@@ -19,7 +21,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  */
 @EventBusSubscriber(modid = Shardline.MODID)
 public final class ModNetworking {
-    private static final String PROTOCOL_VERSION = "4";
+    private static final String PROTOCOL_VERSION = "5";
 
     private ModNetworking() {
     }
@@ -59,7 +61,24 @@ public final class ModNetworking {
                     }
                 }));
 
+        registrar.playToServer(DialogueChoicePayload.TYPE, DialogueChoicePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        DialogueSessions.onChoice(player, payload.session(), payload.index());
+                    }
+                }));
+        registrar.playBidirectional(CloseDialoguePayload.TYPE, CloseDialoguePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        DialogueSessions.onClientClose(player, payload.session());
+                    } else {
+                        ClientDialogue.close(payload);
+                    }
+                }));
+
         // Server -> Client
+        registrar.playToClient(OpenDialoguePayload.TYPE, OpenDialoguePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientDialogue.open(payload)));
         registrar.playToClient(StoryStatePayload.TYPE, StoryStatePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.handleState(payload)));
         registrar.playToClient(TitlesPayload.TYPE, TitlesPayload.STREAM_CODEC, (payload, context) ->

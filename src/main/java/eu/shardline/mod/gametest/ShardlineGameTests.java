@@ -1236,6 +1236,63 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
+    /** Sitzungen: Start, Antwort, ungueltige Sitzung, Abbruch bei Entfernung und bei Schaden; ein offener Dialog pro Spieler. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void dialogueSessions(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        var previous = new java.util.LinkedHashMap<net.minecraft.resources.ResourceLocation, eu.shardline.mod.story.dialogue.DialogueDefinition>();
+        eu.shardline.mod.story.dialogue.Dialogues.all().forEach(d -> previous.put(d.id(), d));
+        var errors = eu.shardline.mod.story.dialogue.Dialogues.errors();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("session");
+            var dialogue = eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("session_test"), json(TEST_DIALOGUE), problems);
+            var map = new java.util.LinkedHashMap<>(previous);
+            map.put(dialogue.id(), dialogue);
+            eu.shardline.mod.story.dialogue.Dialogues.set(map, errors);
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.start(player, null, dialogue.id()), "Dialog startet nicht");
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("hello"), "Sitzung nicht bei 'hello'");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id() + 99, 0);
+            helper.assertTrue(session.node().equals("hello"), "Fremde Sitzungsnummer wurde angenommen");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 1);
+            helper.assertTrue(session.node().equals("hello") && eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == session,
+                    "Gesperrte Antwort hat den Dialog veraendert");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(session.node().equals("gift"), "Antwort nicht ausgefuehrt");
+            player.teleportTo(player.getX() + 40, player.getY(), player.getZ());
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == null, "Zu grosser Abstand bricht nicht ab");
+            data.removeFlag(player.getUUID(), "test:met");
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.start(player, null, dialogue.id()), "Zweiter Start fehlgeschlagen");
+            player.hurt(player.damageSources().fellOutOfWorld(), 1.0F);   // umgeht den Spawn-Schutz des Testspielers
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == null, "Schaden bricht den Dialog nicht ab");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            eu.shardline.mod.story.dialogue.Dialogues.set(previous, errors);
+            data.removeFlag(player.getUUID(), "test:met");
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Netzwerk: OpenDialoguePayload uebersteht Kodieren und Dekodieren (Texte als Components, gesperrte Antworten). */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void dialoguePayloadCodec(GameTestHelper helper) {
+        var payload = new eu.shardline.mod.network.OpenDialoguePayload(7, 42, "rhea", "sad",
+                List.of(net.minecraft.network.chat.Component.translatable("dialogue.shardline.rhea.greeting.1")),
+                List.of(new eu.shardline.mod.network.OpenDialoguePayload.Choice(net.minecraft.network.chat.Component.literal("Ja"), true,
+                                net.minecraft.network.chat.Component.empty()),
+                        new eu.shardline.mod.network.OpenDialoguePayload.Choice(net.minecraft.network.chat.Component.literal("Nein"), false,
+                                net.minecraft.network.chat.Component.translatable("screen.shardline.dialogue.locked"))), false);
+        var buf = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), helper.getLevel().registryAccess());
+        eu.shardline.mod.network.OpenDialoguePayload.STREAM_CODEC.encode(buf, payload);
+        var decoded = eu.shardline.mod.network.OpenDialoguePayload.STREAM_CODEC.decode(buf);
+        helper.assertTrue(decoded.equals(payload), "Payload nach dem Dekodieren verschieden: " + decoded);
+        helper.succeed();
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

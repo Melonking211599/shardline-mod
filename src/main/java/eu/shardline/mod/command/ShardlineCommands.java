@@ -81,6 +81,24 @@ public final class ShardlineCommands {
                                 .then(Commands.literal("dominate").executes(context -> vote(context, StoryEnding.DOMINATED))))
                         .then(Commands.literal("ending").requires(source -> source.hasPermission(2))
                                 .then(Commands.literal("reset").executes(ShardlineCommands::resetEnding))))
+                .then(Commands.literal("dialogue").requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("start")
+                                .then(Commands.argument("npc", StringArgumentType.word())
+                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                                eu.shardline.mod.story.dialogue.Dialogues.all().stream().map(d -> d.speaker()).distinct(), builder))
+                                        .then(Commands.argument("id", net.minecraft.commands.arguments.ResourceLocationArgument.id())
+                                                .suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
+                                                        eu.shardline.mod.story.dialogue.Dialogues.all().stream().map(d -> d.id()), builder))
+                                                .executes(ShardlineCommands::startDialogue))))
+                        .then(Commands.literal("reload").executes(ShardlineCommands::reloadDialogues)))
+                .then(Commands.literal("quest").requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("list")
+                                .executes(context -> listQuests(context.getSource(), context.getSource().getPlayerOrException()))
+                                .then(Commands.argument("target", EntityArgument.player())
+                                        .executes(context -> listQuests(context.getSource(), EntityArgument.getPlayer(context, "target")))))
+                        .then(questCommand("start"))
+                        .then(questCommand("complete"))
+                        .then(questCommand("reset")))
                 .then(Commands.literal("lore").requires(source -> source.hasPermission(2))
                         .then(Commands.literal("give")
                                 .then(Commands.argument("book", StringArgumentType.word())
@@ -99,6 +117,82 @@ public final class ShardlineCommands {
                                         .executes(ShardlineCommands::purge)))
                         .then(Commands.literal("outbreak").executes(ShardlineCommands::outbreak))
                         .then(Commands.literal("reset").executes(context -> resetVirus(context.getSource())))));
+    }
+
+    // ------------------------------------------------------------------ dialogue & quest
+
+    private static int startDialogue(CommandContext<CommandSourceStack> context) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        String npc = StringArgumentType.getString(context, "npc");
+        net.minecraft.resources.ResourceLocation id = net.minecraft.commands.arguments.ResourceLocationArgument.getId(context, "id");
+        var dialogue = eu.shardline.mod.story.dialogue.Dialogues.get(id);
+        if (dialogue == null || !dialogue.speaker().equals(npc)) {
+            context.getSource().sendFailure(Component.translatable("commands.shardline.dialogue.unknown", npc, id.toString()));
+            return 0;
+        }
+        if (!eu.shardline.mod.story.dialogue.DialogueSessions.start(player, null, id)) {
+            context.getSource().sendFailure(Component.translatable("commands.shardline.dialogue.no_start", id.toString()));
+            return 0;
+        }
+        return 1;
+    }
+
+    private static int reloadDialogues(CommandContext<CommandSourceStack> context) {
+        var result = eu.shardline.mod.story.StoryDataLoader.reloadNow(context.getSource().getServer());
+        context.getSource().sendSuccess(() -> Component.translatable("commands.shardline.dialogue.reloaded", result.dialogues().size(),
+                result.quests().size(), result.errors().size()), true);
+        for (String error : result.errors().subList(0, Math.min(8, result.errors().size()))) {
+            context.getSource().sendFailure(Component.literal(error));
+        }
+        return result.dialogues().size();
+    }
+
+    private static com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> questCommand(String action) {
+        return Commands.literal(action)
+                .then(Commands.argument("quest", StringArgumentType.string())
+                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                eu.shardline.mod.story.quest.Quests.all().stream().map(q -> q.id()), builder))
+                        .executes(context -> quest(context, action, List.of(context.getSource().getPlayerOrException())))
+                        .then(Commands.argument("targets", EntityArgument.players())
+                                .executes(context -> quest(context, action, EntityArgument.getPlayers(context, "targets")))));
+    }
+
+    private static int quest(CommandContext<CommandSourceStack> context, String action, Collection<ServerPlayer> targets) {
+        String id = StringArgumentType.getString(context, "quest");
+        if (eu.shardline.mod.story.quest.Quests.get(id) == null) {
+            context.getSource().sendFailure(Component.translatable("commands.shardline.quest.unknown", id));
+            return 0;
+        }
+        int changed = 0;
+        for (ServerPlayer player : targets) {
+            boolean ok = switch (action) {
+                case "start" -> eu.shardline.mod.story.quest.Quests.start(player, id);
+                case "complete" -> eu.shardline.mod.story.quest.Quests.completeStep(player, id);
+                default -> {
+                    eu.shardline.mod.story.quest.Quests.reset(player, id);
+                    yield true;
+                }
+            };
+            changed += ok ? 1 : 0;
+        }
+        int count = changed;
+        context.getSource().sendSuccess(() -> Component.translatable("commands.shardline.quest." + action, id, count), true);
+        return count;
+    }
+
+    private static int listQuests(CommandSourceStack source, ServerPlayer player) {
+        ShardlineWorldData data = StoryManager.data(source.getServer());
+        source.sendSuccess(() -> Component.translatable("commands.shardline.quest.list", player.getDisplayName()).withStyle(ChatFormatting.GOLD), false);
+        data.quests(player.getUUID()).forEach((id, progress) -> {
+            var quest = eu.shardline.mod.story.quest.Quests.get(id);
+            Component title = quest != null ? quest.title() : Component.literal(id);
+            Component state = progress.active()
+                    ? Component.translatable("commands.shardline.quest.list.active", progress.step() + 1, quest != null ? quest.steps().size() : 0,
+                    progress.count())
+                    : Component.translatable("commands.shardline.quest.list.done", progress.completions());
+            source.sendSuccess(() -> Component.literal(" - ").append(title).append(" ").append(state), false);
+        });
+        return data.quests(player.getUUID()).size();
     }
 
     // ------------------------------------------------------------------ story

@@ -1006,5 +1006,29 @@
   "subtitles.shardline.ui.quest.update": "Quest updated",
   "subtitles.shardline.ui.quest.complete": "Quest completed",
   "subtitles.shardline.story.epilogue": "Epilogue begins",
-  "subtitles.shardline.event.aftershock": "The Expanse trembles"
+  "subtitles.shardline.event.aftershock": "The Expanse trembles",
+
+  "screen.shardline.dialogue.title": "Conversation",
+  "screen.shardline.dialogue.hints": "Enter/Space continue · 1–4 answer · L history · Esc close",
+  "screen.shardline.dialogue.close": "Close",
+  "screen.shardline.dialogue.history": "History",
+  "screen.shardline.dialogue.locked": "Condition not met",
+  "npc.shardline.unknown": "Stranger",
+  "shardline.configuration.dialogue_typewriter": "Typewriter text",
+  "shardline.configuration.dialogue_text_speed": "Text speed (characters/s)",
+  "shardline.configuration.dialogue_type_sound": "Typing sound",
+  "shardline.configuration.dialogue_auto_advance": "Auto-advance pages",
+  "shardline.configuration.dialogue_auto_advance_seconds": "Auto-advance delay (s)",
+  "commands.shardline.dialogue.unknown": "No dialogue %2$s for speaker %1$s",
+  "commands.shardline.dialogue.no_start": "Dialogue %s has no matching start node",
+  "commands.shardline.dialogue.reloaded": "Reloaded %s dialogues and %s quests (%s errors, see log)",
+  "commands.shardline.quest.unknown": "Unknown quest: %s",
+  "commands.shardline.quest.start": "Quest %s started for %s player(s)",
+  "commands.shardline.quest.complete": "Current step of %s completed for %s player(s)",
+  "commands.shardline.quest.reset": "Quest %s reset for %s player(s)",
+  "commands.shardline.quest.list": "Quests of %s:",
+  "commands.shardline.quest.list.active": "(step %s/%s, progress %s)",
+  "commands.shardline.quest.list.done": "(completed %s×)",
+
+  "screen.shardline.dialogue.hints_short": "Enter · 1–4 · L · Esc"
 }

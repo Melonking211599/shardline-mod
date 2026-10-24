@@ -74,6 +74,17 @@ public final class StoryDataLoader extends SimplePreparableReloadListener<StoryD
                 result.errors().size());
     }
 
+    /** Laedt nur Dialoge und Auftraege neu (Befehl {@code /shardline dialogue reload}), ohne die uebrigen Datapacks. */
+    public static Result reloadNow(net.minecraft.server.MinecraftServer server) {
+        StoryDataLoader loader = new StoryDataLoader();
+        Raw raw = loader.prepare(server.getResourceManager(), net.minecraft.util.profiling.InactiveProfiler.INSTANCE);
+        Result result = load(raw);
+        Quests.setDefinitions(result.quests());
+        Dialogues.set(result.dialogues(), result.errors());
+        result.errors().forEach(error -> LOGGER.error("[Shardline] Story-Daten: {}", error));
+        return result;
+    }
+
     /** Ergebnis des Ladens (auch fuer Tests mit eigenen Rohdaten). */
     public record Result(Map<ResourceLocation, DialogueDefinition> dialogues, Map<String, QuestDefinition> quests, List<String> errors) {
     }
