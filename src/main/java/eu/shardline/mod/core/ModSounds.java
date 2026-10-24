@@ -209,7 +209,6 @@ public final class ModSounds {
         FILES.put(VIRUS_OUTBREAK, "event/virus_outbreak");
         FILES.put(VIRUS_SEALED, "event/virus_sealed");
         FILES.put(VIRUS_DOMINATED, "event/virus_dominated");
-        FILES.put(MUSIC_INFECTED, "music/infected");
         FILES.put(MUSIC_SPLITTERWEITE, "music/splitterweite");
     }
 
