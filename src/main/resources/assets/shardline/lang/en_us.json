@@ -942,5 +942,10 @@
   "story.shardline.next.5": "Fight the virus: place a Purity Anchor or brew a Purification Essence.",
   "story.shardline.next.6": "Destroy Virus Hearts, then bring the Core of the Breach to the Altar of Decision.",
   "story.shardline.next.ended": "Your choice has been made. Live with it - or help others find their way.",
-  "shardline.configuration.chapter_card": "Chapter card"
+  "shardline.configuration.chapter_card": "Chapter card",
+
+  "message.shardline.purity_anchor_growing": "The purity zone is growing: %s of %s blocks",
+  "subtitles.shardline.block.purity_anchor.grow": "Purity zone grows",
+  "shardline.configuration.anchor_start_radius": "Anchor start radius",
+  "shardline.configuration.anchor_grow_seconds": "Anchor zone growth (seconds)"
 }

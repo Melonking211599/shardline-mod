@@ -1,12 +1,14 @@
 package eu.shardline.mod.client;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.block.entity.ModBlockEntities;
 import eu.shardline.mod.client.particle.ShardParticle;
 import eu.shardline.mod.client.renderer.ArmorExtraModels;
 import eu.shardline.mod.client.renderer.ArmorExtrasLayer;
 import eu.shardline.mod.client.renderer.CrystalGolemRenderer;
 import eu.shardline.mod.client.renderer.InfectedRenderers;
 import eu.shardline.mod.client.renderer.KeeperCapeLayer;
+import eu.shardline.mod.client.renderer.PurityAnchorRenderer;
 import eu.shardline.mod.client.renderer.QueenCloneRenderer;
 import eu.shardline.mod.client.renderer.ShardCreeperRenderer;
 import eu.shardline.mod.client.renderer.ShardlineGeoRenderer;
@@ -97,6 +99,7 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.SHARD_PROJECTILE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_PILLAR.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_pillar", 0.0F, true));
         event.registerEntityRenderer(ModEntities.VOID_ZONE.get(), NoopRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.PURITY_ANCHOR.get(), PurityAnchorRenderer::new);
         event.registerEntityRenderer(ModEntities.SHARD_ZOMBIE.get(), InfectedRenderers.ShardZombieRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_COW.get(), InfectedRenderers.CrystallizedCowRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_SHEEP.get(), InfectedRenderers.CrystallizedSheepRenderer::new);
@@ -159,6 +162,7 @@ public final class ShardlineClient {
         event.registerSpriteSet(ModParticles.SHARD_SPARKLE.get(), ShardParticle.SparkleProvider::new);
         event.registerSpriteSet(ModParticles.VOID_MOTE.get(), ShardParticle.VoidProvider::new);
         event.registerSpriteSet(ModParticles.VIRUS_SPORE.get(), ShardParticle.SporeProvider::new);
+        event.registerSpriteSet(ModParticles.PURITY_MOTE.get(), ShardParticle.PurityProvider::new);
     }
 
     @SubscribeEvent

@@ -84,6 +84,23 @@ public class ShardParticle extends TextureSheetParticle {
         }
     }
 
+    /** Goldene Funken der Reinheitszone: steigen langsam auf, leuchten im Dunkeln. */
+    public static class PurityProvider implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
+
+        public PurityProvider(SpriteSet sprites) {
+            this.sprites = sprites;
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
+            ShardParticle particle = new ShardParticle(level, x, y, z, dx, dy + 0.012, dz, this.sprites, true);
+            particle.setLifetime(30 + particle.random.nextInt(20));
+            particle.quadSize *= 0.8F;
+            return particle;
+        }
+    }
+
     public static class VoidProvider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprites;
 

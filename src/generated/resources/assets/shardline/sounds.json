@@ -62,6 +62,15 @@
     ],
     "subtitle": "subtitles.shardline.block.purity_anchor.activate"
   },
+  "block.purity_anchor.grow": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.amethyst_block.resonate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.purity_anchor.grow"
+  },
   "block.shard_portal.ambient": {
     "sounds": [
       {

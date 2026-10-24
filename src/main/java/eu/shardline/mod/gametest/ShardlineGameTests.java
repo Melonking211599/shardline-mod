@@ -508,9 +508,13 @@ public final class ShardlineGameTests {
      * ihres Chunks ticken sonst je nach Lage der Testposition nicht. @return gibt die Chunks wieder frei
      */
     private static Runnable forceArea(GameTestHelper helper, int size) {
+        return forceArea(helper, new BlockPos(-1, 0, -1), new BlockPos(size, 0, size));
+    }
+
+    private static Runnable forceArea(GameTestHelper helper, BlockPos fromRelative, BlockPos toRelative) {
         ServerLevel level = helper.getLevel();
-        BlockPos a = helper.absolutePos(new BlockPos(-1, 0, -1));
-        BlockPos b = helper.absolutePos(new BlockPos(size, 0, size));
+        BlockPos a = helper.absolutePos(fromRelative);
+        BlockPos b = helper.absolutePos(toRelative);
         List<ChunkPos> forced = new ArrayList<>();
         for (int cx = Math.min(a.getX(), b.getX()) >> 4; cx <= Math.max(a.getX(), b.getX()) >> 4; cx++) {
             for (int cz = Math.min(a.getZ(), b.getZ()) >> 4; cz <= Math.max(a.getZ(), b.getZ()) >> 4; cz++) {
@@ -699,6 +703,54 @@ public final class ShardlineGameTests {
                     && icon.getOrDefault(eu.shardline.mod.core.ModDataComponents.CHAPTER.get(), 0) == chapter.number(),
                     "Kapitel " + chapter.number() + " hat nicht das eigene Emblem als Icon");
         }
+        helper.succeed();
+    }
+
+    /** Reinheitszone: wachsender Radius (alte Anker voll), Schutz nach aktuellem Radius, Reinigung nur der neuen Schale. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void purityZone(GameTestHelper helper) {
+        helper.assertTrue(Math.abs(PurityAnchors.radius(0L, 3000L, 6, 24, 6000L) - 15.0) < 1.0E-6, "Halbe Wachstumszeit = halber Weg");
+        helper.assertTrue(PurityAnchors.radius(-1L, 3000L, 6, 24, 6000L) == 24.0, "Alte Anker ohne Zeitstempel haben den vollen Radius");
+        helper.assertTrue(PurityAnchors.radius(0L, 99999L, 6, 24, 6000L) == 24.0, "Radius waechst nicht ueber das Maximum");
+
+        ServerLevel level = helper.getLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        Runnable release = forceArea(helper, 18);
+        BlockPos center = helper.absolutePos(new BlockPos(9, 1, 9));
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-8, -1, -8), center.offset(8, 2, 8))) {
+            level.setBlock(pos, pos.getY() == center.getY() - 1 ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+        }
+        level.setBlock(center, ModBlocks.PURITY_ANCHOR.get().defaultBlockState(), 3);
+        try {
+            int start = eu.shardline.mod.config.ShardlineConfig.ANCHOR_START_RADIUS.get();
+            int max = eu.shardline.mod.config.ShardlineConfig.ANCHOR_RADIUS.get();
+            long grow = eu.shardline.mod.config.ShardlineConfig.ANCHOR_GROW_SECONDS.get() * 20L;
+            // Frisch gesetzt: Startradius (die Halbzeit prueft oben die Formel; die Spielzeit einer Testwelt ist dafuer zu klein)
+            double radius = PurityAnchors.radius(level, center);
+            helper.assertTrue(grow <= 0 ? radius == Math.max(start, max) : Math.abs(radius - start) < 0.5, "Startradius falsch: " + radius);
+            helper.assertTrue(PurityAnchors.isProtected(level, center.offset((int) radius - 1, 0, 0)), "Innerhalb der Zone muss geschuetzt sein");
+            helper.assertFalse(PurityAnchors.isProtected(level, center.offset((int) radius + 2, 0, 0)), "Ausserhalb der Zone darf kein Schutz sein");
+
+            level.getBlockState(center).tick(level, center, level.getRandom());
+            helper.assertTrue(level.getBlockEntity(center) instanceof eu.shardline.mod.block.entity.PurityAnchorBlockEntity anchor
+                    && Math.abs(anchor.radius(level.getGameTime()) - radius) < 0.5, "Block-Entity kennt den Radius nicht");
+
+            // Schale 4..8: der Block bei 3 bleibt (schon sauber gerechnet), der bei 6 wird gereinigt
+            BlockPos inner = center.offset(3, -1, 0);
+            BlockPos outer = center.offset(6, -1, 0);
+            level.setBlock(inner, ModBlocks.INFECTED_STONE.get().defaultBlockState(), 2);
+            level.setBlock(outer, ModBlocks.INFECTED_STONE.get().defaultBlockState(), 2);
+            int[] purified = {-1};
+            Purification.purifyShell(level, center, 4, 8, count -> purified[0] = count);
+            helper.assertTrue(purified[0] == 1, "Schale sollte genau einen Block reinigen, waren " + purified[0]);
+            helper.assertTrue(level.getBlockState(inner).is(ModBlocks.INFECTED_STONE.get()), "Innerer Block durfte nicht gereinigt werden");
+            helper.assertFalse(level.getBlockState(outer).is(ModBlocks.INFECTED_STONE.get()), "Aeusserer Block wurde nicht gereinigt");
+        } finally {
+            level.setBlock(center, Blocks.AIR.defaultBlockState(), 3);
+            release.run();
+        }
+        helper.assertFalse(data.anchors(level.dimension()).contains(center.asLong()), "Anker wurde nicht abgemeldet");
+        helper.assertTrue(data.anchorSince(level.dimension(), center.asLong()) == -1L, "Setzzeit wurde nicht entfernt");
         helper.succeed();
     }
 

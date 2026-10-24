@@ -2,6 +2,7 @@ package eu.shardline.mod;
 
 import com.mojang.logging.LogUtils;
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.entity.ModBlockEntities;
 import eu.shardline.mod.config.ShardlineClientConfig;
 import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.core.ModAttachments;
@@ -32,6 +33,7 @@ public final class Shardline {
 
     public Shardline(IEventBus modBus, ModContainer container) {
         ModBlocks.BLOCKS.register(modBus);
+        ModBlockEntities.BLOCK_ENTITY_TYPES.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModArmorMaterials.ARMOR_MATERIALS.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

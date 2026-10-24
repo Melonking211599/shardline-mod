@@ -91,6 +91,8 @@ public final class ShardlineConfig {
     // Gegenmittel
     public static final ModConfigSpec.IntValue ANCHOR_RADIUS;
     public static final ModConfigSpec.IntValue ANCHOR_PURIFY_PER_PULSE;
+    public static final ModConfigSpec.IntValue ANCHOR_START_RADIUS;
+    public static final ModConfigSpec.IntValue ANCHOR_GROW_SECONDS;
     public static final ModConfigSpec.IntValue ESSENCE_RADIUS;
     public static final ModConfigSpec.IntValue IMMUNITY_ESSENCE_SECONDS;
     public static final ModConfigSpec.IntValue IMMUNITY_ANCHOR_SECONDS;
@@ -355,12 +357,18 @@ public final class ShardlineConfig {
         b.pop();
 
         b.translation(key("remedies")).push("remedies");
-        ANCHOR_RADIUS = b.comment("Schutzradius eines Reinheitsankers in Bloecken.")
+        ANCHOR_RADIUS = b.comment("Endgueltiger Schutzradius eines Reinheitsankers in Bloecken (die Zone waechst bis dahin).")
                 .translation(key("anchor_radius"))
                 .defineInRange("anchorRadius", 24, 1, 128);
         ANCHOR_PURIFY_PER_PULSE = b.comment("Wie viele zufaellige Positionen ein Reinheitsanker alle zwei Sekunden reinigt.")
                 .translation(key("anchor_purify_per_pulse"))
                 .defineInRange("anchorPurifyPerPulse", 24, 0, 512);
+        ANCHOR_START_RADIUS = b.comment("Schutzradius direkt nach dem Setzen eines Reinheitsankers.")
+                .translation(key("anchor_start_radius"))
+                .defineInRange("anchorStartRadius", 6, 1, 128);
+        ANCHOR_GROW_SECONDS = b.comment("Sekunden, bis die Zone eines Reinheitsankers den vollen Radius erreicht (0 = sofort).")
+                .translation(key("anchor_grow_seconds"))
+                .defineInRange("anchorGrowSeconds", 300, 0, 36000);
         ESSENCE_RADIUS = b.comment("Reinigungsradius der Reinigungsessenz.")
                 .translation(key("essence_radius"))
                 .defineInRange("essenceRadius", 6, 1, 32);

@@ -942,5 +942,10 @@
   "story.shardline.next.5": "Bekämpfe den Virus: Setze einen Reinheitsanker oder braue eine Reinigungsessenz.",
   "story.shardline.next.6": "Zerstöre Virusherzen und bring den Kern des Bruchs zum Entscheidungsaltar.",
   "story.shardline.next.ended": "Deine Wahl ist getroffen. Lebe mit ihr – oder hilf anderen auf ihrem Weg.",
-  "shardline.configuration.chapter_card": "Kapitelkarte"
+  "shardline.configuration.chapter_card": "Kapitelkarte",
+
+  "message.shardline.purity_anchor_growing": "Die Reinheitszone wächst: %s von %s Blöcken",
+  "subtitles.shardline.block.purity_anchor.grow": "Reinheitszone wächst",
+  "shardline.configuration.anchor_start_radius": "Startradius des Ankers",
+  "shardline.configuration.anchor_grow_seconds": "Wachstum der Ankerzone (Sekunden)"
 }

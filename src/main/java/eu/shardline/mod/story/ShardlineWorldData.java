@@ -2,6 +2,8 @@ package eu.shardline.mod.story;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2LongMap;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -51,6 +53,8 @@ public class ShardlineWorldData extends SavedData {
     private boolean paused;
     private long lastHeartSpawn;
     private final Map<ResourceKey<Level>, LongSet> anchors = new HashMap<>();
+    /** Spielzeit, zu der ein Anker gesetzt wurde (fuer den wachsenden Schutzradius). Fehlt sie, gilt der volle Radius. */
+    private final Map<ResourceKey<Level>, Long2LongOpenHashMap> anchorSince = new HashMap<>();
     private final Map<ResourceKey<Level>, LongList> herds = new HashMap<>();
     /** Pro Chunk: Anzahl infizierter Bloecke (geschaetzt, steigt beim Infizieren, faellt beim Reinigen). */
     private final Map<ResourceKey<Level>, Long2IntOpenHashMap> chunkInfection = new HashMap<>();
@@ -196,6 +200,28 @@ public class ShardlineWorldData extends SavedData {
         if (this.anchors(dimension).remove(pos.asLong())) {
             this.setDirty();
         }
+        if (this.anchorSince(dimension).remove(pos.asLong()) != this.anchorSince(dimension).defaultReturnValue()) {
+            this.setDirty();
+        }
+    }
+
+    private Long2LongOpenHashMap anchorSince(ResourceKey<Level> dimension) {
+        return this.anchorSince.computeIfAbsent(dimension, key -> {
+            Long2LongOpenHashMap map = new Long2LongOpenHashMap();
+            map.defaultReturnValue(-1L);
+            return map;
+        });
+    }
+
+    /** Merkt sich, wann ein Anker gesetzt wurde. */
+    public void setAnchorSince(ResourceKey<Level> dimension, BlockPos pos, long gameTime) {
+        this.anchorSince(dimension).put(pos.asLong(), gameTime);
+        this.setDirty();
+    }
+
+    /** Spielzeit, zu der der Anker gesetzt wurde, oder -1 (alte Anker: voller Radius). */
+    public long anchorSince(ResourceKey<Level> dimension, long packedPos) {
+        return this.anchorSince(dimension).get(packedPos);
     }
 
     public LongList herds(ResourceKey<Level> dimension) {
@@ -367,11 +393,20 @@ public class ShardlineWorldData extends SavedData {
 
         CompoundTag dimensions = new CompoundTag();
         Set<ResourceKey<Level>> keys = new HashSet<>(this.anchors.keySet());
+        keys.addAll(this.anchorSince.keySet());
         keys.addAll(this.herds.keySet());
         keys.addAll(this.chunkInfection.keySet());
         for (ResourceKey<Level> key : keys) {
             CompoundTag dimension = new CompoundTag();
             dimension.put("Anchors", new LongArrayTag(this.anchors(key).toLongArray()));
+            Long2LongOpenHashMap since = this.anchorSince(key);
+            long[] sincePairs = new long[since.size() * 2];
+            int s = 0;
+            for (Long2LongMap.Entry entry : since.long2LongEntrySet()) {
+                sincePairs[s++] = entry.getLongKey();
+                sincePairs[s++] = entry.getLongValue();
+            }
+            dimension.put("AnchorSince", new LongArrayTag(sincePairs));
             dimension.put("Herds", new LongArrayTag(this.herds(key).toLongArray()));
             Long2IntOpenHashMap infection = this.chunkInfection(key);
             long[] chunkKeys = new long[infection.size()];
@@ -439,6 +474,10 @@ public class ShardlineWorldData extends SavedData {
             ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, location);
             CompoundTag dimension = dimensions.getCompound(key);
             data.anchors(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("Anchors")));
+            long[] sincePairs = dimension.getLongArray("AnchorSince");
+            for (int s = 0; s + 1 < sincePairs.length; s += 2) {
+                data.anchorSince(dimensionKey).put(sincePairs[s], sincePairs[s + 1]);
+            }
             data.herds(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("Herds")));
             long[] chunkKeys = dimension.getLongArray("InfectionChunks");
             int[] chunkValues = dimension.getIntArray("InfectionCounts");

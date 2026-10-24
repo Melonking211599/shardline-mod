@@ -106,5 +106,7 @@ need(TEX / "gui" / "trader_dialogue.png", (256, 128))
 for n in range(1, 7):
     need(TEX / "item" / f"chapter_emblem_{n}.png", (16, 16)); items.append(f"chapter_emblem_{n}")
 need(TEX / "gui" / "chapter_card.png", (256, 128))
+for i in range(4): need(TEX / "particle" / f"purity_mote_{i}.png", (8, 8))
+need(RESOURCE_ROOT / "assets" / "shardline" / "particles" / "purity_mote.json")
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)
