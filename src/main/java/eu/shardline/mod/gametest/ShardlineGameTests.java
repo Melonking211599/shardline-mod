@@ -1656,6 +1656,57 @@ public final class ShardlineGameTests {
     }
 
     /**
+     * "Der Gezeichnete" ueber die echten Dialoge: Ilsa braut aus Essenz und Echosplittern, Kesh trinkt und ist geheilt.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    public static void markedHealing(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        var ilsa = helper.spawn(ModEntities.ILSA.get(), new BlockPos(1, 1, 1));
+        var kesh = helper.spawn(ModEntities.KESH.get(), new BlockPos(5, 1, 1));
+        try {
+            ilsa.setHome(ilsa.blockPosition());
+            kesh.setHome(kesh.blockPosition());
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 7);
+            for (String flag : List.of("rhea:met", "kesh:met", "ilsa:met")) {
+                data.addFlag(player.getUUID(), flag);
+            }
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "the_marked"), "Der Gezeichnete liess sich nicht annehmen");
+            player.getInventory().add(new ItemStack(eu.shardline.mod.item.ModItems.PURIFICATION_ESSENCE.get()));
+            player.getInventory().add(new ItemStack(eu.shardline.mod.item.ModItems.ECHO_SHARD.get(), 3));
+            eu.shardline.mod.story.quest.Quests.check(player);
+            helper.assertTrue(data.quest(player.getUUID(), "the_marked").step() == 2, "Sammelschritte nicht erkannt");
+
+            player.moveTo(ilsa.getX() + 1.5, ilsa.getY(), ilsa.getZ());
+            ilsa.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("marked_brew"), "Ilsa bietet das Brauen nicht an");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(data.quest(player.getUUID(), "the_marked").step() == 3, "Brauen zaehlt nicht");
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+
+            player.moveTo(kesh.getX() + 1.5, kesh.getY(), kesh.getZ());
+            kesh.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("marked_heal"), "Kesh trinkt nicht");
+            helper.assertTrue(kesh.isHealed() && data.hasFlag(player.getUUID(), "kesh:healed")
+                    && data.hasFlag(player.getUUID(), "quest_done:the_marked"), "Kesh nicht geheilt");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            resetStory(data, player);
+            data.setEnding(ending);
+            ilsa.discard();
+            kesh.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /**
      * Kapitel-9-Gegner: Nachhall und Schwaerenherz erscheinen ueber die Dialogaktion (nie doppelt), ihr Tod setzt die
      * Boss-Flaggen ohne Ausbruch oder Entscheidungsaltar; danach fuehrt Veyl zur Epilog-Entscheidung.
      */

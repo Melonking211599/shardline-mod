@@ -5,12 +5,16 @@ import eu.shardline.mod.entity.boss.EchoQueenEntity;
 import eu.shardline.mod.entity.boss.FesteringHeartEntity;
 import eu.shardline.mod.entity.npc.KeshEntity;
 import eu.shardline.mod.entity.npc.VeylEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import javax.annotation.Nullable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 /**
  * Renderer fuer "Nach dem Ausbruch": Veyl durchscheinend (Alpha steckt in der Textur), Kesh mit Heil-Textur, Nachhall
@@ -60,7 +64,10 @@ public final class NpcRenderers {
         }
     }
 
-    /** Kesh: textures/entity/kesh.png, nach der Heilung kesh_healed.png (Glowmask folgt automatisch dem Namen). */
+    /**
+     * Kesh: textures/entity/kesh.png mit leuchtenden Kristallen (kesh_glowmask.png), nach der Heilung kesh_healed.png
+     * ohne Leuchtschicht - die Kristalle sind erloschen, und GeckoLib stuerzt bei einer leeren Glowmask ab.
+     */
     public static class KeshRenderer extends ShardlineGeoRenderer<KeshEntity> {
         private static final ResourceLocation HEALED = Shardline.id("textures/entity/kesh_healed.png");
 
@@ -70,7 +77,17 @@ public final class NpcRenderers {
                 public ResourceLocation getTextureResource(KeshEntity animatable) {
                     return animatable.isHealed() ? HEALED : super.getTextureResource(animatable);
                 }
-            }, 0.5F, true);
+            }, 0.5F, false);
+            this.addRenderLayer(new AutoGlowingGeoLayer<>(this) {
+                @Override
+                public void render(PoseStack poseStack, KeshEntity animatable, BakedGeoModel bakedModel, @Nullable RenderType renderType,
+                                   MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, float partialTick, int packedLight,
+                                   int packedOverlay) {
+                    if (!animatable.isHealed()) {
+                        super.render(poseStack, animatable, bakedModel, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+                    }
+                }
+            });
         }
     }
 }

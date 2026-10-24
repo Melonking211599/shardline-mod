@@ -139,7 +139,10 @@ for name, size in (("dialogue/frame", (32, 32)), ("dialogue/portrait_frame", (80
 for portrait in sorted((TEX / "gui" / "portraits").glob("*.png")):
     need(portrait, (64, 64))
 need(TEX / "entity" / "kesh_healed.png", (64, 64))
-need(TEX / "entity" / "kesh_healed_glowmask.png", (64, 64))
+# Leere Glowmasks lassen GeckoLib beim ersten Rendern abstuerzen ("must have at least one pixel")
+for mask in sorted((TEX / "entity").glob("*_glowmask.png")):
+    if Image.open(mask).convert("RGBA").getchannel("A").getbbox() is None:
+        errors.append(f"{mask.name}: Glowmask ist leer")
 for npc in ("rhea", "veyl", "ilsa", "kesh"):
     for pose in ("neutral", "happy", "sad", "angry"):
         need(TEX / "gui" / "portraits" / f"{npc}_{pose}.png", (64, 64))

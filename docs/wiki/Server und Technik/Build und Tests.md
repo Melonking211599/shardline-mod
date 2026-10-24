@@ -47,7 +47,7 @@ Die Generatoren prüfen beim Lauf, ob alle referenzierten Texturen existieren. E
 
 ## Automatische Tests (GameTests)
 
-`ShardlineGameTests` enthält **44 Tests**. Letzter Stand: alle bestanden.
+`ShardlineGameTests` enthält **45 Tests**. Letzter Stand: alle bestanden.
 
 | Bereich | Tests |
 |---|---|
@@ -55,7 +55,7 @@ Die Generatoren prüfen beim Lauf, ob alle referenzierten Texturen existieren. E
 | Wesen und Inhalte | `mobsTick` (alle Wesen 10 s ohne Absturz), `crystalSnailHides`, `shardEnchantments`, `craftingContentComplete` |
 | Shardvirus | `virusSpreadAnchorPurify`, `virusQueueProcessing`, `virusRandomTickSpread`, `infectedAnimals`, `immunity`, `purityZone`, `virusHeartPhases`, `virusStrainBlocks`, `virusDepth`, `virusStrainMobs` |
 | Story und Ende | `storyDataRoundTrip`, `storyTexts` (alle Sprachschlüssel vorhanden), `loreBookItems`, `lorePageTrading`, `chapterDisplay`, `decisionAltar`, `endingSealStopsVirus`, `rulerAllegiance` |
-| Nach dem Ausbruch | `dialogueEngine`, `dialogueValidation`, `questFlow`, `aftermathChapters`, `aftermathSaveData`, `dialogueSessions`, `dialoguePayloadCodec`, `storyDataFiles`, `rheaNpc`, `veylAndIlsa`, `keshEscort`, `aftermathFlowSeal` (Kapitel 7 → 8 über die echten Dialoge), `aftermathBossesAndEpilogue`, `festeringNodeDominated`, `journalSync` |
+| Nach dem Ausbruch | `dialogueEngine`, `dialogueValidation`, `questFlow`, `aftermathChapters`, `aftermathSaveData`, `dialogueSessions`, `dialoguePayloadCodec`, `storyDataFiles`, `rheaNpc`, `veylAndIlsa`, `keshEscort`, `markedHealing` (Kesh heilen über die echten Dialoge), `aftermathFlowSeal` (Kapitel 7 → 8 über die echten Dialoge), `aftermathBossesAndEpilogue`, `festeringNodeDominated`, `journalSync` |
 | Assets | `soundFiles` (jede eingetragene Sounddatei existiert) |
 
 > [!info] GameTest-Server und Dimensionen

@@ -49,7 +49,7 @@ Shardline ist eine NeoForge-Mod für Minecraft 1.21.1, entwickelt für das Netzw
 - [[Installation und Server]]: Installation, Abhängigkeiten, Netzwerkbetrieb, Befehle
 - [[Konfiguration]]: alle Einstellungen mit Standardwerten
 - [[Code-Struktur]]: Pakete, Registries, wichtige Abläufe
-- [[Build und Tests]]: Bauen, Datengeneratoren, 44 GameTests, Server-Rauchtest
+- [[Build und Tests]]: Bauen, Datengeneratoren, 45 GameTests, Server-Rauchtest
 - [[Assets und Texturen]]: Texturgeneratoren, Modelle, Sounds und wie man sie ersetzt
 
 ## Verschiedenes

@@ -50,7 +50,7 @@ Package `eu.shardline.mod`, Quellcode unter `src/main/java/eu/shardline/mod/`. A
 | `client.sky` | `SplitterweiteEffects` (Himmel, Mond, Nebelfarbe, violetter Himmel) |
 | `compat` | JEI- und EMI-Plugins mit gemeinsamen Infoseiten (`ShardlineCompatInfo`) |
 | `datagen` | alle Datengeneratoren inkl. `ModStoryAdvancements`, siehe [[Build und Tests]] |
-| `gametest` | `ShardlineGameTests` (44 Tests) |
+| `gametest` | `ShardlineGameTests` (45 Tests) |
 
 ## Wichtige Abläufe
 

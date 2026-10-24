@@ -517,7 +517,7 @@ def kesh_texture(healed: bool = False):
     e.paint("cheek_crystal", crystals)
     if healed:
         e.name = "kesh_healed"
-    e.save()
+    e.save(with_glow=not healed)       # geheilt: Kristalle erloschen, keine Glowmask (GeckoLib verbietet leere Masken)
 
 
 # ------------------------------------------------------------------ Porträts (64x64)
