@@ -849,5 +849,12 @@
   "subtitles.shardline.block.decision_altar.awaken": "Altar erwacht",
   "subtitles.shardline.block.decision_altar.use": "Kern schwingt",
   "advancements.shardline.story.decision_altar.title": "Am Scheideweg",
-  "advancements.shardline.story.decision_altar.description": "Wecke den Entscheidungsaltar mit dem Kern des Bruchs"
+  "advancements.shardline.story.decision_altar.description": "Wecke den Entscheidungsaltar mit dem Kern des Bruchs",
+
+  "block.shardline.keeper_ruin_bricks": "Hüterruinen-Ziegel",
+  "block.shardline.keeper_ruin_pillar": "Hüterruinen-Säule",
+  "block.shardline.keeper_rune_slab": "Hüter-Runenstufe",
+  "structure.shardline.keeper_ruin": "Hüter-Ruinen",
+  "advancements.shardline.keeper_ruin.title": "Wo die Hüter tagten",
+  "advancements.shardline.keeper_ruin.description": "Finde die Ruinen eines Hütersaals"
 }

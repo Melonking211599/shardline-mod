@@ -1,0 +1,6 @@
+{
+  "type": "shardline:keeper_ruin",
+  "biomes": "#shardline:has_structure/keeper_ruin",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

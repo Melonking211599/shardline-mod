@@ -176,6 +176,25 @@ public final class ShardlineStructures {
         }
     }
 
+    /** Hueter-Ruinen: eingestuerzter Saal mit Erinnerungskristall und Lore-Truhe, in allen Biomen der Splitterweite. */
+    public static class KeeperRuin extends Structure {
+        public static final MapCodec<KeeperRuin> CODEC = simpleCodec(KeeperRuin::new);
+
+        public KeeperRuin(StructureSettings settings) {
+            super(settings);
+        }
+
+        @Override
+        protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+            return placeOnGround(context, 6, KeeperRuinPiece::new);
+        }
+
+        @Override
+        public StructureType<?> type() {
+            return ModStructures.KEEPER_RUIN.get();
+        }
+    }
+
     /** Handelsposten mit Splitterhaendler. */
     public static class TraderOutpost extends Structure {
         public static final MapCodec<TraderOutpost> CODEC = simpleCodec(TraderOutpost::new);

@@ -134,7 +134,130 @@ def decision_altar_bottom() -> Tex:
     return clusters(2105, IVORY, base=1, lights=3, darks=4, longest=3)
 
 
+# ====================================================================== F3 Hueter-Ruinen (Elfenbein, Gold, Himmelblau)
+MOSS = [hx(c) for c in ("#1f5a5c", "#2c7f7a", "#46a99a")]
+RUNE = """
+................
+................
+.....gggggg.....
+....g......g....
+...g...ss...g...
+..g...s..s...g..
+..g..s....s..g..
+..g..s.ss.s..g..
+..g..s.ss.s..g..
+..g..s....s..g..
+..g...s..s...g..
+...g...ss...g...
+....g......g....
+.....gggggg.....
+................
+................
+"""
+
+
+def keeper_ruin_bricks() -> Tex:
+    """Helle Hueterziegel (versetzt, 8x4), dunkle Fugen, hier und da Goldeinlage, Moos und Risse."""
+    t = Tex(16, 16)
+    for y in range(16):
+        row = y // 4
+        for x in range(16):
+            bx = (x + (4 if row % 2 else 0)) % 8
+            by = y % 4
+            if by == 3 or bx == 7:
+                t.set(x, y, IVORY[0])
+                continue
+            tone = 2.0
+            if by == 0 or bx == 0:
+                tone = 3.0
+            if by == 2 or bx == 6:
+                tone = 1.6
+            t.set(x, y, IVORY[int(round(tone))])
+    base = clusters(3101, IVORY, base=2, lights=4, darks=4, longest=2)
+    for (x, y) in ((2, 1), (11, 5), (5, 9), (13, 13), (9, 2)):
+        t.set(x, y, base.get(x, y))
+    for (x, y) in ((7, 3), (3, 11), (15, 7)):
+        t.set(x, y, GOLD[2])                     # Goldeinlage in den Fugen
+    for (x, y) in ((12, 10), (13, 10), (13, 9), (14, 8)):
+        t.set(x, y, IVORY[0])                    # Riss
+    for (x, y, c) in ((0, 14, 1), (1, 14, 2), (1, 13, 0), (2, 14, 1), (9, 15, 1), (10, 14, 2)):
+        t.set(x, y, MOSS[c])                     # Moos am Fuss
+    return t
+
+
+def keeper_ruin_pillar() -> Tex:
+    """Kannelierte Saeule mit goldenem Kapitell und Fuss."""
+    t = Tex(16, 16)
+    for y in range(16):
+        for x in range(16):
+            f = x % 4
+            c = IVORY[3] if f == 0 else IVORY[2] if f in (1, 2) else IVORY[1]
+            if y in (0, 15):
+                c = GOLD[3] if y == 0 else GOLD[1]
+            elif y in (1, 14):
+                c = GOLD[2]
+            elif y in (2, 13):
+                c = IVORY[4] if y == 2 else IVORY[0]
+            t.set(x, y, c)
+    for (x, y) in ((6, 7), (6, 8), (10, 4), (2, 10)):
+        t.set(x, y, IVORY[0])                    # Abplatzer
+    return t
+
+
+def keeper_ruin_pillar_top() -> Tex:
+    t = clusters(3103, IVORY, base=2, lights=3, darks=3, longest=2)
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if 6.5 <= d < 7.6:
+                t.set(x, y, GOLD[2] if (x + y) % 2 else GOLD[3])
+            elif d < 2.2:
+                t.set(x, y, GOLD[3] if x + y < 15 else GOLD[2])
+            elif 2.2 <= d < 3.0:
+                t.set(x, y, IVORY[0])
+    return t
+
+
+def keeper_rune_slab() -> Tex:
+    t = clusters(3105, IVORY, base=2, lights=4, darks=3, longest=2)
+    for i in range(16):
+        t.set(i, 0, IVORY[4])
+        t.set(0, i, IVORY[4])
+        t.set(i, 15, IVORY[1])
+        t.set(15, i, IVORY[1])
+    put(t, RUNE, {"g": GOLD[1], "s": IVORY[0]})  # eingemeisselte Rune
+    return t
+
+
+def keeper_rune_slab_glow() -> Tex:
+    t = blank()
+    put(t, RUNE, {"g": SKYB[3], "s": GOLD[4]})
+    return t
+
+
+def keeper_rune_slab_side() -> Tex:
+    """Zwei uebereinanderliegende Stufen (die Seite der unteren Stufe nutzt die untere Haelfte)."""
+    t = Tex(16, 16)
+    for half in (0, 8):
+        for y in range(half, half + 8):
+            for x in range(16):
+                ly = y - half
+                c = IVORY[4] if ly == 0 else IVORY[0] if ly == 7 else IVORY[2]
+                if ly == 4 and 1 <= x <= 14:
+                    c = GOLD[2] if x % 3 else GOLD[3]
+                elif ly in (1, 6) and x % 5 == 2:
+                    c = IVORY[3] if ly == 1 else IVORY[1]
+                t.set(x, y, c)
+    return t
+
+
 BLOCKS = {
+    "block/keeper_ruin_bricks": keeper_ruin_bricks,
+    "block/keeper_ruin_pillar": keeper_ruin_pillar,
+    "block/keeper_ruin_pillar_top": keeper_ruin_pillar_top,
+    "block/keeper_rune_slab": keeper_rune_slab,
+    "block/keeper_rune_slab_glow": keeper_rune_slab_glow,
+    "block/keeper_rune_slab_side": keeper_rune_slab_side,
     "block/decision_altar_side": decision_altar_side,
     "block/decision_altar_side_glow": decision_altar_side_glow,
     "block/decision_altar_top": decision_altar_top,

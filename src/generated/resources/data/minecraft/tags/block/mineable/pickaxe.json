@@ -20,6 +20,9 @@
     "shardline:polished_shardstone_stairs",
     "shardline:polished_shardstone_slab",
     "shardline:chiseled_shardstone_bricks",
-    "shardline:shard_lantern"
+    "shardline:shard_lantern",
+    "shardline:keeper_ruin_bricks",
+    "shardline:keeper_ruin_pillar",
+    "shardline:keeper_rune_slab"
   ]
 }

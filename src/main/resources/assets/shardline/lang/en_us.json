@@ -849,5 +849,12 @@
   "subtitles.shardline.block.decision_altar.awaken": "Altar awakens",
   "subtitles.shardline.block.decision_altar.use": "Core resonates",
   "advancements.shardline.story.decision_altar.title": "At the Crossroads",
-  "advancements.shardline.story.decision_altar.description": "Wake the Altar of Decision with the Core of the Breach"
+  "advancements.shardline.story.decision_altar.description": "Wake the Altar of Decision with the Core of the Breach",
+
+  "block.shardline.keeper_ruin_bricks": "Keeper Ruin Bricks",
+  "block.shardline.keeper_ruin_pillar": "Keeper Ruin Pillar",
+  "block.shardline.keeper_rune_slab": "Keeper Rune Slab",
+  "structure.shardline.keeper_ruin": "Keeper Ruins",
+  "advancements.shardline.keeper_ruin.title": "Where the Keepers Met",
+  "advancements.shardline.keeper_ruin.description": "Find the ruins of a keeper hall"
 }

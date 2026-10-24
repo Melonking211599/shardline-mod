@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shardline:block/keeper_rune_slab"
+    },
+    "type=double": {
+      "model": "shardline:block/keeper_rune_slab_double"
+    },
+    "type=top": {
+      "model": "shardline:block/keeper_rune_slab_top"
+    }
+  }
+}

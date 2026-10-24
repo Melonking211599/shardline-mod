@@ -163,11 +163,13 @@ public final class ShardlineGameTests {
         BlockPos crypt = new BlockPos(base.getX() + 620, 120, base.getZ());
         BlockPos geode = new BlockPos(base.getX() + 680, 120, base.getZ());
         BlockPos crater = new BlockPos(base.getX() + 740, 120, base.getZ());
+        BlockPos keeperRuin = new BlockPos(base.getX() + 800, 120, base.getZ());
         build(level, new KeeperShrinePiece(shrine, 4L));
         build(level, new TraderOutpostPiece(outpost, 5L));
         build(level, new AshCryptPiece(crypt, 6L));
         build(level, new CrystalGeodePiece(geode, 7L));
         build(level, new ShardCraterPiece(crater, 8L));
+        build(level, new eu.shardline.mod.world.structure.KeeperRuinPiece(keeperRuin, 9L));
 
         expect(helper, level, shrine.above(2), ModBlocks.MEMORY_CRYSTAL.get());
         expect(helper, level, shrine.offset(0, 1, 2), Blocks.CHEST);
@@ -187,6 +189,18 @@ public final class ShardlineGameTests {
         boolean craterChest = BlockPos.betweenClosedStream(crater.offset(-7, -4, -7), crater.offset(7, 1, 7))
                 .anyMatch(pos -> level.getBlockState(pos).is(Blocks.CHEST));
         helper.assertTrue(craterChest, "Keine Truhe im Splitterkrater");
+        expect(helper, level, eu.shardline.mod.world.structure.KeeperRuinPiece.crystalPos(keeperRuin), ModBlocks.MEMORY_CRYSTAL.get());
+        expect(helper, level, eu.shardline.mod.world.structure.KeeperRuinPiece.chestPos(keeperRuin), Blocks.CHEST);
+        expect(helper, level, keeperRuin.offset(eu.shardline.mod.world.structure.KeeperRuinPiece.HALF_W, 1,
+                eu.shardline.mod.world.structure.KeeperRuinPiece.HALF_L), ModBlocks.KEEPER_RUIN_PILLAR.get());
+        expect(helper, level, keeperRuin.offset(0, 0, 2), ModBlocks.KEEPER_RUNE_SLAB.get());
+        // Die Truhe der Hueter-Ruinen enthaelt immer mindestens ein Lore-Buch.
+        var table = level.getServer().reloadableRegistries().getLootTable(eu.shardline.mod.core.ModLootTables.KEEPER_RUIN_CHEST);
+        boolean lore = table.getRandomItems(new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, keeperRuin.getCenter())
+                        .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST))
+                .stream().anyMatch(stack -> stack.is(eu.shardline.mod.item.ModItems.LORE_BOOK.get()));
+        helper.assertTrue(lore, "Keine Lore-Buecher in der Truhe der Hueter-Ruinen");
         helper.succeed();
     }
 
@@ -466,7 +480,7 @@ public final class ShardlineGameTests {
         }
         for (ResourceKey<Structure> key : List.of(ModStructures.SHARD_CRATER_KEY, ModStructures.RUIN_TOWER_KEY, ModStructures.KEEPER_SHRINE_KEY,
                 ModStructures.TRADER_OUTPOST_KEY, ModStructures.ASH_CRYPT_KEY, ModStructures.CRYSTAL_GEODE_KEY,
-                ModStructures.COLOSSUS_ARENA_KEY, ModStructures.QUEEN_ARENA_KEY)) {
+                ModStructures.COLOSSUS_ARENA_KEY, ModStructures.QUEEN_ARENA_KEY, ModStructures.KEEPER_RUIN_KEY)) {
             keys.add("structure.shardline." + key.location().getPath());
         }
         keys.add("enchantment.shardline.shard_bane");

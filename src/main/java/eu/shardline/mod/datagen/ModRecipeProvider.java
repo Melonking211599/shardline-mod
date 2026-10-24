@@ -120,6 +120,25 @@ public class ModRecipeProvider extends RecipeProvider {
         stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARDSTONE_BRICKS.get(), 1);
         stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(), ModBlocks.SHARDSTONE.get(), 1);
 
+        // --- Hueter-Ruinen: heller Hueterstein aus Calcit, Runen mit Glowstone-Staub ---
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUIN_BRICKS.get(), 4)
+                .pattern("CC").pattern("CC")
+                .define('C', Items.CALCITE)
+                .unlockedBy(getHasName(Items.CALCITE), has(Items.CALCITE))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUIN_PILLAR.get(), 2)
+                .pattern("B").pattern("B")
+                .define('B', ModBlocks.KEEPER_RUIN_BRICKS.get())
+                .unlockedBy(getHasName(ModBlocks.KEEPER_RUIN_BRICKS.get()), has(ModBlocks.KEEPER_RUIN_BRICKS.get()))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUNE_SLAB.get(), 6)
+                .pattern(" G ").pattern("BBB")
+                .define('G', Items.GLOWSTONE_DUST).define('B', ModBlocks.KEEPER_RUIN_BRICKS.get())
+                .unlockedBy(getHasName(ModBlocks.KEEPER_RUIN_BRICKS.get()), has(ModBlocks.KEEPER_RUIN_BRICKS.get()))
+                .save(output);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUIN_BRICKS.get(), Items.CALCITE, 1);
+        stonecutting(output, RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUIN_PILLAR.get(), ModBlocks.KEEPER_RUIN_BRICKS.get(), 1);
+
         // --- Splitterhandwerk: Licht & Glas ---
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.SHARD_LANTERN.get())
                 .pattern("NNN").pattern("NFN").pattern("NNN")

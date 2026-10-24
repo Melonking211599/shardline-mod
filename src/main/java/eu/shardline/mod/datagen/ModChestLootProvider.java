@@ -110,6 +110,21 @@ public class ModChestLootProvider implements LootTableSubProvider {
                         .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries))))
                 .withPool(loreBooks(2, "keepers_oath", "crystal_kingdom", "queen_selvaine")));
 
+        // Hueter-Ruinen: die Bibliothek der Hueter - immer mindestens ein Lore-Buch
+        output.accept(ModLootTables.KEEPER_RUIN_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(3.0F, 5.0F))
+                .add(item(Items.GOLD_NUGGET, 12, 3, 9))
+                .add(item(Items.PAPER, 10, 2, 6))
+                .add(item(ModBlocks.GLOWBLOOM.get(), 8, 1, 3))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 10, 2, 6))
+                .add(item(ModItems.SHARD_INGOT.get(), 5, 1, 2))
+                .add(item(ModBlocks.KEEPER_RUNE_SLAB.get(), 6, 2, 4))
+                .add(item(Items.EXPERIENCE_BOTTLE, 5, 1, 3))
+                .add(LootItem.lootTableItem(Items.BOOK).setWeight(4)
+                        .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries))))
+                .withPool(loreBooks(0, "keepers_oath", "crystal_kingdom", "the_resonance", "first_infection", "queen_selvaine"))
+                .withPool(loreBooks(3, "keepers_oath", "the_resonance", "the_shattering")));
+
         output.accept(ModLootTables.TRADER_OUTPOST_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(4.0F, 6.0F))
                 .add(item(ModItems.LUMINOUS_BERRY.get(), 14, 3, 8))

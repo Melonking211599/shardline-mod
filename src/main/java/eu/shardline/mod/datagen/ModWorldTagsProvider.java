@@ -49,6 +49,7 @@ public final class ModWorldTagsProvider {
             tag(ModTags.Biomes.HAS_COLOSSUS_ARENA).add(ModBiomes.CRYSTAL_FOREST);
             tag(ModTags.Biomes.HAS_KEEPER_SHRINE).add(ModBiomes.CRYSTAL_FOREST);
             tag(ModTags.Biomes.HAS_TRADER_OUTPOST).addTag(ModTags.Biomes.IS_SPLITTERWEITE);
+            tag(ModTags.Biomes.HAS_KEEPER_RUIN).addTag(ModTags.Biomes.IS_SPLITTERWEITE);
             tag(ModTags.Biomes.HAS_ASH_CRYPT).add(ModBiomes.ASH_FIELDS);
             tag(ModTags.Biomes.HAS_CRYSTAL_GEODE).add(ModBiomes.GLOWING_CAVES);
             // Offene Landschaften, damit der Krater nicht in Baumkronen oder unter Wasser landet.

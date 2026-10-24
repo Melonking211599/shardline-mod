@@ -83,6 +83,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(ModBlocks.INFECTED_LOG.get(), log);
 
         memoryCrystal();
+        keeperRuin();
         decisionAltar();
         purityAnchor();
 
@@ -201,6 +202,35 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         .allFaces((dir, face) -> face.texture(dir.getAxis() == Direction.Axis.Y ? "#glow_top" : "#glow_side")).end();
             }
         }
+        return model;
+    }
+
+    /** Hueter-Ruinen: Ziegel, Saeule (drehbar) und Runenstufe mit leuchtender Rune auf der Oberseite. */
+    private void keeperRuin() {
+        cube(ModBlocks.KEEPER_RUIN_BRICKS.get());
+        axisBlock(ModBlocks.KEEPER_RUIN_PILLAR.get(), modLoc("block/keeper_ruin_pillar"), modLoc("block/keeper_ruin_pillar_top"));
+        simpleBlockItem(ModBlocks.KEEPER_RUIN_PILLAR.get(), models().getExistingFile(modLoc("block/keeper_ruin_pillar")));
+        BlockModelBuilder bottom = runeSlabModel("keeper_rune_slab", 0, 8);
+        BlockModelBuilder top = runeSlabModel("keeper_rune_slab_top", 8, 16);
+        BlockModelBuilder full = runeSlabModel("keeper_rune_slab_double", 0, 16);
+        slabBlock(ModBlocks.KEEPER_RUNE_SLAB.get(), bottom, top, full);
+        simpleBlockItem(ModBlocks.KEEPER_RUNE_SLAB.get(), bottom);
+    }
+
+    private BlockModelBuilder runeSlabModel(String name, float y0, float y1) {
+        BlockModelBuilder model = models().withExistingParent(name, mcLoc("block/block"))
+                .texture("particle", modLoc("block/keeper_rune_slab_side")).texture("side", modLoc("block/keeper_rune_slab_side"))
+                .texture("top", modLoc("block/keeper_rune_slab")).texture("bottom", modLoc("block/keeper_ruin_bricks"))
+                .texture("glow", modLoc("block/keeper_rune_slab_glow")).renderType("cutout");
+        model.element().from(0, y0, 0).to(16, y1, 16)
+                .allFaces((dir, face) -> {
+                    face.texture(dir == Direction.UP ? "#top" : dir == Direction.DOWN ? "#bottom" : "#side");
+                    if (dir != Direction.UP || y1 == 16) {
+                        face.cullface(dir);
+                    }
+                }).end();
+        model.element().from(0, y0, 0).to(16, y1, 16).shade(false).emissivity(15, 15)
+                .face(Direction.UP).texture("#glow").cullface(y1 == 16 ? Direction.UP : null).end().end();
         return model;
     }
 

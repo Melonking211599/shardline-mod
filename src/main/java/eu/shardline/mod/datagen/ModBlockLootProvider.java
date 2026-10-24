@@ -51,6 +51,9 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
                 ModBlocks.SHARD_LANTERN.get()}) {
             this.dropSelf(block);
         }
+        this.dropSelf(ModBlocks.KEEPER_RUIN_BRICKS.get());
+        this.dropSelf(ModBlocks.KEEPER_RUIN_PILLAR.get());
+        this.add(ModBlocks.KEEPER_RUNE_SLAB.get(), this::createSlabItemTable);
         this.add(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), this::createSlabItemTable);
         this.add(ModBlocks.CRYSTAL_SLAB.get(), this::createSlabItemTable);
         this.add(ModBlocks.CRYSTAL_DOOR.get(), this::createDoorTable);

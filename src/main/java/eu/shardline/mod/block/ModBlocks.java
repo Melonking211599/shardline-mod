@@ -218,6 +218,14 @@ public final class ModBlocks {
                     .sound(SoundType.SAND).randomTicks()));
 
     // --- Gegenmittel ---
+    // --- Hueter-Ruinen ---
+    public static final DeferredBlock<Block> KEEPER_RUIN_BRICKS = registerWithItem("keeper_ruin_bricks",
+            () -> new Block(stone(MapColor.QUARTZ, 2.0F)));
+    public static final DeferredBlock<RotatedPillarBlock> KEEPER_RUIN_PILLAR = registerWithItem("keeper_ruin_pillar",
+            () -> new RotatedPillarBlock(stone(MapColor.QUARTZ, 2.0F)));
+    public static final DeferredBlock<SlabBlock> KEEPER_RUNE_SLAB = registerWithItem("keeper_rune_slab",
+            () -> new SlabBlock(stone(MapColor.QUARTZ, 2.0F).lightLevel(state -> 3)));
+
     public static final DeferredBlock<DecisionAltarBlock> DECISION_ALTAR = registerWithItem("decision_altar",
             () -> new DecisionAltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).strength(-1.0F, 3600000.0F)
                     .sound(SoundType.AMETHYST).lightLevel(state -> state.getValue(DecisionAltarBlock.ACTIVE) ? 12 : 4)

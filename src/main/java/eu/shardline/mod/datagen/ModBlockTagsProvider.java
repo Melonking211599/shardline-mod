@@ -93,6 +93,11 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.WOODEN_TRAPDOORS).add(ModBlocks.CRYSTAL_TRAPDOOR.get());
         tag(BlockTags.WOODEN_BUTTONS).add(ModBlocks.CRYSTAL_BUTTON.get());
         tag(BlockTags.WOODEN_PRESSURE_PLATES).add(ModBlocks.CRYSTAL_PRESSURE_PLATE.get());
+
+        // --- Hueter-Ruinen ---
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.KEEPER_RUIN_BRICKS.get(), ModBlocks.KEEPER_RUIN_PILLAR.get(),
+                ModBlocks.KEEPER_RUNE_SLAB.get());
+        tag(BlockTags.SLABS).add(ModBlocks.KEEPER_RUNE_SLAB.get());
         tag(BlockTags.IMPERMEABLE).add(ModBlocks.CRYSTAL_GLASS.get());
         tag(Tags.Blocks.GLASS_BLOCKS).add(ModBlocks.CRYSTAL_GLASS.get());
         tag(Tags.Blocks.GLASS_PANES).add(ModBlocks.CRYSTAL_GLASS_PANE.get());

@@ -50,6 +50,8 @@ public final class ModStructures {
             STRUCTURE_TYPES.register("crystal_geode", () -> () -> ShardlineStructures.CrystalGeode.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<ShardlineStructures.ShardCrater>> SHARD_CRATER =
             STRUCTURE_TYPES.register("shard_crater", () -> () -> ShardlineStructures.ShardCrater.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<ShardlineStructures.KeeperRuin>> KEEPER_RUIN =
+            STRUCTURE_TYPES.register("keeper_ruin", () -> () -> ShardlineStructures.KeeperRuin.CODEC);
 
     // --- Bauteile ---
     public static final DeferredHolder<StructurePieceType, StructurePieceType> RUIN_TOWER_PIECE =
@@ -68,6 +70,8 @@ public final class ModStructures {
             STRUCTURE_PIECES.register("crystal_geode", () -> (StructurePieceType.ContextlessType) CrystalGeodePiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> SHARD_CRATER_PIECE =
             STRUCTURE_PIECES.register("shard_crater", () -> (StructurePieceType.ContextlessType) ShardCraterPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> KEEPER_RUIN_PIECE =
+            STRUCTURE_PIECES.register("keeper_ruin", () -> (StructurePieceType.ContextlessType) KeeperRuinPiece::new);
 
     // --- Platzierung ---
     public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<FixedChunkPlacement>> FIXED_CHUNK =
@@ -82,6 +86,7 @@ public final class ModStructures {
     public static final ResourceKey<Structure> ASH_CRYPT_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("ash_crypt"));
     public static final ResourceKey<Structure> CRYSTAL_GEODE_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("crystal_geode"));
     public static final ResourceKey<Structure> SHARD_CRATER_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("shard_crater"));
+    public static final ResourceKey<Structure> KEEPER_RUIN_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("keeper_ruin"));
     public static final ResourceKey<StructureSet> RUIN_TOWER_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("ruin_towers"));
     public static final ResourceKey<StructureSet> COLOSSUS_ARENA_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("colossus_arenas"));
     public static final ResourceKey<StructureSet> QUEEN_ARENA_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("queen_arena"));
@@ -90,6 +95,7 @@ public final class ModStructures {
     public static final ResourceKey<StructureSet> ASH_CRYPT_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("ash_crypts"));
     public static final ResourceKey<StructureSet> CRYSTAL_GEODE_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("crystal_geodes"));
     public static final ResourceKey<StructureSet> SHARD_CRATER_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("shard_craters"));
+    public static final ResourceKey<StructureSet> KEEPER_RUIN_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("keeper_ruins"));
 
     private ModStructures() {
     }
@@ -143,6 +149,12 @@ public final class ModStructures {
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 TerrainAdjustment.NONE)));
 
+        context.register(KEEPER_RUIN_KEY, new ShardlineStructures.KeeperRuin(new Structure.StructureSettings(
+                biomes.getOrThrow(ModTags.Biomes.HAS_KEEPER_RUIN),
+                Map.of(),
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                TerrainAdjustment.NONE)));
+
         context.register(SHARD_CRATER_KEY, new ShardlineStructures.ShardCrater(new Structure.StructureSettings(
                 biomes.getOrThrow(ModTags.Biomes.HAS_SHARD_CRATER),
                 Map.of(),
@@ -166,6 +178,8 @@ public final class ModStructures {
                 new RandomSpreadStructurePlacement(24, 8, RandomSpreadType.LINEAR, 6610443)));
         context.register(CRYSTAL_GEODE_SET, new StructureSet(structures.getOrThrow(CRYSTAL_GEODE_KEY),
                 new RandomSpreadStructurePlacement(22, 7, RandomSpreadType.LINEAR, 3307751)));
+        context.register(KEEPER_RUIN_SET, new StructureSet(structures.getOrThrow(KEEPER_RUIN_KEY),
+                new RandomSpreadStructurePlacement(28, 10, RandomSpreadType.LINEAR, 9127734)));
         context.register(SHARD_CRATER_SET, new StructureSet(structures.getOrThrow(SHARD_CRATER_KEY),
                 new RandomSpreadStructurePlacement(40, 14, RandomSpreadType.LINEAR, 8812634)));
     }

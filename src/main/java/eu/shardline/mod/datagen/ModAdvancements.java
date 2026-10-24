@@ -5,6 +5,7 @@ import eu.shardline.mod.block.ModBlocks;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.world.dimension.ModDimensions;
+import eu.shardline.mod.world.structure.ModStructures;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.Advancement;
@@ -22,10 +23,12 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.StartRidingTrigger;
 import net.minecraft.advancements.critereon.TameAnimalTrigger;
 import net.minecraft.advancements.critereon.TradeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
@@ -74,6 +77,10 @@ public class ModAdvancements implements AdvancementProvider.AdvancementGenerator
                 "traded", TradeTrigger.TriggerInstance.tradedWithVillager(EntityPredicate.Builder.entity().of(ModEntities.SHARD_TRADER.get())));
         task(enter, "crystal_bow", ModItems.CRYSTAL_BOW.get(), AdvancementType.TASK,
                 "crystal_bow", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CRYSTAL_BOW.get()));
+
+        task(enter, "keeper_ruin", ModBlocks.KEEPER_RUIN_PILLAR.get(), AdvancementType.TASK,
+                "found", PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(
+                        registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(ModStructures.KEEPER_RUIN_KEY))));
 
         // Splitterhandwerk
         AdvancementHolder slime = task(enter, "crystal_slime", ModItems.CRYSTAL_SLIME.get(), AdvancementType.TASK,
