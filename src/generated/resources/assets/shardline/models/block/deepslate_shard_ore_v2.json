@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "shardline:block/deepslate_shard_ore_v2"
+  }
+}

@@ -1,7 +1,15 @@
 {
   "variants": {
-    "": {
-      "model": "shardline:block/infected_dirt"
-    }
+    "": [
+      {
+        "model": "shardline:block/infected_dirt"
+      },
+      {
+        "model": "shardline:block/infected_dirt_v2"
+      },
+      {
+        "model": "shardline:block/infected_dirt_v3"
+      }
+    ]
   }
 }

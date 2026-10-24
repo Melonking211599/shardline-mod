@@ -25,18 +25,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        cube(ModBlocks.SHARDSTONE.get());
+        cubeVariants(ModBlocks.SHARDSTONE.get(), 3);
         cube(ModBlocks.SHARDSTONE_BRICKS.get());
         cube(ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
-        cube(ModBlocks.SHARD_ORE.get());
-        cube(ModBlocks.DEEPSLATE_SHARD_ORE.get());
+        cubeVariants(ModBlocks.SHARD_ORE.get(), 2);
+        cubeVariants(ModBlocks.DEEPSLATE_SHARD_ORE.get(), 2);
         cube(ModBlocks.SHARD_BLOCK.get());
         cube(ModBlocks.GLOW_CRYSTAL_BLOCK.get());
-        cube(ModBlocks.ASH_BLOCK.get());
+        cubeVariants(ModBlocks.ASH_BLOCK.get(), 3);
         cube(ModBlocks.CRYSTAL_PLANKS.get());
         cube(ModBlocks.SHARD_PORTAL_FRAME.get());
-        simpleBlockWithItem(ModBlocks.CRYSTAL_MOSS.get(), models().cubeBottomTop("crystal_moss",
-                modLoc("block/crystal_moss_side"), modLoc("block/shardstone"), modLoc("block/crystal_moss")));
+        withVariants(ModBlocks.CRYSTAL_MOSS.get(), 3, suffix -> models().cubeBottomTop("crystal_moss" + suffix,
+                modLoc("block/crystal_moss_side"), modLoc("block/shardstone"), modLoc("block/crystal_moss" + suffix)));
 
         ResourceLocation bricks = blockTexture(ModBlocks.SHARDSTONE_BRICKS.get());
         stairsBlock(ModBlocks.SHARDSTONE_BRICK_STAIRS.get(), bricks);
@@ -47,8 +47,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         logBlock(ModBlocks.CRYSTAL_LOG.get());
         simpleBlockItem(ModBlocks.CRYSTAL_LOG.get(), models().getExistingFile(modLoc("block/crystal_log")));
-        simpleBlockWithItem(ModBlocks.CRYSTAL_LEAVES.get(), models().cubeAll("crystal_leaves",
-                blockTexture(ModBlocks.CRYSTAL_LEAVES.get())).renderType("cutout_mipped"));
+        withVariants(ModBlocks.CRYSTAL_LEAVES.get(), 3, suffix -> models().cubeAll("crystal_leaves" + suffix,
+                modLoc("block/crystal_leaves" + suffix)).renderType("cutout_mipped"));
 
         cross(ModBlocks.CRYSTAL_SAPLING.get());
         cross(ModBlocks.GLOWBLOOM.get());
@@ -74,9 +74,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "solid");
         infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "solid");
         infected(ModBlocks.INFECTED_LEAVES.get(), "infected_leaves", "cutout_mipped");
-        simpleBlockWithItem(ModBlocks.INFECTED_GRASS.get(), overlayModel("infected_grass",
-                modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top"), modLoc("block/infected_dirt"),
-                modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top_glow"), "cutout"));
+        withVariants(ModBlocks.INFECTED_GRASS.get(), 3, suffix -> overlayModel("infected_grass" + suffix,
+                modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top" + suffix), modLoc("block/infected_dirt"),
+                modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top" + suffix + "_glow"), "cutout"));
         ModelFile log = overlayModel("infected_log", modLoc("block/infected_log"), modLoc("block/infected_log_top"),
                 modLoc("block/infected_log_top"), modLoc("block/infected_log_glow"), modLoc("block/infected_log_top_glow"), "cutout");
         axisBlock(ModBlocks.INFECTED_LOG.get(), log, log);
@@ -124,11 +124,33 @@ public class ModBlockStateProvider extends BlockStateProvider {
         paneBlockWithRenderType(ModBlocks.CRYSTAL_GLASS_PANE.get(), modLoc("block/crystal_glass"), modLoc("block/crystal_glass_pane_top"), "cutout");
     }
 
+    /** Infizierter Block mit drei Varianten (Textur <name>, <name>_v2, <name>_v3, jeweils mit eigener Leuchtschicht). */
     private void infected(Block block, String name, String renderType) {
-        ResourceLocation base = modLoc("block/" + name);
-        ResourceLocation glow = modLoc("block/" + name + "_glow");
-        BlockModelBuilder model = overlayModel(name, base, base, base, glow, glow, renderType);
-        simpleBlockWithItem(block, model);
+        withVariants(block, 3, suffix -> {
+            ResourceLocation base = modLoc("block/" + name + suffix);
+            ResourceLocation glow = modLoc("block/" + name + suffix + "_glow");
+            return overlayModel(name + suffix, base, base, base, glow, glow, renderType);
+        });
+    }
+
+    /** Wuerfel mit gleicher Textur auf allen Seiten und {@code count} Varianten (<name>, <name>_v2, ...). */
+    private void cubeVariants(Block block, int count) {
+        String name = name(block);
+        withVariants(block, count, suffix -> models().cubeAll(name + suffix, modLoc("block/" + name + suffix)));
+    }
+
+    /**
+     * Blockstate mit gleich gewichteten Modellvarianten: Minecraft waehlt pro Blockposition fest eines davon, so bricht
+     * das Kachelmuster auf grossen Flaechen. Ohne Drehung, weil Asche und Tiefenschiefer eine Richtung haben.
+     * Das Item-Modell ist die erste Variante. Suffixe: "", "_v2", "_v3", ...
+     */
+    private void withVariants(Block block, int count, java.util.function.Function<String, ModelFile> model) {
+        ConfiguredModel[] models = new ConfiguredModel[count];
+        for (int i = 0; i < count; i++) {
+            models[i] = new ConfiguredModel(model.apply(i == 0 ? "" : "_v" + (i + 1)));
+        }
+        simpleBlock(block, models);
+        simpleBlockItem(block, models[0].model);
     }
 
     /**

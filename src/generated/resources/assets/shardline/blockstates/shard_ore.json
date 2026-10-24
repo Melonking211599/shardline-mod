@@ -1,7 +1,12 @@
 {
   "variants": {
-    "": {
-      "model": "shardline:block/shard_ore"
-    }
+    "": [
+      {
+        "model": "shardline:block/shard_ore"
+      },
+      {
+        "model": "shardline:block/shard_ore_v2"
+      }
+    ]
   }
 }

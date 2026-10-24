@@ -37,7 +37,7 @@ Gilt für jede neue und überarbeitete Textur. Paletten stehen als Konstanten in
 | `spots(seed, count, gap)` | verteilte Punkte ohne Gitter |
 | `tnoise`, `field`, `rank_tones`, `despeckle` | Bausteine darunter |
 
-## Varianten (für das Datagen, noch nicht verdrahtet)
+## Varianten (im Datagen verdrahtet: `ModBlockStateProvider.withVariants`)
 
 Jede Variante ist eine eigene Datei mit eigenem Seed; `<name>.png` bleibt die Hauptvariante. Infizierte Blöcke brauchen zusätzlich `<name>_vN_glow.png` (liegt bei, animierte Leuchtschichten haben ihre `.mcmeta`).
 

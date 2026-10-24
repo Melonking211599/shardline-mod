@@ -1,7 +1,15 @@
 {
   "variants": {
-    "": {
-      "model": "shardline:block/shardstone"
-    }
+    "": [
+      {
+        "model": "shardline:block/shardstone"
+      },
+      {
+        "model": "shardline:block/shardstone_v2"
+      },
+      {
+        "model": "shardline:block/shardstone_v3"
+      }
+    ]
   }
 }

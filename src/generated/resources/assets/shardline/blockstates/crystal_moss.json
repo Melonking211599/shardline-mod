@@ -1,7 +1,15 @@
 {
   "variants": {
-    "": {
-      "model": "shardline:block/crystal_moss"
-    }
+    "": [
+      {
+        "model": "shardline:block/crystal_moss"
+      },
+      {
+        "model": "shardline:block/crystal_moss_v2"
+      },
+      {
+        "model": "shardline:block/crystal_moss_v3"
+      }
+    ]
   }
 }
