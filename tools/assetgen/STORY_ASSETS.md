@@ -158,3 +158,22 @@ Nachhall: Geist-Rampe `#3a4a5e → #ffffff`, Leuchten `#3fb8c8 → #ffffff`, Alp
 7. Beherrscht: Gefolge, Stimmlose, Schwärenherz neben dem Lager (Gegengesang trifft Herrscher), Sieg → Epilog-Wahl.
 8. Nachbeben (Config auf 1 Minute): Wackeln, violetter Rand, neue Schwäre in der Nähe.
 9. Virus in der Tiefe: Höhle unter infizierter Oberfläche anschauen, Adern im Gestein. Nether/End besuchen: Glutbrand (orange, glimmt, Feuer) und Leerenfäule (blassgrün, Dunkelheit), kristallisierte Piglins und Endermen.
+
+## Stand der Klänge
+
+Eigene Klänge liegen unter `assets/shardline/sounds/` (Ogg Vorbis, 48 kHz; Mono für Klänge mit Position, Stereo nur für globale Ereignisse). Neue Lieferungen (WAV, 16 bit) übernimmt `python tools/assetgen/import_sounds.py <ordner>`: Stille kürzen, Spitzenpegel −1 dBFS, Ogg. Dazu die Datei in `SOUNDS` (Skript) und das Event in `ModSounds.FILES` eintragen, dann `runData`. `validate.py` und der GameTest `soundFiles` prüfen, dass jede eingetragene Datei existiert.
+
+**Eigene Klänge (22 Events, 21 Dateien):** `entity.crystal_colossus.roar|slam`, `entity.shard_queen.cast|scream|teleport`, `entity.shard_zombie.ambient`, `entity.crystallized_cow.death`, `entity.virus_heart.pulse`, `block.shard_portal.travel` und `item.shard_key.use` (dieselbe Datei), `block.memory_crystal.vision`, `block.purity_anchor.activate`, `block.shard_ore.break` (neu, Abbauklang beider Shard-Erze), `item.lore_book.open`, `item.purification_essence.use`, `item.shard_fragment.pickup` (neu, beim Aufheben von Shard-Splittern), `ability.shard_call|crystal_wave`, `story.chapter`, `event.virus_outbreak|sealed|dominated`.
+
+**Noch Vanilla-Platzhalter (113 Events)** – Beschreibungen stehen weiter oben in diesem Dokument:
+
+| Gruppe | Events |
+|---|---|
+| Bosse | `crystal_colossus.ambient|hurt|death|pillar|summon`, `shard_queen.ambient|hurt|death`, `virus_heart.ambient|hurt|death|phase|tendrils|summon` |
+| Wesen der Weite | `shard_creeper.hurt|death|fuse`, `crystal_golem.ambient|hurt|death|angry`, `glow_moth.*`, `ash_walker.*`, `shard_scout.*` + `shoot`, `void_ray.*` + `flap`, `crystal_spider.*`, `shadow_fox.*` + `vanish`, `crystal_snail.*` + `hide`, `shattered_knight.*` + `charge`, `shard_trader.*` + `yes|no|trade` |
+| Befallene | `shard_zombie.hurt|death`, `crystallized_cow.ambient|hurt`, `crystallized_sheep|pig|villager|piglin|enderman.ambient|hurt|death`, `infected.cured` |
+| NPCs | `rhea|veyl|ilsa|kesh.voice|hurt|death` |
+| Blöcke | `shard_portal.ambient`, `purity_anchor.grow`, `decision_altar.rise|awaken|use`, `festering_node.hum|purify|bind|scream` |
+| Items, Fähigkeiten | `shard_projectile.shatter`, `crystal_shield.activate`, `colossus_gauntlet.slam`, `heart_of_the_expanse.blink`, `queens_shardblade.volley`, `keeper_tuning_fork.ring` |
+| Oberfläche, Story | `ui.dialogue.open|close|type|choice`, `ui.quest.update|complete`, `story.epilogue`, `event.aftershock` |
+| Musik (Loops, Stereo, 90–180 s) | `music.splitterweite`, `music.infected` |

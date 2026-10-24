@@ -1,19 +1,13 @@
 {
   "ability.crystal_wave": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.warden.sonic_boom"
-      }
+      "shardline:ability/crystal_wave"
     ],
     "subtitle": "subtitles.shardline.ability.crystal_wave"
   },
   "ability.shard_call": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.evoker.prepare_summon"
-      }
+      "shardline:ability/shard_call"
     ],
     "subtitle": "subtitles.shardline.ability.shard_call"
   },
@@ -82,19 +76,13 @@
   },
   "block.memory_crystal.vision": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "block.beacon.activate"
-      }
+      "shardline:block/memory_crystal/vision"
     ],
     "subtitle": "subtitles.shardline.block.memory_crystal.vision"
   },
   "block.purity_anchor.activate": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "block.conduit.activate"
-      }
+      "shardline:block/purity_anchor/activate"
     ],
     "subtitle": "subtitles.shardline.block.purity_anchor.activate"
   },
@@ -107,6 +95,12 @@
     ],
     "subtitle": "subtitles.shardline.block.purity_anchor.grow"
   },
+  "block.shard_ore.break": {
+    "sounds": [
+      "shardline:block/shard_ore/break"
+    ],
+    "subtitle": "subtitles.shardline.block.shard_ore.break"
+  },
   "block.shard_portal.ambient": {
     "sounds": [
       {
@@ -118,10 +112,7 @@
   },
   "block.shard_portal.travel": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "block.amethyst_block.resonate"
-      }
+      "shardline:block/shard_portal/travel"
     ],
     "subtitle": "subtitles.shardline.block.shard_portal.travel"
   },
@@ -190,19 +181,13 @@
   },
   "entity.crystal_colossus.roar": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.warden.roar"
-      }
+      "shardline:entity/crystal_colossus/roar"
     ],
     "subtitle": "subtitles.shardline.entity.crystal_colossus.roar"
   },
   "entity.crystal_colossus.slam": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.warden.sonic_boom"
-      }
+      "shardline:entity/crystal_colossus/slam"
     ],
     "subtitle": "subtitles.shardline.entity.crystal_colossus.slam"
   },
@@ -325,10 +310,7 @@
   },
   "entity.crystallized_cow.death": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.cow.death"
-      }
+      "shardline:entity/crystallized_cow/death"
     ],
     "subtitle": "subtitles.shardline.entity.crystallized_cow.death"
   },
@@ -676,10 +658,7 @@
   },
   "entity.shard_queen.cast": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.evoker.cast_spell"
-      }
+      "shardline:entity/shard_queen/cast"
     ],
     "subtitle": "subtitles.shardline.entity.shard_queen.cast"
   },
@@ -703,19 +682,13 @@
   },
   "entity.shard_queen.scream": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.ender_dragon.growl"
-      }
+      "shardline:entity/shard_queen/scream"
     ],
     "subtitle": "subtitles.shardline.entity.shard_queen.scream"
   },
   "entity.shard_queen.teleport": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.enderman.teleport"
-      }
+      "shardline:entity/shard_queen/teleport"
     ],
     "subtitle": "subtitles.shardline.entity.shard_queen.teleport"
   },
@@ -811,10 +784,7 @@
   },
   "entity.shard_zombie.ambient": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.zombie.ambient"
-      }
+      "shardline:entity/shard_zombie/ambient"
     ],
     "subtitle": "subtitles.shardline.entity.shard_zombie.ambient"
   },
@@ -937,10 +907,7 @@
   },
   "entity.virus_heart.pulse": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.warden.sonic_charge"
-      }
+      "shardline:entity/virus_heart/pulse"
     ],
     "subtitle": "subtitles.shardline.entity.virus_heart.pulse"
   },
@@ -1009,28 +976,19 @@
   },
   "event.virus_dominated": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.warden.emerge"
-      }
+      "shardline:event/virus_dominated"
     ],
     "subtitle": "subtitles.shardline.event.virus_dominated"
   },
   "event.virus_outbreak": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "entity.wither.spawn"
-      }
+      "shardline:event/virus_outbreak"
     ],
     "subtitle": "subtitles.shardline.event.virus_outbreak"
   },
   "event.virus_sealed": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "block.beacon.power_select"
-      }
+      "shardline:event/virus_sealed"
     ],
     "subtitle": "subtitles.shardline.event.virus_sealed"
   },
@@ -1072,19 +1030,13 @@
   },
   "item.lore_book.open": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "item.book.page_turn"
-      }
+      "shardline:item/lore_book/open"
     ],
     "subtitle": "subtitles.shardline.item.lore_book.open"
   },
   "item.purification_essence.use": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "block.amethyst_block.resonate"
-      }
+      "shardline:item/purification_essence/use"
     ],
     "subtitle": "subtitles.shardline.item.purification_essence.use"
   },
@@ -1097,12 +1049,15 @@
     ],
     "subtitle": "subtitles.shardline.item.queens_shardblade.volley"
   },
+  "item.shard_fragment.pickup": {
+    "sounds": [
+      "shardline:item/shard_fragment/pickup"
+    ],
+    "subtitle": "subtitles.shardline.item.shard_fragment.pickup"
+  },
   "item.shard_key.use": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "block.end_portal.spawn"
-      }
+      "shardline:block/shard_portal/travel"
     ],
     "subtitle": "subtitles.shardline.item.shard_key.use"
   },
@@ -1124,10 +1079,7 @@
   },
   "story.chapter": {
     "sounds": [
-      {
-        "type": "event",
-        "name": "ui.toast.challenge_complete"
-      }
+      "shardline:story/chapter"
     ],
     "subtitle": "subtitles.shardline.story.chapter"
   },

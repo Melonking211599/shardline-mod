@@ -1458,5 +1458,8 @@
   "journal.shardline.npc.veyl": "Der letzte Archivar der Hüter. Ein an die Hüter-Bibliothek gebundener Geist, der die Chronik der Weite führt.",
 
   "structure.shardline.survivor_camp": "Überlebendenlager",
-  "structure.shardline.keeper_library": "Hüter-Bibliothek"
+  "structure.shardline.keeper_library": "Hüter-Bibliothek",
+
+  "subtitles.shardline.item.shard_fragment.pickup": "Shard-Splitter klingt",
+  "subtitles.shardline.block.shard_ore.break": "Shard-Erz zerspringt"
 }

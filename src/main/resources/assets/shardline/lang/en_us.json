@@ -1458,5 +1458,8 @@
   "journal.shardline.npc.veyl": "The last archivist of the Keepers. A ghost bound to the Keeper library, keeping the chronicle of the Expanse.",
 
   "structure.shardline.survivor_camp": "Survivors' Camp",
-  "structure.shardline.keeper_library": "Keeper Library"
+  "structure.shardline.keeper_library": "Keeper Library",
+
+  "subtitles.shardline.item.shard_fragment.pickup": "Shard fragment chimes",
+  "subtitles.shardline.block.shard_ore.break": "Shard ore shatters"
 }

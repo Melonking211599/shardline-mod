@@ -265,4 +265,8 @@ Modelle der Wesen: NPCs eigene GeckoLib-Modelle; Nachhall und Schwärenherz nutz
 
 ### Neue Sounds (Platzhalter → Vanilla)
 
-`entity.rhea|veyl|ilsa|kesh.voice|hurt|death`, `entity.crystallized_piglin|crystallized_enderman.ambient|hurt|death`, `ui.dialogue.open|close|type|choice`, `ui.quest.update|complete`, `story.epilogue`, `event.aftershock`, `block.festering_node.hum|purify|bind|scream`, `item.keeper_tuning_fork.ring`. Eigene Klänge: `.ogg` unter `assets/shardline/sounds/` ablegen und in `ModSounds` den Platzhalter ersetzen (Datagen schreibt `sounds.json`).
+`entity.rhea|veyl|ilsa|kesh.voice|hurt|death`, `entity.crystallized_piglin|crystallized_enderman.ambient|hurt|death`, `ui.dialogue.open|close|type|choice`, `ui.quest.update|complete`, `story.epilogue`, `event.aftershock`, `block.festering_node.hum|purify|bind|scream`, `item.keeper_tuning_fork.ring`.
+
+### Eigene Klänge
+
+21 gelieferte Soundeffekte sind eingebaut (`assets/shardline/sounds/`, importiert mit `tools/assetgen/import_sounds.py`, Zuordnung in `ModSounds.FILES`). Welche Events noch Platzhalter nutzen: [STORY_ASSETS.md → Stand der Klänge](tools/assetgen/STORY_ASSETS.md#stand-der-klänge).

@@ -5,19 +5,25 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.SoundType;
+import net.neoforged.neoforge.common.util.DeferredSoundType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
  * Alle Sound-Events der Mod. Die Zuordnung zu Audiodateien steht in assets/shardline/sounds.json
- * (generiert von ModSoundDefinitionsProvider). Solange keine eigenen .ogg-Dateien existieren,
- * verweisen die Events auf passende Vanilla-Sounds.
+ * (generiert von ModSoundDefinitionsProvider): Events mit eigener Datei ({@link #FILES}, .ogg unter
+ * assets/shardline/sounds/, importiert mit tools/assetgen/import_sounds.py) spielen diese, alle anderen
+ * verweisen auf einen passenden Vanilla-Sound ({@link #PLACEHOLDERS}).
  */
 public final class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, Shardline.MODID);
 
     /** Sound-ID -> Vanilla-Platzhalter-Event. Wird vom Datengenerator gelesen. */
     public static final Map<DeferredHolder<SoundEvent, SoundEvent>, String> PLACEHOLDERS = new LinkedHashMap<>();
+    /** Sound-ID -> eigene Datei unter assets/shardline/sounds/ (ohne .ogg); ersetzt den Platzhalter. */
+    public static final Map<DeferredHolder<SoundEvent, SoundEvent>, String> FILES = new LinkedHashMap<>();
 
     // Splitterkriecher
     public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_CREEPER_HURT = register("entity.shard_creeper.hurt", "entity.creeper.hurt");
@@ -169,6 +175,41 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> QUEST_COMPLETE = register("ui.quest.complete", "ui.toast.challenge_complete");
     public static final DeferredHolder<SoundEvent, SoundEvent> STORY_EPILOGUE = register("story.epilogue", "music_disc.otherside");
     public static final DeferredHolder<SoundEvent, SoundEvent> AFTERSHOCK = register("event.aftershock", "entity.warden.dig");
+    // Eigene Klaenge ohne bisheriges Event
+    public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_FRAGMENT_PICKUP = register("item.shard_fragment.pickup", "entity.item.pickup");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_ORE_BREAK = register("block.shard_ore.break", "block.amethyst_cluster.break");
+
+    /** Shard-Erz: eigener Abbauklang, sonst Calcit bzw. Tiefenschiefer. */
+    public static final SoundType SHARD_ORE_SOUND = new DeferredSoundType(1.0F, 1.0F, SHARD_ORE_BREAK,
+            () -> SoundEvents.CALCITE_STEP, () -> SoundEvents.CALCITE_PLACE, () -> SoundEvents.CALCITE_HIT, () -> SoundEvents.CALCITE_FALL);
+    public static final SoundType DEEPSLATE_SHARD_ORE_SOUND = new DeferredSoundType(1.0F, 1.0F, SHARD_ORE_BREAK,
+            () -> SoundEvents.DEEPSLATE_STEP, () -> SoundEvents.DEEPSLATE_PLACE, () -> SoundEvents.DEEPSLATE_HIT, () -> SoundEvents.DEEPSLATE_FALL);
+
+    static {
+        // Gelieferte Soundeffekte (tools/assetgen/import_sounds.py)
+        FILES.put(COLOSSUS_ROAR, "entity/crystal_colossus/roar");
+        FILES.put(COLOSSUS_SLAM, "entity/crystal_colossus/slam");
+        FILES.put(QUEEN_CAST, "entity/shard_queen/cast");
+        FILES.put(QUEEN_SCREAM, "entity/shard_queen/scream");
+        FILES.put(QUEEN_TELEPORT, "entity/shard_queen/teleport");
+        FILES.put(SHARD_ZOMBIE_AMBIENT, "entity/shard_zombie/ambient");
+        FILES.put(CRYSTALLIZED_COW_DEATH, "entity/crystallized_cow/death");
+        FILES.put(VIRUS_HEART_PULSE, "entity/virus_heart/pulse");
+        FILES.put(SHARD_PORTAL_TRAVEL, "block/shard_portal/travel");
+        FILES.put(SHARD_KEY_USE, "block/shard_portal/travel");          // Portal oeffnen: derselbe Klang
+        FILES.put(MEMORY_CRYSTAL_VISION, "block/memory_crystal/vision");
+        FILES.put(PURITY_ANCHOR_ACTIVATE, "block/purity_anchor/activate");
+        FILES.put(SHARD_ORE_BREAK, "block/shard_ore/break");
+        FILES.put(LORE_BOOK_OPEN, "item/lore_book/open");
+        FILES.put(PURIFICATION_ESSENCE_USE, "item/purification_essence/use");
+        FILES.put(SHARD_FRAGMENT_PICKUP, "item/shard_fragment/pickup");
+        FILES.put(ABILITY_SHARD_CALL, "ability/shard_call");
+        FILES.put(ABILITY_CRYSTAL_WAVE, "ability/crystal_wave");
+        FILES.put(STORY_CHAPTER, "story/chapter");
+        FILES.put(VIRUS_OUTBREAK, "event/virus_outbreak");
+        FILES.put(VIRUS_SEALED, "event/virus_sealed");
+        FILES.put(VIRUS_DOMINATED, "event/virus_dominated");
+    }
 
     private ModSounds() {
     }

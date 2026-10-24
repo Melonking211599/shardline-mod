@@ -209,5 +209,14 @@ for suffix in ("", "_v2", "_v3"):
         bad = sum(1 for y in range(gi.height) for x in range(gi.width) if gp[x, y][3] and lp[x, y % 16][3] == 0)
         if bad: errors.append(f"infected_leaves{suffix}: {bad} Leuchtpixel auf transparentem Laub")
 
+# ---- Eigene Klaenge: jede in sounds.json genannte Datei muss als .ogg existieren
+sounds_json = RESOURCE_ROOT.parent.parent / "generated" / "resources" / "assets" / "shardline" / "sounds.json"
+if sounds_json.exists():
+    for event, definition in json.loads(sounds_json.read_text(encoding="utf-8")).items():
+        for sound in definition.get("sounds", []):
+            name = sound if isinstance(sound, str) else sound.get("name", "")
+            if (isinstance(sound, str) or sound.get("type", "file") == "file") and name.startswith("shardline:"):
+                need(RESOURCE_ROOT / "assets" / "shardline" / "sounds" / (name.split(":", 1)[1] + ".ogg"))
+
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

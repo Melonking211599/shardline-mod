@@ -1850,6 +1850,22 @@ public final class ShardlineGameTests {
         }
     }
 
+    /** Eigene Klaenge: jede in ModSounds.FILES eingetragene Datei liegt als .ogg in der Mod; Shard-Erz klingt eigen. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void soundFiles(GameTestHelper helper) {
+        List<String> missing = new ArrayList<>();
+        eu.shardline.mod.core.ModSounds.FILES.values().forEach(file -> {
+            if (Shardline.class.getResource("/assets/shardline/sounds/" + file + ".ogg") == null) {
+                missing.add(file);
+            }
+        });
+        helper.assertTrue(missing.isEmpty(), "Fehlende Sounddateien: " + missing);
+        helper.assertTrue(eu.shardline.mod.core.ModSounds.FILES.size() >= 21, "Zu wenige eigene Klaenge eingetragen");
+        helper.assertTrue(ModBlocks.SHARD_ORE.get().defaultBlockState().getSoundType().getBreakSound()
+                == eu.shardline.mod.core.ModSounds.SHARD_ORE_BREAK.get(), "Shard-Erz nutzt den eigenen Abbauklang nicht");
+        helper.succeed();
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

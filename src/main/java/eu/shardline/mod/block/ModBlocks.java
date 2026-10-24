@@ -1,6 +1,7 @@
 package eu.shardline.mod.block;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.block.custom.ColossusAltarBlock;
 import eu.shardline.mod.block.custom.CrystalSaplingBlock;
 import eu.shardline.mod.block.custom.CrystalWebBlock;
@@ -91,11 +92,13 @@ public final class ModBlocks {
 
     // --- Erze & Rohstoffbloecke ---
     public static final DeferredBlock<ShardOreBlock> SHARD_ORE = registerWithItem("shard_ore",
-            () -> new ShardOreBlock(UniformInt.of(2, 5), stone(MapColor.COLOR_PURPLE, 3.0F).lightLevel(state -> 3).randomTicks()));
+            () -> new ShardOreBlock(UniformInt.of(2, 5), stone(MapColor.COLOR_PURPLE, 3.0F).sound(ModSounds.SHARD_ORE_SOUND)
+                    .lightLevel(state -> 3).randomTicks()));
     public static final DeferredBlock<ShardOreBlock> DEEPSLATE_SHARD_ORE = registerWithItem("deepslate_shard_ore",
             () -> new ShardOreBlock(UniformInt.of(2, 5), BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE).lightLevel(state -> 3).randomTicks()));
+                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(ModSounds.DEEPSLATE_SHARD_ORE_SOUND).lightLevel(state -> 3)
+                    .randomTicks()));
     public static final DeferredBlock<Block> SHARD_BLOCK = registerWithItem("shard_block",
             () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
                     .requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.AMETHYST)));
