@@ -16,9 +16,11 @@ def need(path, size=None):
 
 ENT = {"shard_creeper": 64, "crystal_golem": 128, "glow_moth": 64, "ash_walker": 64, "shard_scout": 64, "void_ray": 128,
        "crystal_spider": 64, "shard_trader": 64, "shadow_fox": 64, "shattered_knight": 64, "crystal_colossus": 256,
-       "shard_queen": 128, "crystal_pillar": 64, "crystal_snail": 64, "rhea": 64}
+       "shard_queen": 128, "crystal_pillar": 64, "crystal_snail": 64, "rhea": 64,
+       "veyl": 64, "ilsa": 64, "kesh": 64}
 GLOW = {"shard_creeper", "crystal_golem", "glow_moth", "shard_scout", "void_ray", "crystal_spider", "shadow_fox",
-        "shattered_knight", "crystal_colossus", "shard_queen", "crystal_pillar", "crystal_snail", "rhea"}
+        "shattered_knight", "crystal_colossus", "shard_queen", "crystal_pillar", "crystal_snail", "rhea",
+        "veyl", "ilsa", "kesh"}
 for n, s in ENT.items():
     need(TEX / "entity" / f"{n}.png", (s, s))
     if n in GLOW: need(TEX / "entity" / f"{n}_glowmask.png", (s, s))
@@ -117,7 +119,9 @@ for name, size in (("dialogue/frame", (32, 32)), ("dialogue/portrait_frame", (80
     need(TEX / "gui" / f"{name}.png", size)
 for portrait in sorted((TEX / "gui" / "portraits").glob("*.png")):
     need(portrait, (64, 64))
-for npc in ("rhea",):
+need(TEX / "entity" / "kesh_healed.png", (64, 64))
+need(TEX / "entity" / "kesh_healed_glowmask.png", (64, 64))
+for npc in ("rhea", "veyl", "ilsa", "kesh"):
     for pose in ("neutral", "happy", "sad", "angry"):
         need(TEX / "gui" / "portraits" / f"{npc}_{pose}.png", (64, 64))
     clips = json.loads((ANIM / f"{npc}.animation.json").read_text(encoding="utf-8"))["animations"]

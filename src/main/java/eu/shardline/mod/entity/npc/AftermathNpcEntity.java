@@ -141,13 +141,18 @@ public abstract class AftermathNpcEntity extends PathfinderMob implements GeoEnt
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new ConversationGoal());
+        this.registerMovementGoals();
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+    }
+
+    /** Bewegungsziele (Prioritaet 2-6): Flucht, Schlafen, Heimweg, Umherlaufen. Geister ersetzen sie. */
+    protected void registerMovementGoals() {
         this.goalSelector.addGoal(2, new PanicGoal(this, 0.75));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Monster.class, 10.0F, 0.6, 0.8, this::fleesFrom));
         this.goalSelector.addGoal(3, new RestGoal());
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 0.4));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.35));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
     /** Vor wem der NPC flieht (Standard: jedes Monster). */
@@ -230,6 +235,11 @@ public abstract class AftermathNpcEntity extends PathfinderMob implements GeoEnt
         public void stop() {
             AftermathNpcEntity.this.setResting(false);
         }
+    }
+
+    /** Zuletzt verletzt (Tick), fuer Flucht und Schlaf. */
+    protected int lastHurtTick() {
+        return this.lastHurtTick;
     }
 
     /** Ob dieser NPC nachts schlaeft (Geister nicht). */

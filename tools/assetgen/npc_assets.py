@@ -25,6 +25,14 @@ HAIR_AUBURN = [hx(c) for c in ("#2c120c", "#4d1f14", "#74321e", "#9a4a2a", "#c06
 COAT_STEEL = [hx(c) for c in ("#151c28", "#24324a", "#36506e", "#506f92", "#7393b4")]
 TROUSERS = [hx(c) for c in ("#17141c", "#25212c", "#36303f", "#4a4256", "#625a70")]
 EYES_GREEN = hx("#3f7a62")
+SKIN_GHOST = [hx(c) for c in ("#4c5670", "#6f7c98", "#97a6c0", "#c0cde0", "#e6eef8")]
+ROBE_IVORY = [IVORY[0], IVORY[1], IVORY[2], IVORY[3], IVORY[4]]
+BEARD = [hx(c) for c in ("#5e6274", "#82879a", "#a9aebe", "#cfd3df", "#eef0f6")]
+SKIN_OLIVE = [hx(c) for c in ("#4a3226", "#74503c", "#9c7155", "#c19473", "#ddb594")]
+HAIR_DARK = [hx(c) for c in ("#120d10", "#1f171c", "#30242a", "#45353c", "#5e4b52")]
+SHIRT = [hx(c) for c in ("#2a2620", "#423b31", "#5d5444", "#7a705b", "#9a8f76")]
+SKIN_PALE = [hx(c) for c in ("#3e3946", "#615a6c", "#867d92", "#aba1b5", "#cfc6d6")]
+HOOD_VIOLET = [hx(c) for c in ("#120a1c", "#1e1230", "#2d1b48", "#402766", "#58378a")]
 
 
 # ------------------------------------------------------------------ Modell
@@ -60,6 +68,33 @@ EXTRAS = {
             {"origin": [4, 5, -1], "size": [1, 8, 2], "uv": [24, 40]}]},
         {"name": "pendant", "parent": "body", "pivot": [0, 20, -2], "cubes": [
             {"origin": [-1, 19, -2.5], "size": [2, 2, 1], "uv": [56, 32]}]},
+    ],
+    "veyl": [
+        {"name": "robe", "parent": "body", "pivot": [0, 12, 0], "cubes": [
+            {"origin": [-4.5, 0.5, -2.5], "size": [9, 12, 5], "uv": [0, 32]}]},
+        {"name": "book", "parent": "left_arm", "pivot": [6, 13, -2], "cubes": [
+            {"origin": [4.5, 12, -4.5], "size": [4, 1, 3], "uv": [28, 32]}]},
+        {"name": "beard", "parent": "head", "pivot": [0, 25, -4], "cubes": [
+            {"origin": [-2.5, 21, -4.5], "size": [5, 4, 1], "uv": [42, 32]}]},
+    ],
+    "ilsa": [
+        {"name": "apron", "parent": "body", "pivot": [0, 19, -2], "cubes": [
+            {"origin": [-3.5, 5, -2.8], "size": [7, 14, 1], "uv": [0, 32]}]},
+        {"name": "goggles", "parent": "head", "pivot": [0, 30, 0], "cubes": [
+            {"origin": [-4.5, 29, -4.6], "size": [9, 2, 1], "uv": [16, 32]}]},
+        {"name": "belt", "parent": "body", "pivot": [0, 12, 0], "cubes": [
+            {"origin": [-4.5, 11.5, -2.5], "size": [9, 2, 5], "uv": [0, 48]},
+            {"origin": [2, 9.5, -3], "size": [1, 2, 1], "uv": [36, 32]},
+            {"origin": [-3, 9.5, -3], "size": [1, 2, 1], "uv": [36, 32]}]},
+    ],
+    "kesh": [
+        {"name": "cloak", "parent": "body", "pivot": [0, 24, 2], "cubes": [
+            {"origin": [-4.5, 4, 2], "size": [9, 20, 1], "uv": [0, 32]}]},
+        {"name": "shoulder_crystals", "parent": "left_arm", "pivot": [6, 23, 0], "cubes": [
+            {"origin": [4.5, 23, -1], "size": [2, 4, 2], "pivot": [5.5, 23, 0], "rotation": [0, 0, -20], "uv": [20, 32]},
+            {"origin": [6.5, 22, 0.5], "size": [1, 3, 1], "pivot": [7, 22, 1], "rotation": [10, 0, -35], "uv": [28, 32]}]},
+        {"name": "cheek_crystal", "parent": "head", "pivot": [4, 27, -4], "cubes": [
+            {"origin": [3.5, 26, -4.5], "size": [1, 2, 1], "uv": [32, 32]}]},
     ],
 }
 
@@ -259,6 +294,232 @@ def rhea_texture():
     e.save()
 
 
+# ------------------------------------------------------------------ Veyl (Geist des Chronisten)
+VEYL_FACE = """
+ssssssss
+sbbssbbs
+sEissiEs
+ssssssss
+ssnnssss
+sggmmggs
+sggggggs
+.gggggg.
+"""
+GHOST_ALPHA = 205
+
+
+def _ghost(c):
+    return (c[0], c[1], c[2], GHOST_ALPHA)
+
+
+def veyl_texture():
+    """Halb durchscheinend (Alpha 205, der Renderer zeichnet ihn transluzent); Augen und Goldrunen leuchten."""
+    e = Ent("veyl")
+    skin = M_smooth(SKIN_GHOST, bias=2.8)
+    robe = M_fabric(ROBE_IVORY, 5201, bias=2.4)
+    pal = {"s": SKIN_GHOST[3], "b": BEARD[2], "E": (CYAN[3], G), "i": (CYAN[4], G), "n": SKIN_GHOST[2], "g": BEARD[3], "m": BEARD[1]}
+
+    def ghostly(painter):
+        def p(face, fx, fy, fw, fh):
+            r = painter(face, fx, fy, fw, fh)
+            if r is None:
+                return None
+            if isinstance(r, tuple) and len(r) == 2 and isinstance(r[1], bool):
+                return (_ghost(r[0]), r[1])
+            return _ghost(r)
+        return p
+
+    e.paint("head", ghostly(art_face(VEYL_FACE, pal, skin)), only=[0])
+
+    def hood(face, fx, fy, fw, fh):
+        if face == "north" and 0 < fx < fw - 1 and fy > 0:
+            return None                                                  # Gesicht frei
+        if face == "down":
+            return None
+        idx = 2.6 + FACE_LIGHT[face] * 0.8 + edge_light(fx, fy, fw, fh) * 0.4
+        if face == "north" and fy == 0 and fx % 2 == 0:
+            return (GOLD[3], True)                                       # Goldsaum mit Runen
+        return ramp(ROBE_IVORY, idx)
+
+    e.paint("head", ghostly(hood), only=[1])
+    e.paint("beard", ghostly(lambda f, x, y, w, h: ramp(BEARD, 3.2 - y * 0.35 + FACE_LIGHT[f] * 0.5)))
+
+    def body(face, fx, fy, fw, fh):
+        if face == "north" and fx in (3, 4):
+            return (GOLD[3], True) if fy % 3 == 1 else GOLD[1]          # Goldborte mit leuchtenden Runen
+        if fy in (8, 9) and face != "up":
+            return GOLD[2] if fy == 8 else GOLD[1]                       # Guertelschnur
+        return robe(face, fx, fy, fw, fh)
+
+    e.paint("body", ghostly(body))
+    e.paint("right_arm", ghostly(lambda f, x, y, w, h: skin(f, x, y, w, h) if y >= 10 else robe(f, x, y, w, h)))
+    e.paint("left_arm", ghostly(lambda f, x, y, w, h: skin(f, x, y, w, h) if y >= 10 else robe(f, x, y, w, h)))
+    e.paint("right_leg", ghostly(robe))
+    e.paint("left_leg", ghostly(robe))
+
+    def robe_skirt(face, fx, fy, fw, fh):
+        if fy == fh - 1 and nz(fx, 2, 5203) < 0.45:
+            return None                                                  # verwehender Saum
+        if face == "north" and fx in (4,):
+            return GOLD[1]
+        return robe(face, fx, fy, fw, fh - 3)
+
+    e.paint("robe", ghostly(robe_skirt))
+
+    def book(face, fx, fy, fw, fh):
+        if face == "up":
+            if fx == fw // 2:
+                return LEATHER[1]
+            return (GOLD[4], True) if (fx + fy) % 3 == 0 else IVORY[3]   # Seiten mit leuchtender Schrift
+        return ramp(LEATHER, 2.2 + FACE_LIGHT[face] * 0.6)
+
+    e.paint("book", ghostly(book))
+    e.save()
+
+
+# ------------------------------------------------------------------ Ilsa (Schmiedin und Alchemistin)
+ILSA_FACE = """
+hhhhhhhh
+hhssssHh
+hbbssbbh
+hwissiwh
+ssnnsscs
+ssssssss
+sssmmsss
+.ssssss.
+"""
+
+
+def ilsa_texture():
+    e = Ent("ilsa")
+    skin = M_smooth(SKIN_OLIVE, bias=2.6)
+    hair = M_hair(HAIR_DARK, 5301, bias=2.2)
+    pal = {"h": HAIR_DARK[2], "H": HAIR_DARK[4], "s": SKIN_OLIVE[3], "b": HAIR_DARK[1], "w": hx("#efe8de"), "i": hx("#6a4a2a"),
+           "n": SKIN_OLIVE[2], "c": hx("#3a3434"), "m": hx("#874437")}
+
+    def head(face, fx, fy, fw, fh):
+        if face in ("up", "south"):
+            return hair(face, fx, fy, fw, fh)
+        if face in ("east", "west"):
+            return hair(face, fx, fy, fw, fh) if fy <= 2 or (fy <= 4 and (fx >= 6 if face == "east" else fx <= 1)) else skin(face, fx, fy, fw, fh)
+        return skin(face, fx, fy, fw, fh)
+
+    e.paint("head", art_face(ILSA_FACE, pal, head), only=[0])
+    e.paint("head", lambda f, x, y, w, h: hair(f, x, y, w, h) if f in ("up", "south") or (f in ("east", "west") and y <= 1) else None, only=[1])
+    shirt = M_fabric(SHIRT, 5303, bias=2.3)
+    e.paint("body", lambda f, x, y, w, h: ramp(SHIRT, 3.2) if f == "north" and y <= 1 else shirt(f, x, y, w, h))
+
+    def arm(face, fx, fy, fw, fh):
+        if fy >= 7 and face != "up":
+            return ramp(LEATHER, 1.8 + FACE_LIGHT[face] * 0.7 + (0.6 if fy == 7 else 0))   # Schmiedehandschuhe
+        if fy == 3 and face in ("north", "south", "east", "west"):
+            return SHIRT[1]                                              # hochgekrempelter Aermel
+        if fy >= 4:
+            return skin(face, fx, fy, fw, fh)
+        return shirt(face, fx, fy, fw, fh)
+
+    e.paint("right_arm", arm)
+    e.paint("left_arm", arm)
+    trousers = M_fabric(TROUSERS, 5305, bias=2.3)
+    e.paint("right_leg", lambda f, x, y, w, h: ramp(LEATHER, 1.6 + FACE_LIGHT[f] * 0.7) if y >= 9 else trousers(f, x, y, w, h))
+    e.paint("left_leg", lambda f, x, y, w, h: ramp(LEATHER, 1.6 + FACE_LIGHT[f] * 0.7) if y >= 9 else trousers(f, x, y, w, h))
+
+    def apron(face, fx, fy, fw, fh):
+        idx = 2.4 + FACE_LIGHT[face] * 0.8 + edge_light(fx, fy, fw, fh) * 0.4
+        if face == "north" and (fx, fy) in ((2, 6), (3, 7), (5, 10)):
+            return LEATHER[1]                                            # Brandflecken
+        if face == "north" and fy == 3 and 1 <= fx <= 5:
+            return LEATHER[1]                                            # Tasche
+        return ramp(LEATHER, idx)
+
+    e.paint("apron", apron)
+
+    def goggles(face, fx, fy, fw, fh):
+        if face == "north" and fx in (2, 3, 5, 6) and fy == 0:
+            return (SKYB[3], True) if fx in (2, 5) else (SKYB[2], True)  # Glaeser glimmen schwach
+        if face == "north" and fx in (2, 3, 5, 6):
+            return GOLD[1]
+        return ramp(LEATHER, 1.6 + FACE_LIGHT[face] * 0.5)
+
+    e.paint("goggles", goggles)
+
+    def belt(face, fx, fy, fw, fh):
+        if fw == 1:                                                      # Phiolen
+            return (SKYB[3], True) if fy == 0 else (SKYB[2], True)
+        return GOLD[2] if face == "north" and fx == 4 else ramp(LEATHER, 1.8 + FACE_LIGHT[face] * 0.6)
+
+    e.paint("belt", belt)
+    e.save()
+
+
+# ------------------------------------------------------------------ Kesh (der Gezeichnete)
+KESH_FACE = """
+dddddddd
+dddddddd
+dbbssbbd
+dwissEwd
+dssnnscd
+dssssssd
+dssmmssd
+.ssssss.
+"""
+
+
+def kesh_texture(healed: bool = False):
+    """Halb kristallisiert: rechtes Auge und Kristalle leuchten Magenta. Geheilt (versiegeltes Ende, Auftrag "Der
+    Gezeichnete"): Kristalle matt und kleiner, Auge normal."""
+    e = Ent("kesh")
+    skin = M_smooth(SKIN_PALE, bias=2.5)
+    crystal = (lambda c: c) if healed else (lambda c: (c, True))
+    glow_eye = hx("#6a4f7a") if healed else (MAGENTA[3], True)
+    pal = {"d": HOOD_VIOLET[0], "b": HOOD_VIOLET[1], "s": SKIN_PALE[3], "w": hx("#e6e0ea"), "i": hx("#4c5a6a"), "E": glow_eye,
+           "n": SKIN_PALE[2], "c": crystal(MAGENTA[2]) if not healed else SKIN_PALE[2], "m": hx("#6e4a5a")}
+    e.paint("head", art_face(KESH_FACE, pal, skin), only=[0])
+    hood = M_fabric(HOOD_VIOLET, 5401, bias=2.3, folds=False)
+    e.paint("head", lambda f, x, y, w, h: None if (f == "north" and 0 < x < w - 1 and y > 1) or f == "down" else hood(f, x, y, w, h),
+            only=[1])
+    rags = M_fabric(HOOD_VIOLET, 5403, bias=2.2)
+
+    def body(face, fx, fy, fw, fh):
+        if face == "north" and not healed and (fx, fy) in ((5, 2), (6, 3), (6, 4), (7, 5)):
+            return (MAGENTA[2], True)                                    # Ader unter dem Hemd
+        if fy in (8, 9) and face != "up":
+            return ramp(LEATHER, 1.4)
+        return rags(face, fx, fy, fw, fh)
+
+    e.paint("body", body)
+
+    def left_arm(face, fx, fy, fw, fh):
+        if not healed and fy in (3, 6) and face in ("north", "east"):
+            return (VGLOW[1], True)                                      # Kristallringe am kranken Arm
+        return ramp(SKIN_PALE, 2.0 + FACE_LIGHT[face] * 0.7) if fy >= 8 else rags(face, fx, fy, fw, fh)
+
+    e.paint("left_arm", left_arm)
+    e.paint("right_arm", lambda f, x, y, w, h: ramp(SKIN_PALE, 2.3 + FACE_LIGHT[f] * 0.7) if y >= 8 else rags(f, x, y, w, h))
+    trousers = M_fabric(TROUSERS, 5405, bias=2.0)
+    e.paint("right_leg", lambda f, x, y, w, h: ramp(LEATHER, 1.2 + FACE_LIGHT[f] * 0.6) if y >= 10 else trousers(f, x, y, w, h))
+    e.paint("left_leg", lambda f, x, y, w, h: ramp(LEATHER, 1.2 + FACE_LIGHT[f] * 0.6) if y >= 10 else trousers(f, x, y, w, h))
+
+    def cloak(face, fx, fy, fw, fh):
+        if face in ("north", "south") and fy >= fh - 2 and nz(fx, fy, 5407) < 0.45:
+            return None
+        return rags(face, fx, fy, fw, fh)
+
+    e.paint("cloak", cloak)
+    shard = [MAGENTA[0], MAGENTA[1], MAGENTA[2], MAGENTA[3], MAGENTA[4]] if not healed else [SLATE[1], SLATE[2], hx("#6a5a7a"), hx("#8a7a9a"), hx("#a99ab8")]
+
+    def crystals(face, fx, fy, fw, fh):
+        idx = 1.6 + FACE_LIGHT[face] * 0.8 + (1.2 if fy == 0 else 0) + (0.6 if fx == 0 else 0)
+        c = ramp(shard, idx)
+        return c if healed else (c, idx >= 2.4)
+
+    e.paint("shoulder_crystals", crystals)
+    e.paint("cheek_crystal", crystals)
+    if healed:
+        e.name = "kesh_healed"
+    e.save()
+
+
 # ------------------------------------------------------------------ Porträts (64x64)
 POSES = ("neutral", "happy", "sad", "angry")
 
@@ -418,14 +679,99 @@ def rhea_extras(t: Tex, pose):
         t.set(31 if y % 2 else 32, y, GOLD[2])                       # Kettchen
 
 
+def veyl_hair(t: Tex, hair):
+    """Kapuze in Elfenbein mit Goldsaum, darunter ein langer grauer Bart."""
+    def hood(x, y):
+        dx, dy = x + 0.5 - 32, y + 0.5 - 24
+        if ((dx / 12.5) ** 2 + ((dy - 2) / 15.0) ** 2) <= 1.0 and y >= 18:
+            return None                                                  # Gesichtsoeffnung
+        return ramp(ROBE_IVORY, 3.2 - (dx + 17) / 34.0 * 1.6)
+    _fill_ellipse(t, 32, 26, 18, 20, hood)
+    for x in range(14, 51):
+        t.set(x, 45, GOLD[2] if x % 3 else GOLD[3])
+    def beard(x, y):
+        dx = x + 0.5 - 32
+        if y < 34 or abs(dx) > 10 - max(0, y - 40) * 0.6:
+            return None
+        return ramp(BEARD, 3.3 - (dx + 10) / 20.0 * 1.2 - (y - 34) / 24.0 + (nz(x, 7, 5211) - 0.5) * 0.6)
+    _fill_ellipse(t, 32, 42, 11, 11, beard)
+
+
+def veyl_extras(t: Tex, pose):
+    for x0 in (23, 36):                                                  # leuchtende Geisteraugen
+        t.set(x0 + 2, 26, CYAN[4])
+    for (x, y) in ((20, 50), (44, 52), (16, 58), (48, 60), (30, 62)):    # Funken der Erinnerung
+        t.set(x, y, CYAN[3])
+
+
+def ilsa_hair(t: Tex, hair):
+    """Kurzes dunkles Haar, Schutzbrille auf der Stirn."""
+    def shade(x, y):
+        return ramp(hair, 2.6 - (x - 18) / 30.0 * 1.2 + (nz(x, 5, 5311) - 0.5) * 0.8 - y / 50.0)
+    _fill_ellipse(t, 32, 19, 14, 9, lambda x, y: shade(x, y) if y <= 19 or abs(x + 0.5 - 32) > 12 else None)
+    for y in range(15, 19):                                              # Schutzbrille
+        for x in range(18, 47):
+            lens = (21 <= x <= 28 or 35 <= x <= 42) and 15 < y < 18
+            t.set(x, y, (SKYB[3] if y == 16 else SKYB[2]) if lens else (GOLD[1] if y in (15, 18) else LEATHER[2]))
+
+
+def ilsa_extras(t: Tex, pose):
+    for (x, y) in ((40, 31), (41, 32), (39, 33)):                       # Russ auf der Wange
+        t.set(x, y, hx("#4a4040"))
+    for y in range(46, 64):                                              # Lederschuerze ueber dem Hemd
+        for x in range(24, 41):
+            if abs(x - 32) <= 6 + (y - 46) * 0.3:
+                t.set(x, y, ramp(LEATHER, 2.6 - (x - 24) / 17.0))
+    t.set(27, 52, SKYB[3])                                               # Phiole in der Brusttasche
+    t.set(27, 53, SKYB[2])
+
+
+def kesh_hair(t: Tex, hair):
+    """Dunkelviolette Kapuze; das obere Gesicht liegt im Schatten."""
+    def hood(x, y):
+        dx, dy = x + 0.5 - 32, y + 0.5 - 25
+        if ((dx / 12.0) ** 2 + ((dy - 3) / 14.0) ** 2) <= 1.0 and y >= 19:
+            return None
+        return ramp(HOOD_VIOLET, 3.0 - (dx + 18) / 36.0 * 1.6)
+    _fill_ellipse(t, 32, 26, 18, 21, hood)
+    for y in range(19, 24):                                              # Schatten der Kapuze auf der Stirn
+        for x in range(21, 44):
+            c = t.get(x, y)
+            if c[3] and c not in HOOD_VIOLET:
+                t.set(x, y, mix(c, HOOD_VIOLET[0], 0.55))
+
+
+def kesh_extras(t: Tex, pose):
+    for (x, y) in ((38, 26), (39, 26), (38, 27)):                        # rechtes Auge leuchtet Magenta
+        t.set(x, y, MAGENTA[3])
+    t.set(39, 27, MAGENTA[4])
+    for (x, y, c) in ((41, 31, 2), (42, 31, 3), (41, 32, 3), (42, 32, 4), (42, 33, 2), (43, 30, 3), (40, 33, 1)):
+        t.set(x, y, MAGENTA[c])                                          # Kristall auf der Wange
+    for (x, y, c) in ((44, 48, 3), (45, 47, 4), (46, 48, 2), (45, 49, 2), (47, 46, 3)):
+        t.set(x, y, MAGENTA[c])                                          # Kristalle auf der Schulter
+
+
 SPECS = {
     "rhea": {
         "skin": SKIN_WARM, "hair": HAIR_AUBURN, "cloth": COAT_STEEL, "iris": EYES_GREEN, "brow": HAIR_AUBURN[1],
         "mouth": hx("#8c3f36"), "background": [hx("#1b2333"), hx("#1f293b")], "hair_fn": rhea_hair, "extras": [rhea_extras],
     },
+    "veyl": {
+        "skin": SKIN_GHOST, "hair": BEARD, "cloth": ROBE_IVORY, "iris": CYAN[2], "brow": BEARD[2], "mouth": BEARD[1],
+        "background": [hx("#221d18"), hx("#28221b")], "hair_fn": veyl_hair, "extras": [veyl_extras], "floating": True,
+        "outline": hx("#2a2520"),
+    },
+    "ilsa": {
+        "skin": SKIN_OLIVE, "hair": HAIR_DARK, "cloth": SHIRT, "iris": hx("#6a4a2a"), "brow": HAIR_DARK[1], "mouth": hx("#874437"),
+        "background": [hx("#2a1a12"), hx("#301e15")], "hair_fn": ilsa_hair, "extras": [ilsa_extras],
+    },
+    "kesh": {
+        "skin": SKIN_PALE, "hair": HOOD_VIOLET, "cloth": HOOD_VIOLET, "iris": hx("#4c5a6a"), "brow": HOOD_VIOLET[1],
+        "mouth": hx("#6e4a5a"), "background": [hx("#160c20"), hx("#1a0e26")], "hair_fn": kesh_hair, "extras": [kesh_extras],
+    },
 }
 
-TEXTURES = {"rhea": rhea_texture}
+TEXTURES = {"rhea": rhea_texture, "veyl": veyl_texture, "ilsa": ilsa_texture, "kesh": kesh_texture}
 
 
 def main():
@@ -433,6 +779,8 @@ def main():
         geo(npc)
         anims(npc, floating=SPECS[npc].get("floating", False))
         TEXTURES[npc]()
+        if npc == "kesh":
+            kesh_texture(healed=True)
         for pose in POSES:
             save_png(portrait(SPECS[npc], pose), f"gui/portraits/{npc}_{pose}")
     print(f"npc_assets: {len(TEXTURES)} NPCs (Geo, Animationen, Textur, Glowmaske, {len(POSES)} Porträts)")

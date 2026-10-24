@@ -10,4 +10,11 @@ public interface DialogueNpc {
     /** Oeffnet das Handelsfenster (Aktion {@code open_trade}); Standard: kein Handel. */
     default void openTrade(ServerPlayer player) {
     }
+
+    /**
+     * Aktion {@code npc_state}: aendert den Zustand des NPCs, z. B. "follow" (folgt dem Spieler), "stay" (bleibt hier),
+     * "healed" (geheilt). Unbekannte Zustaende ignoriert der NPC.
+     */
+    default void applyState(String state, ServerPlayer player) {
+    }
 }

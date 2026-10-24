@@ -38,7 +38,9 @@ public final class DialogueParser {
     public static final Set<String> CONDITIONS = Set.of("chapter_min", "chapter_max", "ending", "branch", "title", "has_item", "flag",
             "not_flag", "quest_active", "quest_done", "quest_new", "quest_step", "epilogue", "any", "not");
     public static final Set<String> ACTIONS = Set.of("give_item", "take_item", "set_flag", "clear_flag", "advance_chapter", "start_quest",
-            "complete_quest_step", "open_trade", "play_sound", "run_command_safe", "set_epilogue", "give_xp");
+            "complete_quest_step", "open_trade", "play_sound", "run_command_safe", "set_epilogue", "give_xp", "npc_state");
+    /** Zustaende fuer {@code npc_state} (siehe {@link DialogueNpc#applyState}). */
+    public static final Set<String> NPC_STATES = Set.of("follow", "stay", "healed");
     private static final Set<String> ENDINGS = Set.of("none", "seal", "dominate");
     private static final Set<String> TITLES = Set.of("none", "keeper", "ruler");
 
@@ -375,6 +377,18 @@ public final class DialogueParser {
                     return context -> {
                         if (context.npc() instanceof DialogueNpc npc) {
                             npc.openTrade(context.player());
+                        }
+                    };
+                }
+                case "npc_state" -> {
+                    String state = value.getAsString();
+                    if (!NPC_STATES.contains(state)) {
+                        problems.error(where, "unbekannter NPC-Zustand '" + state + "', erlaubt: " + NPC_STATES);
+                        return context -> { };
+                    }
+                    return context -> {
+                        if (context.npc() instanceof DialogueNpc npc) {
+                            npc.applyState(state, context.player());
                         }
                     };
                 }

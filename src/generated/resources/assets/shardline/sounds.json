@@ -413,6 +413,33 @@
     ],
     "subtitle": "subtitles.shardline.entity.glow_moth.hurt"
   },
+  "entity.ilsa.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.player.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.ilsa.death"
+  },
+  "entity.ilsa.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.player.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.ilsa.hurt"
+  },
+  "entity.ilsa.voice": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.wandering_trader.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.ilsa.voice"
+  },
   "entity.infected.cured": {
     "sounds": [
       {
@@ -421,6 +448,33 @@
       }
     ],
     "subtitle": "subtitles.shardline.entity.infected.cured"
+  },
+  "entity.kesh.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.player.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.kesh.death"
+  },
+  "entity.kesh.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.player.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.kesh.hurt"
+  },
+  "entity.kesh.voice": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombie_villager.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.kesh.voice"
   },
   "entity.rhea.death": {
     "sounds": [
@@ -727,6 +781,33 @@
       }
     ],
     "subtitle": "subtitles.shardline.entity.shattered_knight.hurt"
+  },
+  "entity.veyl.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.allay.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.veyl.death"
+  },
+  "entity.veyl.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.allay.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.veyl.hurt"
+  },
+  "entity.veyl.voice": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.allay.ambient_without_item"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.veyl.voice"
   },
   "entity.virus_heart.ambient": {
     "sounds": [

@@ -1354,6 +1354,85 @@ public final class ShardlineGameTests {
         }
     }
 
+    /** Veyl schwebt, schlaeft nicht und nimmt keinen Schaden; Ilsa handelt ueber die Dialogaktion open_trade. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void veylAndIlsa(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var veyl = helper.spawn(eu.shardline.mod.entity.ModEntities.VEYL.get(), new BlockPos(1, 2, 1));
+        var ilsa = helper.spawn(eu.shardline.mod.entity.ModEntities.ILSA.get(), new BlockPos(3, 2, 1));
+        try {
+            helper.assertTrue(veyl.isNoGravity(), "Veyl muss schweben");
+            veyl.setHome(veyl.blockPosition().offset(500, 0, 0));
+            helper.assertFalse(veyl.hurt(veyl.damageSources().generic(), 1000.0F), "Veyl darf als Geist keinen Schaden nehmen");
+            helper.assertTrue(veyl.isAlive() && veyl.getHealth() == veyl.getMaxHealth(), "Veyl hat Leben verloren");
+            helper.assertFalse(ilsa.getOffers().isEmpty(), "Ilsa hat keine Angebote");
+            helper.assertTrue(ilsa.getOffers().stream().allMatch(offer -> offer.getBaseCostA().is(eu.shardline.mod.item.ModItems.SHARD_FRAGMENT.get())
+                    || offer.getResult().is(eu.shardline.mod.item.ModItems.SHARD_FRAGMENT.get())), "Ilsa handelt nicht in Shard-Splittern");
+            ilsa.setHome(ilsa.blockPosition());
+            player.moveTo(ilsa.getX() + 1.5, ilsa.getY(), ilsa.getZ());
+            data.setChapter(player.getUUID(), 7);
+            data.addFlag(player.getUUID(), "ilsa:met");
+            ilsa.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("idle"), "Ilsa startet nicht mit 'idle'");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(ilsa.getTradingPlayer() == player, "open_trade hat den Handel nicht geoeffnet");
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == null, "Dialog bleibt beim Handel offen");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            data.setChapter(player.getUUID(), 0);
+            data.removeFlag(player.getUUID(), "ilsa:met");
+            ilsa.setTradingPlayer(null);
+            veyl.discard();
+            ilsa.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Kesh folgt nach npc_state "follow", meldet bei Rhea den Begleitschritt und wird mit "healed" geheilt. */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void keshEscort(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var saved = new java.util.LinkedHashMap<String, eu.shardline.mod.story.quest.QuestDefinition>();
+        eu.shardline.mod.story.quest.Quests.all().forEach(quest -> saved.put(quest.id(), quest));
+        var kesh = helper.spawn(eu.shardline.mod.entity.ModEntities.KESH.get(), new BlockPos(1, 2, 1));
+        var rhea = helper.spawn(eu.shardline.mod.entity.ModEntities.RHEA.get(), new BlockPos(4, 2, 1));
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("quest");
+            var quest = eu.shardline.mod.story.dialogue.DialogueParser.parseQuest("test_escort", json("""
+                    {"giver": "rhea", "steps": [{"type": "escort", "target": "shardline:kesh"}]}"""), problems);
+            helper.assertTrue(problems.ok(), "Testauftrag hat Fehler: " + problems.errors());
+            var map = new java.util.LinkedHashMap<>(saved);
+            map.put(quest.id(), quest);
+            eu.shardline.mod.story.quest.Quests.setDefinitions(map);
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "test_escort"), "Auftrag liess sich nicht annehmen");
+            var bad = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("action");
+            eu.shardline.mod.story.dialogue.DialogueParser.action(json("{\"npc_state\": \"dance\"}"), bad, "x");
+            helper.assertFalse(bad.ok(), "Unbekannter NPC-Zustand nicht abgelehnt");
+            var follow = eu.shardline.mod.story.dialogue.DialogueParser.action(json("{\"npc_state\": \"follow\"}"), problems, "x");
+            follow.run(new eu.shardline.mod.story.dialogue.DialogueContext(player, kesh));
+            helper.assertTrue(player.getUUID().equals(kesh.following()), "Kesh folgt nicht");
+            player.moveTo(kesh.getX() + 2.0, kesh.getY(), kesh.getZ());
+            kesh.checkArrival();
+            helper.assertTrue(kesh.following() == null, "Kesh bleibt bei Rhea nicht stehen");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "quest_done:test_escort"), "Begleitschritt bei Rhea nicht erkannt");
+            kesh.applyState("healed", player);
+            helper.assertTrue(kesh.isHealed(), "Kesh wurde nicht geheilt");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.quest.Quests.reset(player, "test_escort");
+            eu.shardline.mod.story.quest.Quests.setDefinitions(saved);
+            kesh.discard();
+            rhea.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

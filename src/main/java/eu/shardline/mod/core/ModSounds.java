@@ -141,6 +141,15 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RHEA_VOICE = register("entity.rhea.voice", "entity.villager.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> RHEA_HURT = register("entity.rhea.hurt", "entity.player.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> RHEA_DEATH = register("entity.rhea.death", "entity.player.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VEYL_VOICE = register("entity.veyl.voice", "entity.allay.ambient_without_item");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VEYL_HURT = register("entity.veyl.hurt", "entity.allay.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VEYL_DEATH = register("entity.veyl.death", "entity.allay.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ILSA_VOICE = register("entity.ilsa.voice", "entity.wandering_trader.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ILSA_HURT = register("entity.ilsa.hurt", "entity.player.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ILSA_DEATH = register("entity.ilsa.death", "entity.player.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KESH_VOICE = register("entity.kesh.voice", "entity.zombie_villager.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KESH_HURT = register("entity.kesh.hurt", "entity.player.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KESH_DEATH = register("entity.kesh.death", "entity.player.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_OPEN = register("ui.dialogue.open", "item.book.page_turn");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_CLOSE = register("ui.dialogue.close", "item.book.put");
     public static final DeferredHolder<SoundEvent, SoundEvent> DIALOGUE_TYPE = register("ui.dialogue.type", "block.amethyst_block.hit");

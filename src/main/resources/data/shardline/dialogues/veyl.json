@@ -1,0 +1,71 @@
+{
+  "speaker": "veyl",
+  "start": [
+    {"if": [{"chapter_max": 6}], "node": "too_early"},
+    {"if": [{"not_flag": "veyl:met"}], "node": "first_meeting"},
+    {"if": [{"ending": "seal"}], "node": "idle_seal"},
+    {"if": [{"ending": "dominate"}], "node": "idle_dominate"},
+    {"node": "idle"}
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.veyl.too_early.1"]
+    },
+    "first_meeting": {
+      "portrait": "neutral",
+      "do": [{"set_flag": "veyl:met"}],
+      "text": ["dialogue.shardline.veyl.first_meeting.1", "dialogue.shardline.veyl.first_meeting.2", "dialogue.shardline.veyl.first_meeting.3"],
+      "choices": [
+        {"text": "dialogue.shardline.veyl.first_meeting.c1", "next": "who"},
+        {"text": "dialogue.shardline.veyl.first_meeting.c2", "next": "chronicle"},
+        {"text": "dialogue.shardline.veyl.first_meeting.c3", "next": "END"}
+      ]
+    },
+    "who": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.veyl.who.1", "dialogue.shardline.veyl.who.2"],
+      "choices": [
+        {"text": "dialogue.shardline.veyl.who.c1", "next": "chronicle"},
+        {"text": "dialogue.shardline.veyl.who.c2", "next": "END"}
+      ]
+    },
+    "chronicle": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.veyl.chronicle.1", "dialogue.shardline.veyl.chronicle.2"],
+      "choices": [
+        {"text": "dialogue.shardline.veyl.chronicle.c1", "next": "judge"},
+        {"text": "dialogue.shardline.veyl.chronicle.c2", "next": "END"}
+      ]
+    },
+    "judge": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.veyl.judge.1"],
+      "next": "END"
+    },
+    "idle_seal": {
+      "portrait": "happy",
+      "text": ["dialogue.shardline.veyl.idle_seal.1"],
+      "choices": [
+        {"text": "dialogue.shardline.veyl.idle.c1", "next": "chronicle"},
+        {"text": "dialogue.shardline.veyl.idle.c2", "next": "END"}
+      ]
+    },
+    "idle_dominate": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.veyl.idle_dominate.1"],
+      "choices": [
+        {"text": "dialogue.shardline.veyl.idle.c1", "next": "chronicle"},
+        {"text": "dialogue.shardline.veyl.idle.c2", "next": "END"}
+      ]
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.veyl.idle.1"],
+      "choices": [
+        {"text": "dialogue.shardline.veyl.idle.c1", "next": "chronicle"},
+        {"text": "dialogue.shardline.veyl.idle.c2", "next": "END"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "speaker": "ilsa",
+  "start": [
+    {"if": [{"chapter_max": 6}], "node": "too_early"},
+    {"if": [{"not_flag": "ilsa:met"}], "node": "first_meeting"},
+    {"node": "idle"}
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.ilsa.too_early.1"]
+    },
+    "first_meeting": {
+      "portrait": "happy",
+      "do": [{"set_flag": "ilsa:met"}],
+      "text": ["dialogue.shardline.ilsa.first_meeting.1", "dialogue.shardline.ilsa.first_meeting.2"],
+      "choices": [
+        {"text": "dialogue.shardline.ilsa.first_meeting.c1", "next": "workshop"},
+        {"text": "dialogue.shardline.ilsa.trade", "next": "END", "do": [{"open_trade": true}]},
+        {"text": "dialogue.shardline.ilsa.bye", "next": "END"}
+      ]
+    },
+    "workshop": {
+      "portrait": "happy",
+      "text": ["dialogue.shardline.ilsa.workshop.1", "dialogue.shardline.ilsa.workshop.2"],
+      "next": "idle"
+    },
+    "rebuild": {
+      "portrait": "happy",
+      "text": ["dialogue.shardline.ilsa.rebuild.1", "dialogue.shardline.ilsa.rebuild.2"],
+      "next": "idle"
+    },
+    "resistance": {
+      "portrait": "angry",
+      "text": ["dialogue.shardline.ilsa.resistance.1", "dialogue.shardline.ilsa.resistance.2"],
+      "choices": [
+        {"text": "dialogue.shardline.ilsa.resistance.c1", "next": "resistance_trust"},
+        {"text": "dialogue.shardline.ilsa.resistance.c2", "next": "END"}
+      ]
+    },
+    "resistance_trust": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.ilsa.resistance_trust.1"],
+      "next": "idle"
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.ilsa.idle.1"],
+      "choices": [
+        {"text": "dialogue.shardline.ilsa.trade", "next": "END", "do": [{"open_trade": true}]},
+        {"text": "dialogue.shardline.ilsa.idle.c_seal", "next": "rebuild", "if": [{"ending": "seal"}]},
+        {"text": "dialogue.shardline.ilsa.idle.c_dominate", "next": "resistance", "if": [{"ending": "dominate"}]},
+        {"text": "dialogue.shardline.ilsa.bye", "next": "END"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "speaker": "kesh",
+  "start": [
+    {"if": [{"chapter_max": 6}], "node": "too_early"},
+    {"if": [{"flag": "kesh:healed"}], "node": "healed"},
+    {"if": [{"not_flag": "kesh:met"}], "node": "first_meeting"},
+    {"node": "idle"}
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.kesh.too_early.1"]
+    },
+    "first_meeting": {
+      "portrait": "neutral",
+      "do": [{"set_flag": "kesh:met"}],
+      "text": ["dialogue.shardline.kesh.first_meeting.1", "dialogue.shardline.kesh.first_meeting.2"],
+      "choices": [
+        {"text": "dialogue.shardline.kesh.first_meeting.c1", "next": "tone"},
+        {"text": "dialogue.shardline.kesh.first_meeting.c2", "next": "marks"},
+        {"text": "dialogue.shardline.kesh.bye", "next": "END"}
+      ]
+    },
+    "tone": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.kesh.tone.1", "dialogue.shardline.kesh.tone.2"],
+      "choices": [
+        {"text": "dialogue.shardline.kesh.tone.c_seal", "next": "tone_seal", "if": [{"ending": "seal"}]},
+        {"text": "dialogue.shardline.kesh.tone.c_dominate", "next": "tone_dominate", "if": [{"ending": "dominate"}]},
+        {"text": "dialogue.shardline.kesh.bye", "next": "END"}
+      ]
+    },
+    "tone_seal": {
+      "portrait": "sad",
+      "text": ["dialogue.shardline.kesh.tone_seal.1"],
+      "next": "idle"
+    },
+    "tone_dominate": {
+      "portrait": "angry",
+      "text": ["dialogue.shardline.kesh.tone_dominate.1"],
+      "next": "idle"
+    },
+    "marks": {
+      "portrait": "angry",
+      "text": ["dialogue.shardline.kesh.marks.1", "dialogue.shardline.kesh.marks.2"],
+      "next": "idle"
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": ["dialogue.shardline.kesh.idle.1"],
+      "choices": [
+        {"text": "dialogue.shardline.kesh.idle.c1", "next": "tone"},
+        {"text": "dialogue.shardline.kesh.bye", "next": "END"}
+      ]
+    },
+    "healed": {
+      "portrait": "happy",
+      "text": ["dialogue.shardline.kesh.healed.1", "dialogue.shardline.kesh.healed.2"]
+    }
+  }
+}
