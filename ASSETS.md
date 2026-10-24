@@ -188,3 +188,63 @@ Treppe, Stufe, Zaun, Zauntor, Knopf und Druckplatte aus Kristallholz verwenden `
 | `entity.crystal_snail.ambient` | `block.amethyst_cluster.step` |
 | `entity.crystal_snail.hurt` / `death` | kleiner Schleim |
 | `entity.crystal_snail.hide` | `block.amethyst_block.place` |
+
+## Story-Erweiterung 2
+
+Alle Dateien erzeugen `tools/assetgen/infected_animals.py` (Wesen, Kragen) und `tools/assetgen/story2_assets.py` (Blöcke, Items, GUI, Effekt, Partikel); `run_all.py` ruft beide auf, `validate.py` prüft sie.
+Vorschau: `python tools/assetgen/preview_vanilla.py <png>` zeigt die Vanilla-Modelle mit Textur, Vlies und Kragen. `python tools/assetgen/contact_sheet.py <png> <pfade…>` erstellt einen Kontaktbogen.
+
+### Wesen (Vanilla-Modelle, Texturen im Vanilla-Layout)
+
+| Name | Modell | Textur | Leuchtmaske |
+|---|---|---|---|
+| `crystallized_sheep` | Vanilla-Schaf | `entity/crystallized_sheep.png` (64×32) + Vlies `crystallized_sheep_fur.png` (64×32, Schaf-Fell-Layout) | ja, für beide |
+| `crystallized_pig` | Vanilla-Schwein | `entity/crystallized_pig.png` (64×32) | ja |
+| `crystallized_villager` | Vanilla-Dorfbewohner | `entity/crystallized_villager.png` (64×64; Hut-Ebene = Kristalle, Robe unten zerfetzt) | ja |
+
+Kragen gezähmter Infizierter (`entity/<wesen>_collar.png`, durchsichtig bis auf das Halsband):
+
+| Datei | Größe | liegt auf |
+|---|---|---|
+| `crystallized_cow_collar.png`, `crystallized_pig_collar.png` | 64×32 | Kopf (hinten) |
+| `crystallized_sheep_collar.png` | 64×32 | Kopf des Vlies-Modells |
+| `crystallized_villager_collar.png` | 64×64 | Robe (jacket), oben |
+| `shard_zombie_collar.png` | 64×64 | Jacke, oben |
+
+### Blöcke (`textures/block/`, 16×16)
+
+| Dateien | Verwendung |
+|---|---|
+| `decision_altar_side.png`, `_top.png`, `_bottom.png` | Entscheidungsaltar (Sockel y 13–15, Säule y 6–12, Schale y 3–5 auf der Seitentextur) |
+| `decision_altar_side_glow.png`, `decision_altar_top_glow.png` | Leuchtschicht im erwachten Zustand (links Gold = Siegel, rechts Magenta = Herrschaft) |
+| `keeper_ruin_bricks.png` | Hüterruinen-Ziegel (Elfenbein, Goldfugen, Moos) |
+| `keeper_ruin_pillar.png`, `keeper_ruin_pillar_top.png` | Hüterruinen-Säule (drehbar) |
+| `keeper_rune_slab.png`, `keeper_rune_slab_side.png`, `keeper_rune_slab_glow.png` | Runenstufe: Oberseite, Seite (zwei Stufen übereinander), leuchtende Rune |
+
+### Items (`textures/item/`, 16×16)
+
+`lore_page`, `chapter_emblem_1` … `chapter_emblem_6` (Erster Splitter, Tor, Erinnerungskristall, Kern des Kolosses, Riss, Reinheitsanker; Modell-Overrides über die Eigenschaft `shardline:chapter`)
+
+### Weitere Texturen
+
+| Datei | Größe | Verwendung |
+|---|---|---|
+| `mob_effect/immunity.png` | 18×18 | Effekt Immunität (Schild in Elfenbein/Gold, himmelblauer Kristall) |
+| `gui/trader_dialogue.png` | 256×128 | Dialograhmen 240×100 mit Porträt des Splitterhändlers (48×48 bei 10,10) und Namensleiste |
+| `gui/chapter_card.png` | 256×128 | Kapitelkarte 256×72 mit Medaillonrahmen (Emblem 32×32 bei 18,20) |
+| `particle/purity_mote_0..3.png` | 8×8 | goldene Funken der Reinheitszone (4 Frames, werden kleiner) |
+
+Die goldene Linie der Reinheitszone zeichnet der Block-Entity-Renderer ohne Textur (`RenderType.lines`). Das Virusherz nutzt seine vorhandenen Clips `spawn`, `attack_tendrils`, `summon_infected`, `hurt` und `death`.
+
+### Neue Sounds (Platzhalter → Vanilla)
+
+| Sound-Event | Platzhalter |
+|---|---|
+| `entity.crystallized_sheep.ambient` / `hurt` / `death` | Schaf |
+| `entity.crystallized_pig.ambient` / `hurt` / `death` | Schwein |
+| `entity.crystallized_villager.ambient` / `hurt` / `death` | Zombie-Dorfbewohner |
+| `entity.infected.cured` | `entity.zombie_villager.converted` |
+| `block.decision_altar.rise` / `awaken` / `use` | `block.end_portal.spawn` / `block.beacon.activate` / `block.respawn_anchor.charge` |
+| `entity.virus_heart.phase` / `tendrils` / `summon` | `entity.elder_guardian.curse` / `entity.evoker_fangs.attack` / `entity.evoker.prepare_summon` |
+| `block.purity_anchor.grow` | `block.amethyst_block.resonate` |
+

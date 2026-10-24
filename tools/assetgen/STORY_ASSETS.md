@@ -68,6 +68,30 @@ Neu für die Story (die übrigen Events wie bisher):
 | `story.chapter` | Kurzer, feierlicher Dreiklang (Harfe + Streicher-Pad) | 3 s |
 | `music.infected` | Ambient-Loop: Drone in Moll, langsame Herzschläge, vereinzelte Glasklänge, 90–120 s | Loop |
 
+## Story-Erweiterung 2: Sound-Beschreibungen (`.ogg`, mono, 44,1 kHz)
+
+| Event | Beschreibung | Länge |
+|---|---|---|
+| `entity.crystallized_sheep.ambient` | Blöken, gedämpft, mit feinem Glasklingeln im Ausklang | 1,2 s |
+| `entity.crystallized_sheep.hurt` | Kurzes Blöken + Splittern | 0,4 s |
+| `entity.crystallized_sheep.death` | Blöken bricht ab, Kristallregen | 1 s |
+| `entity.crystallized_pig.ambient` | Grunzen mit hohlem Kristallresonanzton | 1 s |
+| `entity.crystallized_pig.hurt` | Quieken + Klirren | 0,4 s |
+| `entity.crystallized_pig.death` | Quieken, dann zerspringendes Glas | 1 s |
+| `entity.crystallized_villager.ambient` | Murmeln („hmm“), tief, mit leisem falschem Summton darunter | 1,5 s |
+| `entity.crystallized_villager.hurt` | Erschrockenes „hrm“ + Splittern | 0,4 s |
+| `entity.crystallized_villager.death` | Seufzer, der in einen Kristallton übergeht | 1,5 s |
+| `entity.infected.cured` | Kristall bröckelt ab, klarer Glockenton, Ausatmen | 2 s |
+| `block.decision_altar.rise` | Tiefes Grollen, Stein reibt, Akkord aus Gold- und Magentaklang | 4 s |
+| `block.decision_altar.awaken` | Zwei Töne gleichzeitig: warme Glocke und dissonantes Glas, schwellen an | 2 s |
+| `block.decision_altar.use` | Kern rastet ein: dumpfer Schlag, dann Hall | 1,5 s |
+| `entity.virus_heart.phase` | Herz zieht sich zusammen (Knirschen), dann schwerer Schlag mit Sub-Bass | 1,6 s |
+| `entity.virus_heart.tendrils` | Nasses Reißen aus dem Boden, mehrere peitschende Kristallschläge | 1,2 s |
+| `entity.virus_heart.summon` | Schrei aus Glas und Fleisch, Sporenrauschen schwillt an | 2 s |
+| `block.purity_anchor.grow` | Sanfter, aufsteigender Glockenton (Tonhöhe steigt mit dem Radius) | 1,5 s |
+
+Neue Texturen: siehe [ASSETS.md](../../ASSETS.md), Abschnitt „Story-Erweiterung 2“ (Paletten wie oben: Virus, Reinheit Elfenbein/Gold/Himmelblau, Splitterweite Violett/Cyan).
+
 ## Blockbench / Aseprite – Feinschliff
 
 * Blöcke: in Aseprite 4× Kachel-Vorschau (View → Tiled Mode) prüfen; die Adern wiederholen sich im 16-px-Raster, bei Bedarf 1–2 Adern pro Block von Hand variieren.

@@ -29,7 +29,7 @@ Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Sch
 4. **Kristallkoloss:** Gesplitterte Ritter in den Ruinen-Türmen lassen Ritterwappen fallen, daraus entsteht der Erweckungskristall. Diesen setzt du auf den Altar einer Kristallwald-Arena. Die Karte zur Arena verkauft der Splitterhändler.
 5. **Kolossrüstung:** Netherit-Teil, Koloss-Schmiedevorlage und Kolosskern ergeben am Schmiedetisch ein Kolossteil. Set-Bonus: Rückstoßimmunität, 4 zusätzliche Herzen und der Kristallschild auf Taste V.
 6. **Splitterkönigin:** Lege einen Kolosskern auf den Thron im Zentrum der Splitterweite bei den Koordinaten 0 / 0.
-7. **Der Bruch und das Ende:** Der Tod der Königin setzt den Shardvirus frei. Danach gilt es, ihn einzudämmen, drei Virusherzen zu zerstören und am Thron zu entscheiden: versiegeln oder beherrschen. Alles dazu steht in [STORY.md](STORY.md).
+7. **Der Bruch und das Ende:** Der Tod der Königin setzt den Shardvirus frei, vor dem Thron wächst der Entscheidungsaltar. Danach gilt es, ihn einzudämmen (Reinheitsanker mit wachsender Zone, Reinigungsessenz und Immunität), drei Virusherzen mit je drei Phasen zu zerstören und am Altar zu entscheiden: versiegeln oder beherrschen. Den eigenen Stand zeigt `/shardline story status`. Alles dazu steht in [STORY.md](STORY.md).
 
 ## Strukturen
 
@@ -42,7 +42,8 @@ Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Sch
 | Aschegruft | Aschefelder | Vergrabene Grabkammer: Schacht mit Leiter, Sarkophag, 2 Truhen, Aschewandler und Kristallspinne |
 | Kristallgeode | Leuchtende Höhlen | Halb vergrabene Hohlkugel aus Leuchtkristall mit Shard-Erz, Kristallspinnen und Truhe |
 | Koloss-Arena | Kristallwälder | Altar für den Kristallkoloss |
-| Thron der Königin | Zentrum (0 / 0) | Arena der Splitterkönigin |
+| Hüter-Ruinen | Splitterweite, alle Biome | Eingestürzter Hütersaal mit Runenpfad, Erinnerungskristall und Lore-Truhe (Bücher und lose Seiten) |
+| Thron der Königin | Zentrum (0 / 0) | Arena der Splitterkönigin; davor der Entscheidungsaltar |
 
 ## Splitterhandwerk
 

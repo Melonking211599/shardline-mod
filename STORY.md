@@ -25,7 +25,7 @@ Der Fortschritt wird pro Spieler und pro Welt in `data/shardline_story.dat` (Sav
 | 5 | Der Bruch | die Königin fällt (Umkreis 64), infizierten Boden betreten oder einen infizierten Mob töten |
 | 6 | Eindämmung | Reinheitsanker setzen, Reinigungsessenz benutzen oder ein Virusherz besiegen (nach dem Bruch) |
 
-Beim Erreichen eines Kapitels erscheinen ein Titel („Kapitel 3“ / „Echos der Hüter“), eine Chatzeile mit Zusammenfassung und ein Sound. Dazu kommt das Advancement im eigenen Tab **Shardline: Chronik** (`shardline:story/…`). Alle Story-Advancements nutzen `minecraft:impossible` und werden vom Server vergeben.
+Beim Erreichen eines Kapitels erscheint eine **Kapitelkarte**: ein Banner mit dem Kapitel-Emblem, „Kapitel 3“, dem Titel („Echos der Hüter“) und der Zusammenfassung. Sie blendet sich ein, steht einige Sekunden und blendet sich wieder aus (`ChapterCardPayload`, abschaltbar mit `chapterCard` in der Client-Config, dann wie früher als Titel). Dazu kommen eine Chatzeile und ein Sound. Dazu kommt das Advancement im eigenen Tab **Shardline: Chronik** (`shardline:story/…`). Jedes Kapitel-Advancement hat ein eigenes Emblem als Icon (`shardline:chapter_emblem`, nur als Symbol, nicht herstellbar). `/shardline story status` zeigt jedem Spieler seinen Fortschritt und das nächste Ziel. Alle Story-Advancements nutzen `minecraft:impossible` und werden vom Server vergeben.
 
 ## Erzählung im Spiel
 
@@ -64,9 +64,16 @@ Der Block `shardline:memory_crystal[vision=0..7]` ist unzerstörbar. Ein Rechtsk
 
 ### Der Splitterhändler als Erzähler
 
-Spricht ein Spieler den Händler in einem neuen Story-Abschnitt zum ersten Mal an, erzählt der Händler vier Zeilen im Chat. Erst danach öffnet sich bei Rechtsklick das Handelsfenster. Mit Schleichen und Rechtsklick sagt er jederzeit eine kurze Bemerkung zum aktuellen Abschnitt.
+Ein Rechtsklick auf den Händler öffnet ein **Dialogfenster** mit seinem Porträt. Der Text erscheint Zeile für Zeile, ein Klick zeigt ihn sofort ganz. Darunter liegen vier Knöpfe: **Handeln**, **Lore-Seiten**, **Erzähl mehr** und **Tschüss**.
+- Spricht ein Spieler den Händler in einem neuen Story-Abschnitt zum ersten Mal an, erzählt der Händler vier Zeilen Einführung. Danach sagt er jeweils eine kurze Bemerkung.
+- **Erzähl mehr** liefert drei weitere Zeilen zum aktuellen Abschnitt.
+- Mit Schleichen und Rechtsklick handelt man direkt, ohne Dialog.
 
-Es gibt neun Abschnitte: Kapitel 0 bis 6, „versiegelt“ und „beherrscht“. **In Kapitel 4 warnt er vor der Königin** (Advancement „Ungehörte Warnung“).
+Es gibt neun Abschnitte: Kapitel 0 bis 6, „versiegelt“ und „beherrscht“. **In Kapitel 4 warnt er vor der Königin** (Advancement „Ungehörte Warnung“). Was gesagt wird und was ein Knopf bewirkt, entscheidet der Server (`TraderDialoguePayload`, `TraderActionPayload`). Clients ohne den Kanal bekommen die Einführung wie früher im Chat.
+
+**Lose Lore-Seiten** (`shardline:lore_page`) liegen in den Truhen der Hüter-Ruinen, Ruinen-Türme, Aschegrüfte und Kristallgeoden. Jede Seite gehört zu einem der zwölf Bücher, ein Rechtsklick liest sie im Chat.
+- Der Händler kauft lose Seiten für je 2 Shard-Splitter (`story.lorePagePrice`).
+- **Vier Seiten desselben Buchs** bindet er zum ganzen Buch, noch ungelesene Bücher zuerst (Advancement „Neu gebunden“).
 
 ## Der Bruch
 
@@ -140,10 +147,15 @@ Splitterherrscher und infizierte Wesen sind immun.
 |---|---|
 | **Shard-Zombie** | Kristallisierter Zombie: brennt nicht in der Sonne und steckt mit Splitterfieber an. Von ihm getötete Dorfbewohner werden zu Shard-Zombies (schwer 100 %, normal 50 %, leicht 25 %). Setzt neue Infektionsstellen. |
 | **Kristallisierte Kuh** | Friedlicher Träger: setzt doppelt so oft Infektionsstellen, gibt keine Milch. Wer sie im Nahkampf trifft, bekommt zu 30 % Fieber. |
+| **Kristallisiertes Schaf** | Träger mit einem Vlies aus Viruskristallen. Scheren bringt Amethyst und manchmal Shard-Splitter, das Vlies wächst durch Grasfressen nach. Treffer: 25 % Fieber. |
+| **Kristallisiertes Schwein** | Träger, frisst Amethyst, lässt sich satteln. Blitze verwandeln es nicht. Treffer: 25 % Fieber. |
+| **Kristallisierter Dorfbewohner** | Handelt nicht mehr, wandert umher und murmelt Bruchstücke des falschen Tons (Rechtsklick). Er behält Beruf, Stufe, Angebote und Ruf des Dorfbewohners, der er war. Treffer: 30 % Fieber. |
 
-Zombies, Wüstenzombies, Kühe und Dorfbewohner, die auf infiziertem Boden stehen, kristallisieren mit 2 % pro Sekunde. **Dorfbewohner und Händler fliehen** vor wilden infizierten Mobs und Virusherzen.
+Zombies, Wüstenzombies, Kühe, Schafe, Schweine und Dorfbewohner, die auf infiziertem Boden stehen, kristallisieren mit 2 % pro Sekunde. Dorfbewohner werden dabei zu **kristallisierten Dorfbewohnern** (früher Shard-Zombies). Wen ein Shard-Zombie tötet, der wird weiterhin zum Shard-Zombie. Tiere lassen sich mit `virus.animalsTransform` ausnehmen. Wer **Immunität** hat, kristallisiert nicht. **Dorfbewohner und Händler fliehen** vor wilden infizierten Mobs und Virusherzen.
 
-Eine Reinigungsessenz verwandelt Kristallkühe und Shard-Zombies zurück.
+Eine Reinigungsessenz verwandelt alle infizierten Tiere und Shard-Zombies zurück. Ein kristallisierter Dorfbewohner bekommt dabei seinen alten Beruf samt Angeboten zurück (Advancement „Eine Stimme kehrt zurück“).
+
+Splitterherrscher zähmen alle vier infizierten Tiere mit einem Shard-Splitter. Gezähmte infizierte Wesen tragen ein **Halsband** in Magenta mit Kristallnieten, auch Kristall-Kühe und Shard-Zombies. Wer eine Kuh, ein Schaf, ein Schwein und einen Dorfbewohner gezähmt hat, erhält „Kristallherde“.
 
 ### Atmosphäre infizierter Gebiete (Client)
 
@@ -158,15 +170,19 @@ Alles lässt sich in `shardline-client.toml` abschalten.
 
 | | |
 |---|---|
-| **Reinigungsessenz** | Herz der Splitterweite, 3 Leuchtblumen, Shard-Barren und Glasflasche ergeben 3 Essenzen. **Das Herz bleibt erhalten**, es dient als Katalysator. Rechtsklick in die Luft wirkt um dich herum, Rechtsklick auf einen Block wirkt dort (Radius 6). Die Essenz reinigt Blöcke, heilt Fieber und verwandelt infizierte Mobs zurück. |
-| **Reinheitsanker** | Rezept: Essenz oben, darunter Leuchtkristall, Shard-Block, Leuchtkristall, unten 3 Splitterstein-Ziegel. Im Radius von 24 Blöcken gibt es **keine Ausbreitung**. Alle zwei Sekunden reinigt der Anker 24 zufällige Positionen und heilt Fieber in der Nähe. |
-| **Virusherz** (Mini-Boss) | Entsteht in Chunks mit mindestens 160 infizierten Blöcken, aber nur, wenn ein Spieler innerhalb von 64 Blöcken ist, im Umkreis von 96 Blöcken kein anderes Herz existiert und seit dem letzten Herz 8 Minuten vergangen sind. Es ist unbeweglich, hat 200 HP und eine Bossleiste. Es greift mit Splittersalven, Fieberwellen (Radius 8) und herbeigerufenen Shard-Zombies an. Sein Tod reinigt einen Radius von 40 Blöcken. |
+| **Reinigungsessenz** | Herz der Splitterweite, 3 Leuchtblumen, Shard-Barren und Glasflasche ergeben 3 Essenzen. **Das Herz bleibt erhalten**, es dient als Katalysator. Rechtsklick in die Luft wirkt um dich herum, Rechtsklick auf einen Block wirkt dort (Radius 6). Die Essenz reinigt Blöcke, heilt Fieber, verwandelt infizierte Mobs zurück und gibt allen im Radius **2 Minuten Immunität**. |
+| **Reinheitsanker** | Rezept: Essenz oben, darunter Leuchtkristall, Shard-Block, Leuchtkristall, unten 3 Splitterstein-Ziegel. Seine **Reinheitszone** beginnt bei 6 Blöcken und wächst in 5 Minuten auf 24 Blöcke. In der Zone gibt es **keine Ausbreitung**, jeder neu hinzukommende Ring wird gründlich gereinigt, und alle zwei Sekunden reinigt der Anker zusätzlich 24 zufällige Positionen. Lebewesen in der Zone werden vom Fieber geheilt und erhalten Immunität (15 s, ständig aufgefrischt). Goldene Funken und eine goldene Linie am Boden zeigen den Rand. Anker aus älteren Welten haben sofort den vollen Radius. |
+| **Virusherz** (Mini-Boss) | Entsteht in Chunks mit mindestens 160 infizierten Blöcken, aber nur, wenn ein Spieler innerhalb von 64 Blöcken ist, im Umkreis von 96 Blöcken kein anderes Herz existiert und seit dem letzten Herz 8 Minuten vergangen sind. Es ist unbeweglich, hat 200 HP und eine Bossleiste mit Phasenmarken. Sein Tod reinigt einen Radius von 40 Blöcken. **Drei Phasen** (bei 2/3 und 1/3 Leben):<br>1. Splittersalven und Fieberwellen (Radius 8).<br>2. Zusätzlich **Tentakelschläge**: Ein Sporenring markiert eine Sekunde vorher die Einschlagstelle.<br>3. Zusätzlich **Beschwörung** von Shard-Zombies und kristallisierten Tieren (Sporenwirbel zeigen die Stellen), schnellere Wellen.<br>Beim Phasenwechsel verhärtet sich das Herz kurz und ist unverwundbar, die Leiste färbt sich pink bzw. rot. Schwierigkeit: `remedies.virusHeartDifficulty`. |
+| **Immunität** (Effekt) | Splitterfieber kann nicht ausbrechen und Tiere kristallisieren nicht. Gibt es durch Essenz und Anker. Advancement „Unberührt“. |
 
 Jeder Spieler im Umkreis von 32 Blöcken zählt ein besiegtes Herz. **Nach drei Herzen erhält er den Kern des Bruchs.**
 
 ## Endentscheidung
 
-Lege den **Kern des Bruchs** auf den Thron der Königin. Dafür ist Kapitel 6 nötig. Danach öffnet sich ein Auswahlfenster.
+Wenn die Königin fällt, wächst vor ihrem Thron der **Entscheidungsaltar** aus dem Stein (fünf Blöcke vor dem Thron, auf dem Arenaboden). Neue Thron-Arenen haben ihn von Anfang an.
+- Der Altar ist unzerstörbar und ruht, bis ein Spieler mit dem Kern des Bruchs näher als 8 Blöcke kommt. Dann erwacht er: Leuchtschicht, helles Licht, goldene und magentafarbene Spiralen (Advancement „Am Scheideweg“).
+- Lege den **Kern des Bruchs** auf den Altar. Dafür ist Kapitel 6 nötig. Danach öffnet sich ein Auswahlfenster.
+- Der Thron selbst nimmt den Kern weiterhin an, damit Welten funktionieren, in denen die Königin schon vor diesem Update gefallen ist.
 
 - **`ending.mode = VOTE`** (Standard): Die Wahl eröffnet eine Abstimmung (120 s) unter allen Online-Spielern mit Kapitel 6. Sie erhalten dasselbe Fenster und klickbare Chat-Buttons (`/shardline story vote seal|dominate`). Die Abstimmung endet, sobald alle abgestimmt haben, spätestens nach Ablauf der Zeit. Bei Gleichstand wird versiegelt. Den Titel erhalten alle, die für das Ergebnis gestimmt haben.
 - **`ending.mode = FIRST_PLAYER`:** Der erste Spieler entscheidet allein.
@@ -182,15 +198,16 @@ Fähigkeiten des Splitterherrschers:
 - **Kristallwelle** (Taste H): Splitterwelle im Radius 6 mit 8 Schaden, Rückstoß und 4 s Fieber. Abklingzeit 45 s.
 - **Virus-Lauf** (passiv): Tempo II und Regeneration I auf infiziertem Boden.
 
-Wer **später** einen Kern auf den Thron legt, schließt sich dem gewählten Weg an und bekommt dessen Titel.
+Wer **später** einen Kern auf den Altar oder den Thron legt, schließt sich dem gewählten Weg an und bekommt dessen Titel.
 
 ## Befehle
 
-Alle Befehle außer `story vote` brauchen Operator-Rechte (Stufe 2).
+Alle Befehle außer `story status` und `story vote` brauchen Operator-Rechte (Stufe 2).
 
 | Befehl | Wirkung |
 |---|---|
 | `/shardline story set <0-6> [spieler]` | Kapitel setzen |
+| `/shardline story status` | eigener Fortschritt: Kapitelleiste, aktuelles Kapitel, nächstes Ziel, Bücher/Visionen/Herzen, Ende (alle Spieler) |
 | `/shardline story info [spieler]` | Kapitel, Bücher, Visionen, Virusherzen, Titel |
 | `/shardline story vote <seal\|dominate>` | Stimme abgeben (alle Spieler) |
 | `/shardline story ending reset` | Ende und Titel zurücksetzen |
@@ -207,13 +224,13 @@ Alle Befehle außer `story vote` brauchen Operator-Rechte (Stufe 2).
 
 | Abschnitt | Schlüssel (Standard) |
 |---|---|
-| `story` | `chapterTitles` (true), `traderDialogue` (true), `dialogueLineDelayTicks` (50) |
-| `virus` | `enabled` (true), `spreadPaused` (false), `spreadChance` (0.75), `spreadAttempts` (2), `spreadRange` (2), `maxRange` (0 = unbegrenzt), `maxBlocksPerTick` (80), `queueLimit` (8192), `oreSeedChance` (0.2), `portalSeedChance` (0.75), `portalSeedRadius` (6), `infectedMobSeedChance` (0.065), `mobConversionChance` (0.02), `villagersFlee` (true), `villagersTransform` (true), `feverChanceOnInfectedBlock` (0.04), `feverDurationSeconds` (30), `feverDamage` (1.0), `feverCanKill` (false), `feverCuredByMilk` (false) |
-| `remedies` | `anchorRadius` (24), `anchorPurifyPerPulse` (24), `essenceRadius` (6), `heartPurifyRadius` (40), `virusHeartHealth` (200), `heartSpawnThreshold` (160), `heartSpawnCooldownMinutes` (8), `heartsForCore` (3) |
+| `story` | `chapterTitles` (true), `traderDialogue` (true), `dialogueLineDelayTicks` (50), `lorePagePrice` (2) |
+| `virus` | `enabled` (true), `spreadPaused` (false), `spreadChance` (0.75), `spreadAttempts` (2), `spreadRange` (2), `maxRange` (0 = unbegrenzt), `maxBlocksPerTick` (80), `queueLimit` (8192), `oreSeedChance` (0.2), `portalSeedChance` (0.75), `portalSeedRadius` (6), `infectedMobSeedChance` (0.065), `mobConversionChance` (0.02), `villagersFlee` (true), `villagersTransform` (true), `animalsTransform` (true), `feverChanceOnInfectedBlock` (0.04), `feverDurationSeconds` (30), `feverDamage` (1.0), `feverCanKill` (false), `feverCuredByMilk` (false) |
+| `remedies` | `anchorRadius` (24), `anchorPurifyPerPulse` (24), `anchorStartRadius` (6), `anchorGrowSeconds` (300), `essenceRadius` (6), `immunityEssenceSeconds` (120), `immunityAnchorSeconds` (15), `heartPurifyRadius` (40), `virusHeartHealth` (200), `virusHeartDifficulty` (EASY / NORMAL / HARD), `heartSpawnThreshold` (160), `heartSpawnCooldownMinutes` (8), `heartsForCore` (3) |
 | `ending` | `mode` (VOTE / FIRST_PLAYER), `voteDurationSeconds` (120), `titlePrefix` (true) |
 | `abilities` | `shardCallCooldownSeconds` (90), `shardCallMaxMobs` (3), `shardCallStrengthSeconds` (10), `crystalWaveCooldownSeconds` (45), `crystalWaveRadius` (6), `crystalWaveDamage` (8), `crystalWaveFeverSeconds` (4), `virusRun` (true) |
 
-`config/shardline-client.toml`: `infectionFog`, `infectionMusic`, `infectedSky`, `screenShake`, `feverDistortion` (alle standardmäßig true).
+`config/shardline-client.toml`: `infectionFog`, `infectionMusic`, `infectedSky`, `screenShake`, `feverDistortion`, `chapterCard` (alle standardmäßig true).
 
 ## Neue Inhalte im Überblick
 
@@ -269,7 +286,7 @@ Die bestehenden Registry-Namen sind unverändert. Alte Welten laden weiter.
 
 ## Tests
 
-`gradlew runGameTestServer` führt 13 Tests aus, davon 7 neue:
+`gradlew runGameTestServer` führt 23 Tests aus (Stand Story-Erweiterung 2). Aus der ersten Story-Erweiterung stammen:
 - Infektion, Reinheitsanker und Reinigung
 - Warteschlange in Chunk-Stapeln und Pause
 - Ausbreitung per Random Tick
@@ -280,4 +297,35 @@ Die bestehenden Registry-Namen sind unverändert. Alte Welten laden weiter.
 
 Die Strukturtests prüfen zusätzlich die Erinnerungskristalle.
 
+Neu in der Story-Erweiterung 2: `infectedAnimals`, `decisionAltar`, `immunity`, `virusHeartPhases`, `lorePageTrading`, `chapterDisplay`, `purityZone`, dazu die Hüter-Ruinen im Strukturtest.
+
 Für den Server-Rauchtest gilt: `run/world` vorher löschen. Eine Welt, die der GameTest-Server angelegt hat, hat eine falsch eingerichtete Splitterweite.
+
+## Story-Erweiterung 2
+
+### Hüter-Ruinen
+
+Die Ruinen eines Versammlungssaals der Hüter stehen in allen Biomen der Splitterweite (`shardline:keeper_ruin`, Abstand 28 Chunks).
+- **Bau:** Mauern aus hellem Hüterstein, nach Süden zu eingestürzt, an den Ecken und Seiten Säulen.
+- **Innen:** Ein Runenpfad führt zum Podest am Nordende. Dort stehen ein Erinnerungskristall (Aurelis, Der falsche Ton oder meist Der Rat der Hüter) und eine Truhe mit mindestens einem Lore-Buch und mehreren losen Seiten.
+- **Neue Blöcke:** `keeper_ruin_bricks`, `keeper_ruin_pillar`, `keeper_rune_slab` (Rune mit Leuchtschicht). Hergestellt werden sie aus Calcit, die Runenstufe zusätzlich mit Glowstone-Staub.
+- Advancement „Wo die Hüter tagten“. Der Resonanzkompass kennt die Ruinen als Ziel.
+
+### Neue Advancements
+
+| Tab | Advancement |
+|---|---|
+| Shardline | Wo die Hüter tagten (Hüter-Ruinen gefunden) |
+| Chronik | Am Scheideweg, Unberührt, Eine Stimme kehrt zurück, Kristallherde, Neu gebunden |
+
+### Neue Registry-Namen
+
+- **Wesen:** `crystallized_sheep`, `crystallized_pig`, `crystallized_villager` (+ Spawn-Eier)
+- **Blöcke:** `decision_altar`, `keeper_ruin_bricks`, `keeper_ruin_pillar`, `keeper_rune_slab`
+- **Items:** `lore_page`, `chapter_emblem`
+- **Effekt:** `immunity`
+- **Partikel:** `purity_mote`
+- **Block-Entity:** `purity_anchor`
+- **Struktur:** `keeper_ruin` (Set `keeper_ruins`, Biome-Tag `has_structure/keeper_ruin`)
+- **Datenkomponenten:** `lore_page`, `chapter`
+- **Netzwerk** (Protokoll 3): `chapter_card`, `trader_dialogue`, `trader_action`
