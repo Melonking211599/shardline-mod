@@ -88,6 +88,15 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue VILLAGERS_TRANSFORM;
     public static final ModConfigSpec.BooleanValue ANIMALS_TRANSFORM;
     public static final ModConfigSpec.IntValue VIRUS_OVERWORLD_SEED_MINUTES;
+    public static final ModConfigSpec.IntValue VIRUS_NETHER_END_SEED_MINUTES;
+    public static final ModConfigSpec.IntValue VIRUS_MAX_DEPTH;
+    public static final ModConfigSpec.DoubleValue VIRUS_DEPTH_CHANCE;
+    public static final ModConfigSpec.BooleanValue VIRUS_SURFACE_ONLY;
+    public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> VIRUS_DIMENSIONS;
+    public static final ModConfigSpec.DoubleValue VIRUS_EMBER_SPREAD_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue VIRUS_VOID_SPREAD_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue VIRUS_STRAIN_EFFECTS;
+    public static final ModConfigSpec.BooleanValue NETHER_END_MOBS_TRANSFORM;
     public static final ModConfigSpec.DoubleValue FEVER_CHANCE_ON_INFECTED_BLOCK;
     public static final ModConfigSpec.IntValue FEVER_DURATION_SECONDS;
     public static final ModConfigSpec.DoubleValue FEVER_DAMAGE;
@@ -369,6 +378,34 @@ public final class ShardlineConfig {
         VIRUS_OVERWORLD_SEED_MINUTES = b.comment("Alle so viele Minuten setzt der Virus nach dem Bruch einen neuen Herd nahe einem Spieler in der Oberwelt (0 = aus).")
                 .translation(key("overworld_seed_minutes"))
                 .defineInRange("overworldSeedMinutes", 4, 0, 1440);
+        VIRUS_NETHER_END_SEED_MINUTES = b.comment("Alle so viele Minuten setzt der Virus einen neuen Herd nahe einem Spieler im Nether und im End (0 = aus).")
+                .translation(key("nether_end_seed_minutes"))
+                .defineInRange("netherEndSeedMinutes", 10, 0, 1440);
+        VIRUS_MAX_DEPTH = b.comment("Wie tief (Bloecke unter der naechsten Oberflaeche) sich der Virus ins Gestein frisst. 0 = nur Oberflaeche.")
+                .translation(key("virus_max_depth"))
+                .defineInRange("maxDepth", 6, 0, 32);
+        VIRUS_DEPTH_CHANCE = b.comment("Anteil (0-1) der Bloecke unter der Oberflaeche, die befallen werden koennen (Adern im Gestein statt voller Wuerfel).")
+                .translation(key("virus_depth_chance"))
+                .defineInRange("depthChance", 0.35, 0.0, 1.0);
+        VIRUS_SURFACE_ONLY = b.comment("Alter Modus: Der Virus befaellt nur Bloecke mit Luftkontakt (ueberschreibt maxDepth).")
+                .translation(key("virus_surface_only"))
+                .define("surfaceOnly", false);
+        VIRUS_DIMENSIONS = b.comment("Dimensionen, in denen sich der Virus ausbreitet. Nether: Glutbrand, End: Leerenfaeule, sonst Shardvirus.")
+                .translation(key("virus_dimensions"))
+                .defineListAllowEmpty("dimensions", java.util.List.of("minecraft:overworld", "minecraft:the_nether", "minecraft:the_end",
+                        "shardline:splitterweite"), () -> "", o -> o instanceof String);
+        VIRUS_EMBER_SPREAD_MULTIPLIER = b.comment("Faktor auf spreadChance fuer den Glutbrand (Nether).")
+                .translation(key("virus_ember_spread_multiplier"))
+                .defineInRange("emberSpreadMultiplier", 1.25, 0.0, 4.0);
+        VIRUS_VOID_SPREAD_MULTIPLIER = b.comment("Faktor auf spreadChance fuer die Leerenfaeule (End).")
+                .translation(key("virus_void_spread_multiplier"))
+                .defineInRange("voidSpreadMultiplier", 0.75, 0.0, 4.0);
+        VIRUS_STRAIN_EFFECTS = b.comment("Stammwirkungen: Glutbrand setzt Lebewesen kurz in Brand, Leerenfaeule verdunkelt die Sicht.")
+                .translation(key("virus_strain_effects"))
+                .define("strainEffects", true);
+        NETHER_END_MOBS_TRANSFORM = b.comment("Piglins und Endermen auf befallenem Boden kristallisieren.")
+                .translation(key("nether_end_mobs_transform"))
+                .define("netherEndMobsTransform", true);
         FEVER_CHANCE_ON_INFECTED_BLOCK = b.comment("Chance (0-1) pro Sekunde auf infiziertem Boden, Splitterfieber zu bekommen.")
                 .translation(key("fever_chance_on_infected_block"))
                 .defineInRange("feverChanceOnInfectedBlock", 0.04, 0.0, 1.0);

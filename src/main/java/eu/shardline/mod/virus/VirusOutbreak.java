@@ -7,6 +7,7 @@ import eu.shardline.mod.story.ShardlineWorldData;
 import eu.shardline.mod.story.StoryChapter;
 import eu.shardline.mod.story.StoryEnding;
 import eu.shardline.mod.story.StoryManager;
+import java.util.Arrays;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 /**
@@ -78,12 +80,20 @@ public final class VirusOutbreak {
         data.addHerd(level.dimension(), pos, 1);
         VirusSpreadManager.seedAround(level, pos, 24, 160, level.getRandom());
         if (first) {
-            // Der Ton kriecht durch die Portale: erste Herde in der Oberwelt, nahe den Spielern und am Weltspawn.
+            // Der Ton kriecht durch die Portale: erste Herde in der Oberwelt, nahe den Spielern und am Weltspawn,
+            // dazu Glutbrand und Leerenfaeule bei Spielern, die gerade im Nether oder End sind.
             ServerLevel overworld = server.overworld();
             for (ServerPlayer player : overworld.players()) {
                 VirusDrift.seedNear(overworld, player.blockPosition(), overworld.getRandom());
             }
             VirusDrift.seedNear(overworld, overworld.getSharedSpawnPos(), overworld.getRandom());
+            for (ServerLevel other : Arrays.asList(server.getLevel(Level.NETHER), server.getLevel(Level.END))) {
+                if (other != null && VirusSpreadManager.isAllowedDimension(other)) {
+                    for (ServerPlayer player : other.players()) {
+                        VirusDrift.seedNear(other, player.blockPosition(), other.getRandom());
+                    }
+                }
+            }
         }
 
         if (killer != null) {

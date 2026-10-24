@@ -98,6 +98,16 @@ for n, size in (("crystallized_sheep", (64, 32)), ("crystallized_sheep_fur", (64
 for n, size in (("crystallized_cow", (64, 32)), ("crystallized_sheep", (64, 32)), ("crystallized_pig", (64, 32)),
                 ("crystallized_villager", (64, 64)), ("shard_zombie", (64, 64))):
     need(TEX / "entity" / f"{n}_collar.png", size)
+# ---- Nach dem Ausbruch: Virusstaemme (virus_strains.py)
+import virus_strains
+for name, (_fn, variants, animate) in virus_strains.BLOCKS.items():
+    for suffix in [""] + [f"_v{n}" for n in range(2, variants + 1)]:
+        need(TEX / "block" / f"{name}{suffix}.png", (16, 16))
+        need(TEX / "block" / f"{name}{suffix}_glow.png", (16, 64) if animate else (16, 16))
+        if animate: need(TEX / "block" / f"{name}{suffix}_glow.png.mcmeta")
+for n, size in (("crystallized_piglin", (64, 64)), ("crystallized_enderman", (64, 32))):
+    for part in ("", "_glowmask", "_collar"):
+        need(TEX / "entity" / f"{n}{part}.png", size)
 story2_blocks = """decision_altar_side decision_altar_side_glow decision_altar_top decision_altar_top_glow decision_altar_bottom
 keeper_ruin_bricks keeper_ruin_pillar keeper_ruin_pillar_top keeper_rune_slab keeper_rune_slab_glow keeper_rune_slab_side""".split()
 for b in story2_blocks: need(TEX / "block" / f"{b}.png", (16, 16))
@@ -176,7 +186,8 @@ def seam_ratio(path):
 
 
 for fam in ("shardstone", "shard_ore", "deepslate_shard_ore", "crystal_moss", "ash_block", "crystal_leaves", "infected_stone",
-            "infected_dirt", "infected_grass_top", "infected_sand", "infected_leaves"):
+            "infected_dirt", "infected_grass_top", "infected_sand", "infected_leaves", "infected_deepslate", "infected_netherrack",
+            "infected_end_stone", "infected_blackstone", "infected_soul_soil", "infected_wart_block"):
     for suffix in ("", "_v2", "_v3"):
         f = TEX / "block" / f"{fam}{suffix}.png"
         if f.exists() and seam_ratio(f) > (1.6 if "ore" in fam else 1.3):    # Erze: harte Einzelmerkmale, daher grosszuegiger

@@ -305,6 +305,33 @@
     ],
     "subtitle": "subtitles.shardline.entity.crystallized_cow.hurt"
   },
+  "entity.crystallized_enderman.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.enderman.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_enderman.ambient"
+  },
+  "entity.crystallized_enderman.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.enderman.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_enderman.death"
+  },
+  "entity.crystallized_enderman.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.enderman.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_enderman.hurt"
+  },
   "entity.crystallized_pig.ambient": {
     "sounds": [
       {
@@ -331,6 +358,33 @@
       }
     ],
     "subtitle": "subtitles.shardline.entity.crystallized_pig.hurt"
+  },
+  "entity.crystallized_piglin.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombified_piglin.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_piglin.ambient"
+  },
+  "entity.crystallized_piglin.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombified_piglin.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_piglin.death"
+  },
+  "entity.crystallized_piglin.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombified_piglin.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_piglin.hurt"
   },
   "entity.crystallized_sheep.ambient": {
     "sounds": [

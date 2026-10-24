@@ -126,6 +126,12 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_VILLAGER_AMBIENT = register("entity.crystallized_villager.ambient", "entity.zombie_villager.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_VILLAGER_HURT = register("entity.crystallized_villager.hurt", "entity.zombie_villager.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_VILLAGER_DEATH = register("entity.crystallized_villager.death", "entity.zombie_villager.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_PIGLIN_AMBIENT = register("entity.crystallized_piglin.ambient", "entity.zombified_piglin.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_PIGLIN_HURT = register("entity.crystallized_piglin.hurt", "entity.zombified_piglin.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_PIGLIN_DEATH = register("entity.crystallized_piglin.death", "entity.zombified_piglin.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_ENDERMAN_AMBIENT = register("entity.crystallized_enderman.ambient", "entity.enderman.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_ENDERMAN_HURT = register("entity.crystallized_enderman.hurt", "entity.enderman.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_ENDERMAN_DEATH = register("entity.crystallized_enderman.death", "entity.enderman.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> INFECTED_CURED = register("entity.infected.cured", "entity.zombie_villager.converted");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_AMBIENT = register("entity.virus_heart.ambient", "entity.warden.heartbeat");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_HURT = register("entity.virus_heart.hurt", "block.amethyst_block.break");

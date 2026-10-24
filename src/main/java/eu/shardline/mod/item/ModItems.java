@@ -157,6 +157,8 @@ public final class ModItems {
     public static final DeferredItem<DeferredSpawnEggItem> SHARD_ZOMBIE_SPAWN_EGG = spawnEgg("shard_zombie", ModEntities.SHARD_ZOMBIE, 0x3B2A55, 0xC05CFF);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_COW_SPAWN_EGG = spawnEgg("crystallized_cow", ModEntities.CRYSTALLIZED_COW, 0x4A3A3A, 0xB57BFF);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_SHEEP_SPAWN_EGG = spawnEgg("crystallized_sheep", ModEntities.CRYSTALLIZED_SHEEP, 0x3A2A48, 0xFF6FDC);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_PIGLIN_SPAWN_EGG = spawnEgg("crystallized_piglin", ModEntities.CRYSTALLIZED_PIGLIN, 0x7C3D46, 0xFF8A2A);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_ENDERMAN_SPAWN_EGG = spawnEgg("crystallized_enderman", ModEntities.CRYSTALLIZED_ENDERMAN, 0x100D17, 0x5FD6AC);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_PIG_SPAWN_EGG = spawnEgg("crystallized_pig", ModEntities.CRYSTALLIZED_PIG, 0x6B4A62, 0xE03CC0);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_VILLAGER_SPAWN_EGG = spawnEgg("crystallized_villager", ModEntities.CRYSTALLIZED_VILLAGER, 0x2C2138, 0xC933B8);
     public static final DeferredItem<DeferredSpawnEggItem> VIRUS_HEART_SPAWN_EGG = spawnEgg("virus_heart", ModEntities.VIRUS_HEART, 0x240A3A, 0xE040FF);

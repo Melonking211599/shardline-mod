@@ -371,7 +371,8 @@ public final class ShardlineGameTests {
                 ModEntities.SHATTERED_KNIGHT.get(), ModEntities.CRYSTAL_COLOSSUS.get(), ModEntities.SHARD_QUEEN.get(),
                 ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(), ModEntities.CRYSTALLIZED_COW.get(),
                 ModEntities.VIRUS_HEART.get(), ModEntities.CRYSTAL_SNAIL.get(), ModEntities.CRYSTALLIZED_SHEEP.get(),
-                ModEntities.CRYSTALLIZED_PIG.get(), ModEntities.CRYSTALLIZED_VILLAGER.get())) {
+                ModEntities.CRYSTALLIZED_PIG.get(), ModEntities.CRYSTALLIZED_VILLAGER.get(), ModEntities.CRYSTALLIZED_PIGLIN.get(),
+                ModEntities.CRYSTALLIZED_ENDERMAN.get())) {
             // Mit Abstand erzeugen, damit grosse Wesen kleinere nicht in Bloecke schieben.
             BlockPos spawn = origin.offset((index % 5) * 8, 0, (index / 5) * 8);
             index++;
@@ -1431,6 +1432,135 @@ public final class ShardlineGameTests {
             rhea.discard();
             helper.getLevel().getServer().getPlayerList().remove(player);
         }
+    }
+
+    // ------------------------------------------------------------------ Nach dem Ausbruch: Virusstaemme und Tiefe
+
+    /** Stammbloecke: richtige Zuordnung (inkl. Tiefenschiefer vor Stein), Stamm, Reinigung zurueck, Dimensionen erlaubt. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_virus")
+    public static void virusStrainBlocks(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        record Case(Block clean, Block infected, eu.shardline.mod.virus.VirusStrain strain, Block purified) {
+        }
+        var shard = eu.shardline.mod.virus.VirusStrain.SHARD;
+        var ember = eu.shardline.mod.virus.VirusStrain.EMBER;
+        var voidStrain = eu.shardline.mod.virus.VirusStrain.VOID;
+        for (Case c : List.of(
+                new Case(Blocks.DEEPSLATE, ModBlocks.INFECTED_DEEPSLATE.get(), shard, Blocks.DEEPSLATE),
+                new Case(Blocks.SPRUCE_PLANKS, ModBlocks.INFECTED_PLANKS.get(), shard, Blocks.OAK_PLANKS),
+                new Case(Blocks.NETHERRACK, ModBlocks.INFECTED_NETHERRACK.get(), ember, Blocks.NETHERRACK),
+                new Case(Blocks.BASALT, ModBlocks.INFECTED_BLACKSTONE.get(), ember, Blocks.BLACKSTONE),
+                new Case(Blocks.SOUL_SAND, ModBlocks.INFECTED_SOUL_SOIL.get(), ember, Blocks.SOUL_SOIL),
+                new Case(Blocks.WARPED_NYLIUM, ModBlocks.INFECTED_NYLIUM.get(), ember, Blocks.CRIMSON_NYLIUM),
+                new Case(Blocks.NETHER_WART_BLOCK, ModBlocks.INFECTED_WART_BLOCK.get(), ember, Blocks.NETHER_WART_BLOCK),
+                new Case(Blocks.END_STONE, ModBlocks.INFECTED_END_STONE.get(), voidStrain, Blocks.END_STONE),
+                new Case(Blocks.PURPUR_PILLAR, ModBlocks.INFECTED_PURPUR.get(), voidStrain, Blocks.PURPUR_BLOCK),
+                new Case(Blocks.STONE, ModBlocks.INFECTED_STONE.get(), shard, Blocks.STONE))) {
+            var infected = eu.shardline.mod.virus.InfectionMap.infectedFor(c.clean().defaultBlockState());
+            helper.assertTrue(infected != null && infected.is(c.infected()), c.clean() + " wird nicht zu " + c.infected());
+            helper.assertTrue(((eu.shardline.mod.virus.Infected) infected.getBlock()).strain() == c.strain(), c.infected() + ": falscher Stamm");
+            helper.assertTrue(infected.isRandomlyTicking(), c.infected() + " bekommt keine Random Ticks");
+            var clean = eu.shardline.mod.virus.InfectionMap.purifiedFor(infected, level);
+            helper.assertTrue(clean != null && clean.is(c.purified()), c.infected() + " wird nicht zu " + c.purified() + " gereinigt");
+        }
+        helper.assertTrue(eu.shardline.mod.virus.VirusStrain.of(net.minecraft.world.level.Level.NETHER) == ember, "Nether muss Glutbrand haben");
+        helper.assertTrue(eu.shardline.mod.virus.VirusStrain.of(net.minecraft.world.level.Level.END) == voidStrain, "End muss Leerenfaeule haben");
+        var server = level.getServer();
+        for (var dimension : List.of(net.minecraft.world.level.Level.OVERWORLD, net.minecraft.world.level.Level.NETHER,
+                net.minecraft.world.level.Level.END)) {
+            ServerLevel target = server.getLevel(dimension);
+            helper.assertTrue(target != null && VirusSpreadManager.isAllowedDimension(target), dimension.location() + " ist fuer den Virus gesperrt");
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Tiefeninfektion: unter einer befallenen Oberflaeche werden genau die "poroesen" Bloecke befallbar; die Tiefe wird
+     * entlang der Achsen gemessen; ohne befallenen Nachbarn bleibt Gestein sauber.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 100, batch = "shardline_virus")
+    public static void virusDepth(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        boolean wasInfected = data.isInfected();
+        long outbreakTime = data.outbreakTime();
+        boolean wasPaused = data.isPaused();
+        StoryEnding ending = data.ending();
+        data.setInfected(true, level.getGameTime());
+        data.setPaused(false);
+        data.setEnding(StoryEnding.NONE);
+        BlockPos origin = helper.absolutePos(new BlockPos(0, 1, 0)).offset(0, 0, -200);
+        int size = 13;
+        try {
+            for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(size, size + 1, size))) {
+                boolean inside = pos.getX() >= origin.getX() && pos.getX() < origin.getX() + size && pos.getY() < origin.getY() + size
+                        && pos.getZ() >= origin.getZ() && pos.getZ() < origin.getZ() + size;
+                level.setBlock(pos, inside ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+            }
+            BlockPos center = origin.offset(size / 2, size / 2, size / 2);
+            helper.assertTrue(eu.shardline.mod.virus.InfectionMap.depthBelowSurface(level, center, 32) == size / 2 + 1,
+                    "Tiefe der Wuerfelmitte falsch: " + eu.shardline.mod.virus.InfectionMap.depthBelowSurface(level, center, 32));
+            helper.assertTrue(eu.shardline.mod.virus.InfectionMap.depthBelowSurface(level, center, 3) == 4, "Tiefenmessung haelt die Grenze nicht ein");
+            BlockPos inner = origin.offset(4, size - 2, 4);
+            helper.assertFalse(VirusSpreadManager.tryInfect(level, inner), "Gestein ohne befallenen Nachbarn wurde befallen");
+            int top = origin.getY() + size - 1;
+            for (int x = 2; x < size - 2; x++) {
+                for (int z = 2; z < size - 2; z++) {
+                    level.setBlock(new BlockPos(origin.getX() + x, top, origin.getZ() + z), ModBlocks.INFECTED_STONE.get().defaultBlockState(), 2);
+                }
+            }
+            int porous = 0;
+            for (int x = 3; x < size - 3; x++) {
+                for (int z = 3; z < size - 3; z++) {
+                    BlockPos below = new BlockPos(origin.getX() + x, top - 1, origin.getZ() + z);
+                    boolean expected = eu.shardline.mod.virus.InfectionMap.isPorous(below, eu.shardline.mod.config.ShardlineConfig.VIRUS_DEPTH_CHANCE.get());
+                    boolean infected = VirusSpreadManager.tryInfect(level, below);
+                    helper.assertTrue(infected == expected, "Tiefeninfektion bei " + below.toShortString() + ": " + infected + " statt " + expected);
+                    helper.assertTrue(!infected || level.getBlockState(below).is(ModBlocks.INFECTED_STONE.get()), "Falscher Block in der Tiefe");
+                    porous += expected ? 1 : 0;
+                }
+            }
+            helper.assertTrue(porous > 0 && porous < 49, "Unplausibler Anteil poroeser Bloecke: " + porous + "/49");
+            helper.succeed();
+        } finally {
+            for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(size, size + 1, size))) {
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+            }
+            data.setInfected(wasInfected, outbreakTime);
+            data.setPaused(wasPaused);
+            data.setEnding(ending);
+        }
+    }
+
+    /** Glutbrand brennt, Leerenfaeule verdunkelt; Piglin und Enderman kristallisieren und lassen sich reinigen. */
+    @GameTest(template = EMPTY, timeoutTicks = 40, batch = "shardline_virus")
+    public static void virusStrainMobs(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        var cow = helper.spawn(EntityType.COW, new BlockPos(1, 1, 1));
+        var sheep = helper.spawn(EntityType.SHEEP, new BlockPos(3, 1, 1));
+        eu.shardline.mod.virus.VirusEffects.applyStrain(cow, eu.shardline.mod.virus.VirusStrain.EMBER);
+        eu.shardline.mod.virus.VirusEffects.applyStrain(sheep, eu.shardline.mod.virus.VirusStrain.VOID);
+        helper.assertTrue(cow.getRemainingFireTicks() > 0, "Glutbrand setzt nicht in Brand");
+        helper.assertTrue(sheep.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS), "Leerenfaeule verdunkelt nicht");
+
+        var piglin = helper.spawn(EntityType.PIGLIN, new BlockPos(5, 1, 1));
+        var enderman = helper.spawn(EntityType.ENDERMAN, new BlockPos(7, 1, 1));
+        var crystalPiglin = eu.shardline.mod.virus.VirusEffects.convert(level, piglin, ModEntities.CRYSTALLIZED_PIGLIN.get());
+        var crystalEnderman = eu.shardline.mod.virus.VirusEffects.convert(level, enderman, ModEntities.CRYSTALLIZED_ENDERMAN.get());
+        helper.assertTrue(crystalPiglin != null && crystalEnderman != null, "Kristallisierung von Piglin/Enderman fehlgeschlagen");
+        helper.assertTrue(crystalPiglin.fireImmune(), "Kristallisierter Piglin muss feuerfest sein");
+        helper.assertTrue(eu.shardline.mod.virus.VirusEffects.isImmune(crystalEnderman), "Kristallisierter Enderman muss immun sein");
+        var curedPiglin = eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalPiglin);
+        var curedEnderman = eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalEnderman);
+        helper.assertTrue(curedPiglin != null && curedPiglin.getType() == EntityType.ZOMBIFIED_PIGLIN,
+                "Piglin wird in der Oberwelt nicht zum Zombifizierten Piglin gereinigt");
+        helper.assertTrue(curedEnderman != null && curedEnderman.getType() == EntityType.ENDERMAN, "Enderman wird nicht gereinigt");
+        cow.discard();
+        sheep.discard();
+        curedPiglin.discard();
+        curedEnderman.discard();
+        helper.succeed();
     }
 
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */

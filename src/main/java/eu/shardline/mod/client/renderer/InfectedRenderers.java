@@ -5,6 +5,8 @@ import eu.shardline.mod.Shardline;
 import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
 import eu.shardline.mod.entity.infected.InfectedMob;
 import net.minecraft.client.model.CowModel;
+import net.minecraft.client.model.EndermanModel;
+import net.minecraft.client.model.PiglinModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PigModel;
 import net.minecraft.client.model.SheepFurModel;
@@ -19,16 +21,20 @@ import net.minecraft.client.renderer.entity.CowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.PigRenderer;
+import net.minecraft.client.renderer.entity.PiglinRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
+import net.minecraft.client.renderer.entity.layers.CarriedBlockLayer;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Zombie;
 
 /**
@@ -193,6 +199,62 @@ public final class InfectedRenderers {
     }
 
     /** Kragen gezaehmter infizierter Wesen; die Textur liegt im Layout des Eltern-Modells. */
+    /** Kristallisierter Piglin: Vanilla-Piglinmodell (wie der Zombifizierte Piglin), Glutbrand-Leuchtschicht, Kragen. */
+    public static class CrystallizedPiglinRenderer extends PiglinRenderer {
+        private static final ResourceLocation TEXTURE = Shardline.id("textures/entity/crystallized_piglin.png");
+        private static final RenderType GLOW = RenderType.eyes(Shardline.id("textures/entity/crystallized_piglin_glowmask.png"));
+
+        public CrystallizedPiglinRenderer(EntityRendererProvider.Context context) {
+            super(context, ModelLayers.ZOMBIFIED_PIGLIN, ModelLayers.ZOMBIFIED_PIGLIN_INNER_ARMOR, ModelLayers.ZOMBIFIED_PIGLIN_OUTER_ARMOR, true);
+            this.addLayer(new EyesLayer<Mob, PiglinModel<Mob>>(this) {
+                @Override
+                public RenderType renderType() {
+                    return GLOW;
+                }
+            });
+            this.addLayer(new CollarLayer<>(this, Shardline.id("textures/entity/crystallized_piglin_collar.png")));
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(Mob entity) {
+            return TEXTURE;
+        }
+    }
+
+    /**
+     * Kristallisierter Enderman: Vanilla-Endermanmodell mit eigener Textur; blassgruene Augen und Kristalle ueber die
+     * Leuchtschicht (statt der violetten Vanilla-Augen), getragene Bloecke und Kragen wie gewohnt.
+     */
+    public static class CrystallizedEndermanRenderer extends MobRenderer<EnderMan, EndermanModel<EnderMan>> {
+        private static final ResourceLocation TEXTURE = Shardline.id("textures/entity/crystallized_enderman.png");
+        private static final RenderType GLOW = RenderType.eyes(Shardline.id("textures/entity/crystallized_enderman_glowmask.png"));
+
+        public CrystallizedEndermanRenderer(EntityRendererProvider.Context context) {
+            super(context, new EndermanModel<>(context.bakeLayer(ModelLayers.ENDERMAN)), 0.5F);
+            this.addLayer(new EyesLayer<EnderMan, EndermanModel<EnderMan>>(this) {
+                @Override
+                public RenderType renderType() {
+                    return GLOW;
+                }
+            });
+            this.addLayer(new CarriedBlockLayer(this, context.getBlockRenderDispatcher()));
+            this.addLayer(new CollarLayer<>(this, Shardline.id("textures/entity/crystallized_enderman_collar.png")));
+        }
+
+        @Override
+        public void render(EnderMan entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+            EndermanModel<EnderMan> model = this.getModel();
+            model.carrying = entity.getCarriedBlock() != null;
+            model.creepy = entity.isCreepy();
+            super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(EnderMan entity) {
+            return TEXTURE;
+        }
+    }
+
     public static class CollarLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
         private final ResourceLocation texture;
 

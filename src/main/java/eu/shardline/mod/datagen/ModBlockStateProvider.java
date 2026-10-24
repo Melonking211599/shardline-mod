@@ -4,6 +4,7 @@ import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
 import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.block.custom.ShardPortalBlock;
+import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -74,6 +75,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
         infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "solid");
         infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "solid");
         infected(ModBlocks.INFECTED_LEAVES.get(), "infected_leaves", "cutout_mipped");
+        infected(ModBlocks.INFECTED_DEEPSLATE.get(), "infected_deepslate", "solid");
+        infected(ModBlocks.INFECTED_NETHERRACK.get(), "infected_netherrack", "solid");
+        infected(ModBlocks.INFECTED_END_STONE.get(), "infected_end_stone", "solid");
+        for (Block block : List.of(ModBlocks.INFECTED_PLANKS.get(), ModBlocks.INFECTED_BLACKSTONE.get(), ModBlocks.INFECTED_SOUL_SOIL.get(),
+                ModBlocks.INFECTED_WART_BLOCK.get(), ModBlocks.INFECTED_PURPUR.get())) {
+            infected(block, name(block), "solid", 1);
+        }
+        ModelFile nylium = overlayModel("infected_nylium", modLoc("block/infected_nylium_side"), modLoc("block/infected_nylium_top"),
+                modLoc("block/infected_netherrack"), modLoc("block/infected_nylium_side_glow"), modLoc("block/infected_nylium_top_glow"), "solid");
+        simpleBlockWithItem(ModBlocks.INFECTED_NYLIUM.get(), nylium);
         withVariants(ModBlocks.INFECTED_GRASS.get(), 3, suffix -> overlayModel("infected_grass" + suffix,
                 modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top" + suffix), modLoc("block/infected_dirt"),
                 modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top" + suffix + "_glow"), "cutout"));
@@ -126,7 +137,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     /** Infizierter Block mit drei Varianten (Textur <name>, <name>_v2, <name>_v3, jeweils mit eigener Leuchtschicht). */
     private void infected(Block block, String name, String renderType) {
-        withVariants(block, 3, suffix -> {
+        infected(block, name, renderType, 3);
+    }
+
+    private void infected(Block block, String name, String renderType, int variants) {
+        withVariants(block, variants, suffix -> {
             ResourceLocation base = modLoc("block/" + name + suffix);
             ResourceLocation glow = modLoc("block/" + name + suffix + "_glow");
             return overlayModel(name + suffix, base, base, base, glow, glow, renderType);

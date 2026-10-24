@@ -5,6 +5,15 @@
     "shardline:infected_grass",
     "shardline:infected_log",
     "shardline:infected_leaves",
-    "shardline:infected_sand"
+    "shardline:infected_sand",
+    "shardline:infected_deepslate",
+    "shardline:infected_planks",
+    "shardline:infected_netherrack",
+    "shardline:infected_blackstone",
+    "shardline:infected_soul_soil",
+    "shardline:infected_nylium",
+    "shardline:infected_wart_block",
+    "shardline:infected_end_stone",
+    "shardline:infected_purpur"
   ]
 }

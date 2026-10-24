@@ -7,6 +7,8 @@ import eu.shardline.mod.effect.ModEffects;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
+import eu.shardline.mod.entity.infected.CrystallizedEndermanEntity;
+import eu.shardline.mod.entity.infected.CrystallizedPiglinEntity;
 import eu.shardline.mod.entity.infected.CrystallizedPigEntity;
 import eu.shardline.mod.entity.infected.CrystallizedSheepEntity;
 import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
@@ -44,6 +46,11 @@ public final class VirusEffects {
 
     /** Wird jeden Tick fuer Lebewesen auf einem infizierten Block aufgerufen (nur Server). */
     public static void onStandingOnInfected(Level level, Entity entity) {
+        onStandingOnInfected(level, entity, VirusStrain.SHARD);
+    }
+
+    /** Wie oben, mit der Wirkung des Stamms (Glutbrand: kurz brennen, Leerenfaeule: Dunkelheit). */
+    public static void onStandingOnInfected(Level level, Entity entity, VirusStrain strain) {
         if (entity.tickCount % 20 != 0 || !(level instanceof ServerLevel serverLevel) || !(entity instanceof LivingEntity living)) {
             return;
         }
@@ -52,6 +59,10 @@ public final class VirusEffects {
             return;
         }
         RandomSource random = serverLevel.getRandom();
+        if (strain != VirusStrain.SHARD && ShardlineConfig.VIRUS_STRAIN_EFFECTS.get() && !isImmune(living)
+                && !(living instanceof ServerPlayer player && (player.isCreative() || player.isSpectator()))) {
+            applyStrain(living, strain);
+        }
         if (living instanceof ServerPlayer player) {
             if (StoryManager.isRuler(player)) {
                 if (ShardlineConfig.VIRUS_RUN.get()) {
@@ -85,6 +96,25 @@ public final class VirusEffects {
             convert(serverLevel, mob, ModEntities.CRYSTALLIZED_PIG.get());
         } else if (mob instanceof Villager villager && type == EntityType.VILLAGER && ShardlineConfig.VILLAGERS_TRANSFORM.get()) {
             CrystallizedVillagerEntity.infect(serverLevel, villager);
+        } else if (ShardlineConfig.NETHER_END_MOBS_TRANSFORM.get()
+                && (type == EntityType.PIGLIN || type == EntityType.ZOMBIFIED_PIGLIN || type == EntityType.PIGLIN_BRUTE)) {
+            convert(serverLevel, mob, ModEntities.CRYSTALLIZED_PIGLIN.get());
+        } else if (ShardlineConfig.NETHER_END_MOBS_TRANSFORM.get() && type == EntityType.ENDERMAN) {
+            convert(serverLevel, mob, ModEntities.CRYSTALLIZED_ENDERMAN.get());
+        }
+    }
+
+    /** Glutbrand: 2 Sekunden Feuer (feuerfeste Wesen ausgenommen). Leerenfaeule: 3 Sekunden Dunkelheit. */
+    public static void applyStrain(LivingEntity living, VirusStrain strain) {
+        switch (strain) {
+            case EMBER -> {
+                if (!living.fireImmune() && living.getRemainingFireTicks() < 20) {
+                    living.igniteForSeconds(2.0F);
+                }
+            }
+            case VOID -> living.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 60, 0, true, false, true));
+            default -> {
+            }
         }
     }
 
@@ -99,6 +129,10 @@ public final class VirusEffects {
         Mob cured;
         if (target instanceof CrystallizedVillagerEntity villager) {
             cured = villager.restore(level);
+        } else if (target instanceof CrystallizedPiglinEntity piglin) {
+            cured = level.dimension() == Level.NETHER ? convert(level, piglin, EntityType.PIGLIN) : convert(level, piglin, EntityType.ZOMBIFIED_PIGLIN);
+        } else if (target instanceof CrystallizedEndermanEntity enderman) {
+            cured = convert(level, enderman, EntityType.ENDERMAN);
         } else if (target instanceof CrystallizedCowEntity cow) {
             cured = convert(level, cow, EntityType.COW);
         } else if (target instanceof CrystallizedSheepEntity sheep) {
@@ -119,7 +153,7 @@ public final class VirusEffects {
     /** Ob die Reinigungsessenz das Wesen zurueckverwandeln kann. */
     public static boolean isCurable(LivingEntity target) {
         return target instanceof CrystallizedVillagerEntity || target instanceof CrystallizedCowEntity || target instanceof CrystallizedSheepEntity
-                || target instanceof CrystallizedPigEntity || target instanceof ShardZombieEntity;
+                || target instanceof CrystallizedPigEntity || target instanceof ShardZombieEntity || target instanceof CrystallizedEndermanEntity;
     }
 
     /** Verwandelt einen Mob in eine infizierte Variante (behaelt Name, Ausruestung, Position). */
@@ -166,11 +200,27 @@ public final class VirusEffects {
 
     /** Sporen ueber infizierten Bloecken (nur Client, rein optisch). */
     public static void spawnSpores(Level level, BlockPos pos, RandomSource random) {
+        spawnSpores(level, pos, random, VirusStrain.SHARD);
+    }
+
+    /** Wie oben; Glutbrand sprueht Funken und Asche, Leerenfaeule laesst Leerenstaub aufsteigen. */
+    public static void spawnSpores(Level level, BlockPos pos, RandomSource random, VirusStrain strain) {
         if (random.nextInt(8) != 0 || !ShardlineClientConfig.INFECTION_FOG.get()) {
             return;
         }
         BlockPos above = pos.above();
         if (!level.getBlockState(above).isAir()) {
+            return;
+        }
+        if (strain != VirusStrain.SHARD) {
+            double x = pos.getX() + random.nextDouble();
+            double z = pos.getZ() + random.nextDouble();
+            if (strain == VirusStrain.EMBER) {
+                level.addParticle(random.nextInt(3) == 0 ? ParticleTypes.SMALL_FLAME : ParticleTypes.WHITE_ASH, x, pos.getY() + 1.05, z,
+                        0.0, 0.02 + random.nextDouble() * 0.02, 0.0);
+            } else {
+                level.addParticle(ParticleTypes.REVERSE_PORTAL, x, pos.getY() + 1.05, z, 0.0, 0.03, 0.0);
+            }
             return;
         }
         level.addParticle(ModParticles.VIRUS_SPORE.get(), pos.getX() + random.nextDouble(), pos.getY() + 1.05,

@@ -46,11 +46,13 @@ def roots_at(seed: int, count: int = 2, margin: int = 2):
 
 
 def infect(base: Tex, seed: int, tree, shards: int = 1, spores: int = 3, tint: float = 0.5, opaque=None,
-           shard_skip=lambda p: False):
+           shard_skip=lambda p: False, groove=VIRUS, light=VGLOW):
     """Legt Rille, Fraßhof, Leuchtadern und Kristallspitzen auf `base`. Liefert (base, glow).
 
     Aelteres Gewebe (nahe der Wurzel) ist staerker angefressen (breiterer dunkler Hof), die Adern leuchten zur
-    Spitze hin heller, die Zweigspitzen sind fast weiss. Kristalle wachsen nur an Zweigenden."""
+    Spitze hin heller, die Zweigspitzen sind fast weiss. Kristalle wachsen nur an Zweigenden.
+    groove/light: Rillen- und Leuchtrampe (5 Stufen) des Virusstamms; Standard ist der Shardvirus (Violett/Magenta)."""
+    VIRUS, VGLOW = groove, light
     cells, tips = tree
     glow = Tex(N, N)
     px = base.px

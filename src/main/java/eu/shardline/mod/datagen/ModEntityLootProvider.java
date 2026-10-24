@@ -99,6 +99,16 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
                 .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
                 .withPool(rare(ModItems.RAW_SHARD.get(), 0.1F, 0.03F)));
 
+        add(ModEntities.CRYSTALLIZED_PIGLIN.get(), LootTable.lootTable()
+                .withPool(drop(Items.GOLD_NUGGET, 1, 3))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
+                .withPool(rare(Items.BLAZE_POWDER, 0.1F, 0.03F)));
+
+        add(ModEntities.CRYSTALLIZED_ENDERMAN.get(), LootTable.lootTable()
+                .withPool(drop(Items.ENDER_PEARL, 0, 1))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
+                .withPool(rare(ModItems.RAW_SHARD.get(), 0.12F, 0.03F)));
+
         add(ModEntities.CRYSTALLIZED_COW.get(), LootTable.lootTable()
                 .withPool(drop(Items.BEEF, 1, 3))
                 .withPool(drop(Items.AMETHYST_SHARD, 0, 2))

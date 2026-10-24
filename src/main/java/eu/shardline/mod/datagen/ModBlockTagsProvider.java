@@ -76,6 +76,33 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModTags.Blocks.INFECTABLE_SAND).addTag(BlockTags.SAND).add(Blocks.GRAVEL, ModBlocks.ASH_BLOCK.get());
         tag(ModTags.Blocks.INFECTABLE_LOG).addTag(BlockTags.OVERWORLD_NATURAL_LOGS).addTag(ModTags.Blocks.CRYSTAL_LOGS);
         tag(ModTags.Blocks.INFECTABLE_LEAVES).addTag(BlockTags.LEAVES);
+        // Nach dem Ausbruch: tiefer, in Haeusern, Nether (Glutbrand), End (Leerenfaeule)
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.INFECTED_DEEPSLATE.get(), ModBlocks.INFECTED_NETHERRACK.get(),
+                ModBlocks.INFECTED_BLACKSTONE.get(), ModBlocks.INFECTED_NYLIUM.get(), ModBlocks.INFECTED_END_STONE.get(),
+                ModBlocks.INFECTED_PURPUR.get());
+        tag(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.INFECTED_PLANKS.get());
+        tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.INFECTED_SOUL_SOIL.get());
+        tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.INFECTED_WART_BLOCK.get());
+        tag(BlockTags.INFINIBURN_NETHER).add(ModBlocks.INFECTED_NETHERRACK.get());
+        tag(BlockTags.INFINIBURN_OVERWORLD).add(ModBlocks.INFECTED_NETHERRACK.get());
+        tag(BlockTags.INFINIBURN_END).add(ModBlocks.INFECTED_NETHERRACK.get());
+        tag(BlockTags.SOUL_FIRE_BASE_BLOCKS).add(ModBlocks.INFECTED_SOUL_SOIL.get());
+        tag(BlockTags.SOUL_SPEED_BLOCKS).add(ModBlocks.INFECTED_SOUL_SOIL.get());
+        tag(BlockTags.NYLIUM).add(ModBlocks.INFECTED_NYLIUM.get());
+        tag(BlockTags.WART_BLOCKS).add(ModBlocks.INFECTED_WART_BLOCK.get());
+        tag(ModTags.Blocks.INFECTED).add(ModBlocks.INFECTED_DEEPSLATE.get(), ModBlocks.INFECTED_PLANKS.get(),
+                ModBlocks.INFECTED_NETHERRACK.get(), ModBlocks.INFECTED_BLACKSTONE.get(), ModBlocks.INFECTED_SOUL_SOIL.get(),
+                ModBlocks.INFECTED_NYLIUM.get(), ModBlocks.INFECTED_WART_BLOCK.get(), ModBlocks.INFECTED_END_STONE.get(),
+                ModBlocks.INFECTED_PURPUR.get());
+        tag(ModTags.Blocks.INFECTABLE_DEEPSLATE).add(Blocks.DEEPSLATE, Blocks.COBBLED_DEEPSLATE, Blocks.TUFF);
+        tag(ModTags.Blocks.INFECTABLE_PLANKS).addTag(BlockTags.PLANKS);
+        tag(ModTags.Blocks.INFECTABLE_NETHERRACK).add(Blocks.NETHERRACK, Blocks.MAGMA_BLOCK);
+        tag(ModTags.Blocks.INFECTABLE_BLACKSTONE).add(Blocks.BLACKSTONE, Blocks.BASALT, Blocks.SMOOTH_BASALT);
+        tag(ModTags.Blocks.INFECTABLE_SOUL_SOIL).add(Blocks.SOUL_SOIL, Blocks.SOUL_SAND);
+        tag(ModTags.Blocks.INFECTABLE_NYLIUM).add(Blocks.CRIMSON_NYLIUM, Blocks.WARPED_NYLIUM);
+        tag(ModTags.Blocks.INFECTABLE_WART_BLOCK).add(Blocks.NETHER_WART_BLOCK, Blocks.WARPED_WART_BLOCK);
+        tag(ModTags.Blocks.INFECTABLE_END_STONE).add(Blocks.END_STONE, Blocks.END_STONE_BRICKS);
+        tag(ModTags.Blocks.INFECTABLE_PURPUR).add(Blocks.PURPUR_BLOCK, Blocks.PURPUR_PILLAR);
 
         // --- Splitterhandwerk ---
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.POLISHED_SHARDSTONE.get(), ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(),

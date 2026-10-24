@@ -15,6 +15,8 @@
     "shardline:crystallized_sheep",
     "shardline:crystallized_pig",
     "shardline:crystallized_villager",
-    "shardline:virus_heart"
+    "shardline:virus_heart",
+    "shardline:crystallized_piglin",
+    "shardline:crystallized_enderman"
   ]
 }

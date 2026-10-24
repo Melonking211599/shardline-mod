@@ -66,6 +66,15 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         infected(ModBlocks.INFECTED_GRASS.get(), Items.DIRT);
         infected(ModBlocks.INFECTED_LOG.get(), Items.OAK_LOG);
         infected(ModBlocks.INFECTED_SAND.get(), Items.SAND);
+        infected(ModBlocks.INFECTED_DEEPSLATE.get(), Items.COBBLED_DEEPSLATE);
+        infected(ModBlocks.INFECTED_PLANKS.get(), Items.OAK_PLANKS);
+        infected(ModBlocks.INFECTED_NETHERRACK.get(), Items.NETHERRACK);
+        infected(ModBlocks.INFECTED_BLACKSTONE.get(), Items.BLACKSTONE);
+        infected(ModBlocks.INFECTED_SOUL_SOIL.get(), Items.SOUL_SOIL);
+        infected(ModBlocks.INFECTED_NYLIUM.get(), Items.NETHERRACK);
+        infected(ModBlocks.INFECTED_WART_BLOCK.get(), Items.NETHER_WART_BLOCK);
+        infected(ModBlocks.INFECTED_END_STONE.get(), Items.END_STONE);
+        infected(ModBlocks.INFECTED_PURPUR.get(), Items.PURPUR_BLOCK);
         this.add(ModBlocks.INFECTED_LEAVES.get(), block -> this.createSilkTouchDispatchTable(block,
                 this.applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK)
                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));

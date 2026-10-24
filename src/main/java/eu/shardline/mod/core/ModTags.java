@@ -30,6 +30,15 @@ public final class ModTags {
         public static final TagKey<Block> INFECTABLE_LOG = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/log"));
         public static final TagKey<Block> INFECTABLE_LEAVES = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/leaves"));
         public static final TagKey<Block> INFECTABLE_SAND = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/sand"));
+        public static final TagKey<Block> INFECTABLE_DEEPSLATE = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/deepslate"));
+        public static final TagKey<Block> INFECTABLE_PLANKS = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/planks"));
+        public static final TagKey<Block> INFECTABLE_NETHERRACK = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/netherrack"));
+        public static final TagKey<Block> INFECTABLE_BLACKSTONE = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/blackstone"));
+        public static final TagKey<Block> INFECTABLE_SOUL_SOIL = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/soul_soil"));
+        public static final TagKey<Block> INFECTABLE_NYLIUM = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/nylium"));
+        public static final TagKey<Block> INFECTABLE_WART_BLOCK = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/wart_block"));
+        public static final TagKey<Block> INFECTABLE_END_STONE = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/end_stone"));
+        public static final TagKey<Block> INFECTABLE_PURPUR = TagKey.create(Registries.BLOCK, Shardline.id("virus_infectable/purpur"));
         /** Alle infizierten Bloecke. */
         public static final TagKey<Block> INFECTED = TagKey.create(Registries.BLOCK, Shardline.id("infected"));
 

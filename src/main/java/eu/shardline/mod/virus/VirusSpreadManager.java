@@ -94,9 +94,15 @@ public final class VirusSpreadManager {
 
     // ------------------------------------------------------------------ Quellen
 
-    /** Random Tick eines infizierten Blocks. */
+    /** Random Tick eines infizierten Blocks (Shardvirus). */
     public static void spreadFrom(ServerLevel level, BlockPos source, RandomSource random) {
-        if (!StoryManager.isSpreading(level.getServer()) || random.nextDouble() >= ShardlineConfig.VIRUS_SPREAD_CHANCE.get()) {
+        spreadFrom(level, source, random, VirusStrain.SHARD);
+    }
+
+    /** Random Tick eines infizierten Blocks; der Stamm veraendert die Ausbreitungschance. */
+    public static void spreadFrom(ServerLevel level, BlockPos source, RandomSource random, VirusStrain strain) {
+        if (!StoryManager.isSpreading(level.getServer())
+                || random.nextDouble() >= ShardlineConfig.VIRUS_SPREAD_CHANCE.get() * strain.spreadMultiplier()) {
             return;
         }
         int range = ShardlineConfig.VIRUS_SPREAD_RANGE.get();
@@ -154,17 +160,23 @@ public final class VirusSpreadManager {
     // ------------------------------------------------------------------ Umwandlung
 
     /**
-     * Infiziert die Position sofort, wenn alle Bedingungen erfuellt sind.
+     * Infiziert die Position sofort, wenn alle Bedingungen erfuellt sind: Dimension erlaubt ({@code virus.dimensions}),
+     * Block befallbar, an der Oberflaeche oder im Gestein darunter ({@link InfectionMap#canInfectDeep}), kein
+     * Reinheitsanker in der Naehe und innerhalb von {@code virus.maxRange} um einen Herd.
      *
      * @return true, wenn ein Block umgewandelt wurde
      */
     public static boolean tryInfect(ServerLevel level, BlockPos pos) {
+        if (!isAllowedDimension(level)) {
+            return false;
+        }
         BlockState state = InfectionMap.stateIfLoaded(level, pos);
         if (state == null) {
             return false;
         }
         BlockState infected = InfectionMap.infectedFor(state);
-        if (infected == null || !InfectionMap.isExposed(level, pos) || PurityAnchors.isProtected(level, pos)) {
+        if (infected == null || PurityAnchors.isProtected(level, pos)
+                || !InfectionMap.isExposed(level, pos) && !InfectionMap.canInfectDeep(level, pos)) {
             return false;
         }
         ShardlineWorldData data = StoryManager.data(level.getServer());
@@ -178,6 +190,11 @@ public final class VirusSpreadManager {
         int count = data.changeChunkInfection(level.dimension(), new ChunkPos(pos), 1);
         VirusHeartSpawner.onChunkInfectionChanged(level, new ChunkPos(pos), count);
         return true;
+    }
+
+    /** Ob sich der Virus in dieser Dimension ausbreiten darf ({@code virus.dimensions}). */
+    public static boolean isAllowedDimension(ServerLevel level) {
+        return ShardlineConfig.VIRUS_DIMENSIONS.get().contains(level.dimension().location().toString());
     }
 
     /**

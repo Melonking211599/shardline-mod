@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import eu.shardline.mod.virus.VirusStrain;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
@@ -216,6 +217,39 @@ public final class ModBlocks {
     public static final DeferredBlock<InfectedBlock> INFECTED_SAND = registerWithItem("infected_sand",
             () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK).strength(0.6F)
                     .sound(SoundType.SAND).randomTicks()));
+    // Nach dem Ausbruch: tiefer im Boden, in Haeusern, im Nether (Glutbrand) und im End (Leerenfaeule)
+    public static final DeferredBlock<InfectedBlock> INFECTED_DEEPSLATE = registerWithItem("infected_deepslate",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.DEEPSLATE).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_PLANKS = registerWithItem("infected_planks",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).instrument(NoteBlockInstrument.BASS)
+                    .strength(2.0F, 3.0F).sound(SoundType.NETHER_WOOD).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_NETHERRACK = registerWithItem("infected_netherrack",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.NETHER)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(0.6F).sound(SoundType.NETHERRACK)
+                    .lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_BLACKSTONE = registerWithItem("infected_blackstone",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.STONE)
+                    .lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_SOUL_SOIL = registerWithItem("infected_soul_soil",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.6F)
+                    .sound(SoundType.SOUL_SOIL).lightLevel(state -> 2).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_NYLIUM = registerWithItem("infected_nylium",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.CRIMSON_NYLIUM)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(0.5F).sound(SoundType.NYLIUM)
+                    .lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_WART_BLOCK = registerWithItem("infected_wart_block",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(1.0F)
+                    .sound(SoundType.WART_BLOCK).lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_END_STONE = registerWithItem("infected_end_stone",
+            () -> new InfectedBlock(VirusStrain.VOID, BlockBehaviour.Properties.of().mapColor(MapColor.SAND)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.0F, 9.0F).sound(SoundType.STONE)
+                    .randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_PURPUR = registerWithItem("infected_purpur",
+            () -> new InfectedBlock(VirusStrain.VOID, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.STONE)
+                    .randomTicks()));
 
     // --- Gegenmittel ---
     // --- Hueter-Ruinen ---

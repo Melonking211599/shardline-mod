@@ -57,6 +57,8 @@ public final class ModEntityEvents {
         event.put(ModEntities.SHARD_QUEEN.get(), ShardQueenEntity.createAttributes().build());
         event.put(ModEntities.QUEEN_CLONE.get(), QueenCloneEntity.createAttributes().build());
         event.put(ModEntities.SHARD_ZOMBIE.get(), ShardZombieEntity.createAttributes().build());
+        event.put(ModEntities.CRYSTALLIZED_PIGLIN.get(), eu.shardline.mod.entity.infected.CrystallizedPiglinEntity.createAttributes().build());
+        event.put(ModEntities.CRYSTALLIZED_ENDERMAN.get(), eu.shardline.mod.entity.infected.CrystallizedEndermanEntity.createAttributes().build());
         event.put(ModEntities.CRYSTALLIZED_COW.get(), CrystallizedCowEntity.createAttributes().build());
         event.put(ModEntities.CRYSTALLIZED_SHEEP.get(), CrystallizedSheepEntity.createAttributes().build());
         event.put(ModEntities.CRYSTALLIZED_PIG.get(), CrystallizedPigEntity.createAttributes().build());

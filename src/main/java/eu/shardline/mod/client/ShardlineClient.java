@@ -105,6 +105,8 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.VOID_ZONE.get(), NoopRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.PURITY_ANCHOR.get(), PurityAnchorRenderer::new);
         event.registerEntityRenderer(ModEntities.SHARD_ZOMBIE.get(), InfectedRenderers.ShardZombieRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIGLIN.get(), InfectedRenderers.CrystallizedPiglinRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_ENDERMAN.get(), InfectedRenderers.CrystallizedEndermanRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_COW.get(), InfectedRenderers.CrystallizedCowRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_SHEEP.get(), InfectedRenderers.CrystallizedSheepRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIG.get(), InfectedRenderers.CrystallizedPigRenderer::new);

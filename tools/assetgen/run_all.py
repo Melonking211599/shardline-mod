@@ -29,6 +29,7 @@ import fresh_items
 import fresh_update
 import story_items
 import fresh_virus
+import virus_strains
 
 
 def main():
@@ -56,6 +57,7 @@ def main():
     # Nach dem Ausbruch
     dialogue_gui.main()
     npc_assets.main()
+    virus_strains.main()
     print("Fertig.")
 
 

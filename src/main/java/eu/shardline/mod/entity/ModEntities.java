@@ -86,6 +86,12 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedVillagerEntity>> CRYSTALLIZED_VILLAGER = register("crystallized_villager",
             EntityType.Builder.of(CrystallizedVillagerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.95F).eyeHeight(1.62F)
                     .clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.infected.CrystallizedPiglinEntity>> CRYSTALLIZED_PIGLIN =
+            register("crystallized_piglin", EntityType.Builder.of(eu.shardline.mod.entity.infected.CrystallizedPiglinEntity::new, MobCategory.MONSTER)
+                    .sized(0.6F, 1.95F).eyeHeight(1.79F).passengerAttachments(2.0125F).ridingOffset(-0.7F).fireImmune().clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.infected.CrystallizedEndermanEntity>> CRYSTALLIZED_ENDERMAN =
+            register("crystallized_enderman", EntityType.Builder.of(eu.shardline.mod.entity.infected.CrystallizedEndermanEntity::new, MobCategory.MONSTER)
+                    .sized(0.6F, 2.9F).eyeHeight(2.55F).passengerAttachments(2.80625F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<VirusHeartEntity>> VIRUS_HEART = register("virus_heart",
             EntityType.Builder.of(VirusHeartEntity::new, MobCategory.MONSTER).sized(1.8F, 2.4F).eyeHeight(1.6F)
                     .fireImmune().clientTrackingRange(10));
