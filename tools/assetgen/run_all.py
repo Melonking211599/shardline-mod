@@ -14,6 +14,7 @@ import armor
 import armor_extras
 import fresh_blocks
 import bosses
+import bossbars
 import effects_gui
 import entities
 import geo_prep
@@ -34,6 +35,7 @@ def main():
     entities.main()
     bosses.main()
     gui.main()
+    bossbars.main()
     # Story-Erweiterung
     fresh_virus.main()
     story_items.main()
