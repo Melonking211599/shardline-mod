@@ -130,6 +130,9 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_HURT = register("entity.virus_heart.hurt", "block.amethyst_block.break");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_DEATH = register("entity.virus_heart.death", "block.respawn_anchor.deplete");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_PULSE = register("entity.virus_heart.pulse", "entity.warden.sonic_charge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_PHASE = register("entity.virus_heart.phase", "entity.elder_guardian.curse");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_TENDRILS = register("entity.virus_heart.tendrils", "entity.evoker_fangs.attack");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_SUMMON = register("entity.virus_heart.summon", "entity.evoker.prepare_summon");
     public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_SHARD_CALL = register("ability.shard_call", "entity.evoker.prepare_summon");
     public static final DeferredHolder<SoundEvent, SoundEvent> ABILITY_CRYSTAL_WAVE = register("ability.crystal_wave", "entity.warden.sonic_boom");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_INFECTED = register("music.infected", "music.nether.soul_sand_valley");

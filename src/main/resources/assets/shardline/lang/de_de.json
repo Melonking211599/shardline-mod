@@ -866,5 +866,12 @@
   "advancements.shardline.story.immunity.title": "Unberührt",
   "advancements.shardline.story.immunity.description": "Lass dich von der Immunität vor Splitterfieber schützen",
   "shardline.configuration.immunity_essence_seconds": "Immunität durch Essenz (Sekunden)",
-  "shardline.configuration.immunity_anchor_seconds": "Immunität in der Ankerzone (Sekunden)"
+  "shardline.configuration.immunity_anchor_seconds": "Immunität in der Ankerzone (Sekunden)",
+
+  "message.shardline.virus_heart.phase_2": "Das Virusherz verhärtet sich – Tentakel brechen aus dem Boden!",
+  "message.shardline.virus_heart.phase_3": "Das Virusherz schreit – die Infizierten folgen seinem Ruf!",
+  "subtitles.shardline.entity.virus_heart.phase": "Virusherz verhärtet sich",
+  "subtitles.shardline.entity.virus_heart.tendrils": "Tentakel brechen hervor",
+  "subtitles.shardline.entity.virus_heart.summon": "Virusherz ruft die Infizierten",
+  "shardline.configuration.virus_heart_difficulty": "Schwierigkeit des Virusherzens"
 }

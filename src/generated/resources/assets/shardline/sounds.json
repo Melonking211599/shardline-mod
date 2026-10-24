@@ -719,6 +719,15 @@
     ],
     "subtitle": "subtitles.shardline.entity.virus_heart.hurt"
   },
+  "entity.virus_heart.phase": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.elder_guardian.curse"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.virus_heart.phase"
+  },
   "entity.virus_heart.pulse": {
     "sounds": [
       {
@@ -727,6 +736,24 @@
       }
     ],
     "subtitle": "subtitles.shardline.entity.virus_heart.pulse"
+  },
+  "entity.virus_heart.summon": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.evoker.prepare_summon"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.virus_heart.summon"
+  },
+  "entity.virus_heart.tendrils": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.evoker_fangs.attack"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.virus_heart.tendrils"
   },
   "entity.void_ray.ambient": {
     "sounds": [

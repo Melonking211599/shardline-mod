@@ -16,6 +16,7 @@ import eu.shardline.mod.client.sky.SplitterweiteEffects;
 import eu.shardline.mod.client.story.StoryScreenEffects;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import net.minecraft.client.model.HumanoidModel;
@@ -96,7 +97,13 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_SHEEP.get(), InfectedRenderers.CrystallizedSheepRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIG.get(), InfectedRenderers.CrystallizedPigRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_VILLAGER.get(), InfectedRenderers.CrystallizedVillagerRenderer::new);
-        event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "virus_heart", 1.2F, true));
+        // Kein Umkippen beim Tod: Der Clip "death" laesst das Herz an Ort und Stelle zerfallen.
+        event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<VirusHeartEntity>(ctx, "virus_heart", 1.2F, true) {
+            @Override
+            protected float getDeathMaxRotation(VirusHeartEntity animatable) {
+                return 0.0F;
+            }
+        });
     }
 
     @SubscribeEvent

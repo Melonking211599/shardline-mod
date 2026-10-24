@@ -40,7 +40,7 @@ public final class BossBars {
     private static final Map<String, Style> STYLES = Map.of(
             "entity.shardline.crystal_colossus", new Style(texture("crystal_colossus"), 0x84EFFF, new float[] {0.5F}, false),
             "entity.shardline.shard_queen", new Style(texture("shard_queen"), 0xFF8FE8, new float[] {2.0F / 3.0F, 1.0F / 3.0F}, true),
-            "entity.shardline.virus_heart", new Style(texture("virus_heart"), 0xFF6FDC, new float[0], false));
+            "entity.shardline.virus_heart", new Style(texture("virus_heart"), 0xFF6FDC, new float[] {2.0F / 3.0F, 1.0F / 3.0F}, false));
 
     private BossBars() {
     }
@@ -103,10 +103,13 @@ public final class BossBars {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    /** Farbton je nach Phase: Rot = Raserei; bei der Koenigin ist Violett die zweite Phase. Sonst unveraendert. */
+    /** Farbton je nach Phase: Rot = Raserei, Pink = zweite Phase des Virusherzens; bei der Koenigin ist Violett die zweite Phase. */
     private static float[] tint(BossEvent.BossBarColor color, boolean purplePhase) {
         if (color == BossEvent.BossBarColor.RED) {
             return new float[] {1.0F, 0.55F, 0.55F};
+        }
+        if (color == BossEvent.BossBarColor.PINK) {
+            return new float[] {1.0F, 0.8F, 0.95F};
         }
         if (color == BossEvent.BossBarColor.PURPLE && purplePhase) {
             return new float[] {0.85F, 0.75F, 1.0F};

@@ -95,6 +95,7 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.IntValue IMMUNITY_ANCHOR_SECONDS;
     public static final ModConfigSpec.IntValue HEART_PURIFY_RADIUS;
     public static final ModConfigSpec.DoubleValue VIRUS_HEART_HEALTH;
+    public static final ModConfigSpec.EnumValue<HeartDifficulty> VIRUS_HEART_DIFFICULTY;
     public static final ModConfigSpec.IntValue HEART_SPAWN_THRESHOLD;
     public static final ModConfigSpec.IntValue HEART_SPAWN_COOLDOWN_MINUTES;
     public static final ModConfigSpec.IntValue HEARTS_FOR_CORE;
@@ -115,6 +116,35 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue VIRUS_RUN;
 
     /** Wer am Altar ueber das Ende entscheidet. */
+    /** Schwierigkeit des Virusherzens: Abklingzeiten, Schaden und wie viele Infizierte es in Phase 3 ruft. */
+    public enum HeartDifficulty {
+        EASY(1.4, 0.7, 2),
+        NORMAL(1.0, 1.0, 4),
+        HARD(0.7, 1.35, 6);
+
+        private final double cooldown;
+        private final double damage;
+        private final int minions;
+
+        HeartDifficulty(double cooldown, double damage, int minions) {
+            this.cooldown = cooldown;
+            this.damage = damage;
+            this.minions = minions;
+        }
+
+        public double cooldown() {
+            return this.cooldown;
+        }
+
+        public double damage() {
+            return this.damage;
+        }
+
+        public int minions() {
+            return this.minions;
+        }
+    }
+
     public enum EndingMode {
         /** Der erste Spieler mit dem Kern des Bruchs entscheidet allein. */
         FIRST_PLAYER,
@@ -342,6 +372,10 @@ public final class ShardlineConfig {
         VIRUS_HEART_HEALTH = b.comment("Lebenspunkte eines Virusherzens.")
                 .translation(key("virus_heart_health"))
                 .defineInRange("virusHeartHealth", 200.0, 1.0, 100000.0);
+        VIRUS_HEART_DIFFICULTY = b.comment("Schwierigkeit des Virusherzens (Phasen bei 2/3 und 1/3 Leben): EASY, NORMAL oder HARD."
+                        + " Wirkt auf Abklingzeiten, Schaden und die Zahl der beschworenen Infizierten.")
+                .translation(key("virus_heart_difficulty"))
+                .defineEnum("virusHeartDifficulty", HeartDifficulty.NORMAL);
         HEART_SPAWN_THRESHOLD = b.comment("Ab so vielen infizierten Bloecken in einem Chunk kann dort ein Virusherz entstehen.")
                 .translation(key("heart_spawn_threshold"))
                 .defineInRange("heartSpawnThreshold", 160, 16, 65536);

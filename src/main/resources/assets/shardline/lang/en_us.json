@@ -866,5 +866,12 @@
   "advancements.shardline.story.immunity.title": "Untouched",
   "advancements.shardline.story.immunity.description": "Let Immunity shield you from Shard Fever",
   "shardline.configuration.immunity_essence_seconds": "Immunity from essence (seconds)",
-  "shardline.configuration.immunity_anchor_seconds": "Immunity in anchor zone (seconds)"
+  "shardline.configuration.immunity_anchor_seconds": "Immunity in anchor zone (seconds)",
+
+  "message.shardline.virus_heart.phase_2": "The Virus Heart hardens - tendrils break from the ground!",
+  "message.shardline.virus_heart.phase_3": "The Virus Heart screams - the infected answer its call!",
+  "subtitles.shardline.entity.virus_heart.phase": "Virus Heart hardens",
+  "subtitles.shardline.entity.virus_heart.tendrils": "Tendrils burst out",
+  "subtitles.shardline.entity.virus_heart.summon": "Virus Heart calls the infected",
+  "shardline.configuration.virus_heart_difficulty": "Virus Heart difficulty"
 }

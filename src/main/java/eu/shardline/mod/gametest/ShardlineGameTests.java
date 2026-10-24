@@ -595,6 +595,33 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
+    /** Virusherz: Phasen nach Lebenspunkten, Verhaertung beim Phasenwechsel (unverwundbar), danach wieder verwundbar. */
+    @GameTest(template = EMPTY, timeoutTicks = 120, batch = "shardline_heart")
+    public static void virusHeartPhases(GameTestHelper helper) {
+        clearArea(helper, 6, 5);
+        var heart = helper.spawn(ModEntities.VIRUS_HEART.get(), new BlockPos(3, 1, 3));
+        helper.assertTrue(eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(1.0F) == 1
+                && eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(0.6F) == 2
+                && eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(0.2F) == 3, "Phasengrenzen falsch");
+        helper.assertTrue(heart.getPhase() == 1, "Neues Herz muss in Phase 1 sein");
+        heart.setHealth(heart.getMaxHealth() * 0.6F);
+        helper.runAfterDelay(3, () -> {
+            helper.assertTrue(heart.getPhase() == 2, "Phase 2 wurde nicht erreicht");
+            heart.invulnerableTime = 0;
+            helper.assertFalse(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F), "Beim Phasenwechsel muss das Herz unverwundbar sein");
+        });
+        helper.runAfterDelay(45, () -> {
+            heart.invulnerableTime = 0;
+            helper.assertTrue(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F), "Nach dem Phasenwechsel muss das Herz verwundbar sein");
+            heart.setHealth(heart.getMaxHealth() * 0.2F);
+        });
+        helper.runAfterDelay(50, () -> {
+            helper.assertTrue(heart.getPhase() == 3, "Phase 3 wurde nicht erreicht");
+            heart.discard();
+            helper.succeed();
+        });
+    }
+
     // ------------------------------------------------------------------ Story & Shardvirus
 
     /**
