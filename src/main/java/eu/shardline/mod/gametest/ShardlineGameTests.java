@@ -533,6 +533,27 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
+    /** Der Entscheidungsaltar entsteht vor dem Thron, nur einmal, und ruht ohne Kern in der Naehe. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void decisionAltar(GameTestHelper helper) {
+        clearArea(helper, 8, 6);
+        ServerLevel level = helper.getLevel();
+        BlockPos throne = helper.absolutePos(new BlockPos(3, 3, 0));
+        level.setBlockAndUpdate(throne, ModBlocks.QUEEN_ALTAR.get().defaultBlockState());
+        BlockPos altar = eu.shardline.mod.block.custom.DecisionAltarBlock.raise(level, throne, throne);
+        BlockPos expected = eu.shardline.mod.block.custom.DecisionAltarBlock.spotBeforeThrone(throne);
+        helper.assertTrue(expected.equals(altar), "Altar nicht vor dem Thron: " + altar + " statt " + expected);
+        helper.assertTrue(level.getBlockState(expected).is(ModBlocks.DECISION_ALTAR.get()), "Altarblock fehlt");
+        helper.assertTrue(expected.equals(eu.shardline.mod.block.custom.DecisionAltarBlock.raise(level, throne, throne)),
+                "Zweiter Aufruf darf keinen weiteren Altar bauen");
+        helper.assertFalse(eu.shardline.mod.block.custom.DecisionAltarBlock.isCoreNearby(level, expected), "Ohne Kern darf der Altar nicht erwachen");
+        net.minecraft.world.level.block.state.BlockState state = level.getBlockState(expected);
+        helper.assertTrue(state.getLightEmission() == 4, "Ruhender Altar sollte schwach leuchten");
+        helper.assertTrue(state.setValue(eu.shardline.mod.block.custom.DecisionAltarBlock.ACTIVE, true).getLightEmission() == 12,
+                "Erwachter Altar sollte hell leuchten");
+        helper.succeed();
+    }
+
     // ------------------------------------------------------------------ Story & Shardvirus
 
     /**

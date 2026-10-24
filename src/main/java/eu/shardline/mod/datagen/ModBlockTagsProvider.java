@@ -62,8 +62,8 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.INFECTED_LOG.get());
         tag(BlockTags.MINEABLE_WITH_HOE).add(ModBlocks.INFECTED_LEAVES.get());
         tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.PURITY_ANCHOR.get());
-        tag(BlockTags.DRAGON_IMMUNE).add(ModBlocks.MEMORY_CRYSTAL.get());
-        tag(BlockTags.WITHER_IMMUNE).add(ModBlocks.MEMORY_CRYSTAL.get());
+        tag(BlockTags.DRAGON_IMMUNE).add(ModBlocks.MEMORY_CRYSTAL.get(), ModBlocks.DECISION_ALTAR.get());
+        tag(BlockTags.WITHER_IMMUNE).add(ModBlocks.MEMORY_CRYSTAL.get(), ModBlocks.DECISION_ALTAR.get());
         tag(ModTags.Blocks.INFECTED).add(ModBlocks.INFECTED_STONE.get(), ModBlocks.INFECTED_DIRT.get(), ModBlocks.INFECTED_GRASS.get(),
                 ModBlocks.INFECTED_LOG.get(), ModBlocks.INFECTED_LEAVES.get(), ModBlocks.INFECTED_SAND.get());
         tag(ModTags.Blocks.INFECTABLE_STONE).addTag(BlockTags.BASE_STONE_OVERWORLD)

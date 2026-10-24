@@ -17,6 +17,33 @@
     ],
     "subtitle": "subtitles.shardline.ability.shard_call"
   },
+  "block.decision_altar.awaken": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.beacon.activate"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.decision_altar.awaken"
+  },
+  "block.decision_altar.rise": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.end_portal.spawn"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.decision_altar.rise"
+  },
+  "block.decision_altar.use": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "block.respawn_anchor.charge"
+      }
+    ],
+    "subtitle": "subtitles.shardline.block.decision_altar.use"
+  },
   "block.memory_crystal.vision": {
     "sounds": [
       {

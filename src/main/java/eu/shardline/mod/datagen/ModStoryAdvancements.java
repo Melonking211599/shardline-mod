@@ -58,6 +58,7 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         task(purification, "cure_villager", ModItems.CRYSTALLIZED_VILLAGER_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
         AdvancementHolder heart = task(chapter6, "virus_heart", ModItems.VIRUS_HEART_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
         AdvancementHolder core = task(heart, "breach_core", ModItems.BREACH_CORE.get(), AdvancementType.GOAL, 300);
+        task(core, "decision_altar", ModBlocks.DECISION_ALTAR.get(), AdvancementType.TASK, 0);
         task(core, "ending_seal", ModBlocks.QUEEN_TROPHY.get(), AdvancementType.CHALLENGE, 1000);
         AdvancementHolder dominate = task(core, "ending_dominate", ModItems.SHARD_ZOMBIE_SPAWN_EGG.get(), AdvancementType.CHALLENGE, 1000);
         AdvancementHolder tame = task(dominate, "tame_infected", ModItems.CRYSTALLIZED_COW_SPAWN_EGG.get(), AdvancementType.TASK, 0);

@@ -122,6 +122,12 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         this.home = home.immutable();
     }
 
+    /** Position des Throns, an dem die Koenigin gerufen wurde (null bei Spawn-Ei/Befehl). */
+    @Nullable
+    public BlockPos getHome() {
+        return this.home;
+    }
+
     private Vec3 arenaCenter() {
         return this.home != null ? Vec3.atBottomCenterOf(this.home) : this.position();
     }

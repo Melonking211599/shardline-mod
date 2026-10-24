@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "shardline:block/decision_altar"
+    },
+    "lit=true": {
+      "model": "shardline:block/decision_altar_active"
+    }
+  }
+}

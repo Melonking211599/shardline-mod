@@ -106,6 +106,9 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_SEALED = register("event.virus_sealed", "block.beacon.power_select");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_DOMINATED = register("event.virus_dominated", "entity.warden.emerge");
     public static final DeferredHolder<SoundEvent, SoundEvent> PURITY_ANCHOR_ACTIVATE = register("block.purity_anchor.activate", "block.conduit.activate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DECISION_ALTAR_RISE = register("block.decision_altar.rise", "block.end_portal.spawn");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DECISION_ALTAR_AWAKEN = register("block.decision_altar.awaken", "block.beacon.activate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DECISION_ALTAR_USE = register("block.decision_altar.use", "block.respawn_anchor.charge");
     public static final DeferredHolder<SoundEvent, SoundEvent> PURIFICATION_ESSENCE_USE = register("item.purification_essence.use", "block.amethyst_block.resonate");
     public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_ZOMBIE_AMBIENT = register("entity.shard_zombie.ambient", "entity.zombie.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> SHARD_ZOMBIE_HURT = register("entity.shard_zombie.hurt", "entity.zombie.hurt");

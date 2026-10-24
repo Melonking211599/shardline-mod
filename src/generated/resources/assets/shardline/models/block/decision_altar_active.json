@@ -1,0 +1,256 @@
+{
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "west": {
+          "texture": "#side"
+        }
+      },
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "west": {
+          "texture": "#side"
+        }
+      },
+      "from": [
+        4,
+        3,
+        4
+      ],
+      "to": [
+        12,
+        10,
+        12
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "west": {
+          "texture": "#side"
+        }
+      },
+      "from": [
+        2,
+        10,
+        2
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#glow_top"
+        },
+        "east": {
+          "texture": "#glow_top"
+        },
+        "north": {
+          "texture": "#glow_top"
+        },
+        "south": {
+          "texture": "#glow_top"
+        },
+        "up": {
+          "texture": "#glow_top"
+        },
+        "west": {
+          "texture": "#glow_top"
+        }
+      },
+      "from": [
+        6,
+        13,
+        6
+      ],
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "to": [
+        10,
+        16,
+        10
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#glow_top"
+        },
+        "east": {
+          "texture": "#glow_side"
+        },
+        "north": {
+          "texture": "#glow_side"
+        },
+        "south": {
+          "texture": "#glow_side"
+        },
+        "up": {
+          "texture": "#glow_top"
+        },
+        "west": {
+          "texture": "#glow_side"
+        }
+      },
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "to": [
+        15,
+        3,
+        15
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#glow_top"
+        },
+        "east": {
+          "texture": "#glow_side"
+        },
+        "north": {
+          "texture": "#glow_side"
+        },
+        "south": {
+          "texture": "#glow_side"
+        },
+        "up": {
+          "texture": "#glow_top"
+        },
+        "west": {
+          "texture": "#glow_side"
+        }
+      },
+      "from": [
+        4,
+        3,
+        4
+      ],
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "to": [
+        12,
+        10,
+        12
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#glow_top"
+        },
+        "east": {
+          "texture": "#glow_side"
+        },
+        "north": {
+          "texture": "#glow_side"
+        },
+        "south": {
+          "texture": "#glow_side"
+        },
+        "up": {
+          "texture": "#glow_top"
+        },
+        "west": {
+          "texture": "#glow_side"
+        }
+      },
+      "from": [
+        2,
+        10,
+        2
+      ],
+      "neoforge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "to": [
+        14,
+        13,
+        14
+      ]
+    }
+  ],
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "bottom": "shardline:block/decision_altar_bottom",
+    "glow_side": "shardline:block/decision_altar_side_glow",
+    "glow_top": "shardline:block/decision_altar_top_glow",
+    "particle": "shardline:block/decision_altar_side",
+    "side": "shardline:block/decision_altar_side",
+    "top": "shardline:block/decision_altar_top"
+  }
+}

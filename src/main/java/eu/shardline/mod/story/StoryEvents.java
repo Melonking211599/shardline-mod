@@ -1,6 +1,7 @@
 package eu.shardline.mod.story;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.entity.boss.CrystalColossusEntity;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
@@ -143,8 +144,11 @@ public final class StoryEvents {
             for (ServerPlayer player : creditedPlayers(level, entity, killer, BOSS_CREDIT_RADIUS)) {
                 StoryManager.reach(player, StoryChapter.HEART_OF_THE_EXPANSE);
             }
-        } else if (entity instanceof ShardQueenEntity) {
+        } else if (entity instanceof ShardQueenEntity queen) {
             VirusOutbreak.onQueenDeath(level, entity.blockPosition(), killer);
+            if (StoryManager.data(level.getServer()).ending() == StoryEnding.NONE) {
+                DecisionAltarBlock.raise(level, queen.getHome(), entity.blockPosition());
+            }
         } else if (entity instanceof InfectedMob && killer != null && StoryManager.data(level.getServer()).isInfected()) {
             StoryManager.reach(killer, StoryChapter.THE_BREACH);
         }

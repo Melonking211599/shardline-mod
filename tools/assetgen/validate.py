@@ -96,5 +96,8 @@ for n, size in (("crystallized_sheep", (64, 32)), ("crystallized_sheep_fur", (64
 for n, size in (("crystallized_cow", (64, 32)), ("crystallized_sheep", (64, 32)), ("crystallized_pig", (64, 32)),
                 ("crystallized_villager", (64, 64)), ("shard_zombie", (64, 64))):
     need(TEX / "entity" / f"{n}_collar.png", size)
+story2_blocks = "decision_altar_side decision_altar_side_glow decision_altar_top decision_altar_top_glow decision_altar_bottom".split()
+for b in story2_blocks: need(TEX / "block" / f"{b}.png", (16, 16))
+blocks += story2_blocks
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

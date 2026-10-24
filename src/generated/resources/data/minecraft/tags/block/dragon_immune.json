@@ -3,6 +3,7 @@
     "shardline:shard_portal",
     "shardline:colossus_altar",
     "shardline:queen_altar",
-    "shardline:memory_crystal"
+    "shardline:memory_crystal",
+    "shardline:decision_altar"
   ]
 }

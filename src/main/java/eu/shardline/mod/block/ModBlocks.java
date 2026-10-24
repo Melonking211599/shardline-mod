@@ -4,6 +4,7 @@ import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.custom.ColossusAltarBlock;
 import eu.shardline.mod.block.custom.CrystalSaplingBlock;
 import eu.shardline.mod.block.custom.CrystalWebBlock;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.block.custom.InfectedBlock;
 import eu.shardline.mod.block.custom.InfectedPillarBlock;
 import eu.shardline.mod.block.custom.MemoryCrystalBlock;
@@ -217,6 +218,11 @@ public final class ModBlocks {
                     .sound(SoundType.SAND).randomTicks()));
 
     // --- Gegenmittel ---
+    public static final DeferredBlock<DecisionAltarBlock> DECISION_ALTAR = registerWithItem("decision_altar",
+            () -> new DecisionAltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).strength(-1.0F, 3600000.0F)
+                    .sound(SoundType.AMETHYST).lightLevel(state -> state.getValue(DecisionAltarBlock.ACTIVE) ? 12 : 4)
+                    .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)),
+            new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredBlock<PurityAnchorBlock> PURITY_ANCHOR = registerWithItem("purity_anchor",
             () -> new PurityAnchorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).requiresCorrectToolForDrops()
                     .strength(5.0F, 1200.0F).sound(SoundType.AMETHYST).lightLevel(state -> 15).noOcclusion()),

@@ -2,6 +2,7 @@ package eu.shardline.mod.datagen;
 
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.block.custom.ShardPortalBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -82,6 +83,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(ModBlocks.INFECTED_LOG.get(), log);
 
         memoryCrystal();
+        decisionAltar();
         purityAnchor();
 
         // --- Splitterhandwerk ---
@@ -162,6 +164,44 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .rotation().angle(-22.5F).axis(Direction.Axis.Z).origin(11, 2, 8).end()
                 .allFaces((dir, face) -> face.texture("#crystal")).end();
         simpleBlockWithItem(ModBlocks.MEMORY_CRYSTAL.get(), model);
+    }
+
+    /**
+     * Entscheidungsaltar: Sockel, Saeule, Schale mit Kristall. Erwacht (lit=true) liegt ueber allem eine
+     * Leuchtschicht mit voller Eigenhelligkeit; ruhend leuchtet nur der Kristall schwach.
+     */
+    private void decisionAltar() {
+        ResourceLocation side = modLoc("block/decision_altar_side");
+        ResourceLocation top = modLoc("block/decision_altar_top");
+        ResourceLocation bottom = modLoc("block/decision_altar_bottom");
+        ResourceLocation sideGlow = modLoc("block/decision_altar_side_glow");
+        ResourceLocation topGlow = modLoc("block/decision_altar_top_glow");
+        BlockModelBuilder dormant = altarModel("decision_altar", side, top, bottom, sideGlow, topGlow, false);
+        BlockModelBuilder awake = altarModel("decision_altar_active", side, top, bottom, sideGlow, topGlow, true);
+        getVariantBuilder(ModBlocks.DECISION_ALTAR.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(DecisionAltarBlock.ACTIVE) ? awake : dormant).build());
+        simpleBlockItem(ModBlocks.DECISION_ALTAR.get(), awake);
+    }
+
+    private BlockModelBuilder altarModel(String name, ResourceLocation side, ResourceLocation top, ResourceLocation bottom,
+                                         ResourceLocation sideGlow, ResourceLocation topGlow, boolean awake) {
+        BlockModelBuilder model = models().getBuilder(name).texture("particle", side).texture("side", side).texture("top", top)
+                .texture("bottom", bottom).texture("glow_side", sideGlow).texture("glow_top", topGlow).renderType("cutout");
+        float[][] parts = {{1, 0, 1, 15, 3, 15}, {4, 3, 4, 12, 10, 12}, {2, 10, 2, 14, 13, 14}};
+        for (float[] p : parts) {
+            model.element().from(p[0], p[1], p[2]).to(p[3], p[4], p[5])
+                    .allFaces((dir, face) -> face.texture(dir == Direction.UP ? "#top" : dir == Direction.DOWN ? "#bottom" : "#side")).end();
+        }
+        // Kristall in der Schale
+        model.element().from(6, 13, 6).to(10, 16, 10).emissivity(awake ? 15 : 7, awake ? 15 : 7)
+                .allFaces((dir, face) -> face.texture("#glow_top")).end();
+        if (awake) {
+            for (float[] p : parts) {
+                model.element().from(p[0], p[1], p[2]).to(p[3], p[4], p[5]).shade(false).emissivity(15, 15)
+                        .allFaces((dir, face) -> face.texture(dir.getAxis() == Direction.Axis.Y ? "#glow_top" : "#glow_side")).end();
+            }
+        }
+        return model;
     }
 
     /** Reinheitsanker: Sockel, Saeule und schwebender Kristall. */

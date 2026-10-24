@@ -838,5 +838,16 @@
   "advancements.shardline.story.cure_villager.description": "Heile einen kristallisierten Dorfbewohner mit einer Reinigungsessenz",
   "advancements.shardline.story.infected_herd.title": "Kristallherde",
   "advancements.shardline.story.infected_herd.description": "Zähme eine kristallisierte Kuh, ein Schaf, ein Schwein und einen Dorfbewohner",
-  "shardline.configuration.animals_transform": "Tiere kristallisieren"
+  "shardline.configuration.animals_transform": "Tiere kristallisieren",
+
+  "block.shardline.decision_altar": "Entscheidungsaltar",
+  "message.shardline.decision_altar.hint": "Der Altar wartet auf den Kern des Bruchs.",
+  "message.shardline.decision_altar.sealed": "Der Altar schweigt. Das Siegel hält.",
+  "message.shardline.decision_altar.dominated": "Der Altar summt im Takt des Virus.",
+  "message.shardline.decision_altar.risen": "Wo das Siegel brach, wächst ein Altar aus dem Stein. Hier wird über den Shardvirus entschieden.",
+  "subtitles.shardline.block.decision_altar.rise": "Altar wächst empor",
+  "subtitles.shardline.block.decision_altar.awaken": "Altar erwacht",
+  "subtitles.shardline.block.decision_altar.use": "Kern schwingt",
+  "advancements.shardline.story.decision_altar.title": "Am Scheideweg",
+  "advancements.shardline.story.decision_altar.description": "Wecke den Entscheidungsaltar mit dem Kern des Bruchs"
 }

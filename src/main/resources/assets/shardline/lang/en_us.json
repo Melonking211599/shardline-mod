@@ -838,5 +838,16 @@
   "advancements.shardline.story.cure_villager.description": "Cure a Crystallized Villager with a Purification Essence",
   "advancements.shardline.story.infected_herd.title": "Crystal Herd",
   "advancements.shardline.story.infected_herd.description": "Tame a crystallized cow, sheep, pig and villager",
-  "shardline.configuration.animals_transform": "Animals crystallize"
+  "shardline.configuration.animals_transform": "Animals crystallize",
+
+  "block.shardline.decision_altar": "Altar of Decision",
+  "message.shardline.decision_altar.hint": "The altar waits for the Core of the Breach.",
+  "message.shardline.decision_altar.sealed": "The altar is silent. The seal holds.",
+  "message.shardline.decision_altar.dominated": "The altar hums in the virus's rhythm.",
+  "message.shardline.decision_altar.risen": "Where the seal broke, an altar rises from the stone. Here the fate of the Shardvirus will be decided.",
+  "subtitles.shardline.block.decision_altar.rise": "Altar rises",
+  "subtitles.shardline.block.decision_altar.awaken": "Altar awakens",
+  "subtitles.shardline.block.decision_altar.use": "Core resonates",
+  "advancements.shardline.story.decision_altar.title": "At the Crossroads",
+  "advancements.shardline.story.decision_altar.description": "Wake the Altar of Decision with the Core of the Breach"
 }

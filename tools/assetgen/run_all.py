@@ -22,6 +22,7 @@ import gui
 import infected_animals
 import infected_entities
 import snail
+import story2_assets
 import fresh_items
 import fresh_update
 import story_items
@@ -49,6 +50,7 @@ def main():
     snail.main()
     # Story-Erweiterung 2
     infected_animals.main()
+    story2_assets.main()
     print("Fertig.")
 
 
