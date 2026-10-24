@@ -193,6 +193,7 @@ public final class StoryManager {
         ShardlineWorldData data = data(player.server);
         send(player, new StoryStatePayload(data.chapter(player.getUUID()), data.isInfected(),
                 isSpreadPaused(player.server), data.ending().id(), data.isRuler(player.getUUID())));
+        eu.shardline.mod.story.quest.QuestSync.send(player);   // ein offenes Auftragsbuch aktualisieren
     }
 
     public static void syncAll(MinecraftServer server) {

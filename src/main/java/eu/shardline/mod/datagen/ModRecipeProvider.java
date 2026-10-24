@@ -127,6 +127,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy(getHasName(ModItems.SHARD_INGOT.get()), has(ModItems.SHARD_INGOT.get()))
                 .save(output);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CHRONICLE_JOURNAL.get())
+                .requires(Items.BOOK).requires(ModItems.SHARD_FRAGMENT.get())
+                .unlockedBy(getHasName(Items.BOOK), has(Items.BOOK))
+                .save(output);
+
         // --- Hueter-Ruinen: heller Hueterstein aus Calcit, Runen mit Glowstone-Staub ---
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.KEEPER_RUIN_BRICKS.get(), 4)
                 .pattern("CC").pattern("CC")

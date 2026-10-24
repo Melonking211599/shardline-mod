@@ -1773,6 +1773,49 @@ public final class ShardlineGameTests {
         }
     }
 
+    /**
+     * Auftragsbuch: QuestSync baut aus dem Spielerstand Kapitel, Auftraege (Schritt, Fortschritt), getroffene Figuren
+     * und gelesene Seiten; das Paket uebersteht Kodieren und Dekodieren unveraendert.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void journalSync(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        StoryEnding ending = data.ending();
+        try {
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 8);
+            data.setBranch(player.getUUID(), StoryEnding.SEALED);
+            data.addFlag(player.getUUID(), "rhea:met");
+            data.addFlag(player.getUUID(), "kesh:met");
+            data.addFlag(player.getUUID(), "kesh:healed");
+            data.addFlag(player.getUUID(), "lore_read:the_seal:2");
+            eu.shardline.mod.story.quest.Quests.start(player, "knights_without_lord");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "kill", "shardline:shattered_knight");
+            var payload = eu.shardline.mod.story.quest.QuestSync.build(player, true);
+            helper.assertTrue(payload.open() && payload.chapter() == 8 && payload.branch().equals("seal"), "Kapitel/Zweig falsch");
+            helper.assertTrue(payload.nextKey().equals("story.shardline.next.8.seal"), "Naechstes Ziel falsch: " + payload.nextKey());
+            var quest = payload.quests().stream().filter(q -> q.id().equals("knights_without_lord")).findFirst().orElse(null);
+            helper.assertTrue(quest != null && quest.active() && quest.step() == 0 && quest.count() == 1 && quest.needed() == 5
+                    && quest.steps() == 2 && quest.giver().equals("rhea"), "Auftragsstand falsch: " + quest);
+            helper.assertTrue(payload.npcs().size() == 2 && payload.npcs().get(1).bioKey().equals("journal.shardline.npc.kesh.healed"),
+                    "Figuren falsch: " + payload.npcs());
+            helper.assertTrue(payload.lore().size() == 1 && payload.lore().get(0).book().equals("the_seal") && payload.lore().get(0).pages() == 2,
+                    "Lore falsch: " + payload.lore());
+            var buf = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), helper.getLevel().registryAccess());
+            eu.shardline.mod.network.JournalPayload.STREAM_CODEC.encode(buf, payload);
+            helper.assertTrue(eu.shardline.mod.network.JournalPayload.STREAM_CODEC.decode(buf).equals(payload), "Paket uebersteht Kodierung nicht");
+            helper.succeed();
+        } finally {
+            resetStory(data, player);
+            data.removeFlag(player.getUUID(), "kesh:healed");
+            data.removeFlag(player.getUUID(), "lore_read:the_seal:2");
+            data.setEnding(ending);
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

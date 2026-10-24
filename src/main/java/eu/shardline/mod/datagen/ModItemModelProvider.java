@@ -34,7 +34,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ModItems.LORE_BOOK.get(), ModItems.LORE_PAGE.get(), ModItems.PURIFICATION_ESSENCE.get(), ModItems.BREACH_CORE.get(),
                 ModItems.CRYSTAL_SLIME.get(), ModItems.GLOWCAP_STEW.get(), ModItems.CRYSTAL_CANDY.get(), ModItems.BERRY_TART.get(),
                 ModItems.RESONANCE_COMPASS.get(), ModBlocks.CRYSTAL_DOOR.get().asItem(), ModBlocks.SHARD_LANTERN.get().asItem(),
-                ModItems.ECHO_SHARD.get()}) {
+                ModItems.ECHO_SHARD.get(), ModItems.CHRONICLE_JOURNAL.get()}) {
             basicItem(item);
         }
 

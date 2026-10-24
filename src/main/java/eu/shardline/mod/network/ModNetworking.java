@@ -61,6 +61,12 @@ public final class ModNetworking {
                     }
                 }));
 
+        registrar.playToServer(OpenJournalPayload.TYPE, OpenJournalPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        eu.shardline.mod.story.quest.QuestSync.send(player, true);
+                    }
+                }));
         registrar.playToServer(DialogueChoicePayload.TYPE, DialogueChoicePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> {
                     if (context.player() instanceof ServerPlayer player) {
@@ -91,6 +97,8 @@ public final class ModNetworking {
                 context.enqueueWork(() -> ClientStoryHandler.showChapterCard(payload)));
         registrar.playToClient(OpenLorePagePayload.TYPE, OpenLorePagePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openLorePage(payload)));
+        registrar.playToClient(JournalPayload.TYPE, JournalPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> eu.shardline.mod.client.story.ClientJournal.receive(payload)));
         registrar.playToClient(TraderDialoguePayload.TYPE, TraderDialoguePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openTraderDialogue(payload)));
     }

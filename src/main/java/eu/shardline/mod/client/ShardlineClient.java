@@ -176,6 +176,7 @@ public final class ShardlineClient {
     @SubscribeEvent
     static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(KeyBindings.CRYSTAL_SHIELD);
+        event.register(KeyBindings.JOURNAL);
         event.register(KeyBindings.SHARD_CALL);
         event.register(KeyBindings.CRYSTAL_WAVE);
     }

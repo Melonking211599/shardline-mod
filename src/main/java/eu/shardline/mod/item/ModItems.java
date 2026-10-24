@@ -99,6 +99,8 @@ public final class ModItems {
     public static final DeferredItem<Item> ECHO_SHARD = ITEMS.registerSimpleItem("echo_shard", new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<eu.shardline.mod.item.custom.KeeperTuningForkItem> KEEPER_TUNING_FORK = ITEMS.registerItem("keeper_tuning_fork",
             eu.shardline.mod.item.custom.KeeperTuningForkItem::new, new Item.Properties().durability(64).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<eu.shardline.mod.item.custom.ChronicleJournalItem> CHRONICLE_JOURNAL = ITEMS.registerItem("chronicle_journal",
+            eu.shardline.mod.item.custom.ChronicleJournalItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<BreachCoreItem> BREACH_CORE = ITEMS.registerItem("breach_core", BreachCoreItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 

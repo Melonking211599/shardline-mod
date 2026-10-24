@@ -112,6 +112,7 @@ public final class StoryEvents {
         ShardlineWorldData data = StoryManager.data(player.server);
         if (data.addFlag(player.getUUID(), "book:" + book.id())) {
             StoryManager.award(player, "story/lore_book");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "read_lore", target -> target.equals("any") || target.equals(book.id()), 1);
             int read = data.countFlags(player.getUUID(), "book:");
             player.displayClientMessage(Component.translatable("message.shardline.lore_book_found", read, LoreBooks.ALL.size())
                     .withStyle(ChatFormatting.LIGHT_PURPLE), true);

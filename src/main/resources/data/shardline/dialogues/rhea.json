@@ -164,12 +164,19 @@
       "do": [
         {
           "set_flag": "rhea:met"
+        },
+        {
+          "give_item": {
+            "item": "shardline:chronicle_journal",
+            "count": 1
+          }
         }
       ],
       "text": [
         "dialogue.shardline.rhea.first_meeting.1",
         "dialogue.shardline.rhea.first_meeting.2",
-        "dialogue.shardline.rhea.first_meeting.3"
+        "dialogue.shardline.rhea.first_meeting.3",
+        "dialogue.shardline.rhea.first_meeting.4"
       ],
       "choices": [
         {

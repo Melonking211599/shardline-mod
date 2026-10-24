@@ -20,6 +20,10 @@ public final class KeyBindings {
     public static final KeyMapping CRYSTAL_WAVE = new KeyMapping("key.shardline.crystal_wave", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_H, CATEGORY);
 
+    /** Auftragsbuch (Kapitel, Auftraege, Figuren, Lore). */
+    public static final KeyMapping JOURNAL = new KeyMapping("key.shardline.journal", KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, CATEGORY);
+
     private KeyBindings() {
     }
 }
