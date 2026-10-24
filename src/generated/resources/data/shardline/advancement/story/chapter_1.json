@@ -10,8 +10,11 @@
       "translate": "advancements.shardline.story.chapter_1.description"
     },
     "icon": {
+      "components": {
+        "shardline:chapter": 1
+      },
       "count": 1,
-      "id": "shardline:shard_fragment"
+      "id": "shardline:chapter_emblem"
     },
     "title": {
       "translate": "advancements.shardline.story.chapter_1.title"

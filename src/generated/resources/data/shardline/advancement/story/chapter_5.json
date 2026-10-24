@@ -11,8 +11,11 @@
     },
     "frame": "goal",
     "icon": {
+      "components": {
+        "shardline:chapter": 5
+      },
       "count": 1,
-      "id": "shardline:infected_stone"
+      "id": "shardline:chapter_emblem"
     },
     "title": {
       "translate": "advancements.shardline.story.chapter_5.title"

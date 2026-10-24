@@ -924,5 +924,23 @@
   "item.shardline.lore_page.tooltip": "The Shard Trader buys loose pages and binds four pages of one book into the book.",
   "advancements.shardline.story.lore_bound.title": "Rebound",
   "advancements.shardline.story.lore_bound.description": "Let the Shard Trader bind four loose pages into a book",
-  "shardline.configuration.lore_page_price": "Price of a lore page (shards)"
+  "shardline.configuration.lore_page_price": "Price of a lore page (shards)",
+
+  "item.shardline.chapter_emblem": "Chapter Emblem",
+  "item.shardline.chapter_emblem.named": "%s: %s",
+  "commands.shardline.story.status.header": "- Chronicle of Aurelis -",
+  "commands.shardline.story.status.none": "Your story has not begun yet.",
+  "commands.shardline.story.status.chapter": "%s: %s",
+  "commands.shardline.story.status.next": "Next: %s",
+  "commands.shardline.story.status.collection": "Lore books %s/%s · Visions %s/%s · Virus Hearts %s/%s",
+  "commands.shardline.story.status.ending": "The fate of the Shardvirus is decided: %s",
+  "story.shardline.next.0": "Find a shard: violet ore deep in the deepslate.",
+  "story.shardline.next.1": "Build a Shard Frame and open it with a Shard Key.",
+  "story.shardline.next.2": "Read a lore book or touch a Memory Crystal - try the keeper ruins.",
+  "story.shardline.next.3": "Wake the Crystal Colossus with an Awakening Crystal and defeat it.",
+  "story.shardline.next.4": "The Queen waits on her throne at 0 / 0. Think before you fight.",
+  "story.shardline.next.5": "Fight the virus: place a Purity Anchor or brew a Purification Essence.",
+  "story.shardline.next.6": "Destroy Virus Hearts, then bring the Core of the Breach to the Altar of Decision.",
+  "story.shardline.next.ended": "Your choice has been made. Live with it - or help others find their way.",
+  "shardline.configuration.chapter_card": "Chapter card"
 }

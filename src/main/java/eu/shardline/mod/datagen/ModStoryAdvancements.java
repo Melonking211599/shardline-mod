@@ -3,6 +3,7 @@ package eu.shardline.mod.datagen;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
 import eu.shardline.mod.item.ModItems;
+import eu.shardline.mod.item.custom.ChapterEmblemItem;
 import eu.shardline.mod.story.StoryChapter;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
@@ -36,12 +37,12 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         this.fileHelper = fileHelper;
 
         AdvancementHolder chapter1 = Advancement.Builder.advancement()
-                .display(ModItems.SHARD_FRAGMENT.get(), title("chapter_1"), description("chapter_1"), BACKGROUND,
+                .display(ChapterEmblemItem.of(StoryChapter.FIRST_SHARD), title("chapter_1"), description("chapter_1"), BACKGROUND,
                         AdvancementType.TASK, true, true, false)
                 .addCriterion("story", impossible())
                 .save(saver, Shardline.id(StoryChapter.FIRST_SHARD.advancementId()), fileHelper);
-        AdvancementHolder chapter2 = chapter(chapter1, StoryChapter.THE_GATE, ModBlocks.SHARD_PORTAL_FRAME.get());
-        AdvancementHolder chapter3 = chapter(chapter2, StoryChapter.ECHOES_OF_THE_KEEPERS, ModBlocks.MEMORY_CRYSTAL.get());
+        AdvancementHolder chapter2 = chapter(chapter1, StoryChapter.THE_GATE);
+        AdvancementHolder chapter3 = chapter(chapter2, StoryChapter.ECHOES_OF_THE_KEEPERS);
 
         AdvancementHolder book = task(chapter3, "lore_book", ModItems.LORE_BOOK.get(), AdvancementType.TASK, 0);
         task(book, "all_lore_books", ModItems.LORE_BOOK.get(), AdvancementType.CHALLENGE, 250);
@@ -49,11 +50,11 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         AdvancementHolder vision = task(chapter3, "vision", ModBlocks.MEMORY_CRYSTAL.get(), AdvancementType.TASK, 0);
         task(vision, "all_visions", ModBlocks.MEMORY_CRYSTAL.get(), AdvancementType.CHALLENGE, 250);
 
-        AdvancementHolder chapter4 = chapter(chapter3, StoryChapter.HEART_OF_THE_EXPANSE, ModItems.COLOSSUS_CORE.get());
+        AdvancementHolder chapter4 = chapter(chapter3, StoryChapter.HEART_OF_THE_EXPANSE);
         task(chapter4, "trader_warning", ModItems.SHARD_TRADER_SPAWN_EGG.get(), AdvancementType.TASK, 0);
 
-        AdvancementHolder chapter5 = chapter(chapter4, StoryChapter.THE_BREACH, ModBlocks.INFECTED_STONE.get());
-        AdvancementHolder chapter6 = chapter(chapter5, StoryChapter.CONTAINMENT, ModBlocks.PURITY_ANCHOR.get());
+        AdvancementHolder chapter5 = chapter(chapter4, StoryChapter.THE_BREACH);
+        AdvancementHolder chapter6 = chapter(chapter5, StoryChapter.CONTAINMENT);
         task(chapter6, "purity_anchor", ModBlocks.PURITY_ANCHOR.get(), AdvancementType.TASK, 0);
         AdvancementHolder purification = task(chapter6, "purification", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);
         task(purification, "cure_villager", ModItems.CRYSTALLIZED_VILLAGER_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
@@ -67,8 +68,12 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         task(tame, "infected_herd", ModItems.CRYSTALLIZED_SHEEP_SPAWN_EGG.get(), AdvancementType.CHALLENGE, 250);
     }
 
-    private AdvancementHolder chapter(AdvancementHolder parent, StoryChapter chapter, ItemLike icon) {
-        return this.advancement(parent, "chapter_" + chapter.number(), icon, AdvancementType.GOAL, 0);
+    /** Kapitel-Advancement mit dem eigenen Kapitel-Emblem als Icon. */
+    private AdvancementHolder chapter(AdvancementHolder parent, StoryChapter chapter) {
+        Advancement.Builder builder = Advancement.Builder.advancement().parent(parent);
+        builder.display(ChapterEmblemItem.of(chapter), title("chapter_" + chapter.number()), description("chapter_" + chapter.number()),
+                null, AdvancementType.GOAL, true, true, false).addCriterion("story", impossible());
+        return builder.save(this.saver, Shardline.id("story/chapter_" + chapter.number()), this.fileHelper);
     }
 
     private AdvancementHolder task(AdvancementHolder parent, String id, ItemLike icon, AdvancementType type, int experience) {

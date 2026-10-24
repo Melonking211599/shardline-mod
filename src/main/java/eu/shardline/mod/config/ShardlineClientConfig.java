@@ -16,6 +16,7 @@ public final class ShardlineClientConfig {
     public static final ModConfigSpec.BooleanValue INFECTED_SKY;
     public static final ModConfigSpec.BooleanValue SCREEN_SHAKE;
     public static final ModConfigSpec.BooleanValue FEVER_DISTORTION;
+    public static final ModConfigSpec.BooleanValue CHAPTER_CARD;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -43,6 +44,9 @@ public final class ShardlineClientConfig {
         FEVER_DISTORTION = b.comment("Verzerrte Sicht durch Splitterfieber.")
                 .translation("shardline.configuration.fever_distortion")
                 .define("feverDistortion", true);
+        CHAPTER_CARD = b.comment("Kapitelkarte (Emblem, Titel, Zusammenfassung) beim Kapitelwechsel; sonst die schlichten Vanilla-Titel.")
+                .translation("shardline.configuration.chapter_card")
+                .define("chapterCard", true);
         SPEC = b.build();
     }
 

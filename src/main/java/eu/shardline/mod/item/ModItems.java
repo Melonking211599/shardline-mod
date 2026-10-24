@@ -3,6 +3,7 @@ package eu.shardline.mod.item;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.item.custom.BreachCoreItem;
+import eu.shardline.mod.item.custom.ChapterEmblemItem;
 import eu.shardline.mod.item.custom.ColossusGauntletItem;
 import eu.shardline.mod.item.custom.CrystalBowItem;
 import eu.shardline.mod.item.custom.HeartOfTheExpanseItem;
@@ -86,6 +87,8 @@ public final class ModItems {
             HeartOfTheExpanseItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 
     // --- Story & Shardvirus ---
+    public static final DeferredItem<ChapterEmblemItem> CHAPTER_EMBLEM = ITEMS.registerItem("chapter_emblem", ChapterEmblemItem::new,
+            new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<LorePageItem> LORE_PAGE = ITEMS.registerItem("lore_page", LorePageItem::new,
             new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<LoreBookItem> LORE_BOOK = ITEMS.registerItem("lore_book", LoreBookItem::new,

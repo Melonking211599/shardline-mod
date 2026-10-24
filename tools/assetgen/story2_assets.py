@@ -6,7 +6,7 @@ Leuchtschichten (<name>_glow.png) sind durchsichtig bis auf Adern, Runen und Kri
 """
 from __future__ import annotations
 
-from common import BONE, CLEAR, CYAN, GOLD, IVORY, SHARD, SKYB, VGLOW, VIOLET, VIRUS, Tex, hx, save_png
+from common import BONE, CLEAR, COL, CYAN, GOLD, IVORY, MAGENTA, SHARD, SKYB, SLATE, VGLOW, VIOLET, VIRUS, Tex, hx, save_png
 from pixel import clusters, ramps, stamp
 
 # ------------------------------------------------------------------ Hilfen
@@ -425,8 +425,145 @@ def trader_dialogue() -> Tex:
     return t
 
 
+# ====================================================================== F7 Kapitel-Embleme (16x16) und Kapitelkarte
+# Symbol je Kapitel (10x10, zentriert im Medaillon). Zeichen -> Farbe je Emblem.
+EMBLEMS = {
+    1: ("""
+......44..
+.....443..
+....4432..
+...44321..
+..44321...
+..4321....
+.4321.....
+.321......
+.21.......
+..........
+""", {"4": SHARD[4], "3": SHARD[3], "2": SHARD[2], "1": SHARD[1]}, VIOLET[0]),     # der erste Splitter
+    2: ("""
+.pppppppp.
+.pccccccp.
+.pc3333cp.
+.pc3bb3cp.
+.pc3bb3cp.
+.pc3333cp.
+.pccccccp.
+.pccccccp.
+.pppppppp.
+..........
+""", {"p": VIOLET[3], "c": VIOLET[1], "3": CYAN[2], "b": CYAN[4]}, hx("#0d0820")),   # das Tor
+    3: ("""
+....44....
+...4443...
+...4432...
+..443322..
+..443321..
+..443321..
+...4321...
+.ssssssss.
+.s222222s.
+..........
+""", {"4": CYAN[4], "3": CYAN[3], "2": CYAN[2], "1": CYAN[1], "s": IVORY[1]}, hx("#0a1424")),  # Echos: Erinnerungskristall
+    4: ("""
+....44....
+...4443...
+..444332..
+.44433322.
+.44333221.
+..333221..
+...3221...
+....21....
+..........
+..........
+""", {"4": COL[4], "3": COL[3], "2": COL[2], "1": COL[1]}, hx("#071a20")),       # Herz der Weite: Kern des Kolosses
+    5: ("""
+....m.....
+....mm....
+...gm.....
+...mmm....
+....gm....
+...mm.g...
+..mm..m...
+..m....m..
+.m......m.
+..........
+""", {"m": VGLOW[2], "g": VGLOW[4]}, VIRUS[0]),                                 # der Bruch: Riss
+    6: ("""
+....gg....
+...gGGg...
+....gg....
+....gg....
+..s.gg.s..
+..sggggs..
+...ggggg..
+....gg....
+...gggg...
+..........
+""", {"g": GOLD[2], "G": SKYB[3], "s": GOLD[3]}, hx("#1a1406")),                 # Eindaemmung: Reinheitsanker
+}
+
+
+def chapter_emblem(n: int) -> Tex:
+    art, pal, inner = EMBLEMS[n]
+    t = Tex(16, 16)
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if d <= 7.6:
+                if d > 6.4:
+                    t.set(x, y, GOLD[3] if x + y < 15 else GOLD[1])      # Goldring, Licht oben links
+                elif d > 5.6:
+                    t.set(x, y, GOLD[0])
+                else:
+                    t.set(x, y, inner)
+    put(t, art, pal, 3, 3)
+    t.outline(hx("#140b05"))
+    return t
+
+
+def chapter_card() -> Tex:
+    """Banner 256x72: dunkles Violett, an den Enden ausgefranst, Goldlinien oben/unten mit Raute, Medaillonrahmen links."""
+    W, H = 256, 72
+    t = Tex(256, 128)
+    for y in range(H):
+        for x in range(W):
+            edge = min(x, W - 1 - x)
+            fade = min(1.0, edge / 6.0)
+            if (x + y) % 3 == 0 and edge < 4:
+                continue                                       # ausgefranste Enden
+            a = int(215 * fade)
+            if a <= 0:
+                continue
+            c = hx("#140a26") if y < H // 2 else hx("#10081f")
+            t.set(x, y, (c[0], c[1], c[2], a))
+    for x in range(16, W - 16):
+        fade = min(1.0, min(x - 16, W - 17 - x) / 30.0)
+        if fade <= 0:
+            continue
+        for y, col in ((3, GOLD[3]), (4, GOLD[1]), (H - 5, GOLD[2]), (H - 4, GOLD[1])):
+            t.set(x, y, (col[0], col[1], col[2], int(255 * fade)))
+    for (cx, cy) in ((W // 2, 4), (W // 2, H - 5)):
+        for dy in range(-3, 4):
+            for dx in range(-3, 4):
+                d = abs(dx) + abs(dy)
+                if d <= 3:
+                    t.set(cx + dx, cy + dy, VGLOW[3] if d == 0 else GOLD[4] if d == 1 else GOLD[2])
+    # Medaillonrahmen fuer das Emblem (bei 10,12, 48x48; das Emblem wird mit 32x32 bei 18,20 gezeichnet)
+    for y in range(12, 60):
+        for x in range(10, 58):
+            d = ((x - 33.5) ** 2 + (y - 35.5) ** 2) ** 0.5
+            if 21.5 < d <= 23.5:
+                t.set(x, y, GOLD[3] if x + y < 69 else GOLD[1])
+            elif 20.5 < d <= 21.5:
+                t.set(x, y, hx("#07030c"))
+            elif d <= 20.5:
+                t.set(x, y, hx("#0b0618"))
+    return t
+
+
 OTHER = {
     "mob_effect/immunity": immunity_icon,
+    "gui/chapter_card": chapter_card,
     "gui/trader_dialogue": trader_dialogue,
 }
 
@@ -445,6 +582,7 @@ BLOCKS = {
 }
 ITEMS = {
     "item/lore_page": lore_page,
+    **{f"item/chapter_emblem_{n}": (lambda n=n: chapter_emblem(n)) for n in range(1, 7)},
 }
 
 

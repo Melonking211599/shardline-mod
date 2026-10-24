@@ -3,6 +3,7 @@ package eu.shardline.mod.story;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.core.ModSounds;
+import eu.shardline.mod.network.ChapterCardPayload;
 import eu.shardline.mod.network.StoryStatePayload;
 import eu.shardline.mod.network.TitlesPayload;
 import java.util.ArrayList;
@@ -85,9 +86,13 @@ public final class StoryManager {
 
     private static void announceChapter(ServerPlayer player, StoryChapter chapter) {
         if (ShardlineConfig.CHAPTER_TITLES.get()) {
-            player.connection.send(new ClientboundSetTitlesAnimationPacket(15, 70, 25));
-            player.connection.send(new ClientboundSetSubtitleTextPacket(chapter.title().copy().withStyle(ChatFormatting.LIGHT_PURPLE)));
-            player.connection.send(new ClientboundSetTitleTextPacket(chapter.label().copy().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD)));
+            if (player.connection != null && player.connection.hasChannel(ChapterCardPayload.TYPE)) {
+                send(player, new ChapterCardPayload(chapter.number()));
+            } else {
+                player.connection.send(new ClientboundSetTitlesAnimationPacket(15, 70, 25));
+                player.connection.send(new ClientboundSetSubtitleTextPacket(chapter.title().copy().withStyle(ChatFormatting.LIGHT_PURPLE)));
+                player.connection.send(new ClientboundSetTitleTextPacket(chapter.label().copy().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD)));
+            }
         }
         player.sendSystemMessage(Component.empty()
                 .append(Component.translatable("story.shardline.chapter_reached", chapter.label(), chapter.title())

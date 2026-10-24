@@ -924,5 +924,23 @@
   "item.shardline.lore_page.tooltip": "Der Splitterhändler kauft lose Seiten und bindet vier Seiten eines Buchs zum Buch.",
   "advancements.shardline.story.lore_bound.title": "Neu gebunden",
   "advancements.shardline.story.lore_bound.description": "Lass den Splitterhändler vier lose Seiten zu einem Buch binden",
-  "shardline.configuration.lore_page_price": "Preis einer Lore-Seite (Splitter)"
+  "shardline.configuration.lore_page_price": "Preis einer Lore-Seite (Splitter)",
+
+  "item.shardline.chapter_emblem": "Kapitel-Emblem",
+  "item.shardline.chapter_emblem.named": "%s: %s",
+  "commands.shardline.story.status.header": "– Chronik von Aurelis –",
+  "commands.shardline.story.status.none": "Deine Geschichte hat noch nicht begonnen.",
+  "commands.shardline.story.status.chapter": "%s: %s",
+  "commands.shardline.story.status.next": "Als Nächstes: %s",
+  "commands.shardline.story.status.collection": "Lore-Bücher %s/%s · Visionen %s/%s · Virusherzen %s/%s",
+  "commands.shardline.story.status.ending": "Über den Shardvirus ist entschieden: %s",
+  "story.shardline.next.0": "Finde einen Splitter: violettes Erz tief im Tiefenschiefer.",
+  "story.shardline.next.1": "Baue einen Splitterrahmen und öffne ihn mit einem Shard-Schlüssel.",
+  "story.shardline.next.2": "Lies ein Lore-Buch oder berühre einen Erinnerungskristall – versuch es in den Hüter-Ruinen.",
+  "story.shardline.next.3": "Wecke den Kristallkoloss mit einem Erweckungskristall und besiege ihn.",
+  "story.shardline.next.4": "Die Königin wartet auf ihrem Thron bei 0 / 0. Überlege, bevor du kämpfst.",
+  "story.shardline.next.5": "Bekämpfe den Virus: Setze einen Reinheitsanker oder braue eine Reinigungsessenz.",
+  "story.shardline.next.6": "Zerstöre Virusherzen und bring den Kern des Bruchs zum Entscheidungsaltar.",
+  "story.shardline.next.ended": "Deine Wahl ist getroffen. Lebe mit ihr – oder hilf anderen auf ihrem Weg.",
+  "shardline.configuration.chapter_card": "Kapitelkarte"
 }

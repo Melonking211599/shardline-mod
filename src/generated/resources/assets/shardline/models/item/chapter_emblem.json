@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "shardline:item/chapter_emblem_2",
+      "predicate": {
+        "shardline:chapter": 0.15
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_3",
+      "predicate": {
+        "shardline:chapter": 0.25
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_4",
+      "predicate": {
+        "shardline:chapter": 0.35
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_5",
+      "predicate": {
+        "shardline:chapter": 0.45
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_6",
+      "predicate": {
+        "shardline:chapter": 0.55
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "shardline:item/chapter_emblem_1"
+  }
+}

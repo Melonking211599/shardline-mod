@@ -13,7 +13,9 @@ import eu.shardline.mod.client.renderer.ShardlineGeoRenderer;
 import eu.shardline.mod.client.renderer.SlimArmorModels;
 import eu.shardline.mod.client.renderer.VoidRayRenderer;
 import eu.shardline.mod.client.sky.SplitterweiteEffects;
+import eu.shardline.mod.client.story.ChapterCardOverlay;
 import eu.shardline.mod.client.story.StoryScreenEffects;
+import eu.shardline.mod.core.ModDataComponents;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
@@ -70,6 +72,9 @@ public final class ShardlineClient {
             });
             ItemProperties.register(ModItems.CRYSTAL_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"),
                     (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+            // Kapitel-Emblem: Kapitel 1-6 als 0.1-0.6 fuer die Modell-Overrides
+            ItemProperties.register(ModItems.CHAPTER_EMBLEM.get(), Shardline.id("chapter"),
+                    (stack, level, entity, seed) -> stack.getOrDefault(ModDataComponents.CHAPTER.get(), 1) / 10.0F);
         });
     }
 
@@ -172,5 +177,6 @@ public final class ShardlineClient {
     static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("shard_portal_overlay"), PortalOverlay::render);
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("story_effects"), StoryScreenEffects::render);
+        event.registerAbove(VanillaGuiLayers.TITLE, Shardline.id("chapter_card"), ChapterCardOverlay::render);
     }
 }

@@ -70,6 +70,8 @@ public final class ShardlineCommands {
                                         .executes(context -> setChapter(context, List.of(context.getSource().getPlayerOrException())))
                                         .then(Commands.argument("targets", EntityArgument.players())
                                                 .executes(context -> setChapter(context, EntityArgument.getPlayers(context, "targets"))))))
+                        .then(Commands.literal("status")
+                                .executes(context -> status(context.getSource(), context.getSource().getPlayerOrException())))
                         .then(Commands.literal("info").requires(source -> source.hasPermission(2))
                                 .executes(context -> info(context.getSource(), context.getSource().getPlayerOrException()))
                                 .then(Commands.argument("target", EntityArgument.player())
@@ -124,6 +126,51 @@ public final class ShardlineCommands {
                         : data.isRuler(player.getUUID()) ? Component.translatable("title.shardline.ruler")
                         : Component.translatable("title.shardline.none")), false);
         return chapter;
+    }
+
+    /** Fortschritt des eigenen Spielers: Kapitelleiste, aktuelles Kapitel, naechstes Ziel, Sammelstand. */
+    private static int status(CommandSourceStack source, ServerPlayer player) {
+        for (Component line : statusLines(source.getServer(), player.getUUID())) {
+            source.sendSuccess(() -> line, false);
+        }
+        return StoryManager.data(source.getServer()).chapter(player.getUUID());
+    }
+
+    /** Zeilen fuer {@code /shardline story status} (auch fuer Tests). */
+    public static List<Component> statusLines(net.minecraft.server.MinecraftServer server, java.util.UUID player) {
+        ShardlineWorldData data = StoryManager.data(server);
+        int chapter = data.chapter(player);
+        List<Component> lines = new java.util.ArrayList<>();
+        lines.add(Component.translatable("commands.shardline.story.status.header").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
+        // Kapitelleiste: erreichte Kapitel golden, das aktuelle hervorgehoben, kommende grau
+        net.minecraft.network.chat.MutableComponent bar = Component.empty();
+        for (StoryChapter step : StoryChapter.values()) {
+            ChatFormatting color = step.number() < chapter ? ChatFormatting.GOLD : step.number() == chapter ? ChatFormatting.YELLOW : ChatFormatting.DARK_GRAY;
+            bar.append(Component.literal(step.number() <= chapter ? "\u25C6" : "\u25C7").withStyle(color)
+                    .withStyle(style -> style.withHoverEvent(new net.minecraft.network.chat.HoverEvent(
+                            net.minecraft.network.chat.HoverEvent.Action.SHOW_TEXT, step.label().copy().append(": ").append(step.title())))));
+            if (step.number() < StoryChapter.MAX) {
+                bar.append(Component.literal("\u2500").withStyle(step.number() < chapter ? ChatFormatting.GOLD : ChatFormatting.DARK_GRAY));
+            }
+        }
+        lines.add(Component.empty().append(bar).append(Component.literal("  " + chapter + "/" + StoryChapter.MAX).withStyle(ChatFormatting.GRAY)));
+        StoryChapter current = StoryChapter.byNumber(chapter);
+        lines.add(current == null ? Component.translatable("commands.shardline.story.status.none").withStyle(ChatFormatting.GRAY)
+                : Component.translatable("commands.shardline.story.status.chapter", current.label(), current.title()).withStyle(ChatFormatting.GOLD));
+        if (current != null) {
+            lines.add(current.summary().copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+        }
+        lines.add(Component.translatable("commands.shardline.story.status.next",
+                Component.translatable(data.ending() != StoryEnding.NONE ? "story.shardline.next.ended" : "story.shardline.next." + chapter))
+                .withStyle(ChatFormatting.AQUA));
+        lines.add(Component.translatable("commands.shardline.story.status.collection",
+                data.countFlags(player, "book:"), LoreBooks.ALL.size(),
+                data.countFlags(player, "vision:"), eu.shardline.mod.story.lore.Visions.COUNT,
+                data.heartsDefeated(player), eu.shardline.mod.config.ShardlineConfig.HEARTS_FOR_CORE.get()).withStyle(ChatFormatting.DARK_AQUA));
+        if (data.ending() != StoryEnding.NONE) {
+            lines.add(Component.translatable("commands.shardline.story.status.ending", data.ending().title()).withStyle(ChatFormatting.DARK_PURPLE));
+        }
+        return lines;
     }
 
     private static int vote(CommandContext<CommandSourceStack> context, StoryEnding choice) throws CommandSyntaxException {

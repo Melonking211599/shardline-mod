@@ -103,5 +103,8 @@ blocks += story2_blocks
 need(TEX / "mob_effect" / "immunity.png", (18, 18))
 need(TEX / "item" / "lore_page.png", (16, 16)); items.append("lore_page")
 need(TEX / "gui" / "trader_dialogue.png", (256, 128))
+for n in range(1, 7):
+    need(TEX / "item" / f"chapter_emblem_{n}.png", (16, 16)); items.append(f"chapter_emblem_{n}")
+need(TEX / "gui" / "chapter_card.png", (256, 128))
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

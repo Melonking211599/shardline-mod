@@ -21,6 +21,10 @@ public final class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LORE_PAGE = DATA_COMPONENTS.registerComponentType(
             "lore_page", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** Kapitelnummer eines Kapitel-Emblems (1-6). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CHAPTER = DATA_COMPONENTS.registerComponentType(
+            "chapter", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     /** Gewaehltes Ziel des Resonanzkompasses (Index in der Zielliste der aktuellen Dimension). */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RESONANCE_TARGET = DATA_COMPONENTS.registerComponentType(
             "resonance_target", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));

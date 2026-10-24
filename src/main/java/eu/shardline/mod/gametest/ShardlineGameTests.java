@@ -394,36 +394,44 @@ public final class ShardlineGameTests {
     // ------------------------------------------------------------------ Splitterhandwerk
 
     /** Kristallschnecke: zieht sich bei Treffern ins Haus zurueck, nimmt dann deutlich weniger Schaden und kommt wieder heraus. */
-    @GameTest(template = EMPTY, timeoutTicks = 200, batch = "shardline_snail")
+    @GameTest(template = EMPTY, timeoutTicks = 300, batch = "shardline_snail")
     public static void crystalSnailHides(GameTestHelper helper) {
         // Freiraum schaffen: Bauwerke anderer Tests koennen in die Testflaeche ragen (sonst Erstickungsschaden).
         for (BlockPos pos : BlockPos.betweenClosed(-2, 0, -2, 4, 4, 4)) {
             helper.setBlock(pos, pos.getY() == 0 ? Blocks.STONE : Blocks.AIR);
         }
+        Runnable release = forceArea(helper, 4);
         CrystalSnailEntity snail = helper.spawn(ModEntities.CRYSTAL_SNAIL.get(), new BlockPos(1, 1, 1));
         helper.assertFalse(snail.isHiding(), "Schnecke darf anfangs nicht versteckt sein");
         float[] firstHit = new float[1];
-        helper.runAfterDelay(2, () -> {
-            float before = snail.getHealth();
-            snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
-            firstHit[0] = before - snail.getHealth();
-            helper.assertTrue(firstHit[0] > 0.0F, "Erster Treffer hat keinen Schaden gemacht");
-            helper.assertTrue(snail.isHiding(), "Schnecke versteckt sich nach einem Treffer nicht");
-        });
-        helper.runAfterDelay(25, () -> {
-            float before = snail.getHealth();
-            snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
-            float secondHit = before - snail.getHealth();
-            helper.assertTrue(secondHit < firstHit[0] * 0.5F, "Versteckte Schnecke nimmt zu viel Schaden: " + secondHit + " statt < " + firstHit[0] * 0.5F);
-            helper.assertTrue(snail.isHiding(), "Schnecke sollte noch versteckt sein");
-        });
-        helper.runAfterDelay(140, () -> {
-            helper.assertFalse(snail.isHiding(), "Schnecke kommt nicht wieder aus dem Haus");
-            helper.assertTrue(snail.isAlive(), "Schnecke ist gestorben");
-            snail.discard();
-            helper.succeed();
-        });
+        helper.startSequence()
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    float before = snail.getHealth();
+                    snail.invulnerableTime = 0;
+                    snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
+                    firstHit[0] = before - snail.getHealth();
+                    helper.assertTrue(firstHit[0] > 0.0F, "Erster Treffer hat keinen Schaden gemacht");
+                    helper.assertTrue(snail.isHiding(), "Schnecke versteckt sich nach einem Treffer nicht");
+                })
+                .thenIdle(23)
+                .thenExecute(() -> {
+                    float before = snail.getHealth();
+                    snail.invulnerableTime = 0;
+                    snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
+                    float secondHit = before - snail.getHealth();
+                    helper.assertTrue(secondHit < firstHit[0] * 0.5F, "Versteckte Schnecke nimmt zu viel Schaden: " + secondHit + " statt < " + firstHit[0] * 0.5F);
+                    helper.assertTrue(snail.isHiding(), "Schnecke sollte noch versteckt sein");
+                })
+                .thenWaitUntil(() -> helper.assertFalse(snail.isHiding(), "Schnecke kommt nicht wieder aus dem Haus"))
+                .thenExecute(() -> {
+                    helper.assertTrue(snail.isAlive(), "Schnecke ist gestorben");
+                    snail.discard();
+                    release.run();
+                })
+                .thenSucceed();
     }
+
 
     /** Splitterbann trifft nur Splitterwesen, Kristallwehr schuetzt nur vor Splitterschaden. */
     @GameTest(template = EMPTY, timeoutTicks = 20)
@@ -494,6 +502,25 @@ public final class ShardlineGameTests {
     }
 
     // ------------------------------------------------------------------ Story-Erweiterung 2
+
+    /**
+     * Haelt die Chunks der Testflaeche geladen und tickend. Die Vorlage test/empty ist nur 1x1x1 gross; Wesen ausserhalb
+     * ihres Chunks ticken sonst je nach Lage der Testposition nicht. @return gibt die Chunks wieder frei
+     */
+    private static Runnable forceArea(GameTestHelper helper, int size) {
+        ServerLevel level = helper.getLevel();
+        BlockPos a = helper.absolutePos(new BlockPos(-1, 0, -1));
+        BlockPos b = helper.absolutePos(new BlockPos(size, 0, size));
+        List<ChunkPos> forced = new ArrayList<>();
+        for (int cx = Math.min(a.getX(), b.getX()) >> 4; cx <= Math.max(a.getX(), b.getX()) >> 4; cx++) {
+            for (int cz = Math.min(a.getZ(), b.getZ()) >> 4; cz <= Math.max(a.getZ(), b.getZ()) >> 4; cz++) {
+                if (level.setChunkForced(cx, cz, true)) {
+                    forced.add(new ChunkPos(cx, cz));
+                }
+            }
+        }
+        return () -> forced.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, false));
+    }
 
     /** Freie Testflaeche mit Steinboden (Bauwerke anderer Tests koennen hineinragen). */
     private static void clearArea(GameTestHelper helper, int size, int height) {
@@ -599,6 +626,7 @@ public final class ShardlineGameTests {
     @GameTest(template = EMPTY, timeoutTicks = 240, batch = "shardline_heart")
     public static void virusHeartPhases(GameTestHelper helper) {
         clearArea(helper, 6, 5);
+        Runnable release = forceArea(helper, 6);
         var heart = helper.spawn(ModEntities.VIRUS_HEART.get(), new BlockPos(3, 1, 3));
         helper.assertTrue(eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(1.0F) == 1
                 && eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(0.6F) == 2
@@ -621,7 +649,10 @@ public final class ShardlineGameTests {
                     heart.setHealth(heart.getMaxHealth() * 0.2F);
                 })
                 .thenWaitUntil(() -> helper.assertTrue(heart.getPhase() == 3, "Phase 3 wurde nicht erreicht"))
-                .thenExecute(heart::discard)
+                .thenExecute(() -> {
+                    heart.discard();
+                    release.run();
+                })
                 .thenSucceed();
     }
 
@@ -647,6 +678,27 @@ public final class ShardlineGameTests {
         helper.assertTrue(sold == 1 && fragments == eu.shardline.mod.config.ShardlineConfig.LORE_PAGE_PRICE.get(),
                 "Verkauf falsch: " + sold + " Seiten, " + fragments + " Splitter");
         helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.bindBook(player) == null, "Ohne Seiten darf nichts gebunden werden");
+        helper.succeed();
+    }
+
+    /** Kapitel sichtbar: Status-Ausgabe, eigene Embleme als Icons der Kapitel-Advancements, Texte fuer jedes Ziel. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void chapterDisplay(GameTestHelper helper) {
+        net.minecraft.server.MinecraftServer server = helper.getLevel().getServer();
+        List<net.minecraft.network.chat.Component> lines = eu.shardline.mod.command.ShardlineCommands.statusLines(server, java.util.UUID.randomUUID());
+        helper.assertTrue(lines.size() >= 5, "Status hat zu wenige Zeilen: " + lines.size());
+        Language language = Language.getInstance();
+        for (int chapter = 0; chapter <= StoryChapter.MAX; chapter++) {
+            helper.assertTrue(language.has("story.shardline.next." + chapter), "Ziel-Text fehlt fuer Kapitel " + chapter);
+        }
+        for (StoryChapter chapter : StoryChapter.values()) {
+            var holder = server.getAdvancements().get(Shardline.id(chapter.advancementId()));
+            helper.assertTrue(holder != null && holder.value().display().isPresent(), "Advancement fehlt: " + chapter.advancementId());
+            net.minecraft.world.item.ItemStack icon = holder.value().display().get().getIcon();
+            helper.assertTrue(icon.is(eu.shardline.mod.item.ModItems.CHAPTER_EMBLEM.get())
+                    && icon.getOrDefault(eu.shardline.mod.core.ModDataComponents.CHAPTER.get(), 0) == chapter.number(),
+                    "Kapitel " + chapter.number() + " hat nicht das eigene Emblem als Icon");
+        }
         helper.succeed();
     }
 

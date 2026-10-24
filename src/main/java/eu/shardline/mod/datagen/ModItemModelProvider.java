@@ -22,6 +22,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
+        chapterEmblem();
         // Einfache Items
         for (Item item : new Item[] {
                 ModItems.SHARD_FRAGMENT.get(), ModItems.RAW_SHARD.get(), ModItems.SHARD_INGOT.get(), ModItems.ASH_DUST.get(),
@@ -73,5 +74,15 @@ public class ModItemModelProvider extends ItemModelProvider {
         bow.override().predicate(mcLoc("pulling"), 1.0F).model(pulling[0]).end();
         bow.override().predicate(mcLoc("pulling"), 1.0F).predicate(mcLoc("pull"), 0.65F).model(pulling[1]).end();
         bow.override().predicate(mcLoc("pulling"), 1.0F).predicate(mcLoc("pull"), 0.9F).model(pulling[2]).end();
+    }
+
+    /** Kapitel-Emblem: Grundmodell = Kapitel 1, Overrides ueber die Eigenschaft shardline:chapter (0.1-0.6). */
+    private void chapterEmblem() {
+        ItemModelBuilder base = withExistingParent("chapter_emblem", mcLoc("item/generated")).texture("layer0", modLoc("item/chapter_emblem_1"));
+        for (int chapter = 2; chapter <= 6; chapter++) {
+            ModelFile variant = withExistingParent("chapter_emblem_" + chapter, mcLoc("item/generated"))
+                    .texture("layer0", modLoc("item/chapter_emblem_" + chapter));
+            base.override().predicate(modLoc("chapter"), chapter / 10.0F - 0.05F).model(variant).end();
+        }
     }
 }

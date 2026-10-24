@@ -68,6 +68,8 @@ public final class ModNetworking {
                 context.enqueueWork(() -> ClientStoryHandler.handleScreenEffect(payload)));
         registrar.playToClient(OpenEndingChoicePayload.TYPE, OpenEndingChoicePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openEndingChoice(payload)));
+        registrar.playToClient(ChapterCardPayload.TYPE, ChapterCardPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientStoryHandler.showChapterCard(payload)));
         registrar.playToClient(TraderDialoguePayload.TYPE, TraderDialoguePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openTraderDialogue(payload)));
     }
