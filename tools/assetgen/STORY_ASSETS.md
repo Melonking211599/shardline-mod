@@ -163,9 +163,9 @@ Nachhall: Geist-Rampe `#3a4a5e → #ffffff`, Leuchten `#3fb8c8 → #ffffff`, Alp
 
 Eigene Klänge liegen unter `assets/shardline/sounds/` (Ogg Vorbis, 48 kHz; Mono für Klänge mit Position, Stereo nur für globale Ereignisse). Neue Lieferungen (WAV, 16 bit) übernimmt `python tools/assetgen/import_sounds.py <ordner>`: Stille kürzen, Spitzenpegel −1 dBFS, Ogg. Dazu die Datei in `SOUNDS` (Skript) und das Event in `ModSounds.FILES` eintragen, dann `runData`. `validate.py` und der GameTest `soundFiles` prüfen, dass jede eingetragene Datei existiert.
 
-**Eigene Klänge (23 Events, 22 Dateien):** `entity.crystal_colossus.roar|slam`, `entity.shard_queen.cast|scream|teleport`, `entity.shard_zombie.ambient`, `entity.crystallized_cow.death`, `entity.virus_heart.pulse`, `block.shard_portal.travel` und `item.shard_key.use` (dieselbe Datei), `block.memory_crystal.vision`, `block.purity_anchor.activate`, `block.shard_ore.break` (neu, Abbauklang beider Shard-Erze), `item.lore_book.open`, `item.purification_essence.use`, `item.shard_fragment.pickup` (neu, beim Aufheben von Shard-Splittern), `ability.shard_call|crystal_wave`, `story.chapter`, `event.virus_outbreak|sealed|dominated`, `music.splitterweite` (gestreamt).
+**Eigene Klänge (24 Events, 23 Dateien):** `entity.crystal_colossus.roar|slam`, `entity.shard_queen.cast|scream|teleport`, `entity.shard_zombie.ambient`, `entity.crystallized_cow.death`, `entity.virus_heart.pulse`, `block.shard_portal.travel` und `item.shard_key.use` (dieselbe Datei), `block.memory_crystal.vision`, `block.purity_anchor.activate`, `block.shard_ore.break` (neu, Abbauklang beider Shard-Erze), `item.lore_book.open`, `item.purification_essence.use`, `item.shard_fragment.pickup` (neu, beim Aufheben von Shard-Splittern), `ability.shard_call|crystal_wave`, `story.chapter`, `event.virus_outbreak|sealed|dominated`, `music.splitterweite|infected` (gestreamt).
 
-**Noch Vanilla-Platzhalter (112 Events)** – Beschreibungen stehen weiter oben in diesem Dokument:
+**Noch Vanilla-Platzhalter (111 Events)** – Beschreibungen stehen weiter oben in diesem Dokument:
 
 | Gruppe | Events |
 |---|---|
@@ -176,4 +176,3 @@ Eigene Klänge liegen unter `assets/shardline/sounds/` (Ogg Vorbis, 48 kHz; Mono
 | Blöcke | `shard_portal.ambient`, `purity_anchor.grow`, `decision_altar.rise|awaken|use`, `festering_node.hum|purify|bind|scream` |
 | Items, Fähigkeiten | `shard_projectile.shatter`, `crystal_shield.activate`, `colossus_gauntlet.slam`, `heart_of_the_expanse.blink`, `queens_shardblade.volley`, `keeper_tuning_fork.ring` |
 | Oberfläche, Story | `ui.dialogue.open|close|type|choice`, `ui.quest.update|complete`, `story.epilogue`, `event.aftershock` |
-| Musik (Loops, Stereo, 90–180 s) | `music.infected` |

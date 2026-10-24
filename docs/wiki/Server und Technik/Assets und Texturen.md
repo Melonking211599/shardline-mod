@@ -81,8 +81,8 @@ Basis aller Pfade: `src/main/resources/assets/shardline/`
 ## Sounds
 
 - **Events:** 135 Sound-Events, alle mit deutschen und englischen Untertiteln.
-- **Eigene Klänge (23 Events, 22 Dateien)** liegen als Ogg Vorbis (48 kHz) unter `sounds/`: Koloss (Brüllen, Stampfen), Königin (Magie, Schrei, Teleport), Shard-Zombie, kristallisierte Kuh (Tod), Virusherz (Puls), Portal und Shard-Schlüssel, Erinnerungskristall, Reinheitsanker, Shard-Erz abbauen, Lore-Buch, Reinigungsessenz, Shard-Splitter aufheben, Splitterruf, Kristallwelle, Kapitel, Ausbruch, Versiegelt, Beherrscht und die **Musik der Splitterweite** (`music/splitterweite.ogg`, 2 min Stereo, gestreamt).
-- **Platzhalter:** Die übrigen **112 Events** zeigen in `sounds.json` noch auf passende Vanilla-Klänge. Die Liste steht in [[ToDos#Fehlende Sounds]].
+- **Eigene Klänge (24 Events, 23 Dateien)** liegen als Ogg Vorbis (48 kHz) unter `sounds/`: Koloss (Brüllen, Stampfen), Königin (Magie, Schrei, Teleport), Shard-Zombie, kristallisierte Kuh (Tod), Virusherz (Puls), Portal und Shard-Schlüssel, Erinnerungskristall, Reinheitsanker, Shard-Erz abbauen, Lore-Buch, Reinigungsessenz, Shard-Splitter aufheben, Splitterruf, Kristallwelle, Kapitel, Ausbruch, Versiegelt, Beherrscht und zwei Musikstücke: **Splitterweite** (`music/splitterweite.ogg`) und **infizierte Gebiete** (`music/infected.ogg`), je 2 min Stereo, gestreamt.
+- **Platzhalter:** Die übrigen **111 Events** zeigen in `sounds.json` noch auf passende Vanilla-Klänge. Die Liste steht in [[ToDos#Fehlende Sounds]].
 
 **Neue Sounds einbinden:**
 1. WAV-Dateien (16 bit) liefern, Dateiname wie „Kristallkoloss — Brüllen.wav“.
@@ -91,7 +91,7 @@ Basis aller Pfade: `src/main/resources/assets/shardline/`
 4. Das Event in `ModSounds.FILES` eintragen und `gradlew runData` ausführen.
 5. `validate.py` und der GameTest `soundFiles` prüfen, dass jede eingetragene Datei existiert.
 
-Musik wird automatisch gestreamt (`stream: true` für alle `music.*`-Events mit eigener Datei). `music.infected` fehlt noch.
+Musik wird automatisch gestreamt (`stream: true` für alle `music.*`-Events mit eigener Datei).
 
 ## Sprachdateien
 

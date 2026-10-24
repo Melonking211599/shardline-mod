@@ -13,20 +13,19 @@ stand: 2026-10-24
 - [x] Kapitel 7–9 mit NPCs, Dialogen, Aufträgen, Auftragsbuch, Endkämpfen und Epilogen → [[Nach dem Ausbruch]]
 - [x] Strukturen Überlebendenlager und Hüter-Bibliothek
 - [x] 21 eigene Soundeffekte eingebaut (22 Events)
-- [x] Musik der Splitterweite (`music.splitterweite`)
+- [x] Musik: `music.splitterweite` und `music.infected`
 - [x] Doku-Vault aktualisiert (Stand 24.10.2026)
 
 ## Offen
 
 - [ ] Restliche Sounds liefern (siehe unten)
-- [ ] Musik: `music.infected` (Stereo-Loop, 90–180 s)
 - [ ] Im Spiel testen, was die GameTests nicht abdecken: Fenster (Dialog, Auftragsbuch, Entscheidung), Kapitelkarte, Kämpfe gegen Nachhall und Schwärenherz, Schlaf der NPCs, Virus im Nether und End
 - [ ] Englische Texte der neuen Kapitel gegenlesen
 - [ ] Balance: Ausbreitungstempo des Virus und Leben der neuen Bosse auf dem Server prüfen
 
 ## Fehlende Sounds
 
-Diese 112 Events nutzen noch Vanilla-Platzhalter. Beschreibungen, wie sie klingen sollen, stehen im Projekt in `tools/assetgen/STORY_ASSETS.md`.
+Diese 111 Events nutzen noch Vanilla-Platzhalter. Beschreibungen, wie sie klingen sollen, stehen im Projekt in `tools/assetgen/STORY_ASSETS.md`.
 
 | Gruppe | Events |
 |---|---|
@@ -37,4 +36,3 @@ Diese 112 Events nutzen noch Vanilla-Platzhalter. Beschreibungen, wie sie klinge
 | Blöcke | `shard_portal.ambient`, `purity_anchor.grow`, `decision_altar.rise\|awaken\|use`, `festering_node.hum\|purify\|bind\|scream` |
 | Items, Fähigkeiten | `shard_projectile.shatter`, `crystal_shield.activate`, `colossus_gauntlet.slam`, `heart_of_the_expanse.blink`, `queens_shardblade.volley`, `keeper_tuning_fork.ring` |
 | Oberfläche, Story | `ui.dialogue.open\|close\|type\|choice`, `ui.quest.update\|complete`, `story.epilogue`, `event.aftershock` |
-| Musik (Loops, Stereo, 90–180 s) | `music.infected` |
