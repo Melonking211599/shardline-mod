@@ -5,6 +5,8 @@ import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.effect.ModEffects;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.entity.infected.InfectedMob;
+import eu.shardline.mod.story.StoryManager;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -28,6 +30,11 @@ public final class VirusEvents {
         }
         if (VirusEffects.isImmune(event.getEntity())) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        } else if (event.getEntity().hasEffect(ModEffects.IMMUNITY)) {
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+            if (event.getEntity() instanceof ServerPlayer player) {
+                StoryManager.award(player, "story/immunity");
+            }
         }
     }
 

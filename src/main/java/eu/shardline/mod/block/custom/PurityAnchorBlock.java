@@ -7,8 +7,11 @@ import eu.shardline.mod.effect.ShardFeverEffect;
 import eu.shardline.mod.story.StoryEvents;
 import eu.shardline.mod.story.StoryManager;
 import eu.shardline.mod.virus.InfectionMap;
+import eu.shardline.mod.virus.VirusEffects;
 import eu.shardline.mod.virus.VirusSpreadManager;
+import java.util.List;
 import javax.annotation.Nullable;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -20,7 +23,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -83,6 +88,13 @@ public class PurityAnchorBlock extends Block {
     }
 
     @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("block.shardline.purity_anchor.tooltip", ShardlineConfig.ANCHOR_RADIUS.get())
+                .withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.translatable("block.shardline.purity_anchor.tooltip2").withStyle(ChatFormatting.GOLD));
+    }
+
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide) {
             player.displayClientMessage(Component.translatable("message.shardline.purity_anchor_info", ShardlineConfig.ANCHOR_RADIUS.get()), true);
@@ -97,9 +109,11 @@ public class PurityAnchorBlock extends Block {
         StoryManager.data(level.getServer()).addAnchor(level.dimension(), pos);
         int radius = ShardlineConfig.ANCHOR_RADIUS.get();
 
+        int immunity = ShardlineConfig.IMMUNITY_ANCHOR_SECONDS.get() * 20;
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(radius))) {
             if (entity.distanceToSqr(pos.getCenter()) <= (double) radius * radius) {
                 entity.removeEffectsCuredBy(ShardFeverEffect.PURIFICATION);
+                VirusEffects.giveImmunity(entity, immunity, true);
             }
         }
 

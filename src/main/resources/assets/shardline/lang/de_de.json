@@ -856,5 +856,15 @@
   "block.shardline.keeper_rune_slab": "Hüter-Runenstufe",
   "structure.shardline.keeper_ruin": "Hüter-Ruinen",
   "advancements.shardline.keeper_ruin.title": "Wo die Hüter tagten",
-  "advancements.shardline.keeper_ruin.description": "Finde die Ruinen eines Hütersaals"
+  "advancements.shardline.keeper_ruin.description": "Finde die Ruinen eines Hütersaals",
+
+  "effect.shardline.immunity": "Immunität",
+  "effect.shardline.immunity.description": "Reinheit schützt den Körper: Splitterfieber kann nicht ausbrechen und Tiere kristallisieren nicht.",
+  "item.shardline.purification_essence.tooltip_immunity": "Verleiht Immunität gegen Splitterfieber (%s)",
+  "block.shardline.purity_anchor.tooltip": "Stoppt den Virus im Umkreis von %s Blöcken und reinigt ihn nach und nach",
+  "block.shardline.purity_anchor.tooltip2": "Lebewesen in seiner Zone erhalten Immunität",
+  "advancements.shardline.story.immunity.title": "Unberührt",
+  "advancements.shardline.story.immunity.description": "Lass dich von der Immunität vor Splitterfieber schützen",
+  "shardline.configuration.immunity_essence_seconds": "Immunität durch Essenz (Sekunden)",
+  "shardline.configuration.immunity_anchor_seconds": "Immunität in der Ankerzone (Sekunden)"
 }

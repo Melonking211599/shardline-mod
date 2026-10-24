@@ -82,10 +82,13 @@ public class PurificationEssenceItem extends Item {
         int radius = ShardlineConfig.ESSENCE_RADIUS.get();
         Purification.purifySphere(level, center, radius, purified -> player.displayClientMessage(
                 Component.translatable("message.shardline.purified", purified).withStyle(ChatFormatting.AQUA), true));
+        int immunity = ShardlineConfig.IMMUNITY_ESSENCE_SECONDS.get() * 20;
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius))) {
             entity.removeEffectsCuredBy(ShardFeverEffect.PURIFICATION);
+            VirusEffects.giveImmunity(entity, immunity, false);
         }
         player.removeEffectsCuredBy(ShardFeverEffect.PURIFICATION);
+        VirusEffects.giveImmunity(player, immunity, false);
 
         level.sendParticles(ParticleTypes.END_ROD, center.getX() + 0.5, center.getY() + 1.0, center.getZ() + 0.5, 80, radius * 0.4, 1.0, radius * 0.4, 0.05);
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, center.getX() + 0.5, center.getY() + 1.0, center.getZ() + 0.5, 40, radius * 0.5, 0.5, radius * 0.5, 0.0);
@@ -107,5 +110,10 @@ public class PurificationEssenceItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("item.shardline.purification_essence.tooltip").withStyle(ChatFormatting.AQUA));
         tooltip.add(Component.translatable("item.shardline.purification_essence.tooltip2").withStyle(ChatFormatting.GRAY));
+        int seconds = ShardlineConfig.IMMUNITY_ESSENCE_SECONDS.get();
+        if (seconds > 0) {
+            tooltip.add(Component.translatable("item.shardline.purification_essence.tooltip_immunity",
+                    String.format("%d:%02d", seconds / 60, seconds % 60)).withStyle(ChatFormatting.GOLD));
+        }
     }
 }

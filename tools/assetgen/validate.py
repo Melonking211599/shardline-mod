@@ -100,5 +100,6 @@ story2_blocks = """decision_altar_side decision_altar_side_glow decision_altar_t
 keeper_ruin_bricks keeper_ruin_pillar keeper_ruin_pillar_top keeper_rune_slab keeper_rune_slab_glow keeper_rune_slab_side""".split()
 for b in story2_blocks: need(TEX / "block" / f"{b}.png", (16, 16))
 blocks += story2_blocks
+need(TEX / "mob_effect" / "immunity.png", (18, 18))
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

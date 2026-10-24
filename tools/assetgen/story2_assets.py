@@ -251,6 +251,45 @@ def keeper_rune_slab_side() -> Tex:
     return t
 
 
+# ====================================================================== F4 Immunitaet (Effekt-Icon 18x18)
+IMMUNITY_ICON = """
+..................
+...oooooooooooo...
+..oGGGGGGGGGGGGo..
+..oGWWWWWWWWWWgo..
+..oGWWWWbbWWWWgo..
+..oGWWWbBBbWWWgo..
+..oGWWbBSSBbWWgo..
+..oGWWbBSBBbWWgo..
+..oGWWbBBBBbWWgo..
+..oGWWWbBBbWWWgo..
+...oGWWWbbWWWgo...
+...oGWWWWWWWWgo...
+....oGWWWWWWgo....
+.....oGWWWWgo.....
+......oGWWgo......
+.......oggo.......
+........oo........
+..................
+"""
+
+
+def immunity_icon() -> Tex:
+    t = Tex(18, 18)
+    pal = {"o": hx("#2a1d10"), "G": GOLD[3], "g": GOLD[1], "b": SKYB[0], "B": SKYB[2], "S": SKYB[4]}
+    for y, row in enumerate(IMMUNITY_ICON.strip("\n").split("\n")):
+        for x, ch in enumerate(row):
+            if ch == "W":
+                t.set(x, y, IVORY[4] if x < 9 else IVORY[3] if y < 12 else IVORY[2])
+            elif ch != ".":
+                t.set(x, y, pal[ch])
+    return t
+
+
+OTHER = {
+    "mob_effect/immunity": immunity_icon,
+}
+
 BLOCKS = {
     "block/keeper_ruin_bricks": keeper_ruin_bricks,
     "block/keeper_ruin_pillar": keeper_ruin_pillar,
@@ -265,7 +304,6 @@ BLOCKS = {
     "block/decision_altar_bottom": decision_altar_bottom,
 }
 ITEMS = {}
-OTHER = {}
 
 
 def main():

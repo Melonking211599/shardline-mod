@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/purification",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.immunity.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:purification_essence"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.immunity.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

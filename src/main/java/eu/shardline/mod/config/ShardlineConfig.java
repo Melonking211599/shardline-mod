@@ -91,6 +91,8 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.IntValue ANCHOR_RADIUS;
     public static final ModConfigSpec.IntValue ANCHOR_PURIFY_PER_PULSE;
     public static final ModConfigSpec.IntValue ESSENCE_RADIUS;
+    public static final ModConfigSpec.IntValue IMMUNITY_ESSENCE_SECONDS;
+    public static final ModConfigSpec.IntValue IMMUNITY_ANCHOR_SECONDS;
     public static final ModConfigSpec.IntValue HEART_PURIFY_RADIUS;
     public static final ModConfigSpec.DoubleValue VIRUS_HEART_HEALTH;
     public static final ModConfigSpec.IntValue HEART_SPAWN_THRESHOLD;
@@ -328,6 +330,12 @@ public final class ShardlineConfig {
         ESSENCE_RADIUS = b.comment("Reinigungsradius der Reinigungsessenz.")
                 .translation(key("essence_radius"))
                 .defineInRange("essenceRadius", 6, 1, 32);
+        IMMUNITY_ESSENCE_SECONDS = b.comment("Wie lange die Reinigungsessenz Immunitaet gegen Splitterfieber verleiht (Sekunden, 0 = keine).")
+                .translation(key("immunity_essence_seconds"))
+                .defineInRange("immunityEssenceSeconds", 120, 0, 3600);
+        IMMUNITY_ANCHOR_SECONDS = b.comment("Immunitaet, die ein Reinheitsanker alle zwei Sekunden in seiner Zone auffrischt (Sekunden, 0 = keine).")
+                .translation(key("immunity_anchor_seconds"))
+                .defineInRange("immunityAnchorSeconds", 15, 0, 600);
         HEART_PURIFY_RADIUS = b.comment("Radius, den ein besiegtes Virusherz reinigt.")
                 .translation(key("heart_purify_radius"))
                 .defineInRange("heartPurifyRadius", 40, 4, 128);

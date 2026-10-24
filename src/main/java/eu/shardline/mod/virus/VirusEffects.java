@@ -69,7 +69,8 @@ public final class VirusEffects {
             }
             return;
         }
-        if (living instanceof InfectedMob || !(living instanceof Mob mob) || random.nextDouble() >= ShardlineConfig.MOB_CONVERSION_CHANCE.get()) {
+        if (living instanceof InfectedMob || !(living instanceof Mob mob) || living.hasEffect(ModEffects.IMMUNITY)
+                || random.nextDouble() >= ShardlineConfig.MOB_CONVERSION_CHANCE.get()) {
             return;
         }
         EntityType<?> type = mob.getType();
@@ -140,7 +141,15 @@ public final class VirusEffects {
         return converted;
     }
 
-    /** Splitterfieber verleihen; Splitterherrscher und infizierte Wesen sind immun. */
+    /** Immunitaet verleihen (Reinheitsanker, Reinigungsessenz); verlaengert, kuerzt aber nie. */
+    public static void giveImmunity(LivingEntity entity, int ticks, boolean ambient) {
+        if (ticks <= 0 || entity instanceof InfectedMob) {
+            return;
+        }
+        entity.addEffect(new MobEffectInstance(ModEffects.IMMUNITY, ticks, 0, ambient, !ambient, true));
+    }
+
+    /** Splitterfieber verleihen; Splitterherrscher und infizierte Wesen sind immun, die Immunitaet blockt es ebenfalls. */
     public static void giveFever(LivingEntity entity, int ticks) {
         if (ticks <= 0 || isImmune(entity)) {
             return;

@@ -856,5 +856,15 @@
   "block.shardline.keeper_rune_slab": "Keeper Rune Slab",
   "structure.shardline.keeper_ruin": "Keeper Ruins",
   "advancements.shardline.keeper_ruin.title": "Where the Keepers Met",
-  "advancements.shardline.keeper_ruin.description": "Find the ruins of a keeper hall"
+  "advancements.shardline.keeper_ruin.description": "Find the ruins of a keeper hall",
+
+  "effect.shardline.immunity": "Immunity",
+  "effect.shardline.immunity.description": "Purity shields the body: Shard Fever cannot take hold and animals do not crystallize.",
+  "item.shardline.purification_essence.tooltip_immunity": "Grants Immunity to Shard Fever (%s)",
+  "block.shardline.purity_anchor.tooltip": "Stops the virus within %s blocks and slowly cleanses it",
+  "block.shardline.purity_anchor.tooltip2": "Living beings in its zone gain Immunity",
+  "advancements.shardline.story.immunity.title": "Untouched",
+  "advancements.shardline.story.immunity.description": "Let Immunity shield you from Shard Fever",
+  "shardline.configuration.immunity_essence_seconds": "Immunity from essence (seconds)",
+  "shardline.configuration.immunity_anchor_seconds": "Immunity in anchor zone (seconds)"
 }

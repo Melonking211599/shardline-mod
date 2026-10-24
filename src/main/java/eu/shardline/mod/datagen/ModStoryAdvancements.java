@@ -56,6 +56,7 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         task(chapter6, "purity_anchor", ModBlocks.PURITY_ANCHOR.get(), AdvancementType.TASK, 0);
         AdvancementHolder purification = task(chapter6, "purification", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);
         task(purification, "cure_villager", ModItems.CRYSTALLIZED_VILLAGER_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
+        task(purification, "immunity", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);
         AdvancementHolder heart = task(chapter6, "virus_heart", ModItems.VIRUS_HEART_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
         AdvancementHolder core = task(heart, "breach_core", ModItems.BREACH_CORE.get(), AdvancementType.GOAL, 300);
         task(core, "decision_altar", ModBlocks.DECISION_ALTAR.get(), AdvancementType.TASK, 0);

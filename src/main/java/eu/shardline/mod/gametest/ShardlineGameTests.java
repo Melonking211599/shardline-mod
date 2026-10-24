@@ -568,6 +568,33 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
+    /** Immunitaet blockt Splitterfieber; der Reinheitsanker verteilt sie in seiner Zone. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void immunity(GameTestHelper helper) {
+        clearArea(helper, 6, 3);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.world.entity.animal.Pig shielded = helper.spawn(EntityType.PIG, new BlockPos(1, 1, 1));
+        net.minecraft.world.entity.animal.Pig exposed = helper.spawn(EntityType.PIG, new BlockPos(5, 1, 5));
+        eu.shardline.mod.virus.VirusEffects.giveImmunity(shielded, 200, false);
+        eu.shardline.mod.virus.VirusEffects.giveFever(shielded, 200);
+        eu.shardline.mod.virus.VirusEffects.giveFever(exposed, 200);
+        helper.assertFalse(shielded.hasEffect(eu.shardline.mod.effect.ModEffects.SHARD_FEVER), "Immunitaet hat das Fieber nicht verhindert");
+        helper.assertTrue(exposed.hasEffect(eu.shardline.mod.effect.ModEffects.SHARD_FEVER), "Ohne Immunitaet muss das Fieber wirken");
+
+        BlockPos anchor = helper.absolutePos(new BlockPos(3, 1, 3));
+        level.setBlockAndUpdate(anchor, ModBlocks.PURITY_ANCHOR.get().defaultBlockState());
+        try {
+            level.getBlockState(anchor).tick(level, anchor, level.getRandom());
+            helper.assertTrue(exposed.hasEffect(eu.shardline.mod.effect.ModEffects.IMMUNITY), "Anker verteilt keine Immunitaet");
+            helper.assertFalse(exposed.hasEffect(eu.shardline.mod.effect.ModEffects.SHARD_FEVER), "Anker heilt das Fieber nicht");
+        } finally {
+            level.setBlockAndUpdate(anchor, Blocks.AIR.defaultBlockState());
+            shielded.discard();
+            exposed.discard();
+        }
+        helper.succeed();
+    }
+
     // ------------------------------------------------------------------ Story & Shardvirus
 
     /**
