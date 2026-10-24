@@ -19,6 +19,7 @@ import effects_gui
 import entities
 import geo_prep
 import gui
+import infected_animals
 import infected_entities
 import snail
 import fresh_items
@@ -46,6 +47,8 @@ def main():
     # Splitterhandwerk
     fresh_update.main()
     snail.main()
+    # Story-Erweiterung 2
+    infected_animals.main()
     print("Fertig.")
 
 

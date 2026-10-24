@@ -269,6 +269,87 @@
     ],
     "subtitle": "subtitles.shardline.entity.crystallized_cow.hurt"
   },
+  "entity.crystallized_pig.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.pig.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_pig.ambient"
+  },
+  "entity.crystallized_pig.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.pig.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_pig.death"
+  },
+  "entity.crystallized_pig.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.pig.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_pig.hurt"
+  },
+  "entity.crystallized_sheep.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.sheep.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_sheep.ambient"
+  },
+  "entity.crystallized_sheep.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.sheep.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_sheep.death"
+  },
+  "entity.crystallized_sheep.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.sheep.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_sheep.hurt"
+  },
+  "entity.crystallized_villager.ambient": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombie_villager.ambient"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_villager.ambient"
+  },
+  "entity.crystallized_villager.death": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombie_villager.death"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_villager.death"
+  },
+  "entity.crystallized_villager.hurt": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombie_villager.hurt"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.crystallized_villager.hurt"
+  },
   "entity.glow_moth.ambient": {
     "sounds": [
       {
@@ -295,6 +376,15 @@
       }
     ],
     "subtitle": "subtitles.shardline.entity.glow_moth.hurt"
+  },
+  "entity.infected.cured": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "entity.zombie_villager.converted"
+      }
+    ],
+    "subtitle": "subtitles.shardline.entity.infected.cured"
   },
   "entity.shadow_fox.ambient": {
     "sounds": [

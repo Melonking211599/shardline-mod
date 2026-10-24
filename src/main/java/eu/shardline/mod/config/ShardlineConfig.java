@@ -80,6 +80,7 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.DoubleValue MOB_CONVERSION_CHANCE;
     public static final ModConfigSpec.BooleanValue VILLAGERS_FLEE;
     public static final ModConfigSpec.BooleanValue VILLAGERS_TRANSFORM;
+    public static final ModConfigSpec.BooleanValue ANIMALS_TRANSFORM;
     public static final ModConfigSpec.DoubleValue FEVER_CHANCE_ON_INFECTED_BLOCK;
     public static final ModConfigSpec.IntValue FEVER_DURATION_SECONDS;
     public static final ModConfigSpec.DoubleValue FEVER_DAMAGE;
@@ -288,15 +289,18 @@ public final class ShardlineConfig {
         INFECTED_MOB_SEED_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass ein infizierter Mob den Boden unter sich infiziert.")
                 .translation(key("infected_mob_seed_chance"))
                 .defineInRange("infectedMobSeedChance", 0.065, 0.0, 1.0);
-        MOB_CONVERSION_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass Zombies, Kuehe und Dorfbewohner auf infiziertem Boden kristallisieren.")
+        MOB_CONVERSION_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass Zombies, Kuehe, Schafe, Schweine und Dorfbewohner auf infiziertem Boden kristallisieren.")
                 .translation(key("mob_conversion_chance"))
                 .defineInRange("mobConversionChance", 0.02, 0.0, 1.0);
         VILLAGERS_FLEE = b.comment("Dorfbewohner fliehen vor infizierten Mobs.")
                 .translation(key("villagers_flee"))
                 .define("villagersFlee", true);
-        VILLAGERS_TRANSFORM = b.comment("Dorfbewohner verwandeln sich in Shard-Zombies (auf infiziertem Boden oder wenn ein Shard-Zombie sie toetet).")
+        VILLAGERS_TRANSFORM = b.comment("Dorfbewohner verwandeln sich: auf infiziertem Boden in kristallisierte Dorfbewohner, durch einen Shard-Zombie getoetet in Shard-Zombies.")
                 .translation(key("villagers_transform"))
                 .define("villagersTransform", true);
+        ANIMALS_TRANSFORM = b.comment("Kuehe, Schafe und Schweine auf infiziertem Boden kristallisieren.")
+                .translation(key("animals_transform"))
+                .define("animalsTransform", true);
         FEVER_CHANCE_ON_INFECTED_BLOCK = b.comment("Chance (0-1) pro Sekunde auf infiziertem Boden, Splitterfieber zu bekommen.")
                 .translation(key("fever_chance_on_infected_block"))
                 .defineInRange("feverChanceOnInfectedBlock", 0.04, 0.0, 1.0);

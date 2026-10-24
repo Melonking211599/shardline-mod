@@ -5,7 +5,13 @@ import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.effect.ModEffects;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.core.ModSounds;
+import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
+import eu.shardline.mod.entity.infected.CrystallizedPigEntity;
+import eu.shardline.mod.entity.infected.CrystallizedSheepEntity;
+import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
 import eu.shardline.mod.entity.infected.InfectedMob;
+import eu.shardline.mod.entity.infected.ShardZombieEntity;
 import eu.shardline.mod.story.StoryChapter;
 import eu.shardline.mod.story.StoryManager;
 import javax.annotation.Nullable;
@@ -17,7 +23,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -68,13 +73,52 @@ public final class VirusEffects {
             return;
         }
         EntityType<?> type = mob.getType();
+        boolean animals = ShardlineConfig.ANIMALS_TRANSFORM.get();
         if (type == EntityType.ZOMBIE || type == EntityType.HUSK) {
             convert(serverLevel, mob, ModEntities.SHARD_ZOMBIE.get());
-        } else if (type == EntityType.COW) {
+        } else if (type == EntityType.COW && animals) {
             convert(serverLevel, mob, ModEntities.CRYSTALLIZED_COW.get());
-        } else if (mob instanceof Villager && ShardlineConfig.VILLAGERS_TRANSFORM.get() && serverLevel.getDifficulty() != Difficulty.PEACEFUL) {
-            convert(serverLevel, mob, ModEntities.SHARD_ZOMBIE.get());
+        } else if (type == EntityType.SHEEP && animals) {
+            convert(serverLevel, mob, ModEntities.CRYSTALLIZED_SHEEP.get());
+        } else if (type == EntityType.PIG && animals) {
+            convert(serverLevel, mob, ModEntities.CRYSTALLIZED_PIG.get());
+        } else if (mob instanceof Villager villager && type == EntityType.VILLAGER && ShardlineConfig.VILLAGERS_TRANSFORM.get()) {
+            CrystallizedVillagerEntity.infect(serverLevel, villager);
         }
+    }
+
+    /**
+     * Reinigung eines infizierten Wesens (Reinigungsessenz): zurueck zur Vanilla-Form, ein kristallisierter
+     * Dorfbewohner bekommt seinen alten Beruf zurueck.
+     *
+     * @return das gereinigte Wesen oder {@code null}, wenn es sich nicht reinigen laesst
+     */
+    @Nullable
+    public static Mob purifyMob(ServerLevel level, LivingEntity target) {
+        Mob cured;
+        if (target instanceof CrystallizedVillagerEntity villager) {
+            cured = villager.restore(level);
+        } else if (target instanceof CrystallizedCowEntity cow) {
+            cured = convert(level, cow, EntityType.COW);
+        } else if (target instanceof CrystallizedSheepEntity sheep) {
+            cured = convert(level, sheep, EntityType.SHEEP);
+        } else if (target instanceof CrystallizedPigEntity pig) {
+            cured = convert(level, pig, EntityType.PIG);
+        } else if (target instanceof ShardZombieEntity zombie) {
+            cured = convert(level, zombie, EntityType.ZOMBIE);
+        } else {
+            return null;
+        }
+        if (cured != null) {
+            level.playSound(null, cured.blockPosition(), ModSounds.INFECTED_CURED.get(), SoundSource.NEUTRAL, 1.0F, 1.2F);
+        }
+        return cured;
+    }
+
+    /** Ob die Reinigungsessenz das Wesen zurueckverwandeln kann. */
+    public static boolean isCurable(LivingEntity target) {
+        return target instanceof CrystallizedVillagerEntity || target instanceof CrystallizedCowEntity || target instanceof CrystallizedSheepEntity
+                || target instanceof CrystallizedPigEntity || target instanceof ShardZombieEntity;
     }
 
     /** Verwandelt einen Mob in eine infizierte Variante (behaelt Name, Ausruestung, Position). */

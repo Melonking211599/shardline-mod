@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:story/tame_infected",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.infected_herd.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "shardline:crystallized_sheep_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.infected_herd.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "rewards": {
+    "experience": 250
+  },
+  "sends_telemetry_event": true
+}

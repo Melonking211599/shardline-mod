@@ -93,6 +93,9 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.VOID_ZONE.get(), NoopRenderer::new);
         event.registerEntityRenderer(ModEntities.SHARD_ZOMBIE.get(), InfectedRenderers.ShardZombieRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_COW.get(), InfectedRenderers.CrystallizedCowRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_SHEEP.get(), InfectedRenderers.CrystallizedSheepRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIG.get(), InfectedRenderers.CrystallizedPigRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_VILLAGER.get(), InfectedRenderers.CrystallizedVillagerRenderer::new);
         event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "virus_heart", 1.2F, true));
     }
 

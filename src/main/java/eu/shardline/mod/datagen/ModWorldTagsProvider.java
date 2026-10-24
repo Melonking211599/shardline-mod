@@ -94,7 +94,8 @@ public final class ModWorldTagsProvider {
                     ModEntities.ASH_WALKER.get(), ModEntities.SHARD_SCOUT.get(), ModEntities.CRYSTAL_SPIDER.get(),
                     ModEntities.SHADOW_FOX.get(), ModEntities.SHATTERED_KNIGHT.get(), ModEntities.CRYSTAL_COLOSSUS.get(),
                     ModEntities.SHARD_QUEEN.get(), ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(),
-                    ModEntities.CRYSTALLIZED_COW.get(), ModEntities.VIRUS_HEART.get());
+                    ModEntities.CRYSTALLIZED_COW.get(), ModEntities.CRYSTALLIZED_SHEEP.get(), ModEntities.CRYSTALLIZED_PIG.get(),
+                    ModEntities.CRYSTALLIZED_VILLAGER.get(), ModEntities.VIRUS_HEART.get());
         }
     }
 

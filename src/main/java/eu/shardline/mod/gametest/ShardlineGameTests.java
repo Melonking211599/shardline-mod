@@ -356,7 +356,8 @@ public final class ShardlineGameTests {
                 ModEntities.CRYSTAL_SPIDER.get(), ModEntities.SHARD_TRADER.get(), ModEntities.SHADOW_FOX.get(),
                 ModEntities.SHATTERED_KNIGHT.get(), ModEntities.CRYSTAL_COLOSSUS.get(), ModEntities.SHARD_QUEEN.get(),
                 ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(), ModEntities.CRYSTALLIZED_COW.get(),
-                ModEntities.VIRUS_HEART.get(), ModEntities.CRYSTAL_SNAIL.get())) {
+                ModEntities.VIRUS_HEART.get(), ModEntities.CRYSTAL_SNAIL.get(), ModEntities.CRYSTALLIZED_SHEEP.get(),
+                ModEntities.CRYSTALLIZED_PIG.get(), ModEntities.CRYSTALLIZED_VILLAGER.get())) {
             // Mit Abstand erzeugen, damit grosse Wesen kleinere nicht in Bloecke schieben.
             BlockPos spawn = origin.offset((index % 5) * 8, 0, (index / 5) * 8);
             index++;
@@ -379,7 +380,7 @@ public final class ShardlineGameTests {
     // ------------------------------------------------------------------ Splitterhandwerk
 
     /** Kristallschnecke: zieht sich bei Treffern ins Haus zurueck, nimmt dann deutlich weniger Schaden und kommt wieder heraus. */
-    @GameTest(template = EMPTY, timeoutTicks = 200)
+    @GameTest(template = EMPTY, timeoutTicks = 200, batch = "shardline_snail")
     public static void crystalSnailHides(GameTestHelper helper) {
         // Freiraum schaffen: Bauwerke anderer Tests koennen in die Testflaeche ragen (sonst Erstickungsschaden).
         for (BlockPos pos : BlockPos.betweenClosed(-2, 0, -2, 4, 4, 4)) {
@@ -475,6 +476,60 @@ public final class ShardlineGameTests {
         }
         List<String> missing = keys.stream().filter(key -> !language.has(key)).toList();
         helper.assertTrue(missing.isEmpty(), "Fehlende Namen: " + missing);
+        helper.succeed();
+    }
+
+    // ------------------------------------------------------------------ Story-Erweiterung 2
+
+    /** Freie Testflaeche mit Steinboden (Bauwerke anderer Tests koennen hineinragen). */
+    private static void clearArea(GameTestHelper helper, int size, int height) {
+        for (BlockPos pos : BlockPos.betweenClosed(-1, 0, -1, size, height, size)) {
+            helper.setBlock(pos, pos.getY() == 0 ? Blocks.STONE : Blocks.AIR);
+        }
+    }
+
+    /** Schaf, Schwein und Dorfbewohner kristallisieren; Kragen nach dem Zaehmen; Reinigung gibt dem Dorfbewohner den Beruf zurueck. */
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void infectedAnimals(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.world.entity.animal.Sheep sheep = helper.spawn(EntityType.SHEEP, new BlockPos(1, 1, 1));
+        net.minecraft.world.entity.animal.Pig pig = helper.spawn(EntityType.PIG, new BlockPos(4, 1, 1));
+        net.minecraft.world.entity.npc.Villager villager = helper.spawn(EntityType.VILLAGER, new BlockPos(7, 1, 1));
+        villager.setVillagerData(villager.getVillagerData().setProfession(net.minecraft.world.entity.npc.VillagerProfession.LIBRARIAN).setLevel(2));
+
+        var crystalSheep = eu.shardline.mod.virus.VirusEffects.convert(level, sheep, ModEntities.CRYSTALLIZED_SHEEP.get());
+        var crystalPig = eu.shardline.mod.virus.VirusEffects.convert(level, pig, ModEntities.CRYSTALLIZED_PIG.get());
+        var crystalVillager = eu.shardline.mod.entity.infected.CrystallizedVillagerEntity.infect(level, villager);
+        helper.assertTrue(crystalSheep != null && crystalPig != null && crystalVillager != null, "Kristallisierung fehlgeschlagen");
+        helper.assertTrue(crystalVillager.remembersVillager(), "Dorfbewohner-Daten wurden nicht gespeichert");
+
+        helper.assertFalse(crystalSheep.hasCollar(), "Wildes Schaf darf keinen Kragen haben");
+        crystalSheep.setOwnerUUID(java.util.UUID.randomUUID());
+        helper.assertTrue(crystalSheep.hasCollar(), "Gezaehmtes Schaf zeigt keinen Kragen");
+        net.minecraft.nbt.CompoundTag saved = new net.minecraft.nbt.CompoundTag();
+        crystalSheep.addAdditionalSaveData(saved);
+        var reloaded = ModEntities.CRYSTALLIZED_SHEEP.get().create(level);
+        reloaded.readAdditionalSaveData(saved);
+        helper.assertTrue(reloaded.hasCollar() && reloaded.isTamed(), "Besitzer/Kragen wird nicht gespeichert");
+
+        crystalSheep.shear(net.minecraft.sounds.SoundSource.PLAYERS);
+        helper.assertTrue(crystalSheep.isSheared(), "Kristallschaf laesst sich nicht scheren");
+        boolean amethyst = !level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, crystalSheep.getBoundingBox().inflate(3.0),
+                item -> item.getItem().is(Items.AMETHYST_SHARD)).isEmpty();
+        helper.assertTrue(amethyst, "Scheren liefert keinen Amethyst");
+
+        var cured = eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalVillager);
+        helper.assertTrue(cured instanceof net.minecraft.world.entity.npc.Villager, "Reinigung liefert keinen Dorfbewohner");
+        var data = ((net.minecraft.world.entity.npc.Villager) cured).getVillagerData();
+        helper.assertTrue(data.getProfession() == net.minecraft.world.entity.npc.VillagerProfession.LIBRARIAN && data.getLevel() == 2,
+                "Beruf ging bei der Reinigung verloren: " + data.getProfession() + " " + data.getLevel());
+        helper.assertTrue(eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalPig) instanceof net.minecraft.world.entity.animal.Pig,
+                "Schwein wird nicht gereinigt");
+        for (Entity entity : level.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(helper.absolutePos(BlockPos.ZERO)).inflate(12.0),
+                entity -> !(entity instanceof net.minecraft.world.entity.player.Player))) {
+            entity.discard();
+        }
         helper.succeed();
     }
 

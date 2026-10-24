@@ -54,12 +54,14 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
         AdvancementHolder chapter5 = chapter(chapter4, StoryChapter.THE_BREACH, ModBlocks.INFECTED_STONE.get());
         AdvancementHolder chapter6 = chapter(chapter5, StoryChapter.CONTAINMENT, ModBlocks.PURITY_ANCHOR.get());
         task(chapter6, "purity_anchor", ModBlocks.PURITY_ANCHOR.get(), AdvancementType.TASK, 0);
-        task(chapter6, "purification", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);
+        AdvancementHolder purification = task(chapter6, "purification", ModItems.PURIFICATION_ESSENCE.get(), AdvancementType.TASK, 0);
+        task(purification, "cure_villager", ModItems.CRYSTALLIZED_VILLAGER_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
         AdvancementHolder heart = task(chapter6, "virus_heart", ModItems.VIRUS_HEART_SPAWN_EGG.get(), AdvancementType.GOAL, 100);
         AdvancementHolder core = task(heart, "breach_core", ModItems.BREACH_CORE.get(), AdvancementType.GOAL, 300);
         task(core, "ending_seal", ModBlocks.QUEEN_TROPHY.get(), AdvancementType.CHALLENGE, 1000);
         AdvancementHolder dominate = task(core, "ending_dominate", ModItems.SHARD_ZOMBIE_SPAWN_EGG.get(), AdvancementType.CHALLENGE, 1000);
-        task(dominate, "tame_infected", ModItems.CRYSTALLIZED_COW_SPAWN_EGG.get(), AdvancementType.TASK, 0);
+        AdvancementHolder tame = task(dominate, "tame_infected", ModItems.CRYSTALLIZED_COW_SPAWN_EGG.get(), AdvancementType.TASK, 0);
+        task(tame, "infected_herd", ModItems.CRYSTALLIZED_SHEEP_SPAWN_EGG.get(), AdvancementType.CHALLENGE, 250);
     }
 
     private AdvancementHolder chapter(AdvancementHolder parent, StoryChapter chapter, ItemLike icon) {

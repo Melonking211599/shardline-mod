@@ -12,6 +12,9 @@
     "shardline:queen_clone",
     "shardline:shard_zombie",
     "shardline:crystallized_cow",
+    "shardline:crystallized_sheep",
+    "shardline:crystallized_pig",
+    "shardline:crystallized_villager",
     "shardline:virus_heart"
   ]
 }

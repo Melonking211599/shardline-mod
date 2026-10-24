@@ -88,5 +88,13 @@ craft_items = "crystal_door shard_lantern crystal_slime glowcap_stew crystal_can
 for i in craft_items: need(TEX / "item" / f"{i}.png", (16, 16))
 blocks += craft_blocks
 items += craft_items
+
+# ---- Story-Erweiterung 2
+for n, size in (("crystallized_sheep", (64, 32)), ("crystallized_sheep_fur", (64, 32)), ("crystallized_pig", (64, 32)),
+                ("crystallized_villager", (64, 64))):
+    need(TEX / "entity" / f"{n}.png", size); need(TEX / "entity" / f"{n}_glowmask.png", size)
+for n, size in (("crystallized_cow", (64, 32)), ("crystallized_sheep", (64, 32)), ("crystallized_pig", (64, 32)),
+                ("crystallized_villager", (64, 64)), ("shard_zombie", (64, 64))):
+    need(TEX / "entity" / f"{n}_collar.png", size)
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)

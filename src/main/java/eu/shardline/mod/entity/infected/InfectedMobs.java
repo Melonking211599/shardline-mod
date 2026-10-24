@@ -5,8 +5,10 @@ import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.story.StoryManager;
+import eu.shardline.mod.virus.VirusEffects;
 import eu.shardline.mod.virus.VirusSpreadManager;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -18,6 +20,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -98,7 +102,30 @@ public final class InfectedMobs {
                 6, 0.4, 0.3, 0.4, 0.0);
         serverPlayer.displayClientMessage(Component.translatable("message.shardline.tamed_infected", mob.getDisplayName()), true);
         StoryManager.award(serverPlayer, "story/tame_infected");
+        recordHerd(serverPlayer, mob.getType());
         return InteractionResult.CONSUME;
+    }
+
+    /** Merkt sich gezaehmte Tierarten; wer alle vier hat, erhaelt "Kristallherde". */
+    private static void recordHerd(ServerPlayer player, EntityType<?> type) {
+        List<EntityType<?>> herd = List.of(ModEntities.CRYSTALLIZED_COW.get(), ModEntities.CRYSTALLIZED_SHEEP.get(),
+                ModEntities.CRYSTALLIZED_PIG.get(), ModEntities.CRYSTALLIZED_VILLAGER.get());
+        if (!herd.contains(type)) {
+            return;
+        }
+        var data = StoryManager.data(player.server);
+        data.addFlag(player.getUUID(), "tamed:" + EntityType.getKey(type).getPath());
+        if (herd.stream().allMatch(member -> data.hasFlag(player.getUUID(), "tamed:" + EntityType.getKey(member).getPath()))) {
+            StoryManager.award(player, "story/infected_herd");
+        }
+    }
+
+    /** Nahkampftreffer gegen einen kristallisierten Traeger: absplitternde Kristalle verursachen Fieber. */
+    public static void splinterAttacker(LivingEntity self, DamageSource source, float chance) {
+        if (!self.level().isClientSide && source.getDirectEntity() instanceof LivingEntity attacker
+                && attacker.distanceToSqr(self) < 9.0 && self.getRandom().nextFloat() < chance) {
+            VirusEffects.giveFever(attacker, 5 * 20);
+        }
     }
 
     /** Jede Sekunde: Infektion streuen, beschworene Diener altern lassen. */

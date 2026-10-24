@@ -6,6 +6,9 @@ import eu.shardline.mod.entity.boss.QueenCloneEntity;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
+import eu.shardline.mod.entity.infected.CrystallizedPigEntity;
+import eu.shardline.mod.entity.infected.CrystallizedSheepEntity;
+import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
 import eu.shardline.mod.entity.infected.ShardZombieEntity;
 import eu.shardline.mod.entity.misc.CrystalPillarEntity;
 import eu.shardline.mod.entity.misc.VoidZoneEntity;
@@ -74,6 +77,15 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedCowEntity>> CRYSTALLIZED_COW = register("crystallized_cow",
             EntityType.Builder.of(CrystallizedCowEntity::new, MobCategory.CREATURE).sized(0.9F, 1.4F).eyeHeight(1.3F)
                     .passengerAttachments(1.36875F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedSheepEntity>> CRYSTALLIZED_SHEEP = register("crystallized_sheep",
+            EntityType.Builder.of(CrystallizedSheepEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F).eyeHeight(1.235F)
+                    .passengerAttachments(1.2375F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedPigEntity>> CRYSTALLIZED_PIG = register("crystallized_pig",
+            EntityType.Builder.of(CrystallizedPigEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F)
+                    .passengerAttachments(0.86875F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedVillagerEntity>> CRYSTALLIZED_VILLAGER = register("crystallized_villager",
+            EntityType.Builder.of(CrystallizedVillagerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.95F).eyeHeight(1.62F)
+                    .clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<VirusHeartEntity>> VIRUS_HEART = register("virus_heart",
             EntityType.Builder.of(VirusHeartEntity::new, MobCategory.MONSTER).sized(1.8F, 2.4F).eyeHeight(1.6F)
                     .fireImmune().clientTrackingRange(10));

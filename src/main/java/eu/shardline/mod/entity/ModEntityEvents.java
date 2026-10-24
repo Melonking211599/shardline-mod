@@ -6,6 +6,9 @@ import eu.shardline.mod.entity.boss.QueenCloneEntity;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
+import eu.shardline.mod.entity.infected.CrystallizedPigEntity;
+import eu.shardline.mod.entity.infected.CrystallizedSheepEntity;
+import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
 import eu.shardline.mod.entity.infected.ShardZombieEntity;
 import eu.shardline.mod.entity.mob.AshWalkerEntity;
 import eu.shardline.mod.entity.mob.CrystalGolemEntity;
@@ -51,6 +54,9 @@ public final class ModEntityEvents {
         event.put(ModEntities.QUEEN_CLONE.get(), QueenCloneEntity.createAttributes().build());
         event.put(ModEntities.SHARD_ZOMBIE.get(), ShardZombieEntity.createAttributes().build());
         event.put(ModEntities.CRYSTALLIZED_COW.get(), CrystallizedCowEntity.createAttributes().build());
+        event.put(ModEntities.CRYSTALLIZED_SHEEP.get(), CrystallizedSheepEntity.createAttributes().build());
+        event.put(ModEntities.CRYSTALLIZED_PIG.get(), CrystallizedPigEntity.createAttributes().build());
+        event.put(ModEntities.CRYSTALLIZED_VILLAGER.get(), CrystallizedVillagerEntity.createAttributes().build());
         event.put(ModEntities.VIRUS_HEART.get(), VirusHeartEntity.createAttributes().build());
     }
 

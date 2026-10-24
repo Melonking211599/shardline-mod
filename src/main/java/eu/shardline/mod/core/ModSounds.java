@@ -113,6 +113,16 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_COW_AMBIENT = register("entity.crystallized_cow.ambient", "entity.cow.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_COW_HURT = register("entity.crystallized_cow.hurt", "entity.cow.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_COW_DEATH = register("entity.crystallized_cow.death", "entity.cow.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_SHEEP_AMBIENT = register("entity.crystallized_sheep.ambient", "entity.sheep.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_SHEEP_HURT = register("entity.crystallized_sheep.hurt", "entity.sheep.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_SHEEP_DEATH = register("entity.crystallized_sheep.death", "entity.sheep.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_PIG_AMBIENT = register("entity.crystallized_pig.ambient", "entity.pig.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_PIG_HURT = register("entity.crystallized_pig.hurt", "entity.pig.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_PIG_DEATH = register("entity.crystallized_pig.death", "entity.pig.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_VILLAGER_AMBIENT = register("entity.crystallized_villager.ambient", "entity.zombie_villager.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_VILLAGER_HURT = register("entity.crystallized_villager.hurt", "entity.zombie_villager.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRYSTALLIZED_VILLAGER_DEATH = register("entity.crystallized_villager.death", "entity.zombie_villager.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> INFECTED_CURED = register("entity.infected.cured", "entity.zombie_villager.converted");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_AMBIENT = register("entity.virus_heart.ambient", "entity.warden.heartbeat");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_HURT = register("entity.virus_heart.hurt", "block.amethyst_block.break");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIRUS_HEART_DEATH = register("entity.virus_heart.death", "block.respawn_anchor.deplete");
