@@ -10,7 +10,9 @@ import json
 import math
 
 from common import CYAN, GOLD, IVORY, SKYB, TEX, VGLOW, VIRUS, Tex, clamp, hx, mix, nz, save_png
-from pixel import _spots_for, clusters, ramps, shift, stamp
+from fresh_blocks import crystal_log, crystal_log_top
+from fresh_blocks2 import crystal_leaves
+from pixel import clusters, grow, patches, ramps, shift, spots, stamp
 
 N = 16
 
@@ -19,146 +21,115 @@ INF_DIRT = [hx(c) for c in ("#1c0f1c", "#2f1a2e", "#46283f", "#5f3a54", "#7b5169
 INF_GRASS = [hx(c) for c in ("#17081f", "#2a1138", "#44205a", "#63307f", "#8545a3")]
 INF_BARK = [hx(c) for c in ("#140a1a", "#25142c", "#3a2140", "#52305a", "#6e4575")]
 INF_LEAF = [hx(c) for c in ("#12051a", "#2a0b36", "#4a1450", "#76206c", "#a43a92")]
-INF_SAND = [hx(c) for c in ("#42324c", "#63506e", "#8a7391", "#b098b4", "#d3bdd3")]
+INF_SAND = [hx(c) for c in ("#2c2036", "#4a3a56", "#6e587a", "#947c9f", "#b99fc2")]
 
-_DIR8 = ((1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1))
+VARIANT_SEEDS = (0, 1000, 2000)       # Zusatz zu allen Seeds einer Familie; Datei <name>.png = 0, _v2 = 1000, _v3 = 2000
 
 
-# ------------------------------------------------------------------ Adern
-def veins(seed: int, paths: int = 3, length: int = 11, branch: float = 0.09, dirs=range(8), allow=None) -> set:
-    """Duenne Wurzeladern mit 8 Richtungen, leichten Biegungen und Verzweigungen. Laufen ueber den Rand (kachelt)."""
-    out: set = set()
-    dirs = list(dirs)
-    queue = []
-    for i in range(paths):
-        queue.append((int(nz(i, 0, seed) * N), int(nz(i, 1, seed) * N), dirs[int(nz(i, 2, seed) * len(dirs)) % len(dirs)], length))
-    steps = 0
-    while queue and steps < 400:
-        x, y, d, left = queue.pop(0)
-        prev = None
-        while left > 0 and steps < 400:
-            steps += 1
-            if allow is None or allow(x, y):
-                out.add((x, y))
-            r = nz(steps, 5, seed)
-            if r < 0.18:
-                d = (d + 1) % 8
-            elif r < 0.36:
-                d = (d + 7) % 8
-            if dirs and d not in dirs:
-                d = min(dirs, key=lambda k: min((k - d) % 8, (d - k) % 8))
-            if nz(steps, 8, seed) < branch and left > 4:
-                queue.append((x, y, (d + (2 if steps % 2 else 6)) % 8, left // 2 + 2))
-            nx, ny = (x + _DIR8[d][0]) % N, (y + _DIR8[d][1]) % N
-            if allow is not None and not allow(nx, ny):
-                break
-            x, y = nx, ny
-            left -= 1
+# ------------------------------------------------------------------ Adern (gewachsene Baeume, siehe pixel.grow)
+def veins(seed: int, roots, length: int = 13, fork: float = 0.2, allow=None):
+    """Aderbaeume aus gegebenen Wurzeln. Gibt ({(x, y): (u, gen)}, tips) zurueck."""
+    return grow(seed, roots, length=length, fork=fork, wobble=0.3, max_gen=2, allow=allow)
+
+
+def roots_at(seed: int, count: int = 2, margin: int = 2):
+    """Wurzeln am Kachelrand, damit die Adern ueber Bloeckgrenzen weiterwachsen (Netz statt Inseln)."""
+    out = []
+    for i in range(count):
+        edge = int(nz(i, 0, seed) * 4)
+        pos = margin + int(nz(i, 1, seed) * (N - 2 * margin))
+        x, y = ((0, pos), (N - 1, pos), (pos, 0), (pos, N - 1))[edge]
+        dx = 1 if x < N // 2 else -1
+        dy = 1 if y < N // 2 else -1
+        out.append(((x, y), (dx, dy)))
     return out
 
 
-SHARD_GLOW = """
-.2.
-232
-131
-"""
+def infect(base: Tex, seed: int, tree, shards: int = 1, spores: int = 3, tint: float = 0.5, opaque=None,
+           shard_skip=lambda p: False):
+    """Legt Rille, Fraßhof, Leuchtadern und Kristallspitzen auf `base`. Liefert (base, glow).
 
-
-def infect(base: Tex, seed: int, vs: set, shards: int = 2, spores: int = 4, tint: float = 0.4, opaque=None, shard_skip=lambda p: False):
-    """Legt Rille, Hof und Splitter auf `base` und liefert (base, glow)."""
+    Aelteres Gewebe (nahe der Wurzel) ist staerker angefressen (breiterer dunkler Hof), die Adern leuchten zur
+    Spitze hin heller, die Zweigspitzen sind fast weiss. Kristalle wachsen nur an Zweigenden."""
+    cells, tips = tree
     glow = Tex(N, N)
     px = base.px
-    vp = ramps(A=VIRUS, B=VGLOW)
-    halo = set()
-    for (x, y) in vs:
+    ok = (lambda x, y: True) if opaque is None else opaque
+    for (x, y), (u, gen) in cells.items():
+        if not ok(x, y):
+            continue
+        reach = 1 if u < 0.65 else 0
         for q in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
             q = (q[0] % N, q[1] % N)
-            if q not in vs and (opaque is None or opaque(*q)):
-                halo.add(q)
-    for (x, y) in halo:
-        c = mix(px[x, y], VIRUS[2], tint)
-        px[x, y] = (int(c[0] * 0.75), int(c[1] * 0.62), int(c[2] * 0.8), c[3])
-    for (x, y) in sorted(vs):
-        if opaque is not None and not opaque(x, y):
+            if q not in cells and ok(*q) and reach:
+                c = mix(px[q], VIRUS[2], tint * (1.0 - u))
+                px[q] = (int(c[0] * 0.78), int(c[1] * 0.64), int(c[2] * 0.82), c[3])
+    for (x, y), (u, gen) in sorted(cells.items()):
+        if not ok(x, y):
             continue
-        px[x, y] = VIRUS[0] if (x + y) % 3 == 0 else VIRUS[1]
-        glow.set(x, y, VGLOW[2] if (x * 2 + y * 3) % 7 == 0 else VGLOW[1])
-    # Splitter wachsen aus den Adern: leuchtende Kristallspitze mit dunklem Fuss
-    pts = sorted(p for p in vs if not shard_skip(p))
-    placed = []
-    k = 0
-    while pts and len(placed) < shards and k < 200:
-        p = pts[int(nz(k, 3, seed) * len(pts)) % len(pts)]
-        if all(abs(p[0] - q[0]) + abs(p[1] - q[1]) > 5 for q in placed):
-            placed.append(p)
-        k += 1
-    for (x, y) in placed:
-        for j, row in enumerate(SHARD_GLOW.strip("\n").split("\n")):
-            for i, ch in enumerate(row):
-                if ch == ".":
-                    continue
-                tx, ty = (x + i - 1) % N, (y + j - 2) % N
-                if opaque is not None and not opaque(tx, ty):
-                    continue
-                tone = {"1": 1, "2": 3, "3": 2}[ch]
-                px[tx, ty] = VIRUS[3] if ch != "2" else VGLOW[1]
-                glow.set(tx, ty, VGLOW[tone])
-    # einzelne Sporenfunken neben den Adern
-    cand = sorted(halo)
-    placed_n = 0
-    k = 0
-    while placed_n < spores and cand and k < 80:
-        p = cand[int(nz(k, 9, seed) * len(cand)) % len(cand)]
-        if glow.get(*p)[3] == 0:
+        px[x, y] = VIRUS[0] if u < 0.7 else VIRUS[1]
+        tone = 0 if u < 0.3 else 1 if u < 0.65 else 2 if u < 0.92 else 3
+        glow.set(x, y, VGLOW[tone])
+    for (x, y) in tips:
+        if ok(x, y):
+            glow.set(x, y, VGLOW[4])
+    # Kristallspitze wachsen aus Zweigenden (nach oben), dunkler Fuss, helle Spitze
+    placed = 0
+    for k, (x, y) in enumerate(sorted(tips)):
+        if placed >= shards or shard_skip((x, y)):
+            continue
+        spots_ = [((x, (y - 1) % N), VGLOW[3], VIRUS[4]), ((x, (y - 2) % N), VGLOW[2], VIRUS[3])]
+        if all(ok(*q) and q not in cells for q, _, _ in spots_):
+            for q, g, b in spots_:
+                glow.set(q[0], q[1], g)
+                px[q] = b
+            placed += 1
+    # einzelne Sporenfunken im Hof der Adern
+    halo = sorted({((x + dx) % N, (y + dy) % N) for (x, y) in cells for dx, dy in ((2, 0), (-2, 0), (0, 2), (0, -2))} - set(cells))
+    placed_n, k = 0, 0
+    while placed_n < spores and halo and k < 80:
+        p = halo[int(nz(k, 9, seed) * len(halo)) % len(halo)]
+        if ok(*p) and glow.get(*p)[3] == 0 and px[p][3]:
             glow.set(p[0], p[1], VGLOW[1])
             placed_n += 1
         k += 1
     return base, glow
 
 
-# ------------------------------------------------------------------ Grundtexturen
-def stone_base(seed, ramp_, base=2):
-    return clusters(seed, ramp_, base=base, lights=8, darks=8, longest=3)
+# ------------------------------------------------------------------ Grundtexturen (gleiche Strukturen wie die gesunden Bloecke)
+def stone_base(seed, ramp_):
+    return patches(seed, ramp_, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=(4, 4), detail=0.3)
 
 
 def dirt_base(seed, ramp_):
-    t = clusters(seed, ramp_, base=2, lights=8, darks=8, longest=3, horizontal=0.5)
-    pal = ramps(A=ramp_)
-    for (x, y) in _spots_for(seed + 5, 5, 3.4):
-        stamp(t, "43\n32", pal, x, y)
+    t = patches(seed, ramp_, fractions=(0.04, 0.26, 0.46, 0.20, 0.04), cells=(4, 2), detail=0.35, detail_cells=(8, 4))
+    for (x, y) in spots(seed + 5, 3, 5.0):
+        t.set(x, y, ramp_[4])
+        t.set((x + 1) % N, y, ramp_[3])
     return t
 
 
-def infected_stone():
-    base = stone_base(6001, INF_STONE)
-    return infect(base, 6005, veins(6003, paths=2, length=12), shards=3, spores=5)
+def infected_stone(v=0):
+    base = stone_base(6001 + v, INF_STONE)
+    return infect(base, 6005 + v, veins(6003 + v, roots_at(6003 + v, 1), length=17, fork=0.24), shards=1, spores=3)
 
 
-def infected_dirt():
-    base = dirt_base(6101, INF_DIRT)
-    return infect(base, 6105, veins(6103, paths=2, length=12), shards=2, spores=4)
+def infected_dirt(v=0):
+    base = dirt_base(6101 + v, INF_DIRT)
+    return infect(base, 6105 + v, veins(6103 + v, roots_at(6103 + v, 1), length=17, fork=0.24), shards=1, spores=3)
 
 
-BLADE = """
-4
-3
-2
-"""
-
-
-def grass_base(seed, ramp_, rows=range(N)):
-    t = clusters(seed, ramp_, base=2, lights=8, darks=8, longest=2, horizontal=0.3)
-    for (x, y) in _spots_for(seed + 5, 10, 2.6):
-        if y in rows:
-            t.set(x, y, ramp_[4])
-            t.set(x, (y + 1) % N, ramp_[3])
-            t.set(x, (y + 2) % N, ramp_[2])
+def grass_base(seed, ramp_):
+    t = patches(seed, ramp_, fractions=(0.05, 0.25, 0.44, 0.21, 0.05), cells=(4, 4), detail=0.4)
+    for (x, y) in spots(seed + 5, 5, 3.6):                 # einzelne Halme
+        t.set(x, y, ramp_[4])
+        t.set(x, (y + 1) % N, ramp_[3])
     return t
 
 
-def infected_grass_top():
-    base = grass_base(6201, INF_GRASS)
-    return infect(base, 6205, veins(6203, paths=2, length=12), shards=3, spores=5, tint=0.5)
+def infected_grass_top(v=0):
+    base = grass_base(6201 + v, INF_GRASS)
+    return infect(base, 6205 + v, veins(6203 + v, roots_at(6203 + v, 1), length=17, fork=0.24), shards=1, spores=3, tint=0.55)
 
 
 def infected_grass_side():
@@ -174,90 +145,41 @@ def infected_grass_side():
                 base.set(x, y, INF_GRASS[tone])
             else:
                 base.set(x, y, dirt.get(x, y))
-    vs = veins(6307, paths=2, length=9, allow=lambda x, y: y >= fringe[x] + 1)
-    for x in range(N):
-        if nz(x, 5, 6309) > 0.74:
-            for y in range(fringe[x] - 1, min(N, fringe[x] + 3 + int(nz(x, 6, 6309) * 4))):
-                vs.add((x, y))
-    return infect(base, 6311, vs, shards=2, spores=3, tint=0.5, shard_skip=lambda p: p[1] > 12)
-
-
-def bark_strips(ramp_, tones=(2, 3, 2, 1), cuts=(5, 8, 3, 10)):
-    t = Tex(N, N)
-    for strip in range(4):
-        for y in range(N):
-            for i in range(4):
-                c = tones[strip] + (1 if y > cuts[strip] and strip % 2 == 0 else 0) - (1 if y > cuts[strip] and strip % 2 else 0)
-                if i == 0:
-                    c = 0
-                elif i == 1:
-                    c += 1
-                elif i == 3:
-                    c -= 1
-                if y == cuts[strip]:
-                    c = 0
-                t.set(strip * 4 + i, y, ramp_[max(0, min(4, c))])
-    return t
+    allow = lambda x, y: y >= fringe[x] + 1
+    roots = [((3, fringe[3] + 1), (1, 1)), ((11, fringe[11] + 1), (-1, 1))]
+    tree = veins(6307, roots, length=10, allow=allow)
+    cells, tips = tree
+    for x in range(N):                                   # Adern wachsen aus der Grasnarbe nach unten
+        if nz(x, 5, 6309) > 0.78 and (x, fringe[x]) not in cells:
+            for y in range(fringe[x] - 1, min(N, fringe[x] + 2 + int(nz(x, 6, 6309) * 3))):
+                cells[(x, y)] = (0.2 + 0.1 * (y - fringe[x]), 1)
+    return infect(base, 6311, tree, shards=1, spores=2, tint=0.5, shard_skip=lambda p: p[1] > 12)
 
 
 def infected_log():
-    base = bark_strips(INF_BARK)
-    return infect(base, 6407, veins(6405, paths=2, length=11, dirs=(2, 6, 1, 3, 5, 7)), shards=2, spores=3)
+    base = crystal_log(bark=INF_BARK, veins=False)
+    return infect(base, 6407, veins(6405, roots_at(6405, 1), length=17, fork=0.22), shards=1, spores=2)
 
 
 def infected_log_top():
-    base = Tex(N, N)
-    for y in range(N):
-        for x in range(N):
-            d = math.hypot(x - 7.5, y - 7.5)
-            if max(abs(x - 7.5), abs(y - 7.5)) >= 6.5:
-                base.set(x, y, INF_BARK[2] if (x + y) % 4 else INF_BARK[1])
-            else:
-                base.set(x, y, INF_BARK[3] if int(d * 0.9) % 2 == 0 else INF_BARK[2])
-    vs = set()
-    for (ang, ln) in ((0.35, 7.5), (2.5, 6.5), (4.5, 7.0)):
-        for s in range(int(ln * 2)):
-            t = s / 2.0
-            x = int(round(7.5 + math.cos(ang) * t - math.sin(ang) * math.sin(t * 1.3 + ang * 3) * 0.7))
-            y = int(round(7.5 + math.sin(ang) * t + math.cos(ang) * math.sin(t * 1.3 + ang * 3) * 0.7))
-            if 0 <= x < N and 0 <= y < N:
-                vs.add((x, y))
-    vs |= {(7, 7), (8, 7), (7, 8), (8, 8)}
-    return infect(base, 6505, vs, shards=1, spores=2)
-
-
-LEAF = """
-..4.
-.434
-3432
-.32.
-"""
+    base = crystal_log_top(wood=INF_BARK, bark=INF_BARK, core=False)
+    return infect(base, 6505, veins(6503, [((7, 7), (1, 1)), ((8, 8), (-1, 1))], length=11, fork=0.18), shards=0, spores=2)
 
 
 def _leaf_tex():
-    t = Tex(N, N)
-    back = {k: INF_LEAF[max(0, int(k) - 2)] for k in "234"}
-    front = {k: INF_LEAF[int(k)] for k in "234"}
-    for (x, y) in _spots_for(6601, 11, 1.6):
-        stamp(t, LEAF, back, x, y)
-    for (x, y) in _spots_for(6633, 11, 2.4):
-        stamp(t, LEAF, front, x, y)
-    return t
+    return crystal_leaves(6601, tones=INF_LEAF, blossoms=False)
 
 
-def infected_leaves():
+def infected_leaves(v=0):
     leaf = _leaf_tex()
     opaque = lambda x, y: leaf.get(x % N, y % N)[3] > 0
-    return infect(leaf, 6611, veins(6609, paths=3, length=8, allow=opaque), shards=2, spores=4, opaque=opaque)
+    tree = veins(6609 + v, roots_at(6609 + v, 3), length=9, fork=0.18, allow=opaque)
+    return infect(leaf, 6611 + v, tree, shards=1, spores=3, opaque=opaque)
 
 
-def infected_sand():
-    base = clusters(6701, INF_SAND, base=2, lights=9, darks=8, longest=4, horizontal=0.85)
-    for y in range(N):
-        for x in range(N):
-            if (x + 2 * y) % 8 == 0:
-                base.set(x, y, INF_SAND[1])
-    return infect(base, 6707, veins(6705, paths=2, length=12), shards=2, spores=3, tint=0.45)
+def infected_sand(v=0):
+    base = patches(6701 + v, INF_SAND, fractions=(0.04, 0.24, 0.46, 0.22, 0.04), cells=(2, 6), detail=0.35, detail_cells=(8, 4))
+    return infect(base, 6707 + v, veins(6705 + v, roots_at(6705 + v, 1), length=17, fork=0.24), shards=1, spores=3, tint=0.45)
 
 
 # ------------------------------------------------------------------ Story-Bloecke
@@ -375,11 +297,17 @@ def main():
     save_pair("infected_log_top", infected_log_top())
     save_pair("infected_leaves", infected_leaves(), animate=True)
     save_pair("infected_sand", infected_sand())
+    for n, v in ((2, VARIANT_SEEDS[1]), (3, VARIANT_SEEDS[2])):          # Varianten gegen sichtbare Wiederholung
+        save_pair(f"infected_stone_v{n}", infected_stone(v))
+        save_pair(f"infected_dirt_v{n}", infected_dirt(v))
+        save_pair(f"infected_grass_top_v{n}", infected_grass_top(v), animate=True)
+        save_pair(f"infected_leaves_v{n}", infected_leaves(v), animate=True)
+        save_pair(f"infected_sand_v{n}", infected_sand(v))
     save_png(memory_crystal(), "block/memory_crystal")
     save_png(purity_anchor(), "block/purity_anchor")
     save_png(purity_anchor_crystal(), "block/purity_anchor_crystal")
     write_mcmeta("purity_anchor_crystal", 3)
-    print("fresh_virus: 8 infizierte Texturen + Leuchtschichten, memory_crystal, purity_anchor(+Kristall)")
+    print("fresh_virus: 8 infizierte Texturen + Leuchtschichten (+10 Varianten), memory_crystal, purity_anchor(+Kristall)")
 
 
 if __name__ == "__main__":

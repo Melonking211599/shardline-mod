@@ -9,7 +9,7 @@ from __future__ import annotations
 import math
 
 from common import BONE, CLEAR, COL, CYAN, GOLD, IVORY, MAGENTA, SHARD, SKYB, SLATE, VGLOW, VIOLET, VIRUS, Tex, hx, mix, nz, save_png, vnoise
-from pixel import clusters, ramps, stamp
+from pixel import clusters, patch_idx, patches, ramps, stamp
 
 # ------------------------------------------------------------------ Hilfen
 
@@ -133,7 +133,7 @@ def decision_altar_top_glow() -> Tex:
 
 
 def decision_altar_bottom() -> Tex:
-    return clusters(2105, IVORY, base=1, lights=3, darks=4, longest=3)
+    return patches(2105, IVORY, fractions=(0.1, 0.45, 0.35, 0.1, 0.0))
 
 
 # ====================================================================== F3 Hueter-Ruinen (Elfenbein, Gold, Himmelblau)
@@ -159,7 +159,9 @@ RUNE = """
 
 
 def keeper_ruin_bricks() -> Tex:
-    """Helle Hueterziegel (versetzt, 8x4), dunkle Fugen, hier und da Goldeinlage, Moos und Risse."""
+    """Alte Hueterziegel (versetzt, 8x4): Fuellung auf den mittleren Elfenbeinstufen (kein Weiss), Oberkante heller,
+    Unterkante dunkler, dunkle Fugen, drei Goldeinlagen, ein Riss, Moos am Fuss."""
+    idx = patch_idx(3101, fractions=(0.0, 0.40, 0.50, 0.10, 0.0), cells=(4, 4), detail=0.3)
     t = Tex(16, 16)
     for y in range(16):
         row = y // 4
@@ -169,15 +171,12 @@ def keeper_ruin_bricks() -> Tex:
             if by == 3 or bx == 7:
                 t.set(x, y, IVORY[0])
                 continue
-            tone = 2.0
+            tone = idx[y][x]
             if by == 0 or bx == 0:
-                tone = 3.0
-            if by == 2 or bx == 6:
-                tone = 1.6
-            t.set(x, y, IVORY[int(round(tone))])
-    base = clusters(3101, IVORY, base=2, lights=4, darks=4, longest=2)
-    for (x, y) in ((2, 1), (11, 5), (5, 9), (13, 13), (9, 2)):
-        t.set(x, y, base.get(x, y))
+                tone += 1
+            elif by == 2 or bx == 6:
+                tone -= 1
+            t.set(x, y, IVORY[max(0, min(3, tone))])
     for (x, y) in ((7, 3), (3, 11), (15, 7)):
         t.set(x, y, GOLD[2])                     # Goldeinlage in den Fugen
     for (x, y) in ((12, 10), (13, 10), (13, 9), (14, 8)):
@@ -207,7 +206,7 @@ def keeper_ruin_pillar() -> Tex:
 
 
 def keeper_ruin_pillar_top() -> Tex:
-    t = clusters(3103, IVORY, base=2, lights=3, darks=3, longest=2)
+    t = patches(3103, IVORY, fractions=(0.1, 0.4, 0.4, 0.1, 0.0))
     for y in range(16):
         for x in range(16):
             d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
@@ -221,7 +220,7 @@ def keeper_ruin_pillar_top() -> Tex:
 
 
 def keeper_rune_slab() -> Tex:
-    t = clusters(3105, IVORY, base=2, lights=4, darks=3, longest=2)
+    t = patches(3105, IVORY, fractions=(0.1, 0.4, 0.4, 0.1, 0.0))
     for i in range(16):
         t.set(i, 0, IVORY[4])
         t.set(0, i, IVORY[4])

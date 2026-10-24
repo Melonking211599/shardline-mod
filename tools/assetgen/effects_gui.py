@@ -47,7 +47,7 @@ def shard_fever() -> Tex:
         for x in range(18):
             d = abs(x - cx) / 8.2 + abs(y - cy) / 8.2
             if d <= 1.0:
-                idx = 1.0 + (1 - d) * 2.2 + (0.7 if x + y < 17 else -0.2) + ordered(x, y) * 0.45
+                idx = 1.0 + (1 - d) * 2.2 + (0.7 if x + y < 17 else -0.2)
                 if d > 0.88:
                     idx = 0.4 + (0.6 if x + y < 17 else 0)
                 t.set(x, y, ramp(CRY, idx))
@@ -116,12 +116,12 @@ def breach_overlay() -> Tex:
                 t.set(x, y, VIRUS[0][:3] + (clamp(a, 0, 150),))
 
     def crack(x, y, dx, dy, length, seed, depth=0, w=1):
-        k = 0
+        """Ein Riss verjuengt sich vom Rand zur Spitze: am Rand 2 px leuchtend mit dunklem Saum, in der Mitte 1 px
+        mit Saum, zur Spitze nur noch eine helle Linie. Die Spitze ist am hellsten."""
         px, py = float(x), float(y)
         ang = math.atan2(dy, dx)
         for i in range(length):
-            k += 1
-            ang += (nz(i, depth * 7, seed) - 0.5) * 0.7
+            ang += (nz(i, depth * 7, seed) - 0.5) * 0.5
             px += math.cos(ang)
             py += math.sin(ang)
             ix, iy = int(px), int(py)
@@ -130,26 +130,24 @@ def breach_overlay() -> Tex:
             if max(abs(ix - 127.5), abs(iy - 127.5)) < 70:                    # Mitte freihalten
                 break
             fade = 1.0 - i / length
-            # dunkler Rand, leuchtender Kern
-            for ox in range(-w, w + 1):
-                for oy in range(-w, w + 1):
-                    if abs(ox) + abs(oy) <= w:
-                        t.set(ix + ox, iy + oy, VIRUS[1][:3] + (200,))
-            t.set(ix, iy, VGLOW[3 if fade > 0.5 else 2][:3] + (255,))
-            if w >= 1:
+            if fade > 0.35 and w:
+                for (ox, oy) in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1)):
+                    t.set(ix + ox, iy + oy, VIRUS[1][:3] + (190,))
+            t.set(ix, iy, VGLOW[3 if i > length * 0.85 else 2][:3] + (255,))
+            if fade > 0.6 and w:
                 t.set(ix + 1, iy, VGLOW[1][:3] + (255,))
-            if i > 6 and nz(i, depth, seed + 3) > 0.9 and depth < 2:
-                side = ang + (1.0 if nz(i, depth, seed + 5) > 0.5 else -1.0)
-                crack(ix, iy, math.cos(side), math.sin(side), int(length * 0.55), seed + 11 * i, depth + 1, 0)
+            if i > 8 and nz(i, depth, seed + 3) > 0.94 and depth < 2:
+                side = ang + (0.9 if nz(i, depth, seed + 5) > 0.5 else -0.9)
+                crack(ix, iy, math.cos(side), math.sin(side), int(length * 0.5), seed + 11 * i, depth + 1, 0)
 
     starts = []
-    for k in range(7):
-        starts.append((18 + k * 36, 0, 0.1, 1))               # oben
-        starts.append((18 + k * 36 + 10, S - 1, -0.1, -1))    # unten
-        starts.append((0, 25 + k * 34, 1, 0.1))               # links
-        starts.append((S - 1, 20 + k * 34, -1, -0.1))         # rechts
+    for k in range(4):
+        starts.append((30 + k * 62, 0, 0.1, 1))               # oben
+        starts.append((30 + k * 62 + 18, S - 1, -0.1, -1))    # unten
+        starts.append((0, 34 + k * 58, 1, 0.1))               # links
+        starts.append((S - 1, 26 + k * 58, -1, -0.1))         # rechts
     for n, (sx, sy, dx, dy) in enumerate(starts):
-        crack(sx, sy, dx, dy, 34 + int(nz(n, 1, 9903) * 34), 9905 + n * 13)
+        crack(sx, sy, dx, dy, 44 + int(nz(n, 1, 9903) * 36), 9905 + n * 13)
     return t
 
 

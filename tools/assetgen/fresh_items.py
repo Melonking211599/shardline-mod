@@ -431,24 +431,26 @@ PICK = """
 AXE = """
 ................
 ................
-..........54....
-.........5443...
-........554332..
-.......5544332..
-.......443322...
-........33221...
-..........21....
+....5...........
+....55..........
+....5544........
+....55443.......
+....554433......
+....5544332.....
+.....54433.2....
+.....5443.22....
+......543.......
+.......2........
 """
 
 SHOVEL = """
-................
-................
-..........5543..
-.........554432.
-.........544332.
-.........443322.
-.........44332..
-..........322...
+...........555..
+..........5554..
+.........55543..
+.........55443..
+........554432..
+........54432...
+.........432....
 """
 
 
@@ -480,32 +482,48 @@ def colossus_pickaxe():
 
 
 def colossus_axe():
-    return _tool(AXE, COL, 9, CYAN[4], ((10, 4),))
+    return _tool(AXE, COL, 9, CYAN[4], ((6, 5),))
 
 
 def colossus_shovel():
-    return _tool(SHOVEL, COL, 7, CYAN[4], ((12, 4),))
+    return _tool(SHOVEL, COL, 7, CYAN[4], ((11, 3),))
 
 
 def colossus_gauntlet():
+    """Geballte Faust von oben: vier Knoechelbuckel, Fingerfugen, Daumen links, breite Manschette mit Kristall."""
     t = Tex(16, 16)
-    fist = [(3, 3), (11, 2), (14, 4), (14, 9), (12, 11), (4, 11), (2, 8)]
-    mask = {(x, y) for y in range(16) for x in range(16) if poly(fist, x, y)}
-    for (x, y) in mask:
-        c = 3 - (1 if y > 8 else 0) - (1 if x > 11 else 0) + (1 if y < 5 or x < 5 else 0)
-        t.set(x, y, COL[clamp(c, 1, 4)])
-    for y in (5, 7, 9):
-        for x in range(5, 14):
+    for y in range(2, 10):
+        for x in range(2, 15):
+            if (x in (2, 14)) and y in (2, 9):
+                continue                                   # abgerundete Ecken
+            c = 3
+            if y == 2 or x == 2:
+                c = 4
+            if y >= 8 or x >= 13:
+                c = 2
+            if y >= 9 and x >= 12:
+                c = 1
+            t.set(x, y, COL[c])
+    for (x0, x1) in ((3, 4), (6, 7), (9, 10), (12, 13)):   # Knoechelbuckel
+        t.set(x0, 1, COL[4])
+        t.set(x1, 1, COL[3])
+    for x in (5, 8, 11):                                   # Fingerfugen
+        for y in range(2, 7):
             t.set(x, y, COL[0])
-    for x in (6, 8, 10, 12):
-        t.set(x, 4, COL[4])
-    for y in range(12, 16):
-        for x in range(3, 14):
-            t.set(x, y, SLATE[2] if y < 14 else SLATE[0])
-    t.rect(3, 11, 11, 1, COL[3])
-    for x in range(4, 13, 2):
-        t.set(x, 13, CYAN[2])
-    crystal(t, [(8, 6), (9, 8), (8, 11), (7, 8)], ((8, 6), (8, 11)), CYAN, hi=4, lo=1)
+    for x in range(3, 14):
+        if x not in (5, 8, 11):
+            t.set(x, 6, COL[1])                            # Fingerkruemmung
+    for (x, y, c) in ((0, 5, 3), (1, 5, 4), (0, 6, 3), (1, 6, 3), (0, 7, 2), (1, 7, 3), (1, 8, 2), (1, 9, 1)):
+        t.set(x, y, COL[c])                                # Daumen
+    for y in range(10, 15):                                # Manschette
+        for x in range(1, 15):
+            c = SLATE[3] if y == 10 else SLATE[2] if y < 13 else SLATE[1] if y == 13 else SLATE[0]
+            t.set(x, y, c)
+    for x in range(1, 15):
+        t.set(x, 10, COL[3] if x < 12 else COL[2])
+    for x in (2, 4, 11, 13):
+        t.set(x, 12, CYAN[2])                              # Nieten
+    crystal(t, [(8, 9), (10, 12), (8, 15), (6, 12)], ((8, 9), (8, 15)), CYAN, hi=4, lo=1)
     return fin(t, hx("#06303b"))
 
 
@@ -557,14 +575,14 @@ HELMET = _mirror("""
 ........
 ........
 ....4444
-...44333
+...44444
+..444333
 ..443333
-..433333
-..433333
-..43222g
-..4322..
-..4322..
-..4322..
+..431111
+..43g111
+..43332.
+..4332.3
+..4322.3
 """)
 
 CHEST = _mirror("""

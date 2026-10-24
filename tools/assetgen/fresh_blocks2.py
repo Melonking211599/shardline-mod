@@ -3,36 +3,32 @@ from __future__ import annotations
 
 import math
 
-from common import CYAN, LILAC, MAGENTA, SLATE, TEAL, TEX, VIOLET, Tex, clamp, hx, nz, ramp, with_alpha
+from common import CLEAR, CYAN, LILAC, MAGENTA, SLATE, TEAL, TEX, VIOLET, Tex, clamp, hx, nz, ramp, with_alpha
 from fresh_blocks import GLASS_EDGE, pyramid_block
-from pixel import art, clusters, ramps, shift, stamp, _spots_for
+from pixel import art, clusters, despeckle, field, paint, patch_idx, patches, ramps, rank_tones, shift, spots, stamp
 
 
 # ------------------------------------------------------------------ Laub
-LEAF = """
-..4.
-.434
-3432
-.32.
-"""
+LEAF_SEEDS = (131, 149, 163)
 
 
-def crystal_leaves() -> Tex:
-    """Einzelne Blaetter in zwei Schichten (hinten dunkel, vorn hell) mit magentafarbenen Bluetenblaettern."""
-    t = Tex(16, 16)
-    violet = ramps(A=VIOLET, B=MAGENTA)
-    back = {k: (VIOLET[max(0, int(k) - 2)] if k.isdigit() else v) for k, v in violet.items()}
-    for (x, y) in _spots_for(131, 11, 1.6):
-        stamp(t, LEAF, back, x, y)
-    for i, (x, y) in enumerate(_spots_for(163, 12, 2.4)):
-        if i % 4 == 3:
-            tones = {"4": MAGENTA[3], "3": MAGENTA[2], "2": MAGENTA[1]}
-        else:
-            tones = {"4": VIOLET[4] if i % 2 else LILAC[0], "3": VIOLET[3], "2": VIOLET[2]}
-        stamp(t, LEAF, tones, x, y)
-    for (x, y) in ((3, 3), (10, 6), (6, 11), (13, 13)):
-        if t.get(x, y)[3]:
-            t.set(x, y, MAGENTA[4])
+def crystal_leaves(seed: int = LEAF_SEEDS[0], tones=None, blossoms: bool = True) -> Tex:
+    """Violettes Kristalllaub (cutout): grosse Laubflecken in fuenf Violettstufen, kleine Luecken (rund 10 %),
+    kurze Blattadern, drei Magenta-Bluetenpunkte. Genau zwei Farbwelten: Violett + Magenta."""
+    tones = tones or [VIOLET[0], VIOLET[1], VIOLET[2], VIOLET[3], VIOLET[4]]
+    t = paint(patch_idx(seed, fractions=(0.16, 0.30, 0.28, 0.18, 0.08), cells=(4, 4), detail=0.4, detail_cells=(8, 8)), tones)
+    for (x, y) in spots(seed + 3, 5, 3.4):                       # kurze diagonale Blattadern
+        t.set(x, y, tones[1])
+        t.set((x + 1) % 16, (y + 1) % 16, tones[1])
+    holes = despeckle(rank_tones(field(seed + 9, cells=(4, 4), detail=0.4), (0.9, 0.1)))
+    for y in range(16):
+        for x in range(16):
+            if holes[y][x]:
+                t.set(x, y, CLEAR)
+    for (x, y) in (spots(seed + 4, 3, 5.0) if blossoms else ()):  # Bluetenpunkte
+        t.set(x, y, MAGENTA[3])
+        t.set((x + 1) % 16, y, MAGENTA[2])
+        t.set(x, (y + 1) % 16, MAGENTA[1])
     return t
 
 
@@ -201,7 +197,7 @@ FRAME_RUNE = [
 
 
 def shard_portal_frame() -> Tex:
-    t = clusters(171, SLATE, base=2, lights=8, darks=8, longest=3)
+    t = patches(171, SLATE, fractions=(0.07, 0.23, 0.42, 0.22, 0.06))
     for i in range(16):
         t.set(i, 0, SLATE[4])
         t.set(0, i, SLATE[4])
@@ -268,7 +264,7 @@ dbbbbbbd
 
 
 def altar_side(base, trim, rune, rune_pal, seed) -> Tex:
-    t = clusters(seed, base, base=2, lights=7, darks=8, longest=3)
+    t = patches(seed, base, fractions=(0.07, 0.23, 0.42, 0.22, 0.06))
     for i in range(16):
         for (x, y) in ((i, 0), (i, 15), (0, i), (15, i)):
             t.set(x, y, base[0])
@@ -292,7 +288,7 @@ def queen_altar() -> Tex:
 
 
 def altar_top(base, light, mid, dark, seed) -> Tex:
-    t = clusters(seed, base, base=2, lights=7, darks=8, longest=3)
+    t = patches(seed, base, fractions=(0.07, 0.23, 0.42, 0.22, 0.06))
     for i in range(16):
         t.set(i, 0, base[0])
         t.set(0, i, base[0])
@@ -328,6 +324,10 @@ def colossus_trophy() -> Tex:
 def queen_trophy() -> Tex:
     return pyramid_block(MAGENTA, top=4, left=3, right=2, bottom=1, center=3, spark=((5, 5), (6, 5), (9, 3), (3, 9)))
 
+
+VARIANTS = {
+    **{f"block/crystal_leaves_v{n}": (lambda s=s: crystal_leaves(s)) for n, s in enumerate(LEAF_SEEDS[1:], 2)},
+}
 
 ALL = {
     "block/crystal_leaves": crystal_leaves,

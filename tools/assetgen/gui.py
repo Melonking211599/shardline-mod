@@ -6,7 +6,7 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 
 from fresh_blocks import SHARDSTONE
-from pixel import clusters
+from pixel import clusters, patches
 from common import CYAN, LILAC, MAGENTA, RESOURCE_ROOT, SHARD, SLATE, TEX, VIOLET, Tex, clamp, hx, mix, nz, ramp, save_png, vnoise, with_alpha
 
 
@@ -128,7 +128,7 @@ def particle(kind: str, frame: int) -> Tex:
 
 
 def advancement_bg() -> Tex:
-    t = clusters(5301, SHARDSTONE, base=1, lights=8, darks=6, longest=3)
+    t = patches(5301, SHARDSTONE, fractions=(0.1, 0.45, 0.35, 0.1, 0.0))
     for y in range(16):
         for x in range(16):
             c = t.get(x, y)

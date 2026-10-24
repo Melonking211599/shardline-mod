@@ -124,17 +124,18 @@ def leg(r, seed, hoof_rows=1):
 
 
 def fleece(seed, bias=2.2):
-    """Vlies aus weichen Bueschen (helle Oberkante, dunkle Fugen); dazwischen wenige Kristalle mit leuchtender Spitze."""
+    """Vlies aus weichen Bueschen (helle Oberkante, dunkle Fugen); dazwischen wenige zusammenhaengende Kristallnester,
+    deren Mitte leuchtet (kein Streupunkte-Muster)."""
     def p(face, fx, fy, fw, fh):
         off = FACE_ID[face] * 13.7
         n = vnoise(fx / 2.8 + off, fy / 2.8, seed)
         up = vnoise(fx / 2.8 + off, (fy - 1) / 2.8, seed)
         idx = bias + FACE_LIGHT[face] * 0.8 + (n - 0.5) * 1.2 + (n - up) * 3.0 + edge_light(fx, fy, fw, fh) * 0.3
-        k = vnoise(fx / 1.7 + off, fy / 1.7, seed + 99)
-        if k > 0.83:
-            tip = k > 0.9 and (fx + fy) % 2 == 0
-            return (ramp(CRY, 3.6 if tip else 2.0 + (k - 0.83) * 14), tip)
-        return ramp(FLEECE, idx + ordered(fx, fy) * 0.15)
+        k = vnoise(fx / 3.4 + off, fy / 3.4, seed + 99)
+        if k > 0.78:
+            lvl = 1.0 + (k - 0.78) * 14.0              # Rand dunkel, Mitte hell
+            return (ramp(CRY, lvl - (0.4 if (fx + fy) % 2 and lvl < 3.0 else 0.0)), lvl >= 3.2)
+        return ramp(FLEECE, idx)
     return p
 
 

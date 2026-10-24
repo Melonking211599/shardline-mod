@@ -228,3 +228,6 @@ IVORY = [hx(c) for c in ("#6f6a82", "#9f9ab4", "#cdc9dd", "#ecebf6", "#ffffff")]
 SKYB = [hx(c) for c in ("#4879ad", "#79b0e0", "#acd6f5", "#d8eeff", "#f4fbff")]
 # Leder / Pergament fuer Haendlernotizen
 LEATHER = [hx(c) for c in ("#2a1810", "#46281a", "#6b4128", "#93603a", "#bf8a55")]
+
+# Glut fuer den Aschland (Grau/Orange): dunkle Kohle, rote Glut, Orange, helles Gelb
+EMBER = [hx(c) for c in ("#3a1208", "#7a2a0c", "#c4501a", "#f08a2c", "#ffd070")]

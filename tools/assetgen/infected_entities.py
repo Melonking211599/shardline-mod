@@ -181,19 +181,21 @@ def flesh(r, seed, vein_w=0.045, bias=2.0, vein_col=None, fibers=True):
             idx += math.sin((fx * 0.9 + fy * 0.4 + off) * 1.1) * 0.35
         ridge = abs(vnoise(fx / 3.2 + off, fy / 3.2, seed + 9) - 0.5)
         if ridge < vein_w and 0 < fx < fw - 1 and 0 < fy < fh - 1:
-            return (vc if (fx + fy) % 3 else VGLOW[2], True)
+            return (VGLOW[2] if (fx * 3 + fy * 5) % 11 == 0 else vc, True)
         return ramp(r, idx)
     return p
 
 
 def crystal(r, seed, glow_from=2.6):
-    """Facetten-Kristall: diagonale Baender, helle Kanten, leuchtet ab Helligkeit `glow_from`."""
+    """Facetten-Kristall: drei senkrechte Facetten (links hell, Mitte mittel, rechts dunkel), helle Kante oben links,
+    dunkle unten rechts; die Spitze (obere Haelfte) leuchtet. Keine Raster, nur klare Flaechen."""
     def p(face, fx, fy, fw, fh):
-        off = FACE_ID[face] * 5
-        band = ((fx + fy * 2 + off) // 2) % 3
-        idx = 0.0 + band * 0.9 + FACE_LIGHT[face] * 0.6 + ordered(fx, fy) * 0.14
+        col_f = (fx + FACE_ID[face] * 2) % 3
+        idx = (3.2, 2.2, 1.2)[col_f] + FACE_LIGHT[face] * 0.5
+        if fy < fh * 0.35:
+            idx += 0.7
         if fx == 0 or fy == 0:
-            idx += 0.9
+            idx += 0.8
         if fx == fw - 1 or fy == fh - 1:
             idx -= 0.6
         col = ramp(r, idx)
@@ -255,7 +257,7 @@ def heart_texture():
         base_idx = 1.5 + FACE_LIGHT[face] * 0.6 + edge_light(fx, fy, fw, fh) * 0.5
         if long_x and fy == fh // 2 and fh >= 2 or (not long_x and fx == fw // 2):
             return (VGLOW[1] if (fx + fy) % 2 else VGLOW[2], True)
-        return ramp(HEART, base_idx + ordered(fx, fy) * 0.54)
+        return ramp(HEART, base_idx)
 
     def tip(face, fx, fy, fw, fh):
         return (ramp(VGLOW, 3.3 - (fx + fy) * 0.4), True)
