@@ -977,9 +977,9 @@
   "advancements.shardline.story.chapter_9_seal.description": "Face the queen's echo",
   "advancements.shardline.story.chapter_9_dominate.title": "Chapter 9: The Last Tone",
   "advancements.shardline.story.chapter_9_dominate.description": "Silence the countersong",
-  "story.shardline.next.7": "Follow the aftershocks to the survivors' camp and speak with Rhea Tannwald.",
+  "story.shardline.next.7": "Find the survivors' camp in the Expanse (resonance compass) and speak with Rhea Tannwald.",
   "story.shardline.next.8": "Make your choice at the decision altar; then the story goes on.",
-  "story.shardline.next.8.seal": "Raise the anchor net around the camp and find the Keepers' library.",
+  "story.shardline.next.8.seal": "Raise the anchor net around the camp and find the Keeper library (resonance compass).",
   "story.shardline.next.8.dominate": "Gather your following and decide what becomes of the Voiceless.",
   "story.shardline.next.9": "Make your choice at the decision altar; then the story goes on.",
   "story.shardline.next.9.seal": "Face the echo in the Keepers' library.",
@@ -1455,5 +1455,8 @@
   "journal.shardline.npc.kesh.healed": "Once marked, now healed by Ilsa's brew. For the first time in months, it is quiet in his head.",
   "journal.shardline.npc.ilsa": "Smith and alchemist from Birkenfurt. Builds lanterns, brews purification essence and trades for shards.",
   "journal.shardline.npc.ilsa.dominate": "Smith and alchemist, and secretly the leader of the Voiceless, who refuse to hear the ruler's song.",
-  "journal.shardline.npc.veyl": "The last archivist of the Keepers. A ghost bound to the Keeper library, keeping the chronicle of the Expanse."
+  "journal.shardline.npc.veyl": "The last archivist of the Keepers. A ghost bound to the Keeper library, keeping the chronicle of the Expanse.",
+
+  "structure.shardline.survivor_camp": "Survivors' Camp",
+  "structure.shardline.keeper_library": "Keeper Library"
 }

@@ -1,0 +1,492 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 6.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:paper",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:book",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:shard_fragment",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:echo_shard",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 4.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:keeper_rune_slab",
+          "weight": 6
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 4.0,
+        "min": 2.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 0
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "keepers_oath"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_resonance"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_seal"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_seal"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_shattering"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "queen_selvaine"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "queen_selvaine"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "keepers_oath"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_seal"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_seal.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_seal"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "crystal_kingdom"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "shardline:chests/keeper_library"
+}

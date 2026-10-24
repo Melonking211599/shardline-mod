@@ -90,6 +90,8 @@ public final class ModTags {
         public static final TagKey<Biome> HAS_CRYSTAL_GEODE = TagKey.create(Registries.BIOME, Shardline.id("has_structure/crystal_geode"));
         public static final TagKey<Biome> HAS_SHARD_CRATER = TagKey.create(Registries.BIOME, Shardline.id("has_structure/shard_crater"));
         public static final TagKey<Biome> HAS_KEEPER_RUIN = TagKey.create(Registries.BIOME, Shardline.id("has_structure/keeper_ruin"));
+        public static final TagKey<Biome> HAS_SURVIVOR_CAMP = TagKey.create(Registries.BIOME, Shardline.id("has_structure/survivor_camp"));
+        public static final TagKey<Biome> HAS_KEEPER_LIBRARY = TagKey.create(Registries.BIOME, Shardline.id("has_structure/keeper_library"));
 
         private Biomes() {
         }

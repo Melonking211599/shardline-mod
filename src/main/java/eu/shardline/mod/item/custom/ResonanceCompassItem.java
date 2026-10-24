@@ -39,7 +39,7 @@ public class ResonanceCompassItem extends Item {
     private static final List<ResourceKey<Structure>> EXPANSE_TARGETS = List.of(
             ModStructures.RUIN_TOWER_KEY, ModStructures.KEEPER_SHRINE_KEY, ModStructures.TRADER_OUTPOST_KEY,
             ModStructures.ASH_CRYPT_KEY, ModStructures.CRYSTAL_GEODE_KEY, ModStructures.KEEPER_RUIN_KEY, ModStructures.COLOSSUS_ARENA_KEY,
-            ModStructures.QUEEN_ARENA_KEY);
+            ModStructures.QUEEN_ARENA_KEY, ModStructures.SURVIVOR_CAMP_KEY, ModStructures.KEEPER_LIBRARY_KEY);
     private static final List<ResourceKey<Structure>> OVERWORLD_TARGETS = List.of(ModStructures.SHARD_CRATER_KEY);
 
     public ResonanceCompassItem(Properties properties) {

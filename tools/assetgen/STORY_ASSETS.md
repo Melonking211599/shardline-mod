@@ -108,3 +108,53 @@ Neue Texturen: siehe [ASSETS.md](../../ASSETS.md), Abschnitt „Story-Erweiterun
 4. Virusherz: Spawn, Idle-Schwanken, Angriff (Tentakel), Beschwörung, Treffer, Tod bleibt am Ende stehen.
 5. Shard-Zombie/Kuh: Augen und Adern leuchten (Glowmask).
 6. Cape (inkl. Elytra), Effekt-Icon im HUD, Spore-Partikel getintet, Breach-Overlay mit freier Bildmitte, Advancement-Hintergrund.
+
+## Nach dem Ausbruch (Kapitel 7–9)
+
+### Paletten der Virusstämme (`virus_strains.py`)
+
+| Stamm | Rillen (dunkel → hell) | Leuchten (dunkel → hell) |
+|---|---|---|
+| Shardvirus | `#0d0412 #240a2c #481044 #7c1a68 #b8268f` | `#a3208a #e03cc0 #ff6fdc #ffb3f0 #fff0fb` |
+| Glutbrand (Nether) | `#120403 #2a0905 #4a1206 #7a2408 #b3400c` | `#a3300c #e0601a #ff8a2a #ffc46a #fff2c8` |
+| Leerenfäule (End) | `#06040c #120a20 #1e1236 #2a1d4c #3b2a66` | `#1f6e5c #2fa384 #5fd6ac #a8f5d6 #f0fff6` |
+
+Nachhall: Geist-Rampe `#3a4a5e → #ffffff`, Leuchten `#3fb8c8 → #ffffff`, Alpha 80 %. Schwärenherz: Eiter `#160a04 → #cf9a2c`, Leuchten `#a05a10 → #fff0a0`.
+
+### Sound-Beschreibungen (`.ogg`, mono, 44,1 kHz; Platzhalter = Vanilla-Klang aus `sounds.json`)
+
+| Event | Beschreibung | Länge |
+|---|---|---|
+| `entity.rhea.voice` | Müdes Ausatmen, kurzes „hm“, ruhige tiefe Frauenstimme ohne Worte | 1,2 s |
+| `entity.rhea.hurt` / `.death` | Scharfes Einatmen / schweres Ausatmen, Rüstung klappert | 0,4 / 1,2 s |
+| `entity.veyl.voice` | Geflüster aus mehreren Lagen, Papierrascheln, ferner Hall | 1,8 s |
+| `entity.veyl.hurt` / `.death` | Flackerndes Glas, Ton bricht kurz weg / langes Verklingen, letzte Seite raschelt | 0,5 / 2,5 s |
+| `entity.ilsa.voice` | Summen einer Melodie, Werkzeug klirrt leise | 1,5 s |
+| `entity.ilsa.hurt` / `.death` | Überraschter Laut / Seufzer, Fläschchen zerbricht | 0,4 / 1,2 s |
+| `entity.kesh.voice` | Murmeln, darunter ein feiner falscher Kristallton | 1,4 s |
+| `entity.kesh.hurt` / `.death` | Zischen + Splittern / Seufzer, der in einen reinen Ton übergeht | 0,4 / 1,5 s |
+| `ui.dialogue.open` / `.close` | Weiches Aufschlagen von Pergament / Zuklappen | 0,4 s |
+| `ui.dialogue.type` | Sehr kurzer, leiser Kristall-Klick (variiert in der Tonhöhe) | 0,05 s |
+| `ui.dialogue.choice` | Heller Doppelklick | 0,15 s |
+| `ui.quest.update` / `.complete` | Kleiner aufsteigender Glockenton / Dreiklang mit Glanz | 0,6 / 1,8 s |
+| `story.epilogue` | Ruhiges Thema (Harfe, Streicher), endet offen | 8 s |
+| `event.aftershock` | Tiefes Grollen von unten, Kristalle klirren nach | 2,5 s |
+| `block.festering_node.hum` | Nasses Pulsieren mit dissonantem Summton | 2 s |
+| `block.festering_node.purify` | Ton löst sich in eine reine Quinte auf, Glas rieselt | 2 s |
+| `block.festering_node.bind` | Ton beugt sich nach unten, dumpfer Schlag | 1,5 s |
+| `block.festering_node.scream` | Schrei aus Glas und Fleisch | 1,2 s |
+| `item.keeper_tuning_fork.ring` | Klarer Stimmgabelton (A), Tonhöhe vom Code variiert | 1,5 s |
+| `entity.crystallized_piglin.*` | Grunzen mit Glutknistern; Treffer: Splittern; Tod: Grunzen bricht in Funkenregen ab | 1 / 0,4 / 1 s |
+| `entity.crystallized_enderman.*` | Enderman-Rauschen mit hohlem Kristallecho; Tod: rückwärts gesogenes Glas | 1,5 / 0,4 / 1,5 s |
+
+### Testliste (runClient) – Nach dem Ausbruch
+
+1. Welt mit Ende (`/shardline story vote seal` bzw. Entscheidung) → Kapitelkarte 7. Resonanzkompass in der Splitterweite auf „Überlebendenlager“ stellen, hinlaufen.
+2. Lager: Palisade mit Laternen, Feuer, Zelte, Werkstatt; Rhea, Ilsa, Kesh stehen an ihrem Platz, schauen den Spieler an, schlafen nachts.
+3. Rhea ansprechen: Dialogfenster (Porträt, Name, Schreibmaschine, Antworten 1–4, Verlauf L), Chronik-Tagebuch erhalten, `J` öffnet das Auftragsbuch (alle 4 Reiter, Mausrad, Tooltip bei langen Titeln). GUI-Skalierung 1–4 und kleines Fenster prüfen.
+4. „Die erste Schwäre“: Kesh folgt, Schwäre erscheint, Stimmgabel horcht (Richtung), Schwäre anschlagen → Echosplitter; Kesh zu Rhea → Kapitel 8 im richtigen Zweig.
+5. Ilsa: Handel öffnet sich aus dem Dialog; „Der Gezeichnete“ → Kesh wechselt auf die geheilte Textur.
+6. Versiegelt: Anker-Netz, Hüter-Bibliothek finden, Veyl schwebt (durchscheinend, Augen leuchten), Nachhall erscheint, Bossleiste, Sieg → Epilog-Wahl.
+7. Beherrscht: Gefolge, Stimmlose, Schwärenherz neben dem Lager (Gegengesang trifft Herrscher), Sieg → Epilog-Wahl.
+8. Nachbeben (Config auf 1 Minute): Wackeln, violetter Rand, neue Schwäre in der Nähe.
+9. Virus in der Tiefe: Höhle unter infizierter Oberfläche anschauen, Adern im Gestein. Nether/End besuchen: Glutbrand (orange, glimmt, Feuer) und Leerenfäule (blassgrün, Dunkelheit), kristallisierte Piglins und Endermen.

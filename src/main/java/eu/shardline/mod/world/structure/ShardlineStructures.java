@@ -282,4 +282,42 @@ public final class ShardlineStructures {
             return ModStructures.SHARD_CRATER.get();
         }
     }
+
+    /** Ueberlebendenlager (Kapitel 7-9): runde Lichtung, braucht ebenen Boden in allen Richtungen. */
+    public static class SurvivorCamp extends Structure {
+        public static final MapCodec<SurvivorCamp> CODEC = simpleCodec(SurvivorCamp::new);
+
+        public SurvivorCamp(StructureSettings settings) {
+            super(settings);
+        }
+
+        @Override
+        protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+            return placeOnGround(context, 8, SurvivorCampPiece::new);
+        }
+
+        @Override
+        public StructureType<?> type() {
+            return ModStructures.SURVIVOR_CAMP.get();
+        }
+    }
+
+    /** Hueter-Bibliothek (Kapitel 8-9): Saal mit Veyl. */
+    public static class KeeperLibrary extends Structure {
+        public static final MapCodec<KeeperLibrary> CODEC = simpleCodec(KeeperLibrary::new);
+
+        public KeeperLibrary(StructureSettings settings) {
+            super(settings);
+        }
+
+        @Override
+        protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+            return placeOnGround(context, 7, KeeperLibraryPiece::new);
+        }
+
+        @Override
+        public StructureType<?> type() {
+            return ModStructures.KEEPER_LIBRARY.get();
+        }
+    }
 }

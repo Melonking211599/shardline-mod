@@ -52,6 +52,10 @@ public final class ModStructures {
             STRUCTURE_TYPES.register("shard_crater", () -> () -> ShardlineStructures.ShardCrater.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<ShardlineStructures.KeeperRuin>> KEEPER_RUIN =
             STRUCTURE_TYPES.register("keeper_ruin", () -> () -> ShardlineStructures.KeeperRuin.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<ShardlineStructures.SurvivorCamp>> SURVIVOR_CAMP =
+            STRUCTURE_TYPES.register("survivor_camp", () -> () -> ShardlineStructures.SurvivorCamp.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<ShardlineStructures.KeeperLibrary>> KEEPER_LIBRARY =
+            STRUCTURE_TYPES.register("keeper_library", () -> () -> ShardlineStructures.KeeperLibrary.CODEC);
 
     // --- Bauteile ---
     public static final DeferredHolder<StructurePieceType, StructurePieceType> RUIN_TOWER_PIECE =
@@ -72,6 +76,10 @@ public final class ModStructures {
             STRUCTURE_PIECES.register("shard_crater", () -> (StructurePieceType.ContextlessType) ShardCraterPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> KEEPER_RUIN_PIECE =
             STRUCTURE_PIECES.register("keeper_ruin", () -> (StructurePieceType.ContextlessType) KeeperRuinPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> SURVIVOR_CAMP_PIECE =
+            STRUCTURE_PIECES.register("survivor_camp", () -> (StructurePieceType.ContextlessType) SurvivorCampPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> KEEPER_LIBRARY_PIECE =
+            STRUCTURE_PIECES.register("keeper_library", () -> (StructurePieceType.ContextlessType) KeeperLibraryPiece::new);
 
     // --- Platzierung ---
     public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<FixedChunkPlacement>> FIXED_CHUNK =
@@ -87,6 +95,8 @@ public final class ModStructures {
     public static final ResourceKey<Structure> CRYSTAL_GEODE_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("crystal_geode"));
     public static final ResourceKey<Structure> SHARD_CRATER_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("shard_crater"));
     public static final ResourceKey<Structure> KEEPER_RUIN_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("keeper_ruin"));
+    public static final ResourceKey<Structure> SURVIVOR_CAMP_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("survivor_camp"));
+    public static final ResourceKey<Structure> KEEPER_LIBRARY_KEY = ResourceKey.create(Registries.STRUCTURE, Shardline.id("keeper_library"));
     public static final ResourceKey<StructureSet> RUIN_TOWER_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("ruin_towers"));
     public static final ResourceKey<StructureSet> COLOSSUS_ARENA_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("colossus_arenas"));
     public static final ResourceKey<StructureSet> QUEEN_ARENA_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("queen_arena"));
@@ -96,6 +106,8 @@ public final class ModStructures {
     public static final ResourceKey<StructureSet> CRYSTAL_GEODE_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("crystal_geodes"));
     public static final ResourceKey<StructureSet> SHARD_CRATER_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("shard_craters"));
     public static final ResourceKey<StructureSet> KEEPER_RUIN_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("keeper_ruins"));
+    public static final ResourceKey<StructureSet> SURVIVOR_CAMP_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("survivor_camps"));
+    public static final ResourceKey<StructureSet> KEEPER_LIBRARY_SET = ResourceKey.create(Registries.STRUCTURE_SET, Shardline.id("keeper_libraries"));
 
     private ModStructures() {
     }
@@ -155,6 +167,18 @@ public final class ModStructures {
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 TerrainAdjustment.NONE)));
 
+        // Nach dem Ausbruch: keine Monster-Spawns im Lager und in der Bibliothek
+        context.register(SURVIVOR_CAMP_KEY, new ShardlineStructures.SurvivorCamp(new Structure.StructureSettings(
+                biomes.getOrThrow(ModTags.Biomes.HAS_SURVIVOR_CAMP),
+                Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create())),
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                TerrainAdjustment.NONE)));
+        context.register(KEEPER_LIBRARY_KEY, new ShardlineStructures.KeeperLibrary(new Structure.StructureSettings(
+                biomes.getOrThrow(ModTags.Biomes.HAS_KEEPER_LIBRARY),
+                Map.of(MobCategory.MONSTER, new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedRandomList.create())),
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                TerrainAdjustment.NONE)));
+
         context.register(SHARD_CRATER_KEY, new ShardlineStructures.ShardCrater(new Structure.StructureSettings(
                 biomes.getOrThrow(ModTags.Biomes.HAS_SHARD_CRATER),
                 Map.of(),
@@ -180,6 +204,10 @@ public final class ModStructures {
                 new RandomSpreadStructurePlacement(22, 7, RandomSpreadType.LINEAR, 3307751)));
         context.register(KEEPER_RUIN_SET, new StructureSet(structures.getOrThrow(KEEPER_RUIN_KEY),
                 new RandomSpreadStructurePlacement(28, 10, RandomSpreadType.LINEAR, 9127734)));
+        context.register(SURVIVOR_CAMP_SET, new StructureSet(structures.getOrThrow(SURVIVOR_CAMP_KEY),
+                new RandomSpreadStructurePlacement(44, 16, RandomSpreadType.LINEAR, 7302611)));
+        context.register(KEEPER_LIBRARY_SET, new StructureSet(structures.getOrThrow(KEEPER_LIBRARY_KEY),
+                new RandomSpreadStructurePlacement(40, 14, RandomSpreadType.LINEAR, 2290157)));
         context.register(SHARD_CRATER_SET, new StructureSet(structures.getOrThrow(SHARD_CRATER_KEY),
                 new RandomSpreadStructurePlacement(40, 14, RandomSpreadType.LINEAR, 8812634)));
     }

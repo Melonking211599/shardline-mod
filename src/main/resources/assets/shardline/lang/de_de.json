@@ -977,9 +977,9 @@
   "advancements.shardline.story.chapter_9_seal.description": "Stell dich dem Nachhall der Königin",
   "advancements.shardline.story.chapter_9_dominate.title": "Kapitel 9: Der letzte Ton",
   "advancements.shardline.story.chapter_9_dominate.description": "Bring den Gegengesang zum Schweigen",
-  "story.shardline.next.7": "Folge den Nachbeben zum Überlebendenlager und sprich mit Rhea Tannwald.",
+  "story.shardline.next.7": "Finde das Überlebendenlager in der Splitterweite (Resonanzkompass) und sprich mit Rhea Tannwald.",
   "story.shardline.next.8": "Triff deine Wahl am Entscheidungsaltar, dann geht die Geschichte weiter.",
-  "story.shardline.next.8.seal": "Baue das Anker-Netz um das Lager und finde die Hüter-Bibliothek.",
+  "story.shardline.next.8.seal": "Baue das Anker-Netz um das Lager und finde die Hüter-Bibliothek (Resonanzkompass).",
   "story.shardline.next.8.dominate": "Sammle dein Gefolge und entscheide, was aus den Stimmlosen wird.",
   "story.shardline.next.9": "Triff deine Wahl am Entscheidungsaltar, dann geht die Geschichte weiter.",
   "story.shardline.next.9.seal": "Stell dich dem Nachhall in der Hüter-Bibliothek.",
@@ -1455,5 +1455,8 @@
   "journal.shardline.npc.kesh.healed": "Einst gezeichnet, jetzt durch Ilsas Gebräu geheilt. Zum ersten Mal seit Monaten ist es still in seinem Kopf.",
   "journal.shardline.npc.ilsa": "Schmiedin und Alchemistin aus Birkenfurt. Baut Laternen, braut Reinigungsessenz und handelt gegen Splitter.",
   "journal.shardline.npc.ilsa.dominate": "Schmiedin und Alchemistin, und heimlich Anführerin der Stimmlosen, die das Lied des Herrschers nicht hören wollen.",
-  "journal.shardline.npc.veyl": "Der letzte Archivar der Hüter. Ein an die Hüter-Bibliothek gebundener Geist, der die Chronik der Weite führt."
+  "journal.shardline.npc.veyl": "Der letzte Archivar der Hüter. Ein an die Hüter-Bibliothek gebundener Geist, der die Chronik der Weite führt.",
+
+  "structure.shardline.survivor_camp": "Überlebendenlager",
+  "structure.shardline.keeper_library": "Hüter-Bibliothek"
 }

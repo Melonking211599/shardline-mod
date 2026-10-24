@@ -248,3 +248,21 @@ Die goldene Linie der Reinheitszone zeichnet der Block-Entity-Renderer ohne Text
 | `entity.virus_heart.phase` / `tendrils` / `summon` | `entity.elder_guardian.curse` / `entity.evoker_fangs.attack` / `entity.evoker.prepare_summon` |
 | `block.purity_anchor.grow` | `block.amethyst_block.resonate` |
 
+
+## Nach dem Ausbruch (Kapitel 7–9)
+
+Alle Texturen entstehen deterministisch mit Python/Pillow in `tools/assetgen/` und sind in `run_all.py` und `validate.py` eingehängt. Klangbeschreibungen, Paletten und die Testliste: [STORY_ASSETS.md](tools/assetgen/STORY_ASSETS.md).
+
+| Generator | Ausgabe |
+|---|---|
+| `dialogue_gui.py` | `gui/dialogue/frame` (32×32, 9-Slice), `portrait_frame` (80×80), `nameplate` (48×16, 3-Slice), `button` (64×80, 4 Zustände), `icons` (32×16), `gui/journal/background` (256×192), `gui/journal/tabs` (128×56), `gui/portraits/unknown` (64×64) |
+| `npc_assets.py` | GeckoLib-Modelle und -Animationen (`idle`, `walk`, `talk`, `hurt`, `sleep`, `death` hält den letzten Frame) für `rhea`, `veyl`, `ilsa`, `kesh`; Texturen 64×64 mit `_glowmask` (Veyl mit Alpha), `kesh_healed`; Porträts 64×64 je NPC in `neutral`, `happy`, `sad`, `angry` |
+| `virus_strains.py` | `infected_deepslate`, `_planks`, `_netherrack`, `_blackstone`, `_soul_soil`, `_nylium_top`, `_nylium_side`, `_wart_block`, `_end_stone`, `_purpur` (je mit `_glow`, große Flächen mit `_v2`/`_v3`, Nether-Leuchten animiert); `crystallized_piglin` (64×64, Piglin-Layout) und `crystallized_enderman` (64×32) mit Glowmask und Kragen |
+| `aftermath_assets.py` | Items `echo_shard`, `keeper_tuning_fork`, `chronicle_journal`; Block `festering_node` (+ animiertes `_glow`); Kapitelembleme `chapter_emblem_7`, `_8_seal`, `_8_dominate`, `_9_seal`, `_9_dominate`; `echo_queen` und `festering_heart` (umgefärbt aus Königin und Virusherz, mit Glowmask) |
+| `preview_dialogue.py`, `preview_journal.py` | Layout-Vorschau des Dialogfensters bzw. Auftragsbuchs für GUI-Skalierung 1–4 (schreibt nichts in die Mod) |
+
+Modelle der Wesen: NPCs eigene GeckoLib-Modelle; Nachhall und Schwärenherz nutzen die Modelle der Königin bzw. des Virusherzens mit eigener Textur; kristallisierte Piglins und Endermen nutzen die Vanilla-Modelle.
+
+### Neue Sounds (Platzhalter → Vanilla)
+
+`entity.rhea|veyl|ilsa|kesh.voice|hurt|death`, `entity.crystallized_piglin|crystallized_enderman.ambient|hurt|death`, `ui.dialogue.open|close|type|choice`, `ui.quest.update|complete`, `story.epilogue`, `event.aftershock`, `block.festering_node.hum|purify|bind|scream`, `item.keeper_tuning_fork.ring`. Eigene Klänge: `.ogg` unter `assets/shardline/sounds/` ablegen und in `ModSounds` den Platzhalter ersetzen (Datagen schreibt `sounds.json`).

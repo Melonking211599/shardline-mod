@@ -1816,6 +1816,40 @@ public final class ShardlineGameTests {
         }
     }
 
+    /** Ueberlebendenlager und Hueter-Bibliothek: Kernbloecke stehen, die Bewohner erscheinen mit Heimatpunkt am Platz. */
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aftermathStructures(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos base = helper.absolutePos(BlockPos.ZERO);
+        BlockPos camp = new BlockPos(base.getX() + 900, 120, base.getZ());
+        BlockPos library = new BlockPos(base.getX() + 960, 120, base.getZ());
+        build(level, new eu.shardline.mod.world.structure.SurvivorCampPiece(camp, 11L));
+        build(level, new eu.shardline.mod.world.structure.KeeperLibraryPiece(library, 12L));
+        List<Entity> npcs = new ArrayList<>();
+        try {
+            expect(helper, level, camp.above(), Blocks.CAMPFIRE);
+            expect(helper, level, eu.shardline.mod.world.structure.SurvivorCampPiece.chestPos(camp), Blocks.CHEST);
+            expect(helper, level, camp.offset(6, 1, 3), Blocks.ANVIL);
+            expect(helper, level, eu.shardline.mod.world.structure.KeeperLibraryPiece.chestPos(library), Blocks.CHEST);
+            expect(helper, level, library.offset(4, 1, 1), Blocks.BOOKSHELF);
+            expect(helper, level, library.offset(-2, 1, -4), Blocks.LECTERN);
+            for (var expected : List.of(
+                    java.util.Map.entry(ModEntities.RHEA.get(), eu.shardline.mod.world.structure.SurvivorCampPiece.rheaPos(camp)),
+                    java.util.Map.entry(ModEntities.ILSA.get(), eu.shardline.mod.world.structure.SurvivorCampPiece.ilsaPos(camp)),
+                    java.util.Map.entry(ModEntities.KESH.get(), eu.shardline.mod.world.structure.SurvivorCampPiece.keshPos(camp)),
+                    java.util.Map.entry(ModEntities.VEYL.get(), eu.shardline.mod.world.structure.KeeperLibraryPiece.veylPos(library)))) {
+                var found = level.getEntities(expected.getKey(), new net.minecraft.world.phys.AABB(expected.getValue()).inflate(2), entity -> true);
+                helper.assertTrue(found.size() == 1, EntityType.getKey(expected.getKey()) + " erscheint nicht genau einmal: " + found.size());
+                var npc = (eu.shardline.mod.entity.npc.AftermathNpcEntity) found.get(0);
+                helper.assertTrue(expected.getValue().equals(npc.home()) && npc.inCamp(), EntityType.getKey(expected.getKey()) + " hat keinen Heimatpunkt");
+                npcs.add(npc);
+            }
+            helper.succeed();
+        } finally {
+            npcs.forEach(Entity::discard);
+        }
+    }
+
     /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
     private static List<StoryEnding> branchesOf(StoryChapter chapter) {
         return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);

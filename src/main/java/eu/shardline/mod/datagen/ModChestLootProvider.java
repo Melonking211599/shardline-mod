@@ -112,6 +112,26 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .withPool(loreBooks(2, "keepers_oath", "crystal_kingdom", "queen_selvaine")));
 
         // Hueter-Ruinen: die Bibliothek der Hueter - immer mindestens ein Lore-Buch
+        // Nach dem Ausbruch: Vorraete des Lagers (Essen, Licht, Splitter) und das Archiv der Bibliothek (viele Schriften)
+        output.accept(ModLootTables.SURVIVOR_CAMP_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(3.0F, 6.0F))
+                .add(item(Items.BREAD, 12, 1, 4))
+                .add(item(ModItems.BERRY_TART.get(), 8, 1, 3))
+                .add(item(ModItems.LUMINOUS_BERRY.get(), 10, 2, 6))
+                .add(item(Items.TORCH, 8, 2, 8))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 10, 2, 6))
+                .add(item(ModBlocks.CRYSTAL_PLANKS.get(), 8, 4, 12))
+                .add(item(ModItems.PURIFICATION_ESSENCE.get(), 2, 1, 1))));
+        output.accept(ModLootTables.KEEPER_LIBRARY_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(2.0F, 4.0F))
+                .add(item(Items.PAPER, 12, 2, 6))
+                .add(item(Items.BOOK, 8, 1, 3))
+                .add(item(ModItems.SHARD_FRAGMENT.get(), 8, 2, 5))
+                .add(item(ModItems.ECHO_SHARD.get(), 6, 1, 2))
+                .add(item(ModBlocks.KEEPER_RUNE_SLAB.get(), 6, 2, 4)))
+                .withPool(loreBooks(0, "keepers_oath", "the_resonance", "the_seal", "the_shattering", "queen_selvaine"))
+                .withPool(loreBooks(2, "keepers_oath", "the_seal", "crystal_kingdom")));
+
         output.accept(ModLootTables.KEEPER_RUIN_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(3.0F, 5.0F))
                 .add(item(Items.GOLD_NUGGET, 12, 3, 9))
