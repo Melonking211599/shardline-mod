@@ -6,6 +6,7 @@ import eu.shardline.mod.event.CrystalShieldHandler;
 import eu.shardline.mod.story.StoryEnding;
 import eu.shardline.mod.story.ending.EndingManager;
 import eu.shardline.mod.story.ending.RulerAbilities;
+import eu.shardline.mod.story.lore.TraderDialogue;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,7 +19,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  */
 @EventBusSubscriber(modid = Shardline.MODID)
 public final class ModNetworking {
-    private static final String PROTOCOL_VERSION = "2";
+    private static final String PROTOCOL_VERSION = "3";
 
     private ModNetworking() {
     }
@@ -51,6 +52,13 @@ public final class ModNetworking {
                     }
                 }));
 
+        registrar.playToServer(TraderActionPayload.TYPE, TraderActionPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        TraderDialogue.handleAction(player, payload.entityId(), payload.action());
+                    }
+                }));
+
         // Server -> Client
         registrar.playToClient(StoryStatePayload.TYPE, StoryStatePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.handleState(payload)));
@@ -60,5 +68,7 @@ public final class ModNetworking {
                 context.enqueueWork(() -> ClientStoryHandler.handleScreenEffect(payload)));
         registrar.playToClient(OpenEndingChoicePayload.TYPE, OpenEndingChoicePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openEndingChoice(payload)));
+        registrar.playToClient(TraderDialoguePayload.TYPE, TraderDialoguePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientStoryHandler.openTraderDialogue(payload)));
     }
 }

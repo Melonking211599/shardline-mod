@@ -6,7 +6,7 @@ Leuchtschichten (<name>_glow.png) sind durchsichtig bis auf Adern, Runen und Kri
 """
 from __future__ import annotations
 
-from common import CLEAR, CYAN, GOLD, IVORY, SKYB, VGLOW, VIRUS, Tex, hx, save_png
+from common import BONE, CLEAR, CYAN, GOLD, IVORY, SHARD, SKYB, VGLOW, VIOLET, VIRUS, Tex, hx, save_png
 from pixel import clusters, ramps, stamp
 
 # ------------------------------------------------------------------ Hilfen
@@ -286,8 +286,148 @@ def immunity_icon() -> Tex:
     return t
 
 
+# ====================================================================== F6 Haendler-Dialog und lose Lore-Seite
+PARCH = [hx(c) for c in ("#4a3826", "#7d6346", "#ad9168", "#d6bf95", "#efe2c4")]
+INK = hx("#2b1840")
+PAGE = """
+..oooooooooo....
+.oPPPPPPPPPPo...
+.oPWWWWWWWWPPo..
+.oPWiiiiiiWWPo..
+.oPWWWWWWWWWPo..
+.oPWiiiiiiiiWPo.
+.oPWWWWWWWWWWPo.
+.oPWiiiiiWWWWPo.
+.oPWWWWWWWWWWPo.
+.oPWiiiiiiiWWPo.
+.oPWWWWWWWWWWPo.
+.oPWssWiiiWWPo..
+.oPsSSsWWWWPPo..
+.oPPssPPPPoo....
+..ooooooo.......
+................
+"""
+
+
+def lore_page() -> Tex:
+    """Herausgerissene Seite: Pergament, Schriftzeilen in Tinte, violettes Siegel, ausgerissene Ecke rechts unten."""
+    pal = {"o": PARCH[0], "P": PARCH[2], "W": PARCH[4], "i": INK, "s": SHARD[1], "S": SHARD[3]}
+    t = Tex(16, 16)
+    for y, row in enumerate(PAGE.strip("\n").split("\n")):
+        for x, ch in enumerate(row):
+            if ch == "W":
+                t.set(x, y, PARCH[4] if x + y < 14 else PARCH[3])
+            elif ch != ".":
+                t.set(x, y, pal[ch])
+    return t
+
+
+def portrait() -> Tex:
+    """24x24-Porträt des Splitterhaendlers: violette Kapuze mit Goldsaum (einst ein Hueter), fahles Gesicht,
+    Magenta-Augen, grosse Nase, Amulett. Hintergrund: Nachthimmel der Splitterweite."""
+    t = Tex(24, 24)
+    for y in range(24):
+        for x in range(24):
+            t.set(x, y, VIOLET[0] if y < 12 else hx("#140a26"))
+    for (x, y) in ((2, 3), (20, 2), (4, 9), (21, 7), (1, 15)):
+        t.set(x, y, CYAN[3])
+    for y in range(24):
+        for x in range(24):
+            hood = ((x - 11.5) / 10.0) ** 2 + ((y - 11.0) / 11.5) ** 2 <= 1.0 or (y >= 17 and abs(x - 11.5) <= 6 + (y - 17) * 1.2)
+            if not hood:
+                continue
+            face = ((x - 11.5) / 5.2) ** 2 + ((y - 13.0) / 6.2) ** 2 <= 1.0 and y <= 19
+            trim = not face and ((x - 11.5) / 6.4) ** 2 + ((y - 13.0) / 7.4) ** 2 <= 1.0 and y <= 20
+            if face:
+                shade = 2.6 - (0.9 if y <= 8 else 0) + (0.4 if x < 11 else -0.2)
+                t.set(x, y, BONE[max(0, min(4, int(round(shade))))])
+            elif trim:
+                t.set(x, y, GOLD[3] if x + y < 24 else GOLD[2])
+            else:
+                tone = 3 if x < 9 and y < 14 else 2 if x < 15 else 1
+                if y >= 20:
+                    tone -= 1
+                t.set(x, y, VIOLET[max(0, tone)])
+    # Schatten der Kapuze ueber der Stirn
+    for x in range(8, 16):
+        t.set(x, 7, VIOLET[0])
+        if 9 <= x <= 14:
+            t.set(x, 8, BONE[1])
+    # Augen (leuchtend) und Brauen
+    for (x, y, c) in ((8, 11, BONE[0]), (9, 11, BONE[0]), (14, 11, BONE[0]), (15, 11, BONE[0]),
+                      (8, 12, VGLOW[3]), (9, 12, VGLOW[1]), (14, 12, VGLOW[3]), (15, 12, VGLOW[1])):
+        t.set(x, y, c)
+    # Nase
+    for y in range(12, 18):
+        t.set(11, y, BONE[3])
+        t.set(12, y, BONE[2])
+    t.set(11, 17, BONE[2])
+    t.set(12, 17, BONE[1])
+    hline(t, 10, 13, 18, BONE[1])
+    # Amulett
+    for (x, y, c) in ((11, 21, GOLD[3]), (12, 21, GOLD[2]), (11, 22, CYAN[3]), (12, 22, CYAN[2]), (10, 22, GOLD[2]), (13, 22, GOLD[1])):
+        t.set(x, y, c)
+    return t
+
+
+def trader_dialogue() -> Tex:
+    """Atlas 256x128: Dialograhmen 240x100 mit Porträtrahmen (6,6, 56x56) und Namensleiste."""
+    W, H = 240, 100
+    t = Tex(256, 128)
+    for y in range(H):
+        for x in range(W):
+            base = hx("#170c28") if y < 50 else hx("#130a22")
+            t.set(x, y, base)
+    # Aussenrahmen: dunkel, Gold (oben/links heller), dunkel
+    for x in range(W):
+        for y in range(H):
+            ring = min(x, y, W - 1 - x, H - 1 - y)
+            if ring == 0:
+                t.set(x, y, hx("#07030c"))
+            elif ring in (1, 2):
+                light = min(x, y) <= min(W - 1 - x, H - 1 - y)   # oben und links hell, unten und rechts dunkel
+                t.set(x, y, GOLD[3] if ring == 1 and light else GOLD[2] if light else GOLD[1])
+            elif ring == 3:
+                t.set(x, y, hx("#0b0516"))
+    # Eckornamente (Goldraute mit Magenta-Edelstein)
+    for (cx, cy) in ((4, 4), (W - 5, 4), (4, H - 5), (W - 5, H - 5)):
+        for dy in range(-3, 4):
+            for dx in range(-3, 4):
+                d = abs(dx) + abs(dy)
+                if d <= 3:
+                    t.set(cx + dx, cy + dy, VGLOW[3] if d == 0 else VGLOW[1] if d == 1 else GOLD[3] if d == 2 else GOLD[1])
+    # Porträtrahmen
+    px, py, pw = 6, 6, 56
+    for y in range(py, py + pw):
+        for x in range(px, px + pw):
+            ring = min(x - px, y - py, px + pw - 1 - x, py + pw - 1 - y)
+            if ring == 0:
+                t.set(x, y, hx("#07030c"))
+            elif ring == 1:
+                t.set(x, y, GOLD[3] if min(x - px, y - py) <= min(px + pw - 1 - x, py + pw - 1 - y) else GOLD[1])
+            elif ring == 2:
+                t.set(x, y, hx("#07030c"))
+    art = portrait()
+    for y in range(48):
+        for x in range(48):
+            t.set(px + 4 + x, py + 4 + y, art.get(x // 2, y // 2))
+    # Namensleiste mit Goldlinie
+    for x in range(66, W - 8):
+        for y in range(5, 18):
+            t.set(x, y, hx("#0e0719"))
+        t.set(x, 18, GOLD[2] if (x // 3) % 2 == 0 else GOLD[1])
+    # Textfeld leicht abgesetzt
+    for x in range(66, W - 8):
+        for y in range(20, 70):
+            if (x + y) % 2 == 0:
+                c = t.get(x, y)
+                t.set(x, y, (min(255, c[0] + 4), min(255, c[1] + 2), min(255, c[2] + 8), 255))
+    return t
+
+
 OTHER = {
     "mob_effect/immunity": immunity_icon,
+    "gui/trader_dialogue": trader_dialogue,
 }
 
 BLOCKS = {
@@ -303,7 +443,9 @@ BLOCKS = {
     "block/decision_altar_top_glow": decision_altar_top_glow,
     "block/decision_altar_bottom": decision_altar_bottom,
 }
-ITEMS = {}
+ITEMS = {
+    "item/lore_page": lore_page,
+}
 
 
 def main():

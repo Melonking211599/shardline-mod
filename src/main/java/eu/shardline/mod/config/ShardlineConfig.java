@@ -63,6 +63,7 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue CHAPTER_TITLES;
     public static final ModConfigSpec.BooleanValue TRADER_DIALOGUE;
     public static final ModConfigSpec.IntValue DIALOGUE_LINE_DELAY_TICKS;
+    public static final ModConfigSpec.IntValue LORE_PAGE_PRICE;
 
     // Virus
     public static final ModConfigSpec.BooleanValue VIRUS_ENABLED;
@@ -282,6 +283,9 @@ public final class ShardlineConfig {
         DIALOGUE_LINE_DELAY_TICKS = b.comment("Abstand zwischen zwei Dialogzeilen in Ticks (20 = 1 Sekunde).")
                 .translation(key("dialogue_line_delay_ticks"))
                 .defineInRange("dialogueLineDelayTicks", 50, 0, 400);
+        LORE_PAGE_PRICE = b.comment("Shard-Splitter, die der Splitterhaendler fuer eine lose Lore-Seite zahlt.")
+                .translation(key("lore_page_price"))
+                .defineInRange("lorePagePrice", 2, 0, 64);
         b.pop();
 
         b.translation(key("virus")).push("virus");

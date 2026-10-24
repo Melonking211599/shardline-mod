@@ -7,6 +7,7 @@ import eu.shardline.mod.item.custom.ColossusGauntletItem;
 import eu.shardline.mod.item.custom.CrystalBowItem;
 import eu.shardline.mod.item.custom.HeartOfTheExpanseItem;
 import eu.shardline.mod.item.custom.LoreBookItem;
+import eu.shardline.mod.item.custom.LorePageItem;
 import eu.shardline.mod.item.custom.LoreItem;
 import eu.shardline.mod.item.custom.ModSmithingTemplates;
 import eu.shardline.mod.item.custom.PurificationEssenceItem;
@@ -85,6 +86,8 @@ public final class ModItems {
             HeartOfTheExpanseItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 
     // --- Story & Shardvirus ---
+    public static final DeferredItem<LorePageItem> LORE_PAGE = ITEMS.registerItem("lore_page", LorePageItem::new,
+            new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<LoreBookItem> LORE_BOOK = ITEMS.registerItem("lore_book", LoreBookItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<PurificationEssenceItem> PURIFICATION_ESSENCE = ITEMS.registerItem("purification_essence",

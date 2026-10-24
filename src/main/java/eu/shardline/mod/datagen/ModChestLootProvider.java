@@ -51,7 +51,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(item(Items.OBSIDIAN, 4, 1, 2))
                 .add(LootItem.lootTableItem(Items.BOOK).setWeight(3)
                         .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries))))
-                .withPool(loreBooks(4, "wanderer_notes", "crystal_kingdom", "keepers_oath", "the_resonance", "first_infection", "traders_ledger")));
+                .withPool(loreBooks(4, "wanderer_notes", "crystal_kingdom", "keepers_oath", "the_resonance", "first_infection", "traders_ledger"))
+                .withPool(lorePages(1.0F, 2.0F, 12, "wanderer_notes", "crystal_kingdom", "keepers_oath", "the_resonance", "traders_ledger")));
 
         output.accept(ModLootTables.RUIN_TOWER_TREASURE, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(2.0F, 4.0F))
@@ -123,7 +124,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(LootItem.lootTableItem(Items.BOOK).setWeight(4)
                         .apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries))))
                 .withPool(loreBooks(0, "keepers_oath", "crystal_kingdom", "the_resonance", "first_infection", "queen_selvaine"))
-                .withPool(loreBooks(3, "keepers_oath", "the_resonance", "the_shattering")));
+                .withPool(loreBooks(3, "keepers_oath", "the_resonance", "the_shattering"))
+                .withPool(lorePages(2.0F, 4.0F, 4, "keepers_oath", "crystal_kingdom", "the_resonance", "queen_selvaine", "the_seal")));
 
         output.accept(ModLootTables.TRADER_OUTPOST_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(4.0F, 6.0F))
@@ -150,7 +152,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(enchanted(ModItems.SHARD_HELMET.get(), 2))
                 .add(enchanted(ModItems.SHARD_BOOTS.get(), 2))
                 .add(item(ModItems.COLOSSUS_SUMMONING_CRYSTAL.get(), 1, 1, 1)))
-                .withPool(loreBooks(3, "the_last_knights", "the_shattering", "first_infection")));
+                .withPool(loreBooks(3, "the_last_knights", "the_shattering", "first_infection"))
+                .withPool(lorePages(1.0F, 2.0F, 10, "the_last_knights", "the_shattering", "first_infection")));
 
         output.accept(ModLootTables.CRYSTAL_GEODE_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(3.0F, 5.0F))
@@ -162,7 +165,8 @@ public class ModChestLootProvider implements LootTableSubProvider {
                 .add(item(Items.LAPIS_LAZULI, 6, 4, 10))
                 .add(item(Items.DIAMOND, 3, 1, 2))
                 .add(enchanted(ModItems.SHARD_PICKAXE.get(), 3)))
-                .withPool(loreBooks(4, "the_resonance", "first_infection")));
+                .withPool(loreBooks(4, "the_resonance", "first_infection"))
+                .withPool(lorePages(1.0F, 1.0F, 8, "the_resonance", "first_infection")));
 
         output.accept(ModLootTables.SHARD_CRATER_CHEST, LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(UniformGenerator.between(3.0F, 5.0F))
@@ -189,6 +193,24 @@ public class ModChestLootProvider implements LootTableSubProvider {
             pool.add(LootItem.lootTableItem(ModItems.LORE_BOOK.get()).setWeight(1)
                     .apply(SetComponentsFunction.setComponent(ModDataComponents.LORE_BOOK.get(), book.id()))
                     .apply(SetComponentsFunction.setComponent(DataComponents.WRITTEN_BOOK_CONTENT, LoreBooks.content(book))));
+        }
+        return pool;
+    }
+
+    /** Lose Lore-Seiten: je ein Eintrag pro Buch und Seite, dazu ein Leereintrag. */
+    private static LootPool.Builder lorePages(float minRolls, float maxRolls, int emptyWeight, String... ids) {
+        LootPool.Builder pool = LootPool.lootPool().setRolls(UniformGenerator.between(minRolls, maxRolls))
+                .add(EmptyLootItem.emptyItem().setWeight(emptyWeight));
+        for (String id : ids) {
+            LoreBooks.LoreBook book = LoreBooks.byId(id);
+            if (book == null) {
+                throw new IllegalArgumentException("Unbekanntes Lore-Buch: " + id);
+            }
+            for (int page = 1; page <= book.pages(); page++) {
+                pool.add(LootItem.lootTableItem(ModItems.LORE_PAGE.get()).setWeight(1)
+                        .apply(SetComponentsFunction.setComponent(ModDataComponents.LORE_BOOK.get(), book.id()))
+                        .apply(SetComponentsFunction.setComponent(ModDataComponents.LORE_PAGE.get(), page)));
+            }
         }
         return pool;
     }

@@ -45,6 +45,7 @@ public class ModStoryAdvancements implements AdvancementProvider.AdvancementGene
 
         AdvancementHolder book = task(chapter3, "lore_book", ModItems.LORE_BOOK.get(), AdvancementType.TASK, 0);
         task(book, "all_lore_books", ModItems.LORE_BOOK.get(), AdvancementType.CHALLENGE, 250);
+        task(book, "lore_bound", ModItems.LORE_PAGE.get(), AdvancementType.TASK, 0);
         AdvancementHolder vision = task(chapter3, "vision", ModBlocks.MEMORY_CRYSTAL.get(), AdvancementType.TASK, 0);
         task(vision, "all_visions", ModBlocks.MEMORY_CRYSTAL.get(), AdvancementType.CHALLENGE, 250);
 

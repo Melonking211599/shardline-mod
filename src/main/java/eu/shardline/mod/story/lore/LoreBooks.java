@@ -67,6 +67,14 @@ public final class LoreBooks {
         return new WrittenBookContent(Filterable.passThrough(book.id()), "Shardline", 0, pages, true);
     }
 
+    /** Lose Seite eines Buchs (Seite 1 bis {@link LoreBook#pages()}). */
+    public static ItemStack page(LoreBook book, int page) {
+        ItemStack stack = new ItemStack(ModItems.LORE_PAGE.get());
+        stack.set(ModDataComponents.LORE_BOOK.get(), book.id());
+        stack.set(ModDataComponents.LORE_PAGE.get(), Math.max(1, Math.min(book.pages(), page)));
+        return stack;
+    }
+
     public static ItemStack create(LoreBook book) {
         ItemStack stack = new ItemStack(ModItems.LORE_BOOK.get());
         stack.set(ModDataComponents.LORE_BOOK.get(), book.id());

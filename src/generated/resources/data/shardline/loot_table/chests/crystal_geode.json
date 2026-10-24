@@ -242,6 +242,272 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 1.0,
+        "min": 1.0
+      }
     }
   ],
   "random_sequence": "shardline:chests/crystal_geode"

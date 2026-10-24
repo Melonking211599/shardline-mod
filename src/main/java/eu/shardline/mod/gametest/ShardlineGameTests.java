@@ -596,7 +596,7 @@ public final class ShardlineGameTests {
     }
 
     /** Virusherz: Phasen nach Lebenspunkten, Verhaertung beim Phasenwechsel (unverwundbar), danach wieder verwundbar. */
-    @GameTest(template = EMPTY, timeoutTicks = 120, batch = "shardline_heart")
+    @GameTest(template = EMPTY, timeoutTicks = 240, batch = "shardline_heart")
     public static void virusHeartPhases(GameTestHelper helper) {
         clearArea(helper, 6, 5);
         var heart = helper.spawn(ModEntities.VIRUS_HEART.get(), new BlockPos(3, 1, 3));
@@ -605,21 +605,49 @@ public final class ShardlineGameTests {
                 && eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(0.2F) == 3, "Phasengrenzen falsch");
         helper.assertTrue(heart.getPhase() == 1, "Neues Herz muss in Phase 1 sein");
         heart.setHealth(heart.getMaxHealth() * 0.6F);
-        helper.runAfterDelay(3, () -> {
-            helper.assertTrue(heart.getPhase() == 2, "Phase 2 wurde nicht erreicht");
-            heart.invulnerableTime = 0;
-            helper.assertFalse(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F), "Beim Phasenwechsel muss das Herz unverwundbar sein");
-        });
-        helper.runAfterDelay(45, () -> {
-            heart.invulnerableTime = 0;
-            helper.assertTrue(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F), "Nach dem Phasenwechsel muss das Herz verwundbar sein");
-            heart.setHealth(heart.getMaxHealth() * 0.2F);
-        });
-        helper.runAfterDelay(50, () -> {
-            helper.assertTrue(heart.getPhase() == 3, "Phase 3 wurde nicht erreicht");
-            heart.discard();
-            helper.succeed();
-        });
+        // Warten statt fester Verzoegerung: Der Chunk einer neuen Batch tickt nicht sofort.
+        helper.startSequence()
+                .thenWaitUntil(() -> helper.assertTrue(heart.getPhase() == 2, "Phase 2 wurde nicht erreicht"))
+                .thenExecute(() -> {
+                    heart.invulnerableTime = 0;
+                    helper.assertFalse(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F),
+                            "Beim Phasenwechsel muss das Herz unverwundbar sein");
+                })
+                .thenIdle(40)
+                .thenExecute(() -> {
+                    heart.invulnerableTime = 0;
+                    helper.assertTrue(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F),
+                            "Nach dem Phasenwechsel muss das Herz verwundbar sein");
+                    heart.setHealth(heart.getMaxHealth() * 0.2F);
+                })
+                .thenWaitUntil(() -> helper.assertTrue(heart.getPhase() == 3, "Phase 3 wurde nicht erreicht"))
+                .thenExecute(heart::discard)
+                .thenSucceed();
+    }
+
+    /** Lose Lore-Seiten: Verkauf gegen Splitter und Binden von vier Seiten desselben Buchs. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void lorePageTrading(GameTestHelper helper) {
+        net.minecraft.world.entity.player.Player player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        LoreBooks.LoreBook seal = LoreBooks.byId("the_seal");
+        LoreBooks.LoreBook oath = LoreBooks.byId("keepers_oath");
+        for (int page = 1; page <= 4; page++) {
+            player.getInventory().add(LoreBooks.page(seal, page));
+        }
+        player.getInventory().add(LoreBooks.page(oath, 2));
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.countPages(player) == 5, "Seiten falsch gezaehlt");
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.bindableBooks(player).equals(List.of(seal)), "Bindbares Buch nicht erkannt");
+        LoreBooks.LoreBook bound = eu.shardline.mod.story.lore.TraderDialogue.bindBook(player);
+        helper.assertTrue(bound == seal, "Falsches Buch gebunden");
+        helper.assertTrue(player.getInventory().contains(stack -> stack.is(eu.shardline.mod.item.ModItems.LORE_BOOK.get())
+                && "the_seal".equals(stack.get(eu.shardline.mod.core.ModDataComponents.LORE_BOOK.get()))), "Gebundenes Buch fehlt im Inventar");
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.countPages(player) == 1, "Gebundene Seiten wurden nicht entfernt");
+        int sold = eu.shardline.mod.story.lore.TraderDialogue.sellPages(player);
+        int fragments = player.getInventory().countItem(eu.shardline.mod.item.ModItems.SHARD_FRAGMENT.get());
+        helper.assertTrue(sold == 1 && fragments == eu.shardline.mod.config.ShardlineConfig.LORE_PAGE_PRICE.get(),
+                "Verkauf falsch: " + sold + " Seiten, " + fragments + " Splitter");
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.bindBook(player) == null, "Ohne Seiten darf nichts gebunden werden");
+        helper.succeed();
     }
 
     // ------------------------------------------------------------------ Story & Shardvirus
@@ -833,6 +861,7 @@ public final class ShardlineGameTests {
             }
             for (int line = 1; line <= 3; line++) {
                 keys.add("dialogue.shardline.trader." + stage + ".idle." + line);
+                keys.add("dialogue.shardline.trader." + stage + ".more." + line);
             }
         }
         List<String> missing = keys.stream().filter(key -> !language.has(key)).toList();

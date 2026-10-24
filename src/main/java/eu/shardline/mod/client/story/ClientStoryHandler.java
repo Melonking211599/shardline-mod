@@ -4,6 +4,7 @@ import eu.shardline.mod.network.OpenEndingChoicePayload;
 import eu.shardline.mod.network.ScreenEffectPayload;
 import eu.shardline.mod.network.StoryStatePayload;
 import eu.shardline.mod.network.TitlesPayload;
+import eu.shardline.mod.network.TraderDialoguePayload;
 import eu.shardline.mod.story.StoryEnding;
 import net.minecraft.client.Minecraft;
 
@@ -28,5 +29,9 @@ public final class ClientStoryHandler {
 
     public static void openEndingChoice(OpenEndingChoicePayload payload) {
         Minecraft.getInstance().setScreen(new EndingChoiceScreen(payload.vote(), payload.secondsLeft()));
+    }
+
+    public static void openTraderDialogue(TraderDialoguePayload payload) {
+        Minecraft.getInstance().setScreen(new TraderDialogueScreen(payload));
     }
 }

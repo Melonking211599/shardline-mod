@@ -101,5 +101,7 @@ keeper_ruin_bricks keeper_ruin_pillar keeper_ruin_pillar_top keeper_rune_slab ke
 for b in story2_blocks: need(TEX / "block" / f"{b}.png", (16, 16))
 blocks += story2_blocks
 need(TEX / "mob_effect" / "immunity.png", (18, 18))
+need(TEX / "item" / "lore_page.png", (16, 16)); items.append("lore_page")
+need(TEX / "gui" / "trader_dialogue.png", (256, 128))
 print("\n".join(errors) if errors else f"OK: alle Pruefungen bestanden ({len(ENT)} Wesen, {len(blocks)+1} Bloecke, {len(items)} Items)")
 sys.exit(1 if errors else 0)
