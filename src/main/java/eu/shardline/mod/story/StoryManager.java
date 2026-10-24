@@ -227,6 +227,7 @@ public final class StoryManager {
         data(player.server).addRuler(player.getUUID());
         applyTitleTeam(player);
         award(player, "story/ending_dominate");
+        player.sendSystemMessage(Component.translatable("message.shardline.ruler_allegiance").withStyle(ChatFormatting.LIGHT_PURPLE));
         syncTitles(player.server);
         sync(player);
     }

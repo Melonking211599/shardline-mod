@@ -53,6 +53,8 @@ public final class ModTags {
     public static final class EntityTypes {
         /** Wesen, gegen die Splitterbann zusaetzlichen Schaden macht. */
         public static final TagKey<EntityType<?>> SENSITIVE_TO_SHARD_BANE = TagKey.create(Registries.ENTITY_TYPE, Shardline.id("sensitive_to_shard_bane"));
+        /** Wesen der Splitterweite, die nach dem Ende "Beherrschen" die Splitterherrscher nicht angreifen. */
+        public static final TagKey<EntityType<?>> OBEYS_RULER = TagKey.create(Registries.ENTITY_TYPE, Shardline.id("obeys_ruler"));
 
         private EntityTypes() {
         }

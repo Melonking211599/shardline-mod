@@ -1009,4 +1009,30 @@ public final class ShardlineGameTests {
             data.setEnding(ending);
         }
     }
+
+    /** Ende "Beherrschen": Shardgegner nehmen Splitterherrscher nicht als Ziel, Bosse bleiben feindlich. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_ending")
+    @SuppressWarnings("removal")
+    public static void rulerAllegiance(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        try {
+            net.minecraft.world.entity.Mob creeper = helper.spawnWithNoFreeWill(ModEntities.SHARD_CREEPER.get(), 0, 1, 0);
+            creeper.setTarget(player);
+            helper.assertTrue(creeper.getTarget() == player, "Ohne Titel muss der Kriecher angreifen");
+            creeper.setTarget(null);
+            data.addRuler(player.getUUID());
+            creeper.setTarget(player);
+            helper.assertTrue(creeper.getTarget() == null, "Kriecher darf den Herrscher nicht als Ziel nehmen");
+            helper.assertTrue(eu.shardline.mod.story.ending.RulerAllegiance.obeys(creeper, player), "Kriecher muss gehorchen");
+            for (EntityType<?> boss : List.<EntityType<?>>of(ModEntities.CRYSTAL_COLOSSUS.get(), ModEntities.SHARD_QUEEN.get())) {
+                helper.assertFalse(boss.is(eu.shardline.mod.core.ModTags.EntityTypes.OBEYS_RULER), "Bosse muessen feindlich bleiben");
+            }
+            creeper.discard();
+            helper.succeed();
+        } finally {
+            data.rulers().remove(player.getUUID());
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
 }

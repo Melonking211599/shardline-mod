@@ -71,7 +71,7 @@ Ein Rechtsklick auf den Händler öffnet ein **Dialogfenster** mit seinem Portr�
 
 Es gibt neun Abschnitte: Kapitel 0 bis 6, „versiegelt“ und „beherrscht“. **In Kapitel 4 warnt er vor der Königin** (Advancement „Ungehörte Warnung“). Was gesagt wird und was ein Knopf bewirkt, entscheidet der Server (`TraderDialoguePayload`, `TraderActionPayload`). Clients ohne den Kanal bekommen die Einführung wie früher im Chat.
 
-**Lose Lore-Seiten** (`shardline:lore_page`) liegen in den Truhen der Hüter-Ruinen, Ruinen-Türme, Aschegrüfte und Kristallgeoden. Jede Seite gehört zu einem der zwölf Bücher, ein Rechtsklick liest sie im Chat.
+**Lose Lore-Seiten** (`shardline:lore_page`) liegen in den Truhen der Hüter-Ruinen, Ruinen-Türme, Aschegrüfte und Kristallgeoden. Jede Seite gehört zu einem der zwölf Bücher. Ein Rechtsklick öffnet sie in einem eigenen Lesefenster (Pergamentblatt mit Buchtitel und Seitenzahl). Clients ohne den Kanal lesen sie wie früher im Chat.
 - Der Händler kauft lose Seiten für je 2 Shard-Splitter (`story.lorePagePrice`).
 - **Vier Seiten desselben Buchs** bindet er zum ganzen Buch, noch ungelesene Bücher zuerst (Advancement „Neu gebunden“).
 
@@ -84,6 +84,8 @@ Stirbt die Königin, passiert Folgendes, solange `virus.enabled` aktiv ist und d
 - Auf dem Bildschirm erscheinen ein Blitz, Risse und eine violette Vignette, dazu wackelt die Kamera.
 - Der Himmel in allen Dimensionen mit Tageslicht färbt sich violett.
 - Rund um den Todesort beginnt sofort die Infektion.
+- In der Oberwelt entstehen sofort Herde in der Nähe jedes Spielers dort und am Weltspawn.
+- Danach setzt der Virus alle `virus.overworldSeedMinutes` Minuten (Standard 4, 0 = aus) einen neuen Herd 24 bis 64 Blöcke neben einem zufälligen Spieler in der Oberwelt. Reinheitsanker schützen auch hier.
 
 Ist das Ende bereits „versiegelt“, meldet der Server nur, dass das Siegel hält.
 
@@ -181,7 +183,7 @@ Jeder Spieler im Umkreis von 32 Blöcken zählt ein besiegtes Herz. **Nach drei 
 
 Wenn die Königin fällt, wächst vor ihrem Thron der **Entscheidungsaltar** aus dem Stein (fünf Blöcke vor dem Thron, auf dem Arenaboden). Neue Thron-Arenen haben ihn von Anfang an.
 - Der Altar ist unzerstörbar und ruht, bis ein Spieler mit dem Kern des Bruchs näher als 8 Blöcke kommt. Dann erwacht er: Leuchtschicht, helles Licht, goldene und magentafarbene Spiralen (Advancement „Am Scheideweg“).
-- Lege den **Kern des Bruchs** auf den Altar. Dafür ist Kapitel 6 nötig. Danach öffnet sich ein Auswahlfenster.
+- Lege den **Kern des Bruchs** auf den Altar. Dafür ist Kapitel 6 nötig. Danach öffnet sich das Entscheidungsfenster: zwei Karten, links „Versiegeln“ (Elfenbein/Gold), rechts „Beherrschen“ (Schwarzviolett/Magenta). Die Karte unter der Maus leuchtet auf, ein Klick wählt.
 - Der Thron selbst nimmt den Kern weiterhin an, damit Welten funktionieren, in denen die Königin schon vor diesem Update gefallen ist.
 
 - **`ending.mode = VOTE`** (Standard): Die Wahl eröffnet eine Abstimmung (120 s) unter allen Online-Spielern mit Kapitel 6. Sie erhalten dasselbe Fenster und klickbare Chat-Buttons (`/shardline story vote seal|dominate`). Die Abstimmung endet, sobald alle abgestimmt haben, spätestens nach Ablauf der Zeit. Bei Gleichstand wird versiegelt. Den Titel erhalten alle, die für das Ergebnis gestimmt haben.
@@ -197,6 +199,7 @@ Fähigkeiten des Splitterherrschers:
 - **Splitterruf** (Taste G): Holt bis zu 3 gezähmte infizierte Diener aus bis zu 128 Blöcken heran. Fehlende werden als Shard-Zombies für 60 s beschworen. Dazu gibt es 10 s Stärke. Abklingzeit 90 s.
 - **Kristallwelle** (Taste H): Splitterwelle im Radius 6 mit 8 Schaden, Rückstoß und 4 s Fieber. Abklingzeit 45 s.
 - **Virus-Lauf** (passiv): Tempo II und Regeneration I auf infiziertem Boden.
+- **Gefolgschaft** (passiv): Die Wesen der Splitterweite (Tag `shardline:obeys_ruler`: Splitterkriecher, Kristallgolem, Aschewandler, Splitterspäher, Kristallspinne, Schattenfuchs, Gesplitterter Ritter, Void-Rochen, Klone der Königin) greifen Splitterherrscher nicht an und lassen von ihnen ab. Bosse bleiben feindlich.
 
 Wer **später** einen Kern auf den Altar oder den Thron legt, schließt sich dem gewählten Weg an und bekommt dessen Titel.
 
@@ -225,7 +228,7 @@ Alle Befehle außer `story status` und `story vote` brauchen Operator-Rechte (St
 | Abschnitt | Schlüssel (Standard) |
 |---|---|
 | `story` | `chapterTitles` (true), `traderDialogue` (true), `dialogueLineDelayTicks` (50), `lorePagePrice` (2) |
-| `virus` | `enabled` (true), `spreadPaused` (false), `spreadChance` (0.75), `spreadAttempts` (2), `spreadRange` (2), `maxRange` (0 = unbegrenzt), `maxBlocksPerTick` (80), `queueLimit` (8192), `oreSeedChance` (0.2), `portalSeedChance` (0.75), `portalSeedRadius` (6), `infectedMobSeedChance` (0.065), `mobConversionChance` (0.02), `villagersFlee` (true), `villagersTransform` (true), `animalsTransform` (true), `feverChanceOnInfectedBlock` (0.04), `feverDurationSeconds` (30), `feverDamage` (1.0), `feverCanKill` (false), `feverCuredByMilk` (false) |
+| `virus` | `enabled` (true), `spreadPaused` (false), `spreadChance` (0.75), `spreadAttempts` (2), `spreadRange` (2), `maxRange` (0 = unbegrenzt), `overworldSeedMinutes` (4, 0 = aus), `maxBlocksPerTick` (80), `queueLimit` (8192), `oreSeedChance` (0.2), `portalSeedChance` (0.75), `portalSeedRadius` (6), `infectedMobSeedChance` (0.065), `mobConversionChance` (0.02), `villagersFlee` (true), `villagersTransform` (true), `animalsTransform` (true), `feverChanceOnInfectedBlock` (0.04), `feverDurationSeconds` (30), `feverDamage` (1.0), `feverCanKill` (false), `feverCuredByMilk` (false) |
 | `remedies` | `anchorRadius` (24), `anchorPurifyPerPulse` (24), `anchorStartRadius` (6), `anchorGrowSeconds` (300), `essenceRadius` (6), `immunityEssenceSeconds` (120), `immunityAnchorSeconds` (15), `heartPurifyRadius` (40), `virusHeartHealth` (200), `virusHeartDifficulty` (EASY / NORMAL / HARD), `heartSpawnThreshold` (160), `heartSpawnCooldownMinutes` (8), `heartsForCore` (3) |
 | `ending` | `mode` (VOTE / FIRST_PLAYER), `voteDurationSeconds` (120), `titlePrefix` (true) |
 | `abilities` | `shardCallCooldownSeconds` (90), `shardCallMaxMobs` (3), `shardCallStrengthSeconds` (10), `crystalWaveCooldownSeconds` (45), `crystalWaveRadius` (6), `crystalWaveDamage` (8), `crystalWaveFeverSeconds` (4), `virusRun` (true) |
@@ -297,7 +300,7 @@ Die bestehenden Registry-Namen sind unverändert. Alte Welten laden weiter.
 
 Die Strukturtests prüfen zusätzlich die Erinnerungskristalle.
 
-Neu in der Story-Erweiterung 2: `infectedAnimals`, `decisionAltar`, `immunity`, `virusHeartPhases`, `lorePageTrading`, `chapterDisplay`, `purityZone`, dazu die Hüter-Ruinen im Strukturtest.
+Neu in der Story-Erweiterung 2: `infectedAnimals`, `decisionAltar`, `immunity`, `virusHeartPhases`, `lorePageTrading`, `chapterDisplay`, `purityZone`, `rulerAllegiance`, dazu die Hüter-Ruinen im Strukturtest.
 
 Für den Server-Rauchtest gilt: `run/world` vorher löschen. Eine Welt, die der GameTest-Server angelegt hat, hat eine falsch eingerichtete Splitterweite.
 
@@ -328,4 +331,4 @@ Die Ruinen eines Versammlungssaals der Hüter stehen in allen Biomen der Splitte
 - **Block-Entity:** `purity_anchor`
 - **Struktur:** `keeper_ruin` (Set `keeper_ruins`, Biome-Tag `has_structure/keeper_ruin`)
 - **Datenkomponenten:** `lore_page`, `chapter`
-- **Netzwerk** (Protokoll 3): `chapter_card`, `trader_dialogue`, `trader_action`
+- **Netzwerk** (Protokoll 4): `chapter_card`, `trader_dialogue`, `trader_action`, `open_lore_page`

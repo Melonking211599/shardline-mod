@@ -6,7 +6,9 @@ Leuchtschichten (<name>_glow.png) sind durchsichtig bis auf Adern, Runen und Kri
 """
 from __future__ import annotations
 
-from common import BONE, CLEAR, COL, CYAN, GOLD, IVORY, MAGENTA, SHARD, SKYB, SLATE, VGLOW, VIOLET, VIRUS, Tex, hx, save_png
+import math
+
+from common import BONE, CLEAR, COL, CYAN, GOLD, IVORY, MAGENTA, SHARD, SKYB, SLATE, VGLOW, VIOLET, VIRUS, Tex, hx, mix, nz, save_png, vnoise
 from pixel import clusters, ramps, stamp
 
 # ------------------------------------------------------------------ Hilfen
@@ -613,11 +615,150 @@ def purity_mote(frame: int) -> Tex:
     return t
 
 
+# ====================================================================== Lesefenster und Endentscheidung (GUI)
+def _shade(c, f):
+    return (max(0, min(255, int(c[0] * f))), max(0, min(255, int(c[1] * f))), max(0, min(255, int(c[2] * f))), c[3])
+
+
+def lore_page_gui() -> Tex:
+    """Atlas 256x256, Blatt 176x208 bei 0,0: Pergament mit Flecken, rechts und unten ausgerissen, dunkler Rand,
+    Goldlinie unter der Kopfzeile, violettes Siegel rechts unten (unterhalb der 14 Textzeilen)."""
+    W, H = 176, 208
+    t = Tex(256, 256)
+    for y in range(H):
+        right = W - 6 - int(5 * vnoise(y / 5.0, 3.0, 11)) - (2 if nz(0, y, 12) < 0.25 else 0)
+        for x in range(W):
+            bottom = H - 6 - int(5 * vnoise(x / 5.0, 7.0, 13)) - (2 if nz(x, 0, 14) < 0.25 else 0)
+            if x < 3 or y < 3 or x > right or y > bottom:
+                continue
+            edge = min(x - 3, y - 3, right - x, bottom - y)
+            stain = vnoise(x / 18.0, y / 18.0, 21) * 0.6 + vnoise(x / 6.0, y / 6.0, 22) * 0.25 + nz(x, y, 23) * 0.15
+            c = PARCH[4] if stain < 0.48 else PARCH[3] if stain < 0.76 else mix(PARCH[3], PARCH[2], 0.35)
+            c = _shade(c, 1.0 - 0.04 * (x + y) / (W + H))   # Licht von oben links
+            if edge == 0:
+                c = PARCH[0]
+            elif edge == 1:
+                c = PARCH[1]
+            elif edge < 5:
+                c = mix(PARCH[2], c, (edge - 1) / 4.0)
+            t.set(x, y, c)
+    # Goldlinie unter Titel und Seitenzahl, Rauten an den Enden
+    for x in range(22, 150):
+        t.set(x, 39, GOLD[2])
+        t.set(x, 40, GOLD[1])
+    for cx in (20, 152):
+        for dy in range(-2, 3):
+            for dx in range(-2, 3):
+                if abs(dx) + abs(dy) <= 2:
+                    t.set(cx + dx, 39 + dy, GOLD[3] if abs(dx) + abs(dy) < 2 else GOLD[1])
+    # Siegel
+    for y in range(184, 202):
+        for x in range(138, 156):
+            d = ((x - 146.5) ** 2 + (y - 192.5) ** 2) ** 0.5 + 0.8 * (nz(x, y, 31) - 0.5)
+            if d <= 8.5:
+                t.set(x, y, SHARD[0] if d > 7.5 else SHARD[3] if x + y < 336 else SHARD[1] if d > 4 else SHARD[2])
+    put(t, """
+..w..
+.wSw.
+wS.Sw
+.wSw.
+..w..
+""", {"w": SHARD[4], "S": SHARD[2]}, 144, 190)
+    return t
+
+
+def _card(t: Tex, ox: int, W: int, H: int, fill, frame, inner, seed: int):
+    """Karte mit abgeschraegten Ecken, Doppelrahmen und weichem Rauschen in der Flaeche."""
+    for y in range(H):
+        for x in range(W):
+            cut = min(x, W - 1 - x) + min(y, H - 1 - y)
+            if min(x, W - 1 - x) < 6 and min(y, H - 1 - y) < 6 and cut < 6:
+                continue
+            edge = min(x, y, W - 1 - x, H - 1 - y)
+            n = vnoise(x / 14.0, y / 14.0, seed) * 0.7 + nz(x, y, seed + 1) * 0.3
+            c = fill[2] if n < 0.4 else fill[1] if n < 0.7 else fill[0]
+            c = mix(c, fill[3], max(0.0, 0.35 - y / (H * 2.0)))   # oben heller
+            if edge <= 1 or cut < 8:
+                c = frame[0]
+            elif edge <= 3:
+                c = frame[2] if x + y < (W + H) // 2 else frame[1]
+            elif edge == 7:
+                c = inner
+            t.set(ox + x, y, c)
+
+
+def ending_choice() -> Tex:
+    """Atlas 512x256 mit zwei Karten 150x190: links Versiegeln (Elfenbein, Goldrahmen, Sonnensiegel in Himmelblau),
+    rechts Beherrschen (Schwarzviolett, Magentarahmen, Splitterkrone). Emblem oben (y 12-68), Titel bei y 76,
+    Text ab y 92 (8 Zeilen)."""
+    W, H = 150, 190
+    t = Tex(512, 256)
+    _card(t, 0, W, H, [IVORY[4], IVORY[3], mix(IVORY[3], GOLD[4], 0.25), IVORY[4]], [GOLD[0], GOLD[1], GOLD[3]], GOLD[2], 41)
+    _card(t, W, W, H, [VIRUS[0], VIRUS[1], hx("#1a0721"), VIRUS[2]], [hx("#07020a"), MAGENTA[1], MAGENTA[3]], VGLOW[0], 51)
+    cx, cy = 75, 40
+    # Versiegeln: Sonnenscheibe mit Strahlen und Schloss-Raute
+    for y in range(10, 72):
+        for x in range(40, 110):
+            dx, dy = x - cx, y - cy
+            d = (dx * dx + dy * dy) ** 0.5
+            if d <= 13:
+                t.set(x, y, SKYB[3] if d < 6 else SKYB[1] if d < 11 else GOLD[2])
+            elif d <= 15:
+                t.set(x, y, GOLD[3] if dx + dy < 0 else GOLD[1])
+            elif 17 <= d <= 27:
+                a = math.atan2(dy, dx)
+                ray = abs(((a / (2 * math.pi)) * 12) % 1.0 - 0.5)
+                if ray < 0.5 - (d - 17) / 26.0 * 0.5 - 0.2:
+                    t.set(x, y, GOLD[3] if d < 22 else GOLD[2])
+    put(t, """
+...w...
+..wGw..
+.wG.Gw.
+wG...Gw
+.wG.Gw.
+..wGw..
+...w...
+""", {"w": GOLD[4], "G": GOLD[1]}, cx - 3, cy - 3)
+    # Beherrschen: Krone aus Splittern ueber einem Auge
+    ox = W
+    for y in range(10, 72):
+        for x in range(40, 110):
+            dx, dy = x - cx, y - cy
+            ex = dx / 16.0
+            ey = (dy - 8) / 7.0
+            if ex * ex + ey * ey <= 1.0:
+                inner = ex * ex + ey * ey
+                pd = (dx * dx + (dy - 8) ** 2) ** 0.5
+                c = VGLOW[4] if pd < 2 else hx("#07020a") if pd < 4 else VGLOW[2] if pd < 6 else MAGENTA[1] if inner < 0.75 else MAGENTA[3]
+                t.set(ox + x, y, c)
+    for i, (sx, h) in enumerate(((-18, 14), (-9, 20), (0, 26), (9, 20), (18, 14))):
+        base = cy - 2
+        for k in range(h):
+            half = max(0, int((h - k) / h * 3.5))
+            for w in range(-half, half + 1):
+                c = SHARD[4] if w == -half and k > 1 else SHARD[3] if w < 0 else SHARD[1]
+                if k == h - 1:
+                    c = VGLOW[3]
+                t.set(ox + cx + sx + w, base - k, c)
+    hline(t, ox + cx - 22, ox + cx + 22, cy - 1, MAGENTA[2])
+    hline(t, ox + cx - 22, ox + cx + 22, cy, MAGENTA[0])
+    # Trennornament unter dem Titel
+    for x in range(20, W - 20):
+        fade = min(1.0, min(x - 20, W - 21 - x) / 20.0)
+        g = GOLD[2]
+        t.set(x, 87, (g[0], g[1], g[2], int(255 * fade)))
+        m = MAGENTA[2]
+        t.set(ox + x, 87, (m[0], m[1], m[2], int(255 * fade)))
+    return t
+
+
 OTHER = {
     "mob_effect/immunity": immunity_icon,
     **{f"particle/purity_mote_{n}": (lambda n=n: purity_mote(n)) for n in range(4)},
     "gui/chapter_card": chapter_card,
     "gui/trader_dialogue": trader_dialogue,
+    "gui/lore_page": lore_page_gui,
+    "gui/ending_choice": ending_choice,
 }
 
 BLOCKS = {

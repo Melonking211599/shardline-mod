@@ -28,7 +28,7 @@ Einstellungen liegen in `config/shardline-common.toml` (Spawnraten, Boss-HP, Sch
 3. **Shard-Set:** Es wird aus Shard-Barren hergestellt. Set-Bonus: Nachtsicht in der Splitterweite und 50 % weniger Splitterschaden.
 4. **Kristallkoloss:** Gesplitterte Ritter in den Ruinen-Türmen lassen Ritterwappen fallen, daraus entsteht der Erweckungskristall. Diesen setzt du auf den Altar einer Kristallwald-Arena. Die Karte zur Arena verkauft der Splitterhändler.
 5. **Kolossrüstung:** Netherit-Teil, Koloss-Schmiedevorlage und Kolosskern ergeben am Schmiedetisch ein Kolossteil. Set-Bonus: Rückstoßimmunität, 4 zusätzliche Herzen und der Kristallschild auf Taste V.
-6. **Splitterkönigin:** Lege einen Kolosskern auf den Thron im Zentrum der Splitterweite bei den Koordinaten 0 / 0.
+6. **Splitterkönigin:** Lege einen Kolosskern auf den Thron im Zentrum der Splitterweite bei den Koordinaten 0 / 0. Sie schwebt meist außer Reichweite, stürzt sich aber regelmäßig herab (Schrei und Hinweis über der Hotbar). Dann ist sie im Nahkampf zu treffen. Sie heilt sich erst, wenn niemand mehr in der Arena ist.
 7. **Der Bruch und das Ende:** Der Tod der Königin setzt den Shardvirus frei, vor dem Thron wächst der Entscheidungsaltar. Danach gilt es, ihn einzudämmen (Reinheitsanker mit wachsender Zone, Reinigungsessenz und Immunität), drei Virusherzen mit je drei Phasen zu zerstören und am Altar zu entscheiden: versiegeln oder beherrschen. Den eigenen Stand zeigt `/shardline story status`. Alles dazu steht in [STORY.md](STORY.md).
 
 ## Strukturen

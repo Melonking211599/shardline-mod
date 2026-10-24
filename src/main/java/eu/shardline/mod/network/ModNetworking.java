@@ -19,7 +19,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  */
 @EventBusSubscriber(modid = Shardline.MODID)
 public final class ModNetworking {
-    private static final String PROTOCOL_VERSION = "3";
+    private static final String PROTOCOL_VERSION = "4";
 
     private ModNetworking() {
     }
@@ -70,6 +70,8 @@ public final class ModNetworking {
                 context.enqueueWork(() -> ClientStoryHandler.openEndingChoice(payload)));
         registrar.playToClient(ChapterCardPayload.TYPE, ChapterCardPayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.showChapterCard(payload)));
+        registrar.playToClient(OpenLorePagePayload.TYPE, OpenLorePagePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientStoryHandler.openLorePage(payload)));
         registrar.playToClient(TraderDialoguePayload.TYPE, TraderDialoguePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openTraderDialogue(payload)));
     }

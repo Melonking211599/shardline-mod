@@ -82,6 +82,7 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue VILLAGERS_FLEE;
     public static final ModConfigSpec.BooleanValue VILLAGERS_TRANSFORM;
     public static final ModConfigSpec.BooleanValue ANIMALS_TRANSFORM;
+    public static final ModConfigSpec.IntValue VIRUS_OVERWORLD_SEED_MINUTES;
     public static final ModConfigSpec.DoubleValue FEVER_CHANCE_ON_INFECTED_BLOCK;
     public static final ModConfigSpec.IntValue FEVER_DURATION_SECONDS;
     public static final ModConfigSpec.DoubleValue FEVER_DAMAGE;
@@ -339,6 +340,9 @@ public final class ShardlineConfig {
         ANIMALS_TRANSFORM = b.comment("Kuehe, Schafe und Schweine auf infiziertem Boden kristallisieren.")
                 .translation(key("animals_transform"))
                 .define("animalsTransform", true);
+        VIRUS_OVERWORLD_SEED_MINUTES = b.comment("Alle so viele Minuten setzt der Virus nach dem Bruch einen neuen Herd nahe einem Spieler in der Oberwelt (0 = aus).")
+                .translation(key("overworld_seed_minutes"))
+                .defineInRange("overworldSeedMinutes", 4, 0, 1440);
         FEVER_CHANCE_ON_INFECTED_BLOCK = b.comment("Chance (0-1) pro Sekunde auf infiziertem Boden, Splitterfieber zu bekommen.")
                 .translation(key("fever_chance_on_infected_block"))
                 .defineInRange("feverChanceOnInfectedBlock", 0.04, 0.0, 1.0);

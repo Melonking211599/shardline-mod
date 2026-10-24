@@ -97,6 +97,10 @@ public final class ModWorldTagsProvider {
                     ModEntities.SHARD_QUEEN.get(), ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(),
                     ModEntities.CRYSTALLIZED_COW.get(), ModEntities.CRYSTALLIZED_SHEEP.get(), ModEntities.CRYSTALLIZED_PIG.get(),
                     ModEntities.CRYSTALLIZED_VILLAGER.get(), ModEntities.VIRUS_HEART.get());
+            tag(ModTags.EntityTypes.OBEYS_RULER).add(ModEntities.SHARD_CREEPER.get(), ModEntities.CRYSTAL_GOLEM.get(),
+                    ModEntities.ASH_WALKER.get(), ModEntities.SHARD_SCOUT.get(), ModEntities.CRYSTAL_SPIDER.get(),
+                    ModEntities.SHADOW_FOX.get(), ModEntities.SHATTERED_KNIGHT.get(), ModEntities.VOID_RAY.get(),
+                    ModEntities.QUEEN_CLONE.get());
         }
     }
 

@@ -77,6 +77,14 @@ public final class VirusOutbreak {
 
         data.addHerd(level.dimension(), pos, 1);
         VirusSpreadManager.seedAround(level, pos, 24, 160, level.getRandom());
+        if (first) {
+            // Der Ton kriecht durch die Portale: erste Herde in der Oberwelt, nahe den Spielern und am Weltspawn.
+            ServerLevel overworld = server.overworld();
+            for (ServerPlayer player : overworld.players()) {
+                VirusDrift.seedNear(overworld, player.blockPosition(), overworld.getRandom());
+            }
+            VirusDrift.seedNear(overworld, overworld.getSharedSpawnPos(), overworld.getRandom());
+        }
 
         if (killer != null) {
             StoryManager.reach(killer, StoryChapter.THE_BREACH);

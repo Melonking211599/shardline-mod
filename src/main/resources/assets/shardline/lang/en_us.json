@@ -947,5 +947,9 @@
   "message.shardline.purity_anchor_growing": "The purity zone is growing: %s of %s blocks",
   "subtitles.shardline.block.purity_anchor.grow": "Purity zone grows",
   "shardline.configuration.anchor_start_radius": "Anchor start radius",
-  "shardline.configuration.anchor_grow_seconds": "Anchor zone growth (seconds)"
+  "shardline.configuration.anchor_grow_seconds": "Anchor zone growth (seconds)",
+
+  "message.shardline.queen_swoop": "The Queen dives down - strike now!",
+  "message.shardline.ruler_allegiance": "The creatures of the Expanse bow to you. Shard creatures no longer attack you.",
+  "shardline.configuration.overworld_seed_minutes": "Overworld seeding (minutes)"
 }

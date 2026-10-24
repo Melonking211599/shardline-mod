@@ -947,5 +947,9 @@
   "message.shardline.purity_anchor_growing": "Die Reinheitszone wächst: %s von %s Blöcken",
   "subtitles.shardline.block.purity_anchor.grow": "Reinheitszone wächst",
   "shardline.configuration.anchor_start_radius": "Startradius des Ankers",
-  "shardline.configuration.anchor_grow_seconds": "Wachstum der Ankerzone (Sekunden)"
+  "shardline.configuration.anchor_grow_seconds": "Wachstum der Ankerzone (Sekunden)",
+
+  "message.shardline.queen_swoop": "Die Königin stürzt herab - jetzt zuschlagen!",
+  "message.shardline.ruler_allegiance": "Die Geschöpfe der Splitterweite beugen sich dir. Shardgegner greifen dich nicht mehr an.",
+  "shardline.configuration.overworld_seed_minutes": "Oberwelt-Aussaat (Minuten)"
 }

@@ -37,8 +37,11 @@ public final class BossBars {
     private record Style(ResourceLocation texture, int nameColor, float[] phases, boolean purplePhase) {
     }
 
+    private static final Style COLOSSUS = new Style(texture("crystal_colossus"), 0x84EFFF, new float[] {0.5F}, false);
+    /** Schluessel = Uebersetzungsschluessel des Bossleisten-Namens (der Koloss wechselt in Phase 2 auf "enraged"). */
     private static final Map<String, Style> STYLES = Map.of(
-            "entity.shardline.crystal_colossus", new Style(texture("crystal_colossus"), 0x84EFFF, new float[] {0.5F}, false),
+            "entity.shardline.crystal_colossus", COLOSSUS,
+            "entity.shardline.crystal_colossus.enraged", COLOSSUS,
             "entity.shardline.shard_queen", new Style(texture("shard_queen"), 0xFF8FE8, new float[] {2.0F / 3.0F, 1.0F / 3.0F}, true),
             "entity.shardline.virus_heart", new Style(texture("virus_heart"), 0xFF6FDC, new float[] {2.0F / 3.0F, 1.0F / 3.0F}, false));
 

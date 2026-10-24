@@ -2,11 +2,14 @@ package eu.shardline.mod.item.custom;
 
 import eu.shardline.mod.core.ModDataComponents;
 import eu.shardline.mod.core.ModSounds;
+import eu.shardline.mod.network.OpenLorePagePayload;
+import eu.shardline.mod.story.StoryManager;
 import eu.shardline.mod.story.lore.LoreBooks;
 import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,7 +21,7 @@ import net.minecraft.world.level.Level;
 
 /**
  * Lose Lore-Seite: eine herausgerissene Seite eines der zwoelf Lore-Buecher (Komponenten {@code shardline:lore_book}
- * und {@code shardline:lore_page}). Rechtsklick liest die Seite im Chat. Der Splitterhaendler kauft lose Seiten
+ * und {@code shardline:lore_page}). Rechtsklick oeffnet das Lesefenster (ohne Mod-Kanal: Text im Chat). Der Splitterhaendler kauft lose Seiten
  * gegen Shard-Splitter und bindet vier Seiten desselben Buchs zum ganzen Buch.
  */
 public class LorePageItem extends Item {
@@ -48,13 +51,18 @@ public class LorePageItem extends Item {
         if (book == null) {
             return InteractionResultHolder.fail(stack);
         }
-        if (!level.isClientSide) {
+        if (player instanceof ServerPlayer serverPlayer) {
             int page = Math.min(pageNumber(stack), book.pages());
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LORE_BOOK_OPEN.get(), SoundSource.PLAYERS, 0.7F, 1.3F);
+            player.getCooldowns().addCooldown(this, 10);
+            if (serverPlayer.connection != null && serverPlayer.connection.hasChannel(OpenLorePagePayload.TYPE)) {
+                StoryManager.send(serverPlayer, new OpenLorePagePayload(book.id(), page));
+                return InteractionResultHolder.consume(stack);
+            }
+            // Fallback ohne Kanal: Text im Chat
             player.sendSystemMessage(Component.translatable("item.shardline.lore_page.header", book.title(), page, book.pages())
                     .withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
             player.sendSystemMessage(book.page(page).copy().withStyle(ChatFormatting.GRAY));
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.LORE_BOOK_OPEN.get(), SoundSource.PLAYERS, 0.7F, 1.3F);
-            player.getCooldowns().addCooldown(this, 20);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
