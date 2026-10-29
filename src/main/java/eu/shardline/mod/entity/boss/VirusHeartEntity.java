@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -78,6 +79,9 @@ public class VirusHeartEntity extends Monster implements GeoEntity {
     private static final int TENDRIL_WINDUP = 20;
     private static final int SUMMON_WINDUP = 34;
     private static final int DEATH_TICKS = 44;
+    /** Entity-Event "Fieberwelle": die Bossleiste laesst ihre Adern im Takt des Herzschlags aufleuchten. */
+    private static final byte EVENT_PULSE = 100;
+    private static long lastPulseMillis;
     private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(VirusHeartEntity.class, EntityDataSerializers.INT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -313,6 +317,7 @@ public class VirusHeartEntity extends Monster implements GeoEntity {
     /** Fieberwelle: Schaden, Rueckstoss und Splitterfieber im Umkreis, streut Infektion. */
     private void pulse(ServerLevel level) {
         this.triggerAnim(ShardlineAnimations.ACTION_CONTROLLER, "pulse");
+        level.broadcastEntityEvent(this, EVENT_PULSE);
         level.playSound(null, this.blockPosition(), ModSounds.VIRUS_HEART_PULSE.get(), SoundSource.HOSTILE, 2.0F, 0.8F);
         for (int i = 0; i < 40; i++) {
             float angle = i * Mth.TWO_PI / 40.0F;
@@ -386,6 +391,20 @@ public class VirusHeartEntity extends Monster implements GeoEntity {
     /** Fuer Unterklassen (Schwaerenherz): Name und Farbe der Bossleiste. */
     protected ServerBossEvent bossEvent() {
         return this.bossEvent;
+    }
+
+    /** Zeitpunkt (Util.getMillis) der letzten Fieberwelle, die dieser Client gesehen hat; fuer die Bossleiste. */
+    public static long lastPulseMillis() {
+        return lastPulseMillis;
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == EVENT_PULSE) {
+            lastPulseMillis = Util.getMillis();
+        } else {
+            super.handleEntityEvent(id);
+        }
     }
 
     /** Der Koerper bleibt fuer den Clip {@code death} stehen (2,2 s statt der ueblichen 1 s). */

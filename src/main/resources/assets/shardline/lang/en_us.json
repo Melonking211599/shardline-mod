@@ -943,6 +943,7 @@
   "story.shardline.next.6": "Destroy Virus Hearts, then bring the Core of the Breach to the Altar of Decision.",
   "story.shardline.next.ended": "Your choice has been made. Live with it - or help others find their way.",
   "shardline.configuration.chapter_card": "Chapter card",
+  "shardline.configuration.custom_boss_bars": "Custom boss bars",
 
   "message.shardline.purity_anchor_growing": "The purity zone is growing: %s of %s blocks",
   "subtitles.shardline.block.purity_anchor.grow": "Purity zone grows",

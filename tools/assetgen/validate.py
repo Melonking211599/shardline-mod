@@ -59,6 +59,22 @@ need(TEX / "environment/splitterweite_sky.png", (128, 128)); need(TEX / "environ
 need(TEX / "misc/shard_portal_overlay.png", (256, 256)); need(TEX / "gui/advancements/backgrounds/shardline.png", (16, 16))
 need(RESOURCE_ROOT / "shardline_logo.png", (256, 128))
 
+# ---- Bossleisten: je Boss Hintergrund 182x10, Fuellung 198 x (10*Phasen), Rahmen 214 x (32*Phasen); Sonderteile
+for boss, phases in (("crystal_colossus", 2), ("shard_queen", 3), ("virus_heart", 3), ("echo_queen", 1), ("festering_heart", 1)):
+    need(TEX / "gui/boss_bar" / f"{boss}_background.png", (182, 10))
+    need(TEX / "gui/boss_bar" / f"{boss}_fill.png", (198, 10 * phases))
+    need(TEX / "gui/boss_bar" / f"{boss}_overlay.png", (214, 32 * phases))
+need(TEX / "gui/boss_bar/shard_queen_cracks.png", (182, 30))
+need(TEX / "gui/boss_bar/virus_heart_veins.png", (182, 10)); need(TEX / "gui/boss_bar/festering_heart_veins.png", (182, 10))
+need(TEX / "gui/boss_bar/crystal_colossus_shield.png", (20, 10))
+for boss in ("crystal_colossus", "shard_queen", "virus_heart", "echo_queen", "festering_heart"):   # Fenster im Rahmen bleibt frei
+    im = Image.open(TEX / "gui/boss_bar" / f"{boss}_overlay.png").convert("RGBA")
+    for y in range(12, 22):
+        for x in range(16, 198):
+            if im.getpixel((x, y))[3]:
+                errors.append(f"{boss}_overlay.png: Fenster nicht frei bei {x},{y}")
+                break
+
 # ---- Story-Erweiterung
 story_blocks = "infected_stone infected_dirt infected_grass_top infected_grass_side infected_log infected_log_top infected_leaves infected_sand".split()
 for b in story_blocks:

@@ -136,6 +136,8 @@ Hitbox 1,2 × 3,0 und Augenhöhe 2,6 bleiben (Krone endet bei 2,9 Blöcken). Sch
 5. `ShardlineClientConfig.customBossBars` (Standard an), Lang DE und EN.
 6. Vorschau-Skript rendert jede Leiste bei 100 %, 50 % und 10 % (auch GUI-Skalierung 1–4).
 
+**Umsetzung (Stand nach Redesign 3):** Alle fünf Bosse haben ein eigenes Design (`bossbars.py`, Dateien unter `gui/boss_bar/`, Atlas entfernt). Abweichungen vom Plan: Der Rahmen ist 214 × 32 px (4 px mehr Platz oben für Kronen und Dornen, das Fenster liegt bei y 12); Füllung und Rahmen haben **eine Zeile je Phase** statt eines Farbtons per Multiplikation, weil Cyan × Rot nie Rot ergibt (Koloss: Cyan → Glut, Königin: Rosa → Violett → Rot, Virusherz: Violett → Rosa → Rot). Die Marken sind weiter feine Linien, der Koloss bekommt am 50-%-Marker ein Schild, das zerbricht. Herzschlag: `VirusHeartEntity.pulse()` sendet das Entity-Event 100, `BossBars` liest `VirusHeartEntity.lastPulseMillis()`; im echten Client sprangen die Adern im Abstand der Fieberwellen (Messung der Helligkeit pro Bild). Ein Konfigschalter `customBossBars` (Standard an) stellt auf Vanilla um.
+
 ## 7. Reihenfolge, Prüfungen, Abbruchregel
 
 Reihenfolge wie im Auftrag: Rüstung und Tools → Queen → Bossbars → restliche Kategorien (Blöcke, Wesen und Bosse, Infiziertes, Items, GUI/Effekte/Partikel) → Gesamtvalidierung. Nach jeder Kategorie Kontaktbogen und zwei bis drei Sätze Kritik, einmal nachbessern. Wird etwas nach zwei Versuchen nicht klar besser, vereinfache ich es oder frage nach. Alles bleibt deterministisch (feste Seeds, `run_all.py` zweimal ergibt identische Dateien).

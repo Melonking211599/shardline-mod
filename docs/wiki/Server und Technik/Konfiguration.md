@@ -186,6 +186,7 @@ Der Platzhalter `<mob>` steht für einen dieser Werte: `shard_creeper`, `crystal
 | `screenShake` | `true` | Kamerawackeln (Bruch, Nachbeben) |
 | `feverDistortion` | `true` | verzerrte Sicht bei Splitterfieber |
 | `chapterCard` | `true` | Kapitelkarte statt einfachem Titel |
+| `customBossBars` | `true` | eigene Bossleisten der Shardline-Bosse; `false` zeigt die Vanilla-Leisten |
 | `dialogue.typewriter` | `true` | Schreibmaschinentext im Dialogfenster |
 | `dialogue.textSpeed` | `45` | Zeichen pro Sekunde (5–400) |
 | `dialogue.typeSound` | `true` | Tippgeräusch |

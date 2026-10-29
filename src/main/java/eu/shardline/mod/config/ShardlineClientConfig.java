@@ -17,6 +17,7 @@ public final class ShardlineClientConfig {
     public static final ModConfigSpec.BooleanValue SCREEN_SHAKE;
     public static final ModConfigSpec.BooleanValue FEVER_DISTORTION;
     public static final ModConfigSpec.BooleanValue CHAPTER_CARD;
+    public static final ModConfigSpec.BooleanValue CUSTOM_BOSS_BARS;
     public static final ModConfigSpec.BooleanValue DIALOGUE_TYPEWRITER;
     public static final ModConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
     public static final ModConfigSpec.BooleanValue DIALOGUE_TYPE_SOUND;
@@ -52,6 +53,9 @@ public final class ShardlineClientConfig {
         CHAPTER_CARD = b.comment("Kapitelkarte (Emblem, Titel, Zusammenfassung) beim Kapitelwechsel; sonst die schlichten Vanilla-Titel.")
                 .translation("shardline.configuration.chapter_card")
                 .define("chapterCard", true);
+        CUSTOM_BOSS_BARS = b.comment("Eigene Bossleisten fuer die Shardline-Bosse; aus: die schlichten Vanilla-Leisten.")
+                .translation("shardline.configuration.custom_boss_bars")
+                .define("customBossBars", true);
         b.translation("shardline.configuration.dialogue").push("dialogue");
         DIALOGUE_TYPEWRITER = b.comment("Dialogtext erscheint Buchstabe fuer Buchstabe (aus: sofort ganz).")
                 .translation("shardline.configuration.dialogue_typewriter")

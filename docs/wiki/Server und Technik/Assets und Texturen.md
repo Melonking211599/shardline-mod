@@ -73,7 +73,7 @@ Basis aller Pfade: `src/main/resources/assets/shardline/`
 | `textures/environment/splitterweite_sky.png`, `splitterweite_moon.png` | Himmel und zerbrochener Mond |
 | `textures/misc/shard_portal_overlay.png` | Bildschirm-Overlay im Portal |
 | `textures/particle/…` | Funkeln, Void, Virus-Sporen, Reinheit (8 × 8) |
-| `textures/gui/bossbar/<boss>.png` | eigene Bossleisten (256 × 64: Hintergrund, Füllung, Rahmen) |
+| `textures/gui/boss_bar/<boss>_{background,fill,overlay}.png` | eigene Bossleisten (Leiste 182 × 10; Füllung und Rahmen mit einer Zeile je Phase), dazu `crystal_colossus_shield`, `shard_queen_cracks`, `virus_heart_veins`, `festering_heart_veins` |
 | `textures/gui/…` | Dialogfenster, Porträts, Auftragsbuch, Lore-Seite, Entscheidung, Kapitelkarte |
 | `textures/mob_effect/…` | Splitterfieber, Immunität |
 | `textures/gui/advancements/backgrounds/shardline.png` | Hintergrund der Advancement-Tabs |
