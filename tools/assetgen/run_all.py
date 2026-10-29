@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import anims
 import armor
-import armor_extras
+import armor_models
 import dialogue_gui
 import npc_assets
 import fresh_blocks
@@ -26,6 +26,7 @@ import infected_entities
 import snail
 import story2_assets
 import fresh_items
+import gear
 import fresh_update
 import story_items
 import fresh_virus
@@ -38,8 +39,9 @@ def main():
     anims.main()
     fresh_blocks.main()
     fresh_items.main()
+    gear.main()
     armor.main()
-    armor_extras.main()
+    armor_models.main()
     entities.main()
     bosses.main()
     gui.main()

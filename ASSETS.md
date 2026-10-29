@@ -6,7 +6,7 @@ Alle Pfade sind relativ zu `src/main/resources/assets/shardline/`. Jede Datei ex
 
 **Bossleisten:** Die drei Bosse haben eine eigene Leiste (`client/story/BossBars.java`, Event `CustomizeGuiOverlayEvent.BossEventProgress`). Die Atlanten `textures/gui/bossbar/<boss>.png` (256x64: Hintergrund, Fuellung, Rahmen) erzeugt `tools/assetgen/bossbars.py`. Die Fuellung schimmert, bei unter 25 % Leben pulsiert sie, Phasenwechsel sind als Marken eingezeichnet, die Raserei (Rot) und die zweite Phase der Koenigin (Violett) tonen den Rahmen. Bossleisten anderer Wesen bleiben unveraendert.
 
-**Ruestungen am Koerper:** Die Vanilla-Layer (`textures/models/armor/<set>_layer_1/2.png`) werden auf ein schlankeres Modell gelegt (`SlimArmorModels`, Aufblaehung 0,55 statt 1,0, Hose 0,3 statt 0,5). Dazu kommen 3D-Zusatzteile (Kristallkamm, Rueckenkristalle, Schulterplatten, Knieschuetzer, Stiefelflossen) aus `<set>_extras.png` und `<set>_extras_glow.png`. Sie entstehen zusammen mit `client/renderer/ArmorExtraModels.java` aus `tools/assetgen/armor_extras.py` (Java-Datei nicht von Hand aendern). `python tools/assetgen/preview_armor.py <bild.png>` rendert Spieler mit beiden Sets aus vier Blickwinkeln.
+**Ruestungen am Koerper:** Beide Sets werden als GeckoLib-Modelle getragen (`client/renderer/ShardlineArmorRenderer`, Item `ShardlineArmorItem` ist ein `GeoItem`): `geo/armor/<set>.geo.json` mit den acht Bones `armorHead`, `armorBody`, `armorRightArm`, `armorLeftArm`, `armorRightLeg`, `armorLeftLeg`, `armorRightBoot`, `armorLeftBoot` (Bedrock-Standardpivots), Textur `textures/armor/<set>.png` mit Leuchtmaske `<set>_glowmask.png` und leerer `animations/armor/<set>.animation.json`. Sichtbar je Slot: Helm nur Kopf, Brustplatte Rumpf und Arme, Hose nur die Beine (Hueftplatten haengen deshalb an den Bein-Bones), Stiefel nur die Stiefel-Bones. Rüstungsbesaetze (Trims) werden an diesen Teilen nicht angezeigt, der Verzauberungsglanz schon. Die Vanilla-Ebenen `textures/models/armor/<set>_layer_1/2.png` bleiben als Rueckfall fuer Fremdmods. Erzeugt wird alles von `tools/assetgen/armor_models.py` (Bausatz `armorkit.py`: Wuerfel-DSL, UV-Packer, Flaechenmalerei); `python tools/assetgen/armor_models.py --preview <bild.png> --compare` rendert beide Sets auf einer Puppe, neben Netherite aus dem lokalen Minecraft-Jar.
 
 ## Entity-Modelle (GeckoLib)
 
@@ -62,15 +62,16 @@ Sonderfälle:
 
 - **Rohstoffe:** `shard_fragment`, `raw_shard`, `shard_ingot`, `ash_dust`, `scout_eye`, `void_ray_hide`, `shadow_pelt`, `knight_crest`, `luminous_berry`
 - **Fortschritt:** `shard_key`, `colossus_summoning_crystal`, `colossus_core`, `colossus_upgrade_smithing_template`, `heart_of_the_expanse`
-- **Shard-Set:** `shard_helmet`, `shard_chestplate`, `shard_leggings`, `shard_boots`, `shard_sword`, `shard_pickaxe`, `shard_axe`, `shard_shovel`
-- **Koloss-Set:** `colossus_helmet`, `colossus_chestplate`, `colossus_leggings`, `colossus_boots`, `colossus_sword`, `colossus_pickaxe`, `colossus_axe`, `colossus_shovel`
+- **Shard-Set (dunkler Violettstahl, Kristallinlays):** `shard_helmet`, `shard_chestplate`, `shard_leggings`, `shard_boots`, `shard_sword`, `shard_pickaxe`, `shard_axe`, `shard_shovel`
+- **Koloss-Set (schwerer Steinstahl, Cyan nur am Kern):** `colossus_helmet`, `colossus_chestplate`, `colossus_leggings`, `colossus_boots`, `colossus_sword`, `colossus_pickaxe`, `colossus_axe`, `colossus_shovel`
+- Rüstungs-, Werkzeug- und Waffen-Icons zeichnet `tools/assetgen/gear.py` als Pixelkarten (Netherite-Kontrast: dunkler Grundton, helle Kante oben links, 1 px Kontur). Vergleich mit Vanilla: `python tools/assetgen/compare_vanilla.py <bild.png>`.
 - **Spezialwaffen:** `crystal_bow` mit den Spannstufen `crystal_bow_pulling_0`, `_1` und `_2`, dazu `colossus_gauntlet` und `queens_shardblade`
 - **Spawn-Eier:** Sie brauchen keine Textur, ihre Farben stehen im Code.
 
-## Rüstung am Körper (`textures/models/armor/`, 64×32)
+## Rüstung am Körper
 
-- `shard_layer_1.png` (Helm, Brust, Stiefel) und `shard_layer_2.png` (Hose)
-- `colossus_layer_1.png` und `colossus_layer_2.png`
+- **Getragenes Modell:** `geo/armor/{shard,colossus}.geo.json`, `textures/armor/{shard,colossus}.png` (+ `_glowmask.png`), siehe oben
+- **Rückfall-Ebenen** (`textures/models/armor/`, 64×32): `shard_layer_1.png` (Helm, Brust, Stiefel) und `shard_layer_2.png` (Hose), `colossus_layer_1.png` und `colossus_layer_2.png`
 
 ## Weitere Texturen
 

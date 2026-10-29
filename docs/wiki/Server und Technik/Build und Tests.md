@@ -84,7 +84,7 @@ Unter `tools/assetgen/` (Python 3 mit Pillow und NumPy):
 | `run_all.py` | erzeugt **alle** Texturen deterministisch neu |
 | `validate.py` | prüft Texturen, Modelle und Sounddateien (Größen, fehlende Dateien) |
 | `import_sounds.py <ordner>` | übernimmt gelieferte WAV-Sounds als Ogg (siehe [[Assets und Texturen#Sounds]]) |
-| `preview_geo.py`, `preview_armor.py`, `preview_journal.py`, `contact_sheet.py` | Vorschaubilder und Kontaktbögen |
+| `preview_geo.py`, `armor_models.py --preview`, `compare_vanilla.py`, `preview_journal.py`, `contact_sheet.py` | Vorschaubilder und Kontaktbögen |
 
 ## Was die Tests nicht abdecken
 

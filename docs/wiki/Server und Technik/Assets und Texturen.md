@@ -15,14 +15,15 @@ Basis aller Pfade: `src/main/resources/assets/shardline/`
 | `python tools/assetgen/run_all.py` | alle Texturen neu erzeugen (Pillow nötig) |
 | `python tools/assetgen/validate.py` | Größen, fehlende Dateien, Modelle und Sounds prüfen |
 | `python tools/assetgen/preview_geo.py <bild.png> <wesen> …` | Wesen mit Textur als 3D-Modell aus mehreren Blickwinkeln |
-| `python tools/assetgen/preview_armor.py <bild.png>` | Spieler mit beiden Rüstungssets |
+| `python tools/assetgen/armor_models.py --preview <bild.png> [--compare]` | beide Rüstungsmodelle auf einer Puppe aus vier Blickwinkeln, mit `--compare` neben Netherite (aus dem lokalen Minecraft-Jar) |
+| `python tools/assetgen/compare_vanilla.py <bild.png> [--before <alte textures/>]` | Rüstungs- und Werkzeug-Icons neben Netherite |
 
 **Aufbau:**
 - **Werkzeugkasten:** `pixel.py` (Cluster-Grundtöne wie bei Vanilla statt Pixelrauschen, Stempel, weiche Konturen), Farbpaletten in `common.py`.
 - **Blöcke:** `fresh_blocks.py`, `fresh_blocks2.py`; infizierte und Story-Blöcke `fresh_virus.py`, Virusstämme `virus_strains.py`.
 - **Items:** `fresh_items.py`, `story_items.py`.
 - **Wesen und Bosse:** Materialien in `ent.py`, dazu `entities.py`, `bosses.py`, `infected_entities.py`, `infected_animals.py`, `npc_assets.py`, `snail.py`, `aftermath_assets.py`.
-- **Rüstung:** `armor.py` (Vanilla-Layer) und `armor_extras.py` (3D-Zusatzteile, erzeugt auch `client/renderer/ArmorExtraModels.java` – diese Java-Datei nicht von Hand ändern).
+- **Rüstung:** `armor_models.py` mit dem Bausatz `armorkit.py` erzeugt die getragenen GeckoLib-Modelle (`geo/armor`, `textures/armor`), `armor.py` die Vanilla-Rückfallebenen. `gear.py` zeichnet die Icons von Rüstung, Werkzeugen und Spezialwaffen als Pixelkarten.
 - **Oberflächen:** `gui.py`, `effects_gui.py`, `dialogue_gui.py` (Dialogfenster, Porträts, Auftragsbuch), `bossbars.py` (eigene Bossleisten).
 
 > [!note] Eigene Texturen
@@ -63,7 +64,7 @@ Basis aller Pfade: `src/main/resources/assets/shardline/`
 - **Portal:** `textures/block/shard_portal.png` ist ein 16 × 128-Streifen mit 8 Frames, gesteuert über `shard_portal.png.mcmeta`.
 - **Infizierte Blöcke:** Grundtextur plus Leuchtschicht (`*_overlay`), die mit voller Eigenhelligkeit gerendert wird.
 - **Kristallbogen:** `crystal_bow` und `crystal_bow_pulling_0/1/2`.
-- **Rüstung am Körper:** `textures/models/armor/<set>_layer_1.png` / `_layer_2.png` (64 × 32) auf einem schlankeren Modell (`SlimArmorModels`), dazu `<set>_extras.png` und `<set>_extras_glow.png`.
+- **Rüstung am Körper:** GeckoLib-Modell `geo/armor/<set>.geo.json` mit Textur `textures/armor/<set>.png` und `<set>_glowmask.png` (acht Bones `armorHead` … `armorLeftBoot`). Rüstungsbesätze (Trims) erscheinen an diesen Teilen nicht. Die Vanilla-Ebenen `textures/models/armor/<set>_layer_1.png` / `_layer_2.png` (64 × 32) sind nur der Rückfall.
 
 ## Weitere Grafik
 

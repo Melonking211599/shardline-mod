@@ -44,7 +44,11 @@ def chain(bones, bone):
 
 
 def texels(name):
-    geo, bones, tex, glow = load(name)
+    return texels_of(*load(name))
+
+
+def texels_of(geo, bones, tex, glow):
+    """Texel-Polygone aus Geo-Daten, Bones-Dict, Texturbild und optionaler Leuchtmaske (auch fuer Ruestungen)."""
     tw, th = geo["description"]["texture_width"], geo["description"]["texture_height"]
     out = []
     for bone in geo["bones"]:

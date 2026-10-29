@@ -1,12 +1,16 @@
 """Ruestungs-Layer (64x32, Vanilla-Format) fuer Shard- und Kolossset. Aufruf: python tools/assetgen/armor.py
 
+Die getragene Ruestung ist das GeckoLib-Modell aus armor_models.py; diese Ebenen sind nur der Rueckfall fuer Fremdmods,
+die direkt die Vanilla-Ebene ansprechen (gleiche Paletten, vereinfachte Formen).
+
 Ausgabe: textures/models/armor/<set>_layer_1.png und <set>_layer_2.png
 Zusaetzlich <set>_layer_N_glow.png (nur die leuchtenden Pixel), falls ein Glow-Layer im Code registriert wird.
 Mapping: layer_1 = Helm, Brust, Arme, Stiefel; layer_2 = Hose (Guertel + Beine).
 """
 from __future__ import annotations
 
-from common import COL, CYAN, MAGENTA, SHARD, SLATE, TEX, Tex, hx, nz, ramp
+from common import SLATE, TEX, Tex, hx, nz, ramp
+from gear import COLOSSUS_P, SHARD_P
 from uvlib import FACE_LIGHT, edge_light, paint_box
 
 HEAD = (0, 0, 8, 8, 8)
@@ -235,9 +239,18 @@ def build(st: ArmorStyle):
     return res
 
 
+def _ramp(p):
+    return [p[k] for k in "12345"]
+
+
+def _gem(p):
+    return [p["a"], p["a"], p["b"], p["c"], p["w"]]
+
+
+# Rueckfall-Ebenen in den Paletten der Rundum-Modelle (geo/armor): dunkler Violettstahl bzw. Steinstahl mit Cyan-Kern
 STYLES = [
-    ArmorStyle("shard", SHARD, MAGENTA, SLATE[0], False),
-    ArmorStyle("colossus", COL, CYAN, CYAN[2], True),
+    ArmorStyle("shard", _ramp(SHARD_P), _gem(SHARD_P), SHARD_P["1"], False),
+    ArmorStyle("colossus", _ramp(COLOSSUS_P), _gem(COLOSSUS_P), COLOSSUS_P["b"], True),
 ]
 
 

@@ -3,8 +3,6 @@ package eu.shardline.mod.client;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.entity.ModBlockEntities;
 import eu.shardline.mod.client.particle.ShardParticle;
-import eu.shardline.mod.client.renderer.ArmorExtraModels;
-import eu.shardline.mod.client.renderer.ArmorExtrasLayer;
 import eu.shardline.mod.client.renderer.CrystalGolemRenderer;
 import eu.shardline.mod.client.renderer.InfectedRenderers;
 import eu.shardline.mod.client.renderer.KeeperCapeLayer;
@@ -12,7 +10,6 @@ import eu.shardline.mod.client.renderer.PurityAnchorRenderer;
 import eu.shardline.mod.client.renderer.QueenCloneRenderer;
 import eu.shardline.mod.client.renderer.ShardCreeperRenderer;
 import eu.shardline.mod.client.renderer.ShardlineGeoRenderer;
-import eu.shardline.mod.client.renderer.SlimArmorModels;
 import eu.shardline.mod.client.renderer.VoidRayRenderer;
 import eu.shardline.mod.client.sky.SplitterweiteEffects;
 import eu.shardline.mod.client.story.ChapterCardOverlay;
@@ -23,18 +20,12 @@ import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.world.dimension.ModDimensions;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.EntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -43,14 +34,11 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 /**
@@ -123,44 +111,10 @@ public final class ShardlineClient {
     }
 
     @SubscribeEvent
-    static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ArmorExtrasLayer.SHARD_LAYER, ArmorExtraModels::shard);
-        event.registerLayerDefinition(ArmorExtrasLayer.COLOSSUS_LAYER, ArmorExtraModels::colossus);
-        event.registerLayerDefinition(SlimArmorModels.OUTER, SlimArmorModels::outerDefinition);
-        event.registerLayerDefinition(SlimArmorModels.INNER, SlimArmorModels::innerDefinition);
-    }
-
-    @SubscribeEvent
-    static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener((net.minecraft.server.packs.resources.ResourceManagerReloadListener) manager -> SlimArmorModels.clear());
-    }
-
-    /** Alle Shardline-Ruestungsteile benutzen das schlanke Ruestungsmodell. */
-    @SubscribeEvent
-    static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> original) {
-                return SlimArmorModels.get(slot);
-            }
-        }, ModItems.SHARD_HELMET.get(), ModItems.SHARD_CHESTPLATE.get(), ModItems.SHARD_LEGGINGS.get(), ModItems.SHARD_BOOTS.get(),
-                ModItems.COLOSSUS_HELMET.get(), ModItems.COLOSSUS_CHESTPLATE.get(), ModItems.COLOSSUS_LEGGINGS.get(), ModItems.COLOSSUS_BOOTS.get());
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings({"unchecked", "rawtypes"})
     static void addLayers(EntityRenderersEvent.AddLayers event) {
         for (PlayerSkin.Model skin : event.getSkins()) {
             if (event.getSkin(skin) instanceof PlayerRenderer renderer) {
                 renderer.addLayer(new KeeperCapeLayer(renderer));
-                renderer.addLayer(new ArmorExtrasLayer<>(renderer, event.getEntityModels()));
-            }
-        }
-        // Ruestungsstaender und andere humanoide Wesen (Zombies, Skelette ...) zeigen die Zusatzteile ebenfalls.
-        for (EntityType<?> type : event.getEntityTypes()) {
-            if (event.getRenderer(type) instanceof LivingEntityRenderer living && !(living instanceof PlayerRenderer)
-                    && living.getModel() instanceof HumanoidModel) {
-                living.addLayer(new ArmorExtrasLayer(living, event.getEntityModels()));
             }
         }
     }

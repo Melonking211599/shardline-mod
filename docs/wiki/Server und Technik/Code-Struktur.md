@@ -44,7 +44,7 @@ Package `eu.shardline.mod`, Quellcode unter `src/main/java/eu/shardline/mod/`. A
 | `world.structure` | `ModStructures` (Typen, Sets), `ShardlineStructures`, `ShardlinePiece` und je ein Bauteil pro Struktur (elf), `FixedChunkPlacement` |
 | `world.portal` | `ShardPortalShape` (Rahmenerkennung), `ShardPortalForcer` (Zielportal suchen/bauen) |
 | `client` | `ShardlineClient` (Renderer, Partikel, Tasten, Himmel, Overlay), `ClientGameEvents`, `KeyBindings` (V, G, H, J), `PortalOverlay` |
-| `client.renderer` | GeckoLib-Renderer, `InfectedRenderers`, `NpcRenderers`, `KeeperCapeLayer`, `PurityAnchorRenderer`, `SlimArmorModels`, `ArmorExtrasLayer`/`ArmorExtraModels` (generiert) |
+| `client.renderer` | GeckoLib-Renderer, `InfectedRenderers`, `NpcRenderers`, `KeeperCapeLayer`, `PurityAnchorRenderer`, `ShardlineArmorRenderer` (GeckoLib-Rüstung) |
 | `client.story` | `StoryClientState`, `ClientStoryHandler`, `ChapterCardOverlay`, `StoryScreenEffects`, `InfectionAtmosphere`, `BossBars`, Fenster: `EndingChoiceScreen`, `TraderDialogueScreen`, `LorePageScreen`, `DialogueScreen`, `QuestJournalScreen`; `ClientDialogue`, `ClientJournal` |
 | `client.particle` | `ShardParticle` (Funkeln, Void, Sporen, Reinheit) |
 | `client.sky` | `SplitterweiteEffects` (Himmel, Mond, Nebelfarbe, violetter Himmel) |

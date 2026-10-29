@@ -212,6 +212,41 @@ for suffix in ("", "_v2", "_v3"):
         bad = sum(1 for y in range(gi.height) for x in range(gi.width) if gp[x, y][3] and lp[x, y % 16][3] == 0)
         if bad: errors.append(f"infected_leaves{suffix}: {bad} Leuchtpixel auf transparentem Laub")
 
+# ---- Ruestungsmodelle (GeckoLib, armor_models.py): Bones mit Standardpivots, UV-Boxen ohne Ueberlappung, Glowmaske
+from armorkit import PIVOTS as ARMOR_PIVOTS
+for s in ("shard", "colossus"):
+    gp = ASSETS / "geo" / "armor" / f"{s}.geo.json"
+    need(gp); need(ASSETS / "animations" / "armor" / f"{s}.animation.json")
+    for layer in (1, 2): need(TEX / "models/armor" / f"{s}_layer_{layer}.png", (64, 32))
+    if not gp.exists(): continue
+    g = json.loads(gp.read_text(encoding="utf-8"))["minecraft:geometry"][0]
+    W, H = int(g["description"]["texture_width"]), int(g["description"]["texture_height"])
+    need(TEX / "armor" / f"{s}.png", (W, H)); need(TEX / "armor" / f"{s}_glowmask.png", (W, H))
+    names = [b["name"] for b in g["bones"]]
+    if sorted(names) != sorted(ARMOR_PIVOTS): errors.append(f"armor/{s}: Bones {names} statt {sorted(ARMOR_PIVOTS)}")
+    owner, claimed = {}, set()
+    for b in g["bones"]:
+        if tuple(b["pivot"]) != tuple(ARMOR_PIVOTS.get(b["name"], ())): errors.append(f"armor/{s}/{b['name']}: Pivot {b['pivot']} statt {list(ARMOR_PIVOTS.get(b['name'], []))}")
+        for i, c in enumerate(b.get("cubes", [])):
+            if any(abs(v - round(v)) > 1e-6 for v in c["size"]): errors.append(f"armor/{s}/{b['name']}#{i}: Groesse nicht ganzzahlig")
+            w, h, d = (int(round(v)) for v in c["size"])
+            u, vv = int(c["uv"][0]), int(c["uv"][1])
+            ext = box_extent(u, vv, w, h, d)
+            if ext[0] > W or ext[1] > H: errors.append(f"armor/{s}/{b['name']}#{i}: UV ausserhalb {ext} von {W}x{H}")
+            for (x0, y0, fw, fh) in box_rects(u, vv, w, h, d).values():
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        if (x, y) in owner and owner[(x, y)] != (b["name"], i): errors.append(f"armor/{s}: UV ueberlappt bei {(x, y)} ({b['name']}#{i} und {owner[(x, y)]})"); break
+                        owner[(x, y)] = (b["name"], i)
+    base = Image.open(TEX / "armor" / f"{s}.png").convert("RGBA")
+    stray = opaque(base) - set(owner)
+    if stray: errors.append(f"armor/{s}: {len(stray)} bemalte Pixel ausserhalb der UV-Boxen")
+    glow = Image.open(TEX / "armor" / f"{s}_glowmask.png").convert("RGBA")
+    if glow.getchannel("A").getbbox() is None: errors.append(f"armor/{s}: Glowmaske ist leer")
+    bp, gpx = base.load(), glow.load()
+    off = [(x, y) for (x, y) in opaque(glow) if bp[x, y] != gpx[x, y]]
+    if off: errors.append(f"armor/{s}: Glowmaske weicht auf {len(off)} Pixeln von der Basistextur ab")
+
 # ---- Eigene Klaenge: jede in sounds.json genannte Datei muss als .ogg existieren
 sounds_json = RESOURCE_ROOT.parent.parent / "generated" / "resources" / "assets" / "shardline" / "sounds.json"
 if sounds_json.exists():
