@@ -71,19 +71,19 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("particle", modLoc("block/glow_crystal_block")));
 
         // --- Shardvirus: Grundtextur + leuchtende Overlay-Schicht (<name>_glow.png) ---
-        infected(ModBlocks.INFECTED_STONE.get(), "infected_stone", "solid");
-        infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "solid");
-        infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "solid");
+        infected(ModBlocks.INFECTED_STONE.get(), "infected_stone", "cutout");
+        infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "cutout");
+        infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "cutout");
         infected(ModBlocks.INFECTED_LEAVES.get(), "infected_leaves", "cutout_mipped");
-        infected(ModBlocks.INFECTED_DEEPSLATE.get(), "infected_deepslate", "solid");
-        infected(ModBlocks.INFECTED_NETHERRACK.get(), "infected_netherrack", "solid");
-        infected(ModBlocks.INFECTED_END_STONE.get(), "infected_end_stone", "solid");
+        infected(ModBlocks.INFECTED_DEEPSLATE.get(), "infected_deepslate", "cutout");
+        infected(ModBlocks.INFECTED_NETHERRACK.get(), "infected_netherrack", "cutout");
+        infected(ModBlocks.INFECTED_END_STONE.get(), "infected_end_stone", "cutout");
         for (Block block : List.of(ModBlocks.INFECTED_PLANKS.get(), ModBlocks.INFECTED_BLACKSTONE.get(), ModBlocks.INFECTED_SOUL_SOIL.get(),
                 ModBlocks.INFECTED_WART_BLOCK.get(), ModBlocks.INFECTED_PURPUR.get())) {
-            infected(block, name(block), "solid", 1);
+            infected(block, name(block), "cutout", 1);
         }
         ModelFile nylium = overlayModel("infected_nylium", modLoc("block/infected_nylium_side"), modLoc("block/infected_nylium_top"),
-                modLoc("block/infected_netherrack"), modLoc("block/infected_nylium_side_glow"), modLoc("block/infected_nylium_top_glow"), "solid");
+                modLoc("block/infected_netherrack"), modLoc("block/infected_nylium_side_glow"), modLoc("block/infected_nylium_top_glow"), "cutout");
         simpleBlockWithItem(ModBlocks.INFECTED_NYLIUM.get(), nylium);
         ResourceLocation node = modLoc("block/festering_node");
         simpleBlockWithItem(ModBlocks.FESTERING_NODE.get(), overlayModel("festering_node", node, node, node,

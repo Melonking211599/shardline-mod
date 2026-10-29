@@ -134,7 +134,7 @@ def net_tree(seed: int, twigs: int = 2):
         paths.append(path)
         n = len(path)
         for j, c in enumerate(path):
-            u = 0.45 + 0.30 * math.sin(math.pi * j / max(1, n - 1))      # an den Ports gleich, in der Mitte heller
+            u = 0.35 + 0.22 * math.sin(math.pi * j / max(1, n - 1))      # an den Ports gleich; ruhiges Magenta, nur die Zweigspitzen leuchten hell
             if c not in cells:
                 cells[c] = (u, 0)
     placed = 0

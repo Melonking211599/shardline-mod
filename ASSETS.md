@@ -110,7 +110,7 @@ Der Umhang der Hüter liegt unter `textures/entity/keeper_cape.png` (64×32, Van
 
 ### Blöcke (`textures/block/`, 16×16)
 
-Jeder infizierte Block besteht aus einer Grundtextur und einer **Leuchtschicht** `<name>_glow.png`. Die Leuchtschicht ist transparent bis auf die leuchtenden Adern und Funken. Sie wird mit voller Eigenhelligkeit über die Grundtextur gelegt.
+Jeder infizierte Block besteht aus einer Grundtextur und einer **Leuchtschicht** `<name>_glow.png`. Die Leuchtschicht ist transparent bis auf die leuchtenden Adern und Funken. Sie wird mit voller Eigenhelligkeit über die Grundtextur gelegt. Das Blockmodell nutzt dafür den Render-Typ `cutout` (mit `solid` wären die transparenten Stellen der Leuchtschicht schwarz). **Aderportale:** Alle befallenen Blöcke aller Familien und Varianten (Stein, Erde, Gras, Sand, Tiefenschiefer, Netherrack, Endstein, Schwarzstein, Seelenerde, Nylium, Warzen, Planken, Purpur) kreuzen die Kachelränder an denselben Stellen (oben/unten bei x = 4, links/rechts bei y = 11); `fresh_virus.net_tree` führt die vier Ports je Variante anders zusammen (drei Routen), dazu kommen kurze Zweige mit hellen Spitzen. So setzt sich jede Ader im Nachbarblock fort, auch wenn der eine andere Variante oder Familie ist. `validate.py` prüft, dass die Leuchtschicht an den vier Ports leuchtet. Laub, Grasseite und Holz behalten eigene Adern.
 
 | Dateien | Verwendung |
 |---|---|
