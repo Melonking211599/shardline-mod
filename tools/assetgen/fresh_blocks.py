@@ -21,11 +21,15 @@ GLASS_EDGE = hx("#06303b")
 # Varianten: pro Familie drei Seeds (Datei <name>.png = Seed 1, <name>_v2.png, <name>_v3.png). Die Verdrahtung
 # (Blockstate mit zufaelligen Modellen) ist Sache des Datagens.
 STONE_SEEDS = (11, 23, 37)
+# Fleckengitter je Variante verschieden (4x4, 3x5, 5x3 Zellen pro Kachel) und mit Verzerrung: sonst haben alle Varianten
+# dasselbe Grossraster, und im Zufallsfeld zeigt sich ein Gitter aus gleichen Platten.
+STONE_CELLS = {STONE_SEEDS[0]: (4, 4), STONE_SEEDS[1]: (3, 5), STONE_SEEDS[2]: (5, 3)}
+WARP = 0.85
 
 
 def _flecks(t: Tex, seed: int, count: int = 2):
     """Wenige Cyan-Kristallsplitter (2 Pixel, hell oben links) an unregelmaessigen Stellen, nie im Raster."""
-    for k, (x, y) in enumerate(spots(seed, count, 6.0)):
+    for k, (x, y) in enumerate(spots(seed, count, 6.0, margin=1)):
         dx, dy = (0, 1) if nz(k, 5, seed) < 0.5 else (1, 0)
         t.set(x, y, CYAN[3])
         t.set((x + dx) % 16, (y + dy) % 16, CYAN[1])
@@ -33,14 +37,14 @@ def _flecks(t: Tex, seed: int, count: int = 2):
 
 def _hairline(t: Tex, seed: int, ramp_, length: int = 6):
     """Dunkler Haarriss als zusammenhaengender Pfad."""
-    x, y = int(nz(1, 1, seed) * 16), int(nz(2, 2, seed) * 16)
+    x, y = 3 + int(nz(1, 1, seed) * 9), 2 + int(nz(2, 2, seed) * 8)          # mitten in der Kachel, kein Riss ueber den Rand
     for (px, py) in walk(seed, x, y, length, heading=(1 if nz(3, 3, seed) < 0.5 else -1, 1), wobble=0.25):
         t.set(px, py, ramp_[0])
 
 
 def shardstone(seed: int = STONE_SEEDS[0]) -> Tex:
     """Schiefer mit violettem Stich: grosse ruhige Flecken in vier Tonstufen, ein Haarriss, zwei Kristallsplitter."""
-    t = patches(seed, SHARDSTONE, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=(4, 4), detail=0.3)
+    t = patches(seed, SHARDSTONE, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=STONE_CELLS.get(seed, (4, 4)), detail=0.3, warp=WARP)
     _hairline(t, seed + 2, SHARDSTONE, 6)
     _flecks(t, seed + 3, 1 if seed == STONE_SEEDS[0] else 2)
     return t
@@ -75,7 +79,7 @@ def _ore(seed: int, base_ramp, cells) -> Tex:
     """Vanilla-Erz: ruhiges Grundgestein plus zwei Erzadern aus je zwei bis drei Nestern verschiedener Form
     (vier Splitterstufen, Licht oben links). Jedes Nest wirft einen Schattenpixel ins Gestein. Die Adern liegen
     weit auseinander, dazwischen bleibt reines Gestein, damit kein Gitter entsteht."""
-    t = patches(seed, base_ramp, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=cells, detail=0.3)
+    t = patches(seed, base_ramp, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=cells, detail=0.3, warp=WARP)
     pal = ramps(B=SHARD)
     anchors = spots(seed + 5, 2, 8.0)
     offsets = ((0, 0, 0), (4, 3, 1), (-1, 5, 3)), ((0, 0, 2), (3, 4, 3), (5, -1, 1))
@@ -208,6 +212,9 @@ def glow_crystal_cluster() -> Tex:
 # ------------------------------------------------------------------ Moos und Asche
 MOSS_SEEDS = (81, 93, 107)
 ASH_SEEDS = (71, 83, 97)
+MOSS_CELLS = {MOSS_SEEDS[0]: (4, 4), MOSS_SEEDS[1]: (3, 5), MOSS_SEEDS[2]: (5, 3)}
+ASH_CELLS = {ASH_SEEDS[0]: (2, 6), ASH_SEEDS[1]: (3, 7), ASH_SEEDS[2]: (2, 5)}
+ASH_EMBERS = {ASH_SEEDS[0]: 2, ASH_SEEDS[1]: 1, ASH_SEEDS[2]: 2}      # unterschiedlich viele Glutadern, damit kein Punktraster entsteht
 BLADE = """
 3.4
 .3.
@@ -216,18 +223,18 @@ BLADE = """
 
 def crystal_moss(seed: int = MOSS_SEEDS[0]) -> Tex:
     """Tuerkisgruen: grosse ruhige Moosflecken, drei kleine Hoehenbueschel, zwei Kristalltropfen."""
-    t = patches(seed, TEAL, fractions=(0.03, 0.25, 0.47, 0.22, 0.03), cells=(4, 4), detail=0.35)
+    t = patches(seed, TEAL, fractions=(0.03, 0.25, 0.47, 0.22, 0.03), cells=MOSS_CELLS.get(seed, (4, 4)), detail=0.35, warp=WARP)
     pal = ramps(A=TEAL)
-    for (x, y) in spots(seed + 1, 3, 5.0):
+    for (x, y) in spots(seed + 1, 3, 5.0, margin=1):
         stamp(t, BLADE, pal, x, y)
-    for k, (x, y) in enumerate(spots(seed + 2, 2, 7.0)):
+    for k, (x, y) in enumerate(spots(seed + 2, 2, 7.0, margin=1)):
         t.set(x, y, CYAN[3] if k == 0 else CYAN[2])
     return t
 
 
 def crystal_moss_side() -> Tex:
     """Splitterstein darunter (gleiche Flecken wie shardstone), oben eine Moosdecke mit unregelmaessigen Zotteln."""
-    t = patches(STONE_SEEDS[0], SHARDSTONE, fractions=(0.07, 0.23, 0.42, 0.22, 0.06), cells=(4, 4), detail=0.3)
+    t = patches(STONE_SEEDS[0], SHARDSTONE, fractions=(0.07, 0.23, 0.42, 0.22, 0.06), cells=STONE_CELLS[STONE_SEEDS[0]], detail=0.3, warp=WARP)
     depths = (5, 6, 4, 5, 7, 5, 4, 6, 5, 8, 5, 4, 6, 5, 5, 4)
     for x in range(16):
         d = depths[x]
@@ -244,9 +251,9 @@ def crystal_moss_side() -> Tex:
 
 def ash_block(seed: int = ASH_SEEDS[0]) -> Tex:
     """Aschland: warmgrauer Boden mit waagerechten Windschlieren, zwei Glutadern in dunklen Rissen (Grau + Orange)."""
-    t = patches(seed, ASH, fractions=(0.10, 0.26, 0.38, 0.20, 0.06), cells=(2, 6), detail=0.35, detail_cells=(8, 4))
-    for k in range(2):
-        x, y = int(nz(k, 1, seed) * 16), int(nz(k, 2, seed) * 16)
+    t = patches(seed, ASH, fractions=(0.10, 0.26, 0.38, 0.20, 0.06), cells=ASH_CELLS.get(seed, (2, 6)), detail=0.35, detail_cells=(8, 4), warp=0.6)
+    for k in range(ASH_EMBERS.get(seed, 2)):
+        x, y = 1 + int(nz(k, 1, seed) * 10), 1 + int(nz(k, 2, seed) * 10)
         path = walk(seed + k, x, y, 5, heading=(1, 1), wobble=0.3)
         for (px, py) in path:
             t.set(px, py, ASH[0])

@@ -112,13 +112,15 @@ def M_stone(r, seed, rough=0.5, crack=None, crack_glow=False, bias=2.0, strata=F
 
 
 def M_crystal(r, seed, glow_from=2.0):
-    """Facettenkristall: diagonale Baender, helle Kanten; leuchtet ab einer Helligkeit."""
+    """Facettenkristall: drei senkrechte Facetten ueber die Breite (links hell, Mitte mittel, rechts dunkel), das obere
+    Drittel heller, helle Kante oben/links, dunkle unten/rechts; leuchtet ab einer Helligkeit. Kein Diagonalraster."""
     def p(face, fx, fy, fw, fh):
-        off = FACE_ID[face] * 5
-        band = ((fx + fy * 2 + off) // 2) % 3
-        idx = 0.9 + band * 0.8 + FACE_LIGHT[face] * 0.9
+        col_f = min(2, fx * 3 // max(1, fw))
+        idx = (2.9, 2.0, 1.1)[col_f] + FACE_LIGHT[face] * 0.6
+        if fy < fh * 0.3:
+            idx += 0.7
         if fx == 0 or fy == 0:
-            idx += 1.0
+            idx += 0.7
         if fx == fw - 1 or fy == fh - 1:
             idx -= 0.6
         col = ramp(r, idx)

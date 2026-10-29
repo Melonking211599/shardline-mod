@@ -59,6 +59,18 @@ need(TEX / "environment/splitterweite_sky.png", (128, 128)); need(TEX / "environ
 need(TEX / "misc/shard_portal_overlay.png", (256, 256)); need(TEX / "gui/advancements/backgrounds/shardline.png", (16, 16))
 need(RESOURCE_ROOT / "shardline_logo.png", (256, 128))
 
+# ---- Befallene Bloecke: Aderportale (Adern kreuzen die Kanten bei x = 4 und y = 11, damit sie ueber Kacheln und Varianten weiterlaufen)
+for fam in ("infected_stone", "infected_dirt", "infected_grass_top", "infected_sand", "infected_deepslate", "infected_netherrack",
+            "infected_end_stone", "infected_blackstone", "infected_soul_soil", "infected_nylium_top", "infected_wart_block",
+            "infected_planks", "infected_purpur"):
+    for suffix in ("", "_v2", "_v3"):
+        f = TEX / "block" / f"{fam}{suffix}_glow.png"
+        if not f.exists():
+            continue
+        im = Image.open(f).convert("RGBA")
+        for (x, y) in ((4, 0), (4, 15), (0, 11), (15, 11)):
+            if im.getpixel((x, y))[3] == 0:
+                errors.append(f"{f.name}: kein Aderportal bei {x},{y}")
 # ---- Bossleisten: je Boss Hintergrund 182x10, Fuellung 198 x (10*Phasen), Rahmen 214 x (32*Phasen); Sonderteile
 for boss, phases in (("crystal_colossus", 2), ("shard_queen", 3), ("virus_heart", 3), ("echo_queen", 1), ("festering_heart", 1)):
     need(TEX / "gui/boss_bar" / f"{boss}_background.png", (182, 10))
@@ -218,7 +230,7 @@ for fam in ("shardstone", "shard_ore", "deepslate_shard_ore", "crystal_moss", "a
             "infected_end_stone", "infected_blackstone", "infected_soul_soil", "infected_wart_block"):
     for suffix in ("", "_v2", "_v3"):
         f = TEX / "block" / f"{fam}{suffix}.png"
-        if f.exists() and seam_ratio(f) > (1.6 if "ore" in fam else 1.3):    # Erze: harte Einzelmerkmale, daher grosszuegiger
+        if f.exists() and seam_ratio(f) > (1.6 if "ore" in fam else 1.9 if "leaves" in fam else 1.3):    # Erze und Laub (harte Luecken): grosszuegiger
             errors.append(f"{fam}{suffix}: sichtbare Kachelnaht (Verhaeltnis {seam_ratio(f):.2f})")
 for suffix in ("", "_v2", "_v3"):
     leaf, glow = TEX / "block" / f"infected_leaves{suffix}.png", TEX / "block" / f"infected_leaves{suffix}_glow.png"

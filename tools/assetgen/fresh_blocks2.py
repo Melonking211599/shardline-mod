@@ -10,17 +10,19 @@ from pixel import art, clusters, despeckle, field, paint, patch_idx, patches, ra
 
 # ------------------------------------------------------------------ Laub
 LEAF_SEEDS = (131, 149, 163)
+LEAF_CELLS = {LEAF_SEEDS[0]: (4, 4), LEAF_SEEDS[1]: (3, 5), LEAF_SEEDS[2]: (5, 3)}
 
 
-def crystal_leaves(seed: int = LEAF_SEEDS[0], tones=None, blossoms: bool = True) -> Tex:
+def crystal_leaves(seed: int = LEAF_SEEDS[0], tones=None, blossoms: bool = True, cells=None) -> Tex:
     """Violettes Kristalllaub (cutout): grosse Laubflecken in fuenf Violettstufen, kleine Luecken (rund 10 %),
     kurze Blattadern, drei Magenta-Bluetenpunkte. Genau zwei Farbwelten: Violett + Magenta."""
     tones = tones or [VIOLET[0], VIOLET[1], VIOLET[2], VIOLET[3], VIOLET[4]]
-    t = paint(patch_idx(seed, fractions=(0.16, 0.30, 0.28, 0.18, 0.08), cells=(4, 4), detail=0.4, detail_cells=(8, 8)), tones)
+    cells = cells or LEAF_CELLS.get(seed, (4, 4))
+    t = paint(patch_idx(seed, fractions=(0.16, 0.30, 0.28, 0.18, 0.08), cells=cells, detail=0.4, detail_cells=(8, 8), warp=0.8), tones)
     for (x, y) in spots(seed + 3, 5, 3.4):                       # kurze diagonale Blattadern
         t.set(x, y, tones[1])
         t.set((x + 1) % 16, (y + 1) % 16, tones[1])
-    holes = despeckle(rank_tones(field(seed + 9, cells=(4, 4), detail=0.4), (0.9, 0.1)))
+    holes = despeckle(rank_tones(field(seed + 9, cells=cells, detail=0.4, warp=0.8), (0.9, 0.1)))
     for y in range(16):
         for x in range(16):
             if holes[y][x]:

@@ -96,12 +96,12 @@ def shift(c, f):
     return (min(255, int(c[0] * f)), min(255, int(c[1] * f)), min(255, int(c[2] * f)), c[3])
 
 
-def _spots_for(seed: int, count: int, gap: float, n: int = 16):
-    """Gleichmaessig verteilte Punkte mit Mindestabstand (kachelnd), deterministisch."""
+def _spots_for(seed: int, count: int, gap: float, n: int = 16, margin: int = 0):
+    """Gleichmaessig verteilte Punkte mit Mindestabstand (kachelnd), deterministisch. margin haelt sie vom Kachelrand fern."""
     out = []
     k = 0
     while len(out) < count and k < 500:
-        x, y = int(nz(k, 4, seed) * n), int(nz(k, 5, seed) * n)
+        x, y = margin + int(nz(k, 4, seed) * (n - 2 * margin)), margin + int(nz(k, 5, seed) * (n - 2 * margin))
         if all(min(abs(x - a), n - abs(x - a)) ** 2 + min(abs(y - b), n - abs(y - b)) ** 2 >= gap * gap for a, b in out):
             out.append((x, y))
         k += 1
@@ -129,11 +129,18 @@ def tnoise(x: float, y: float, cx: int, cy: int, seed: int, n: int = 16) -> floa
     return a * (1 - fy) + b * fy
 
 
-def field(seed: int, cells=(4, 4), detail: float = 0.3, detail_cells=(8, 8), n: int = 16):
-    """Zweistufiges kachelndes Feld (grobe Flecken + feinere Kante), Werte 0..1 pro Pixel als Zeilenliste."""
-    return [[(1 - detail) * tnoise(x + 0.5, y + 0.5, cells[0], cells[1], seed, n)
-             + detail * tnoise(x + 0.5, y + 0.5, detail_cells[0], detail_cells[1], seed + 7, n)
-             for x in range(n)] for y in range(n)]
+def field(seed: int, cells=(4, 4), detail: float = 0.3, detail_cells=(8, 8), n: int = 16, warp: float = 0.0):
+    """Zweistufiges kachelndes Feld (grobe Flecken + feinere Kante), Werte 0..1 pro Pixel als Zeilenliste.
+
+    warp > 0 verschiebt die Abtastpunkte mit einem zweiten, kachelnden Feld (in Zellen): das nimmt dem Feld das
+    regelmaessige Gitter aus `cells` Spitzen pro Kachel, die Flecken liegen unregelmaessig und kachelnd bleibt es."""
+    def val(x, y):
+        if warp:
+            x, y = (x + (tnoise(x, y, 3, 3, seed + 21, n) - 0.5) * 2.0 * warp * n / cells[0],
+                    y + (tnoise(x, y, 3, 3, seed + 33, n) - 0.5) * 2.0 * warp * n / cells[1])
+        return ((1 - detail) * tnoise(x, y, cells[0], cells[1], seed, n)
+                + detail * tnoise(x, y, detail_cells[0], detail_cells[1], seed + 7, n))
+    return [[val(x + 0.5, y + 0.5) for x in range(n)] for y in range(n)]
 
 
 def rank_tones(values, fractions):
@@ -179,14 +186,14 @@ def paint(idx, ramp, offset: int = 0) -> Tex:
 
 
 def patch_idx(seed: int, fractions=(0.06, 0.22, 0.44, 0.22, 0.06), cells=(4, 4), detail: float = 0.3,
-              detail_cells=(8, 8), clean: int = 1, n: int = 16):
-    return despeckle(rank_tones(field(seed, cells, detail, detail_cells, n), fractions), clean)
+              detail_cells=(8, 8), clean: int = 1, n: int = 16, warp: float = 0.0):
+    return despeckle(rank_tones(field(seed, cells, detail, detail_cells, n, warp), fractions), clean)
 
 
 def patches(seed: int, ramp, fractions=(0.06, 0.22, 0.44, 0.22, 0.06), cells=(4, 4), detail: float = 0.3,
-            detail_cells=(8, 8), clean: int = 1, offset: int = 0, n: int = 16) -> Tex:
+            detail_cells=(8, 8), clean: int = 1, offset: int = 0, n: int = 16, warp: float = 0.0) -> Tex:
     """Kachelnde Tonflecken in einer Rampe. fractions legt die Anteile der Rampenstufen fest (Summe 1)."""
-    return paint(patch_idx(seed, fractions, cells, detail, detail_cells, clean, n), ramp, offset)
+    return paint(patch_idx(seed, fractions, cells, detail, detail_cells, clean, n, warp), ramp, offset)
 
 
 def walk(seed: int, x: int, y: int, length: int, heading=(1, 1), wobble: float = 0.3, n: int = 16):
@@ -203,9 +210,9 @@ def walk(seed: int, x: int, y: int, length: int, heading=(1, 1), wobble: float =
     return pts
 
 
-def spots(seed: int, count: int, gap: float, n: int = 16):
-    """Verteilte Punkte mit Mindestabstand (Poisson-artig, kachelnd), ohne Gitter."""
-    return _spots_for(seed, count, gap, n)
+def spots(seed: int, count: int, gap: float, n: int = 16, margin: int = 0):
+    """Verteilte Punkte mit Mindestabstand (Poisson-artig, kachelnd), ohne Gitter. margin > 0: nicht am Kachelrand."""
+    return _spots_for(seed, count, gap, n, margin)
 
 
 def grow(seed: int, roots, length: int = 12, fork: float = 0.14, wobble: float = 0.28, max_gen: int = 2, allow=None,

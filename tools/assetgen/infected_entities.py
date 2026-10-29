@@ -22,7 +22,7 @@ from ent import FACE_ID, Ent
 from uvlib import FACE_LIGHT, edge_light, paint_box
 
 # ------------------------------------------------------------------ Paletten (Viruspalette + Hautfarben)
-CRY = [hx(c) for c in ("#3a0c3a", "#7a1a68", "#c42c9e", "#ff6fdc", "#ffd0f4")]       # Virus-Kristall
+CRY = [hx(c) for c in ("#1a0824", "#401050", "#821f76", "#c8399f", "#ffa8ea")]       # Virus-Kristall: dunkles Magenta, nur die Kanten leuchten hell
 HEART = [hx(c) for c in ("#17051a", "#2f0a33", "#561048", "#841a66", "#b3267f")]      # krankes Herzfleisch
 GROUND = [hx(c) for c in ("#0b030c", "#16071a", "#240c2a", "#391340", "#52205a")]     # verseuchter Boden
 ZSKIN = [hx(c) for c in ("#1c1424", "#2c2138", "#41334f", "#5a4a6c", "#77668a")]
@@ -186,7 +186,7 @@ def flesh(r, seed, vein_w=0.045, bias=2.0, vein_col=None, fibers=True):
     return p
 
 
-def crystal(r, seed, glow_from=2.6):
+def crystal(r, seed, glow_from=3.0):
     """Facetten-Kristall: drei senkrechte Facetten (links hell, Mitte mittel, rechts dunkel), helle Kante oben links,
     dunkle unten rechts; die Spitze (obere Haelfte) leuchtet. Keine Raster, nur klare Flaechen."""
     def p(face, fx, fy, fw, fh):
@@ -231,7 +231,7 @@ def heart_texture():
     # Boden und Wurzeln
     e.paint("roots", flesh(GROUND, 7001, vein_w=0.075, bias=1.6, fibers=False))
     # Kern: pulsierendes Fleisch. Kerngehaeuse (Frontplatte) siehe unten.
-    e.paint("core", flesh(HEART, 7003, vein_w=0.05, bias=2.1), only=0)
+    e.paint("core", flesh(HEART, 7003, vein_w=0.04, bias=1.9), only=0)
 
     def window(face, fx, fy, fw, fh):
         if face != "north":
@@ -247,8 +247,8 @@ def heart_texture():
             return (VGLOW[0], True)
         return VIRUS[1]
     e.paint("core", window, only=1)
-    e.paint("spikes", crystal(CRY, 7005, 2.7))
-    e.paint("detail_growths", crystal(CRY, 7007, 2.7), only=[0, 1, 2, 3, 4])
+    e.paint("spikes", crystal(CRY, 7005, 3.2))
+    e.paint("detail_growths", crystal(CRY, 7007, 3.2), only=[0, 1, 2, 3, 4])
     e.paint("detail_growths", flesh(HEART, 7009, vein_w=0.07, bias=2.0), only=[5, 6])
 
     # Tentakel: dunkles Fleisch, leuchtender Strang der Laenge nach, Spitze komplett leuchtend

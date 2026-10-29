@@ -14,7 +14,7 @@ import math
 
 from clean import ordered
 from common import TEX, VGLOW, VIRUS, Tex, hx, mix, nz, ramp, save_png
-from fresh_virus import N, infect, pulse_frames, roots_at, veins, write_mcmeta
+from fresh_virus import N, infect, net_tree, pulse_frames, roots_at, veins, write_mcmeta
 from infected_animals import collar_band
 from pixel import patch_idx, patches, spots
 from uvlib import FACE_LIGHT, edge_light, paint_box
@@ -42,15 +42,14 @@ VARIANT_SEEDS = (0, 1000, 2000)
 
 def _pair(base: Tex, seed: int, strain: str, roots: int = 1, length: int = 17, fork: float = 0.24, **kw):
     groove, light = STRAINS[strain]
-    return infect(base, seed + 4, veins(seed + 2, roots_at(seed + 2, roots), length=length, fork=fork), groove=groove,
-                  light=light, **kw)
+    return infect(base, seed + 4, net_tree(seed + 2), groove=groove, light=light, **kw)
 
 
 # ------------------------------------------------------------------ Oberwelt (Shardvirus, tiefer im Boden und in Haeusern)
 def infected_deepslate(v=0):
     """Waagerecht geschichtet wie Tiefenschiefer (gestreckte Flecken), die Adern folgen den Schichten."""
-    base = patches(7001 + v, INF_DEEPSLATE, fractions=(0.04, 0.26, 0.44, 0.22, 0.04), cells=(2, 8), detail=0.25,
-                   detail_cells=(4, 16))
+    base = patches(7001 + v, INF_DEEPSLATE, fractions=(0.04, 0.26, 0.44, 0.22, 0.04), cells=((2, 8), (3, 7), (2, 6))[(v // 1000) % 3], detail=0.25,
+                   detail_cells=(4, 16), warp=0.6)
     return _pair(base, 7000 + v, "shard", shards=1, spores=2)
 
 
@@ -80,8 +79,8 @@ def infected_planks():
 # ------------------------------------------------------------------ Nether (Glutbrand)
 def infected_netherrack(v=0):
     """Grobe, kantige Klumpen wie Netherrack; Glutadern statt Violett."""
-    base = patches(7231 + v, INF_NETHERRACK, fractions=(0.06, 0.22, 0.40, 0.24, 0.08), cells=(4, 4), detail=0.45,
-                   detail_cells=(8, 8))
+    base = patches(7231 + v, INF_NETHERRACK, fractions=(0.06, 0.22, 0.40, 0.24, 0.08), cells=((4, 4), (3, 5), (5, 3))[(v // 1000) % 3], detail=0.45,
+                   detail_cells=(8, 8), warp=0.85)
     return _pair(base, 7230 + v, "ember", shards=1, spores=3)
 
 
@@ -141,7 +140,7 @@ def infected_wart_block():
 # ------------------------------------------------------------------ End (Leerenfaeule)
 def infected_end_stone(v=0):
     """Endstein: blasse, poroese Flecken mit Loechern; die Faeule frisst schwarzviolette Rillen mit blassgruenem Kern."""
-    base = patches(7801 + v, INF_END, fractions=(0.04, 0.22, 0.46, 0.24, 0.04), cells=(4, 4), detail=0.35)
+    base = patches(7801 + v, INF_END, fractions=(0.04, 0.22, 0.46, 0.24, 0.04), cells=((4, 4), (3, 5), (5, 3))[(v // 1000) % 3], detail=0.35, warp=0.85)
     for (x, y) in spots(7805 + v, 5, 3.6):
         base.set(x, y, INF_END[0])
     return _pair(base, 7800 + v, "void", shards=1, spores=3, tint=0.6)

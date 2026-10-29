@@ -45,6 +45,125 @@ def roots_at(seed: int, count: int = 2, margin: int = 2):
     return out
 
 
+# ------------------------------------------------------------------ Aderportale: Adern laufen ueber Kachelgrenzen weiter
+# Alle befallenen Bloecke (jede Familie, jede Variante) kreuzen die Kanten an denselben Stellen: oben/unten bei x = 4,
+# links/rechts bei y = 11. Im Zufallsfeld setzt sich eine Ader daher in der Nachbarkachel fort, auch wenn diese eine
+# andere Variante oder ein anderer Block ist; im Inneren fuehrt jede Variante die Ports anders zusammen.
+PORT_X, PORT_Y = 4, 11
+PORT_CELL = {"N": (PORT_X, 0), "S": (PORT_X, N - 1), "W": (0, PORT_Y), "E": (N - 1, PORT_Y)}
+INWARD = {"N": (0, 1), "S": (0, -1), "W": (1, 0), "E": (-1, 0)}
+ROUTINGS = (
+    (("N", "S"), ("W", "E")),
+    (("N", "W"), ("S", "E")),
+    (("N", "E"), ("S", "W")),
+)
+
+
+def _stairs(p, q, seed, salt):
+    """Treppenpfad von p nach q (4er-zusammenhaengend), Achsen meist abwechselnd: wirkt wie eine diagonale Wurzel."""
+    x, y = p
+    out = [p]
+    axis = 0
+    k = 0
+    while (x, y) != q:
+        dx = (q[0] > x) - (q[0] < x)
+        dy = (q[1] > y) - (q[1] < y)
+        if dx and dy:
+            if nz(k, salt, seed) < 0.28:
+                pass                                     # gleiche Achse noch einmal
+            else:
+                axis = 1 - axis
+        else:
+            axis = 0 if dx else 1
+        if axis == 0 and dx:
+            x += dx
+        elif axis == 1 and dy:
+            y += dy
+        elif dx:
+            x += dx
+        else:
+            y += dy
+        out.append((x, y))
+        k += 1
+    return out
+
+
+def _route(seed, a, b, salt):
+    """Pfad von Port a nach Port b: zwei Zellen senkrecht zur Kante hinein, dazwischen ein Umweg ueber einen Zwischenpunkt."""
+    start, end = PORT_CELL[a], PORT_CELL[b]
+    s1 = (start[0] + INWARD[a][0], start[1] + INWARD[a][1])
+    e1 = (end[0] + INWARD[b][0], end[1] + INWARD[b][1])
+    dx, dy = e1[0] - s1[0], e1[1] - s1[1]
+    ln = max(1.0, math.hypot(dx, dy))
+    nx, ny = -dy / ln, dx / ln                                  # Normale zur Verbindungslinie
+    j = (2 + int(nz(salt, 4, seed) * 2)) * (1 if nz(salt, 5, seed) < 0.5 else -1)
+    wp1 = (clamp(int(round(s1[0] + dx * 0.34 + nx * j)), 2, N - 3), clamp(int(round(s1[1] + dy * 0.34 + ny * j)), 2, N - 3))
+    wp2 = (clamp(int(round(s1[0] + dx * 0.68 - nx * j)), 2, N - 3), clamp(int(round(s1[1] + dy * 0.68 - ny * j)), 2, N - 3))
+    path = [start] + _stairs(s1, wp1, seed, salt + 10) + _stairs(wp1, wp2, seed, salt + 20)[1:] + _stairs(wp2, e1, seed, salt + 30)[1:] + [end]
+    clean = []
+    for c in path:
+        if not clean or clean[-1] != c:
+            clean.append(c)
+    return clean
+
+
+def _twig(path, i, side, length):
+    """Zweig ab Pfadzelle i: abwechselnd ein Schritt weg vom Pfad und ein Schritt in Pfadrichtung (diagonale Wurzel)."""
+    ax = path[i + 1][0] - path[i - 1][0]
+    ay = path[i + 1][1] - path[i - 1][1]
+    if abs(ax) >= abs(ay):
+        along, perp = (1 if ax >= 0 else -1, 0), (0, side)
+    else:
+        along, perp = (0, 1 if ay >= 0 else -1), (side, 0)
+    x, y = path[i]
+    out = []
+    for k in range(length):
+        step = perp if k % 2 == 0 else along
+        x, y = x + step[0], y + step[1]
+        out.append((x, y))
+    return out
+
+
+def net_tree(seed: int, twigs: int = 2):
+    """Aderbaum aus Portal-Pfaden plus kurzen Zweigen mit leuchtenden Spitzen. Rueckgabe wie pixel.grow: ({(x, y): (u, gen)}, tips)."""
+    routing = ROUTINGS[(seed // 1000 + (seed // 100) % 10) % 3]
+    cells, tips = {}, set()
+    paths = []
+    for i, (a, b) in enumerate(routing):
+        path = _route(seed, a, b, 40 + i * 7)
+        paths.append(path)
+        n = len(path)
+        for j, c in enumerate(path):
+            u = 0.45 + 0.30 * math.sin(math.pi * j / max(1, n - 1))      # an den Ports gleich, in der Mitte heller
+            if c not in cells:
+                cells[c] = (u, 0)
+    placed = 0
+    for attempt in range(40):
+        if placed >= twigs:
+            break
+        path = paths[attempt % len(paths)]
+        i = 5 + int(nz(attempt, 61, seed) * max(1, len(path) - 10))
+        side = 1 if nz(attempt, 62, seed) < 0.5 else -1
+        twig = _twig(path, i, side, 3 + int(nz(attempt, 63, seed) * 3))
+        near_port = any(abs(x - PORT_X) < 2 or abs(y - PORT_Y) < 2 for (x, y) in path[i:i + 1])
+        if near_port:
+            continue
+        keep = []
+        for c in twig:
+            if not (2 <= c[0] <= N - 3 and 2 <= c[1] <= N - 3) or c in cells:
+                break
+            if any((c[0] + dx, c[1] + dy) in cells for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)) if (c[0] + dx, c[1] + dy) != path[i] and (c[0] + dx, c[1] + dy) not in keep):
+                if keep:
+                    break
+            keep.append(c)
+        if len(keep) >= 2:
+            for k, c in enumerate(keep):
+                cells[c] = (0.55 + 0.4 * k / max(1, len(keep) - 1), 1)
+            tips.add(keep[-1])
+            placed += 1
+    return cells, tips
+
+
 def infect(base: Tex, seed: int, tree, shards: int = 1, spores: int = 3, tint: float = 0.5, opaque=None,
            shard_skip=lambda p: False, groove=VIRUS, light=VGLOW):
     """Legt Rille, Fraßhof, Leuchtadern und Kristallspitzen auf `base`. Liefert (base, glow).
@@ -99,12 +218,19 @@ def infect(base: Tex, seed: int, tree, shards: int = 1, spores: int = 3, tint: f
 
 
 # ------------------------------------------------------------------ Grundtexturen (gleiche Strukturen wie die gesunden Bloecke)
+BASE_CELLS = ((4, 4), (3, 5), (5, 3))            # Fleckengitter je Variante (Seed // 1000), mit Verzerrung gegen das Gitter
+
+
+def _cells(seed):
+    return BASE_CELLS[(seed // 1000) % 3]
+
+
 def stone_base(seed, ramp_):
-    return patches(seed, ramp_, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=(4, 4), detail=0.3)
+    return patches(seed, ramp_, fractions=(0.0, 0.27, 0.50, 0.21, 0.02), cells=_cells(seed), detail=0.3, warp=0.85)
 
 
 def dirt_base(seed, ramp_):
-    t = patches(seed, ramp_, fractions=(0.04, 0.26, 0.46, 0.20, 0.04), cells=(4, 2), detail=0.35, detail_cells=(8, 4))
+    t = patches(seed, ramp_, fractions=(0.04, 0.26, 0.46, 0.20, 0.04), cells=((4, 2), (3, 3), (5, 2))[(seed // 1000) % 3], detail=0.35, detail_cells=(8, 4), warp=0.7)
     for (x, y) in spots(seed + 5, 3, 5.0):
         t.set(x, y, ramp_[4])
         t.set((x + 1) % N, y, ramp_[3])
@@ -113,16 +239,16 @@ def dirt_base(seed, ramp_):
 
 def infected_stone(v=0):
     base = stone_base(6001 + v, INF_STONE)
-    return infect(base, 6005 + v, veins(6003 + v, roots_at(6003 + v, 1), length=17, fork=0.24), shards=1, spores=3)
+    return infect(base, 6005 + v, net_tree(6003 + v), shards=1, spores=3)
 
 
 def infected_dirt(v=0):
     base = dirt_base(6101 + v, INF_DIRT)
-    return infect(base, 6105 + v, veins(6103 + v, roots_at(6103 + v, 1), length=17, fork=0.24), shards=1, spores=3)
+    return infect(base, 6105 + v, net_tree(6103 + v), shards=1, spores=3)
 
 
 def grass_base(seed, ramp_):
-    t = patches(seed, ramp_, fractions=(0.05, 0.25, 0.44, 0.21, 0.05), cells=(4, 4), detail=0.4)
+    t = patches(seed, ramp_, fractions=(0.05, 0.25, 0.44, 0.21, 0.05), cells=_cells(seed), detail=0.4, warp=0.85)
     for (x, y) in spots(seed + 5, 5, 3.6):                 # einzelne Halme
         t.set(x, y, ramp_[4])
         t.set(x, (y + 1) % N, ramp_[3])
@@ -131,7 +257,7 @@ def grass_base(seed, ramp_):
 
 def infected_grass_top(v=0):
     base = grass_base(6201 + v, INF_GRASS)
-    return infect(base, 6205 + v, veins(6203 + v, roots_at(6203 + v, 1), length=17, fork=0.24), shards=1, spores=3, tint=0.55)
+    return infect(base, 6205 + v, net_tree(6203 + v), shards=1, spores=3, tint=0.55)
 
 
 def infected_grass_side():
@@ -168,12 +294,12 @@ def infected_log_top():
     return infect(base, 6505, veins(6503, [((7, 7), (1, 1)), ((8, 8), (-1, 1))], length=11, fork=0.18), shards=0, spores=2)
 
 
-def _leaf_tex():
-    return crystal_leaves(6601, tones=INF_LEAF, blossoms=False)
+def _leaf_tex(v=0):
+    return crystal_leaves(6601 + v // 100, tones=INF_LEAF, blossoms=False, cells=BASE_CELLS[(v // 1000) % 3])
 
 
 def infected_leaves(v=0):
-    leaf = _leaf_tex()
+    leaf = _leaf_tex(v)
     opaque = lambda x, y: leaf.get(x % N, y % N)[3] > 0
     tree = veins(6609 + v, roots_at(6609 + v, 3), length=9, fork=0.18, allow=opaque)
     return infect(leaf, 6611 + v, tree, shards=1, spores=3, opaque=opaque)
@@ -181,7 +307,7 @@ def infected_leaves(v=0):
 
 def infected_sand(v=0):
     base = patches(6701 + v, INF_SAND, fractions=(0.04, 0.24, 0.46, 0.22, 0.04), cells=(2, 6), detail=0.35, detail_cells=(8, 4))
-    return infect(base, 6707 + v, veins(6705 + v, roots_at(6705 + v, 1), length=17, fork=0.24), shards=1, spores=3, tint=0.45)
+    return infect(base, 6707 + v, net_tree(6705 + v), shards=1, spores=3, tint=0.45)
 
 
 # ------------------------------------------------------------------ Story-Bloecke
