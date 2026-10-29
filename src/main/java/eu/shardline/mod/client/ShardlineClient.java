@@ -17,6 +17,7 @@ import eu.shardline.mod.client.story.StoryScreenEffects;
 import eu.shardline.mod.core.ModDataComponents;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.entity.boss.ShardQueenEntity;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.world.dimension.ModDimensions;
@@ -86,7 +87,13 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.SHADOW_FOX.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shadow_fox", 0.4F, true));
         event.registerEntityRenderer(ModEntities.SHATTERED_KNIGHT.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shattered_knight", 0.6F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_COLOSSUS.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_colossus", 1.6F, true));
-        event.registerEntityRenderer(ModEntities.SHARD_QUEEN.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_queen", 0.8F, true));
+        // Kein Umkippen beim Tod: Der Clip "death" laesst die Koenigin an Ort und Stelle zerfallen.
+        event.registerEntityRenderer(ModEntities.SHARD_QUEEN.get(), ctx -> new ShardlineGeoRenderer<ShardQueenEntity>(ctx, "shard_queen", 0.55F, true) {
+            @Override
+            protected float getDeathMaxRotation(ShardQueenEntity animatable) {
+                return 0.0F;
+            }
+        });
         event.registerEntityRenderer(ModEntities.QUEEN_CLONE.get(), QueenCloneRenderer::new);
         event.registerEntityRenderer(ModEntities.SHARD_PROJECTILE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_PILLAR.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_pillar", 0.0F, true));

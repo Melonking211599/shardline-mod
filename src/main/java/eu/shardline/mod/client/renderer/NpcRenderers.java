@@ -49,6 +49,11 @@ public final class NpcRenderers {
         public RenderType getRenderType(EchoQueenEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
             return RenderType.entityTranslucent(texture);
         }
+
+        @Override
+        protected float getDeathMaxRotation(EchoQueenEntity animatable) {
+            return 0.0F;
+        }
     }
 
     /** Schwaerenherz: Modell und Animationen des Virusherzens, Textur festering_heart; kippt beim Tod nicht um. */

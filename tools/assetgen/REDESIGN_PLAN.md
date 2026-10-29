@@ -125,6 +125,8 @@ Animationen (Clip-Namen aus dem Code, alle bleiben):
 
 Hitbox 1,2 × 3,0 und Augenhöhe 2,6 bleiben (Krone endet bei 2,9 Blöcken). Schattenradius der Queen sinkt von 0,8 auf etwa 0,6, weil der Körper schlanker ist; Klon (1,0 × 2,6, Schatten 0,5) und Echo (Schatten 0,0) bleiben. Ringe ragen bis 14 px, das ist breiter als die Hitbox und rein optisch.
 
+**Umsetzung (Stand nach Redesign 2):** 33 Bones, 127 Würfel, UV-Bedarf 74 von 128 Zeilen (128×128 reicht). Abweichungen vom Plan: Die Ringe sind astrolabartig geneigt (Hüftring waagerecht, zwei geneigte Ringe, deren vordere Bögen tief liegen, damit Gesicht und Kern frei bleiben; sie drehen mit 30, −60 und 90 °/s auf eigenen Bones `ring_N_spin`), Kopfneigungen laufen über den zusätzlichen Bone `neck`, weil GeckoLib `head` jedes Bild zum Blickziel dreht. `hurt` läuft auf einem eigenen Controller (`hurt`), damit ein Treffer keinen Zauber abbricht; `death` und `hurt` werden jetzt von `ShardQueenEntity` ausgelöst (Entscheidung 5), der Körper bleibt 44 Ticks stehen und kippt nicht um (`getDeathMaxRotation` = 0 für Queen und Echo). Schatten der Queen 0,55, Klon 0,4. Wichtige Messung aus dem echten Client: Bone-Drehungen laufen in x umgekehrt zu Würfel-Drehungen (steht im Kopf von `queen_rig.py`).
+
 ## 6. Bossbars: Umsetzungsplan
 
 1. Eine Design-Tabelle (Schlüssel des Namens → Design) in `BossBars.java` mit öffentlicher `register(...)`-Methode statt der festen `Map`; Fallback auf Vanilla nur für fremde Leisten.

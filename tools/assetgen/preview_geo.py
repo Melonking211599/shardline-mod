@@ -47,7 +47,7 @@ def texels(name):
     return texels_of(*load(name))
 
 
-def texels_of(geo, bones, tex, glow):
+def texels_of(geo, bones, tex, glow, pose=None):
     """Texel-Polygone aus Geo-Daten, Bones-Dict, Texturbild und optionaler Leuchtmaske (auch fuer Ruestungen)."""
     tw, th = geo["description"]["texture_width"], geo["description"]["texture_height"]
     out = []
@@ -67,8 +67,20 @@ def texels_of(geo, bones, tex, glow):
                 if "rotation" in cube:
                     p = rot(p, cube["rotation"], cube.get("pivot", bone.get("pivot", [0, 0, 0])))
                 for b in chain(bones, bone):
-                    if "rotation" in b:
-                        p = rot(p, b["rotation"], b.get("pivot", [0, 0, 0]))
+                    pv = b.get("pivot", [0, 0, 0])
+                    extra = (pose or {}).get(b["name"], {})
+                    sc = extra.get("scale")
+                    if sc:
+                        p = (pv[0] + (p[0] - pv[0]) * sc[0], pv[1] + (p[1] - pv[1]) * sc[1], pv[2] + (p[2] - pv[2]) * sc[2])
+                    r0 = b.get("rotation", (0, 0, 0))
+                    r1 = extra.get("rotation", (0, 0, 0))
+                    total = (r0[0] + r1[0], r0[1] + r1[1], r0[2] + r1[2])
+                    if any(total):
+                        # GeckoLib dreht Bones in x umgekehrt zu Wuerfeln (im Spiel geprueft)
+                        p = rot(p, (-total[0], total[1], total[2]), pv)
+                    ps = extra.get("position")
+                    if ps:
+                        p = (p[0] + ps[0], p[1] + ps[1], p[2] + ps[2])
                 return p
 
             faces = {

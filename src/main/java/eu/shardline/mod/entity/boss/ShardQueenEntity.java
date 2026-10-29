@@ -83,6 +83,9 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
     private int swoopTicks;
     private int meleeCooldown;
     private static final int SWOOP_TICKS = 100;
+    /** Der Koerper bleibt fuer den Clip {@code death} stehen (2,2 s statt der ueblichen 1 s). */
+    private static final int DEATH_TICKS = 44;
+    private int hurtAnimCooldown;
 
     public ShardQueenEntity(EntityType<? extends ShardQueenEntity> type, Level level) {
         super(type, level);
@@ -144,6 +147,9 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
         ServerLevel level = (ServerLevel) this.level();
+        if (this.hurtAnimCooldown > 0) {
+            this.hurtAnimCooldown--;
+        }
         this.updatePhase(level);
 
         LivingEntity target = this.getTarget();
@@ -406,7 +412,12 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         if (this.getPhase() >= 2 && !this.livingClones().isEmpty()) {
             amount *= 0.5F;
         }
-        return super.hurt(source, amount);
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide && this.isAlive() && this.hurtAnimCooldown == 0) {
+            this.hurtAnimCooldown = 12;
+            this.triggerAnim(ShardlineAnimations.HURT_CONTROLLER, "hurt");
+        }
+        return hurt;
     }
 
     @Override
@@ -415,6 +426,16 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         if (!this.level().isClientSide) {
             this.discardClones();
             VoidZoneEntity.clearAround(this, LEASH_RADIUS);
+            this.triggerAnim(ShardlineAnimations.ACTION_CONTROLLER, "death");
+        }
+    }
+
+    @Override
+    protected void tickDeath() {
+        this.deathTime++;
+        if (this.deathTime >= DEATH_TICKS && !this.level().isClientSide() && !this.isRemoved()) {
+            this.level().broadcastEntityEvent(this, (byte) 60);
+            this.remove(RemovalReason.KILLED);
         }
     }
 
@@ -526,7 +547,8 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(ShardlineAnimations.flying(this));
-        controllers.add(ShardlineAnimations.actions(this, "cast", "summon", "teleport", "scream"));
+        controllers.add(ShardlineAnimations.actions(this, "cast", "summon", "teleport", "scream", "death"));
+        controllers.add(ShardlineAnimations.flinch(this));
     }
 
     @Override

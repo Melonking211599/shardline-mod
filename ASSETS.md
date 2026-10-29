@@ -25,12 +25,13 @@ Jedes Wesen hat drei Dateien: ein Modell unter `geo/entity/<name>.geo.json`, die
 | `shadow_fox` | 64×64 | ja | idle, walk, attack |
 | `shattered_knight` | 64×64 | ja | idle, walk, attack, charge |
 | `crystal_colossus` | 256×256 | ja | idle, walk, attack, slam, pillar, summon, roar |
-| `shard_queen` | 128×128 | ja | fly, cast, summon, teleport, scream |
+| `shard_queen` | 128×128 | ja | fly, idle, cast, summon, teleport, scream, hurt, death, void_zone, projectile_barrage, clone_summon, phase_transition (vom Code ausgelöst: fly, cast, summon, teleport, scream, hurt, death) |
 | `crystal_pillar` | 64×64 | ja | warmup, rise |
 
 Sonderfälle:
 - **Kristallgolem:** Wütend nutzt er die Zusatztextur `textures/entity/crystal_golem_angry.png` (128×128).
-- **Klon der Königin:** Er hat kein eigenes Modell, sondern nutzt Modell und Animationen der Königin mit der eigenen Textur `textures/entity/queen_clone.png` (128×128). Sie wird durchscheinend gerendert.
+- **Königin:** Neues Modell (`tools/assetgen/queen_rig.py`, Animationen `queen_anim.py`): schlanke Glasgestalt ohne Flügel mit Krone aus sieben Zacken, offener Brustmulde mit Kern, Rock, Schleppe, Rückensplittern und drei schwebenden Splitterringen (Bones `ring_N`/`ring_N_spin`). Bone `neck` trägt die Kopfneigungen der Clips, `head` folgt dem Blickziel. `hurt` läuft auf einem eigenen Controller (`hurt`) und unterbricht keine Zauber, `death` hält die letzte Pose und der Körper bleibt 44 Ticks stehen.
+- **Klon der Königin:** Er hat kein eigenes Modell, sondern nutzt Modell und Animationen der Königin mit der eigenen Textur `textures/entity/queen_clone.png` (128×128, mit Glowmask). Sie wird durchscheinend gerendert. Der Nachhall (`echo_queen`) ist dieselbe Textur umgefärbt.
 - **Kopfdrehung:** Ein Bone mit dem Namen `head` dreht sich automatisch zum Blickziel.
 - **Splitter-Projektil:** Es wird als Item (`textures/item/shard_fragment.png`) dargestellt. Die Void-Zone besteht nur aus Partikeln.
 

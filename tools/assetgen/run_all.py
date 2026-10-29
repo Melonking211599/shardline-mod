@@ -16,6 +16,8 @@ import dialogue_gui
 import npc_assets
 import fresh_blocks
 import bosses
+import queen_anim
+import queen_rig
 import bossbars
 import effects_gui
 import entities
@@ -44,6 +46,8 @@ def main():
     armor_models.main()
     entities.main()
     bosses.main()
+    queen_rig.main()
+    queen_anim.main()
     gui.main()
     bossbars.main()
     # Story-Erweiterung

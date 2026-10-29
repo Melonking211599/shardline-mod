@@ -18,6 +18,8 @@ public final class ShardlineAnimations {
 
     /** Name des Controllers fuer ausloesbare Einzelanimationen (Angriff, Zauber, ...). */
     public static final String ACTION_CONTROLLER = "action";
+    /** Eigener Controller fuer das kurze Zusammenzucken bei Treffern; unterbricht laufende Zauber nicht. */
+    public static final String HURT_CONTROLLER = "hurt";
 
     private ShardlineAnimations() {
     }
@@ -31,6 +33,13 @@ public final class ShardlineAnimations {
     /** Controller fuer Flieger: dauerhaft Flug-Animation. */
     public static <T extends Entity & GeoAnimatable> AnimationController<T> flying(T entity) {
         return new AnimationController<>(entity, "movement", 4, state -> state.setAndContinue(FLY));
+    }
+
+    /** Controller fuer den Clip {@code hurt}: spielt ihn auf {@code triggerAnim(HURT_CONTROLLER, "hurt")} neben den anderen Clips. */
+    public static <T extends Entity & GeoAnimatable> AnimationController<T> flinch(T entity) {
+        AnimationController<T> controller = new AnimationController<>(entity, HURT_CONTROLLER, 1, state -> PlayState.STOP);
+        controller.triggerableAnim("hurt", RawAnimation.begin().thenPlay("hurt"));
+        return controller;
     }
 
     /**
