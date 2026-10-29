@@ -2,6 +2,19 @@
 
 Gilt für jede neue und überarbeitete Textur. Paletten stehen als Konstanten in `common.py`, der Werkzeugkasten in `pixel.py`.
 
+## Kurzfassung der Redesign-Runde 2 (8 Zeilen, hat bei Widerspruch Vorrang)
+
+1. **Licht** oben links, 4–5 Stufen je Rampe, keine weichen Verläufe, kein 1-px-Rauschen (einzelne Streupixel gelten als Fehler).
+2. **Kontur:** Items 1 px in dunklem Materialton (nie reines Schwarz), Blöcke ohne Kontur mit heller Oberkante und dunkler Unterkante. Rüstung und Werkzeuge folgen dem Netherite-Kontrast: dunkler Grundton, helle Kante oben links.
+3. **Silhouette zuerst:** Form, dann Licht, dann Detail. Jede Textur muss bei 1× an der Form erkennbar sein (Slot-Test).
+4. **Von Hand statt Rauschen:** Items, Icons, Gesichter, Ornamente und GUI als ASCII-Pixelkarten mit fester Palette. Rauschen nur für Kachelblöcke und nur strukturiert (Schichten, Maserung, Adern über die Kachelgrenze hinweg).
+5. **Farbwelten:** Splitterweite Violett/Cyan, Virus Schwarzviolett/Magenta, Reinheit Elfenbein/Gold/Himmelblau, Asche Grau/Glut. Höchstens 2 Akzentfarben je Textur.
+6. **Leuchten** nur an Adern, Augen, Kristallspitzen und Runen. Die Glowmaske deckt exakt diese Pixel und ist eine Teilmenge der Basistextur.
+7. **Material:** Shard-Set = dunkler Violettstahl mit Kristallinlays, Colossus-Set = schwerer Steinstahl mit cyanfarbenem Kern. Beide mit klaren Kanten, abgeschrägten Platten und Nietenreihen.
+8. **Kacheln und Determinismus:** Kachelblöcke zeigen bei 3×3 kein Raster (große Strukturen bekommen 2–3 Seeds, Merkmale laufen über die Kachelgrenze). Seeds und Paletten sind fest, `run_all.py` zweimal ausgeführt ergibt identische Dateien.
+
+Die ausführlichen Regeln darunter gelten weiter, soweit sie dieser Kurzfassung nicht widersprechen.
+
 ## Regeln
 
 1. **Licht** kommt von oben links, Schatten fallen nach unten rechts. Jede Rampe hat 4–5 Stufen. Keine Zwischenverläufe, keine Weichzeichner, keine Alpha-Verläufe (außer Overlays, Partikel und die Schimmerkanten der GUI).
