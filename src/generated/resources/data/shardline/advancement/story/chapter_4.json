@@ -11,8 +11,11 @@
     },
     "frame": "goal",
     "icon": {
+      "components": {
+        "shardline:chapter": 4
+      },
       "count": 1,
-      "id": "shardline:colossus_core"
+      "id": "shardline:chapter_emblem"
     },
     "title": {
       "translate": "advancements.shardline.story.chapter_4.title"

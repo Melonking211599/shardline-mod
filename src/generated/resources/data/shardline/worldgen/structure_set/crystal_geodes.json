@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 3307751,
+    "separation": 7,
+    "spacing": 22
+  },
+  "structures": [
+    {
+      "structure": "shardline:crystal_geode",
+      "weight": 1
+    }
+  ]
+}

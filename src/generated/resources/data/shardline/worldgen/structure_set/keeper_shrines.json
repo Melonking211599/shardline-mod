@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 4183920,
+    "separation": 9,
+    "spacing": 26
+  },
+  "structures": [
+    {
+      "structure": "shardline:keeper_shrine",
+      "weight": 1
+    }
+  ]
+}

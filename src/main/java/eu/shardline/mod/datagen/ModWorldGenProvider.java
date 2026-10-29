@@ -2,6 +2,7 @@ package eu.shardline.mod.datagen;
 
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.core.ModDamageTypes;
+import eu.shardline.mod.core.ModEnchantments;
 import eu.shardline.mod.world.ModBiomeModifiers;
 import eu.shardline.mod.world.biome.ModBiomes;
 import eu.shardline.mod.world.dimension.ModDimensions;
@@ -34,6 +35,7 @@ public class ModWorldGenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.STRUCTURE, ModStructures::bootstrapStructures)
             .add(Registries.STRUCTURE_SET, ModStructures::bootstrapSets)
             .add(Registries.DAMAGE_TYPE, ModDamageTypes::bootstrap)
+            .add(Registries.ENCHANTMENT, ModEnchantments::bootstrap)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap);
 
     public ModWorldGenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {

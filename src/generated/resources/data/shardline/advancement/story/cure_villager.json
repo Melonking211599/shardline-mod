@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:story/purification",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.cure_villager.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "shardline:crystallized_villager_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.cure_villager.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  },
+  "sends_telemetry_event": true
+}

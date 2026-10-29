@@ -43,12 +43,38 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
 
         this.dropSelf(ModBlocks.PURITY_ANCHOR.get());
 
+        // --- Splitterhandwerk ---
+        for (Block block : new Block[] {
+                ModBlocks.POLISHED_SHARDSTONE.get(), ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), ModBlocks.CHISELED_SHARDSTONE_BRICKS.get(),
+                ModBlocks.CRYSTAL_STAIRS.get(), ModBlocks.CRYSTAL_FENCE.get(), ModBlocks.CRYSTAL_FENCE_GATE.get(),
+                ModBlocks.CRYSTAL_TRAPDOOR.get(), ModBlocks.CRYSTAL_BUTTON.get(), ModBlocks.CRYSTAL_PRESSURE_PLATE.get(),
+                ModBlocks.SHARD_LANTERN.get()}) {
+            this.dropSelf(block);
+        }
+        this.dropSelf(ModBlocks.KEEPER_RUIN_BRICKS.get());
+        this.dropSelf(ModBlocks.KEEPER_RUIN_PILLAR.get());
+        this.add(ModBlocks.KEEPER_RUNE_SLAB.get(), this::createSlabItemTable);
+        this.add(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), this::createSlabItemTable);
+        this.add(ModBlocks.CRYSTAL_SLAB.get(), this::createSlabItemTable);
+        this.add(ModBlocks.CRYSTAL_DOOR.get(), this::createDoorTable);
+        this.dropWhenSilkTouch(ModBlocks.CRYSTAL_GLASS.get());
+        this.dropWhenSilkTouch(ModBlocks.CRYSTAL_GLASS_PANE.get());
+
         // Infizierte Bloecke: mit Behutsamkeit der Block selbst, sonst das gereinigte Material.
         infected(ModBlocks.INFECTED_STONE.get(), Items.COBBLESTONE);
         infected(ModBlocks.INFECTED_DIRT.get(), Items.DIRT);
         infected(ModBlocks.INFECTED_GRASS.get(), Items.DIRT);
         infected(ModBlocks.INFECTED_LOG.get(), Items.OAK_LOG);
         infected(ModBlocks.INFECTED_SAND.get(), Items.SAND);
+        infected(ModBlocks.INFECTED_DEEPSLATE.get(), Items.COBBLED_DEEPSLATE);
+        infected(ModBlocks.INFECTED_PLANKS.get(), Items.OAK_PLANKS);
+        infected(ModBlocks.INFECTED_NETHERRACK.get(), Items.NETHERRACK);
+        infected(ModBlocks.INFECTED_BLACKSTONE.get(), Items.BLACKSTONE);
+        infected(ModBlocks.INFECTED_SOUL_SOIL.get(), Items.SOUL_SOIL);
+        infected(ModBlocks.INFECTED_NYLIUM.get(), Items.NETHERRACK);
+        infected(ModBlocks.INFECTED_WART_BLOCK.get(), Items.NETHER_WART_BLOCK);
+        infected(ModBlocks.INFECTED_END_STONE.get(), Items.END_STONE);
+        infected(ModBlocks.INFECTED_PURPUR.get(), Items.PURPUR_BLOCK);
         this.add(ModBlocks.INFECTED_LEAVES.get(), block -> this.createSilkTouchDispatchTable(block,
                 this.applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK)
                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));

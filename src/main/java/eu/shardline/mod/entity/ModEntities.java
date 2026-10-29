@@ -6,11 +6,15 @@ import eu.shardline.mod.entity.boss.QueenCloneEntity;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
+import eu.shardline.mod.entity.infected.CrystallizedPigEntity;
+import eu.shardline.mod.entity.infected.CrystallizedSheepEntity;
+import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
 import eu.shardline.mod.entity.infected.ShardZombieEntity;
 import eu.shardline.mod.entity.misc.CrystalPillarEntity;
 import eu.shardline.mod.entity.misc.VoidZoneEntity;
 import eu.shardline.mod.entity.mob.AshWalkerEntity;
 import eu.shardline.mod.entity.mob.CrystalGolemEntity;
+import eu.shardline.mod.entity.mob.CrystalSnailEntity;
 import eu.shardline.mod.entity.mob.CrystalSpiderEntity;
 import eu.shardline.mod.entity.mob.GlowMothEntity;
 import eu.shardline.mod.entity.mob.ShadowFoxEntity;
@@ -37,6 +41,8 @@ public final class ModEntities {
             EntityType.Builder.of(CrystalGolemEntity::new, MobCategory.CREATURE).sized(1.4F, 2.7F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<GlowMothEntity>> GLOW_MOTH = register("glow_moth",
             EntityType.Builder.of(GlowMothEntity::new, MobCategory.AMBIENT).sized(0.5F, 0.5F).eyeHeight(0.3F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystalSnailEntity>> CRYSTAL_SNAIL = register("crystal_snail",
+            EntityType.Builder.of(CrystalSnailEntity::new, MobCategory.CREATURE).sized(0.6F, 0.6F).eyeHeight(0.4F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<AshWalkerEntity>> ASH_WALKER = register("ash_walker",
             EntityType.Builder.of(AshWalkerEntity::new, MobCategory.MONSTER).sized(0.6F, 1.95F).fireImmune().clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<ShardScoutEntity>> SHARD_SCOUT = register("shard_scout",
@@ -71,9 +77,31 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedCowEntity>> CRYSTALLIZED_COW = register("crystallized_cow",
             EntityType.Builder.of(CrystallizedCowEntity::new, MobCategory.CREATURE).sized(0.9F, 1.4F).eyeHeight(1.3F)
                     .passengerAttachments(1.36875F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedSheepEntity>> CRYSTALLIZED_SHEEP = register("crystallized_sheep",
+            EntityType.Builder.of(CrystallizedSheepEntity::new, MobCategory.CREATURE).sized(0.9F, 1.3F).eyeHeight(1.235F)
+                    .passengerAttachments(1.2375F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedPigEntity>> CRYSTALLIZED_PIG = register("crystallized_pig",
+            EntityType.Builder.of(CrystallizedPigEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F)
+                    .passengerAttachments(0.86875F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CrystallizedVillagerEntity>> CRYSTALLIZED_VILLAGER = register("crystallized_villager",
+            EntityType.Builder.of(CrystallizedVillagerEntity::new, MobCategory.CREATURE).sized(0.6F, 1.95F).eyeHeight(1.62F)
+                    .clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.infected.CrystallizedPiglinEntity>> CRYSTALLIZED_PIGLIN =
+            register("crystallized_piglin", EntityType.Builder.of(eu.shardline.mod.entity.infected.CrystallizedPiglinEntity::new, MobCategory.MONSTER)
+                    .sized(0.6F, 1.95F).eyeHeight(1.79F).passengerAttachments(2.0125F).ridingOffset(-0.7F).fireImmune().clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.infected.CrystallizedEndermanEntity>> CRYSTALLIZED_ENDERMAN =
+            register("crystallized_enderman", EntityType.Builder.of(eu.shardline.mod.entity.infected.CrystallizedEndermanEntity::new, MobCategory.MONSTER)
+                    .sized(0.6F, 2.9F).eyeHeight(2.55F).passengerAttachments(2.80625F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<VirusHeartEntity>> VIRUS_HEART = register("virus_heart",
             EntityType.Builder.of(VirusHeartEntity::new, MobCategory.MONSTER).sized(1.8F, 2.4F).eyeHeight(1.6F)
                     .fireImmune().clientTrackingRange(10));
+    // Nach dem Ausbruch: Kapitel-9-Gegner
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.boss.EchoQueenEntity>> ECHO_QUEEN = register("echo_queen",
+            EntityType.Builder.of(eu.shardline.mod.entity.boss.EchoQueenEntity::new, MobCategory.MONSTER).sized(1.2F, 3.0F).eyeHeight(2.6F)
+                    .fireImmune().clientTrackingRange(12));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.boss.FesteringHeartEntity>> FESTERING_HEART =
+            register("festering_heart", EntityType.Builder.of(eu.shardline.mod.entity.boss.FesteringHeartEntity::new, MobCategory.MONSTER)
+                    .sized(1.8F, 2.4F).eyeHeight(1.6F).fireImmune().clientTrackingRange(10));
 
     // --- Projektile & Effekte ---
     public static final DeferredHolder<EntityType<?>, EntityType<ShardProjectileEntity>> SHARD_PROJECTILE = register("shard_projectile",
@@ -88,6 +116,16 @@ public final class ModEntities {
 
     private ModEntities() {
     }
+
+    // Nach dem Ausbruch: NPCs (keine natuerlichen Spawns; Lager, Spawn-Ei)
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.npc.RheaEntity>> RHEA = register("rhea",
+            EntityType.Builder.of(eu.shardline.mod.entity.npc.RheaEntity::new, MobCategory.MISC).sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.npc.VeylEntity>> VEYL = register("veyl",
+            EntityType.Builder.of(eu.shardline.mod.entity.npc.VeylEntity::new, MobCategory.MISC).sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.npc.IlsaEntity>> ILSA = register("ilsa",
+            EntityType.Builder.of(eu.shardline.mod.entity.npc.IlsaEntity::new, MobCategory.MISC).sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<eu.shardline.mod.entity.npc.KeshEntity>> KESH = register("kesh",
+            EntityType.Builder.of(eu.shardline.mod.entity.npc.KeshEntity::new, MobCategory.MISC).sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10));
 
     private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String name, EntityType.Builder<T> builder) {
         return ENTITY_TYPES.register(name, () -> builder.build(Shardline.MODID + ":" + name));

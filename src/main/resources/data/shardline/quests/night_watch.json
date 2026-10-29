@@ -1,0 +1,14 @@
+{
+  "chapter_min": 8,
+  "giver": "rhea",
+  "repeatable": true,
+  "steps": [
+    {"type": "kill", "target": "#shardline:night_watch_targets", "count": 8},
+    {"type": "talk", "target": "rhea"}
+  ],
+  "rewards": [
+    {"item": "shardline:berry_tart", "count": 2},
+    {"item": "shardline:shard_fragment", "count": 8}
+  ],
+  "xp": 50
+}

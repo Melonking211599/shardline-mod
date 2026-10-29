@@ -17,3 +17,7 @@ bin/
 
 # Datagen-Cache
 src/generated/resources/.cache/
+
+# Python-Cache der Textur-Skripte
+__pycache__/
+*.pyc

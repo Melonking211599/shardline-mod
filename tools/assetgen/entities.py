@@ -7,20 +7,22 @@ from __future__ import annotations
 
 import math
 
-from blocks import SHARDSTONE
-from common import (ASH, BONE, COL, CYAN, LILAC, MAGENTA, SHARD, SLATE, TEAL, VIOLET, Tex, clamp, hx, mix, nz,
+from fresh_blocks import SHARDSTONE
+from clean import ordered
+from common import (ASH, BONE, COL, CYAN, EMBER, LILAC, MAGENTA, SHARD, SLATE, TEAL, VIOLET, Tex, clamp, hx, mix, nz,
                     ramp, vnoise)
 from ent import (Ent, M_chitin, M_cloth, M_crystal, M_flat, M_fur, M_membrane, M_plate, M_stone, art_face, overlay)
 from uvlib import FACE_LIGHT, edge_light
 
 G = True  # leuchtet
 GOLEM_STONE = [mix(SLATE[i], CYAN[0], 0.22) for i in range(5)]
-FOX = [hx(c) for c in ("#07050d", "#0e0a1a", "#181230", "#271d49", "#3c2d70")]
+FOX = [hx(c) for c in ("#0e0a1c", "#1c1535", "#2f2456", "#4a3a8c", "#6c5ac0")]   # dunkel, aber Formen lesbar
 LEATHER = [hx(c) for c in ("#140f1f", "#211833", "#33264d", "#4b3a70", "#6a5599")]
 ROBE = [hx(c) for c in ("#190c33", "#2a1556", "#40227f", "#5a35ad", "#7e55d6")]
 HAIR = [hx(c) for c in ("#06030c", "#0e0719", "#190d2d", "#2a1a4a", "#432a73")]
 CHITIN = [hx(c) for c in ("#0a0714", "#140d26", "#201640", "#322363", "#4a3590")]
 MEMB = [hx(c) for c in ("#0b0820", "#150f38", "#221a5a", "#352a86", "#4f41b8")]
+RAY = [hx(c) for c in ("#120d30", "#1f1850", "#33297f", "#4e41b0", "#7a6ae0")]
 
 
 def P(**kw):
@@ -131,7 +133,7 @@ E.E
     def wing(mirror):
         def p(face, fx, fy, fw, fh):
             ax = (fw - 1 - fx) if mirror else fx  # Abstand zum Koerper = ax
-            n = nz(fx, fy, 311)
+            n = ordered(fx, fy) * 0.8 + 0.5
             if face == "up":
                 # Flugelrand leuchtet, Adern faecherfoermig, Augenfleck
                 if ax >= fw - 1 or fy == 0 or fy == fh - 1:
@@ -153,20 +155,23 @@ E.E
 
 # ====================================================================== Aschewandler
 def ash_walker():
+    """Aschewandler: Grau mit Orange-Glut. Gesicht: zwei grosse Glutaugen, Nasenloch, Mund als Riss mit Zahnreihe;
+    Rippen als dunkle Querbaender, Glut in einzelnen Rissen (nur aufgemalt, keine Leuchtmaske)."""
     e = Ent("ash_walker")
-    stone = M_stone(ASH, 401, rough=0.5, crack=MAGENTA[1], crack_glow=False)
+    stone = M_stone(ASH, 401, rough=0.5, crack=EMBER[1], crack_glow=False)
     e.paint("head", art_face("""
 ........
 .dddddd.
-.dEddEd.
-.dddddd.
+.EEddEE.
+.EOddOE.
 ..dnnd..
 .dtdtdd.
-.dddddd.
+.dttttd.
 ........
-""", P(E=MAGENTA[3], d=ASH[1], n=ASH[0], t=ASH[4]), stone))
+""", P(E=EMBER[3], O=EMBER[4], d=ASH[1], n=ASH[0], t=ASH[4]), stone))
     ribs = overlay(stone, lambda f, x, y, w, h: ASH[0] if f in ("north", "south") and y in (3, 6, 9) and 0 < x < w - 1 else (
-        MAGENTA[1] if f == "north" and (x, y) in ((3, 4), (4, 7), (2, 10)) else None))
+        EMBER[2] if f == "north" and (x, y) in ((3, 4), (4, 7), (2, 10)) else (
+            EMBER[1] if f == "north" and (x, y) in ((3, 5), (4, 8), (3, 10)) else None)))
     e.paint("body", ribs)
     limb = overlay(stone, lambda f, x, y, w, h: ASH[0] if y >= 9 else None)
     for b in ("right_arm", "left_arm", "right_leg", "left_leg"):
@@ -177,7 +182,16 @@ def ash_walker():
 # ====================================================================== Shard-Spaeher
 def shard_scout():
     e = Ent("shard_scout")
-    e.paint("core", M_crystal(SHARD, 501, glow_from=1.8), only=[0])
+    e.paint("core", art_face("""
+......
+.dddd.
+dd..dd
+dd..dd
+.dddd.
+......
+......
+......
+""".replace(" ", "."), P(d=VIOLET[0]), M_crystal(SHARD, 501, glow_from=1.8)), only=[0])
     e.paint("core", M_crystal(VIOLET, 503, glow_from=1.5), only=[1, 2])
     e.paint("head", art_face("""
 .E.
@@ -189,41 +203,54 @@ EPE
 
 
 # ====================================================================== Void-Rochen
+STARS = ((3, 3), (10, 5), (5, 9), (11, 12), (2, 15), (8, 17))     # Sternbild auf dem Ruecken, nicht im Raster
+
+
 def void_ray():
+    """Void-Rochen: Ruecken mit Wirbelsaeule und Winkelrippen (V nach vorn), sechs Leuchtsterne; Fluegel mit
+    facherfoermigen Adern von der Koerperseite und leuchtendem Aussenrand; Bauch hell, damit die Flugform
+    von unten lesbar ist."""
     e = Ent("void_ray")
 
     def dorsal(face, fx, fy, fw, fh):
-        n = nz(fx, fy, 601)
+        n = ordered(fx, fy) * 0.8 + 0.5
         if face == "up":
+            if (fx, fy) in STARS:
+                return (CYAN[3], G)
             if fx in (fw // 2, fw // 2 - 1):
-                return ramp(MEMB, 3.0 - (fy % 4) * 0.35)
-            if (fx % 4 == 1 and fy % 5 == 2) or (fx % 4 == 3 and fy % 5 == 0):
-                return (CYAN[2], G)
-            return ramp(MEMB, 1.1 + (vnoise(fx / 3.0, fy / 3.0, 603) - 0.5) * 1.6)
+                return ramp(RAY, 3.3 - (fy % 5) * 0.3)           # Wirbelsaeule
+            if (abs(fx - (fw - 1) / 2.0) + fy) % 6 < 1:          # Winkelrippen
+                return ramp(RAY, 3.0)
+            return ramp(RAY, 1.9 + (vnoise(fx / 3.5, fy / 3.5, 603) - 0.5) * 1.3)
         if face == "down":
-            return ramp(LILAC[:2] + [LILAC[2]], 0.2 + n * 1.5) if False else ramp(
-                [VIOLET[2], VIOLET[3], LILAC[0], LILAC[1]], 0.8 + (vnoise(fx / 3.0, fy / 2.0, 605) - 0.5) * 1.6 + n * 0.5)
-        return ramp(MEMB, 0.8 + n)
+            return ramp([VIOLET[2], VIOLET[3], LILAC[0], LILAC[1]], 1.3 + (vnoise(fx / 3.5, fy / 3.0, 605) - 0.5) * 1.4)
+        return ramp(RAY, 1.4 + n * 0.8)
 
     e.paint("body", dorsal)
 
-    def wing(face, fx, fy, fw, fh):
-        n = nz(fx, fy, 611)
-        if face == "up":
-            if fy == fh - 1 or fx == fw - 1:
-                return (CYAN[2] if (fx + fy) % 3 == 0 else CYAN[0], (fx + fy) % 3 == 0)
-            if (fx * 3 - fy) % 8 == 0 or (fx - fy * 2) % 11 == 0:
-                return ramp(MEMB, 4)
-            return ramp(MEMB, 1.0 + (vnoise(fx / 3.0, fy / 3.0, 613) - 0.5) * 1.5)
-        if face == "down":
-            return ramp([VIOLET[1], VIOLET[2], VIOLET[3], LILAC[0]], 1.2 + (n - 0.5) * 1.2)
-        return ramp(MEMB, 1.5)
+    def wing(mirror):
+        def p(face, fx, fy, fw, fh):
+            n = ordered(fx, fy) * 0.8 + 0.5
+            ax = (fw - 1 - fx) if mirror else fx             # Abstand zur Koerperseite
+            if face == "up":
+                if fy == fh - 1 or ax == fw - 1:
+                    return (CYAN[2], True) if (ax + fy) % 3 == 0 else (CYAN[0], False)
+                ang = math.atan2(fy - (fh - 1) / 2.0, ax + 1.2)
+                if abs(((ang * 6.0 / math.pi) % 1.0) - 0.5) < 0.12:
+                    return ramp(RAY, 3.3 - ax * 0.12)         # Adern, zur Spitze schwaecher
+                return ramp(RAY, 1.9 + ax * 0.06 + (vnoise(fx / 3.5, fy / 3.5, 613) - 0.5) * 0.9)
+            if face == "down":
+                return ramp([VIOLET[1], VIOLET[2], VIOLET[3], LILAC[0]], 1.5 + (vnoise(fx / 3.0, fy / 3.0, 614) - 0.5) * 1.5)
+            return ramp(RAY, 1.8)
+        return p
 
-    for b in ("left_wing", "left_wing_tip", "right_wing", "right_wing_tip"):
-        e.paint(b, wing)
-    e.paint("head", overlay(M_plate(MEMB, 615, bias=1.4), lambda f, x, y, w, h: (CYAN[3], G) if f in ("up", "north") and ((x, y) in ((0, 0), (5, 0), (0, 1), (5, 1)) if w == 6 else False) else None))
+    for b in ("left_wing", "left_wing_tip"):
+        e.paint(b, wing(False))
+    for b in ("right_wing", "right_wing_tip"):
+        e.paint(b, wing(True))
+    e.paint("head", overlay(M_plate(RAY, 615, bias=1.9), lambda f, x, y, w, h: (CYAN[3], G) if f in ("up", "north") and ((x, y) in ((0, 0), (5, 0), (0, 1), (5, 1)) if w == 6 else False) else None))
     e.paint("saddle", M_plate(LEATHER, 617, rivets=3, bias=2.0))
-    e.paint("tail", lambda f, x, y, w, h: ramp(MEMB, 1.8 + (x + y) % 3 * 0.5))
+    e.paint("tail", lambda f, x, y, w, h: ramp(RAY, 2.2 + (x + y) % 3 * 0.5))
     e.save()
 
 
@@ -258,7 +285,7 @@ def crystal_spider():
         seg = fx // 7
         if fx % 7 == 6 and face in ("north", "south", "up", "down"):
             return (CYAN[1], G)
-        return ramp(CHITIN, 1.5 + FACE_LIGHT[face] * 0.8 + (fx % 7) * 0.12 + (nz(fx, fy, 705) - 0.5) * 0.4)
+        return ramp(CHITIN, 1.5 + FACE_LIGHT[face] * 0.8 + (fx % 7) * 0.12 + ordered(fx, fy) * 0.36)
 
     for b in ("leg_left_1", "leg_left_2", "leg_left_3", "leg_left_4", "leg_right_1", "leg_right_2", "leg_right_3", "leg_right_4"):
         e.paint(b, leg)
@@ -298,14 +325,18 @@ rrrrrrrr
 
 # ====================================================================== Schattenfuchs
 def shadow_fox():
+    """Schattenfuchs: dunkles Violett mit hellerem Bauch, Pfoten und Schwanzspitze (Silhouette bei Nacht lesbar),
+    gluehende Rueckenlinie, grosse schraege Magenta-Augen, dunkle Nase, Magenta-Ohren."""
     e = Ent("shadow_fox")
-    fur = M_fur(FOX, 901, bias=1.7)
+    fur = M_fur(FOX, 901, bias=1.55)
 
     def body(face, fx, fy, fw, fh):
         if face == "up" and fx in (1, 4) and 1 < fy < fh - 1 and fy % 3 != 0:
             return (VIOLET[3], G)
         if face in ("east", "west") and fy == 1 and fx % 2 == 0 and fx > 0:
             return (VIOLET[2], G)
+        if face == "down" or (face in ("east", "west", "north", "south") and fy >= fh - 2):
+            return ramp(FOX, 2.7 + (nz(fx // 2, fy, 907) - 0.5))         # heller Bauch
         return fur(face, fx, fy, fw, fh)
 
     e.paint("body", body)
@@ -316,11 +347,20 @@ def shadow_fox():
 ........
 ...dd...
 """, P(E=(MAGENTA[3], G), d=FOX[0]), fur), only=[0])
-    e.paint("head", overlay(M_fur(FOX, 903, bias=1.2), lambda f, x, y, w, h: FOX[0] if f == "north" and y == 0 and 0 < x < w - 1 else None), only=[1])
+    e.paint("head", overlay(M_fur(FOX, 903, bias=2.4), lambda f, x, y, w, h: FOX[0] if f == "north" and y == 0 and 0 < x < w - 1 else None), only=[1])
     e.paint("head", overlay(fur, lambda f, x, y, w, h: MAGENTA[1] if f == "north" and w == 2 and h == 2 else None), only=[2, 3])
-    e.paint("tail", overlay(fur, lambda f, x, y, w, h: (VIOLET[3], G) if f == "south" and 0 < x < w - 1 and 0 < y < h - 1 else (
-        (VIOLET[2], G) if f in ("up", "down") and y >= 6 and x in (1, 2) else None)))
-    paw = overlay(M_fur(FOX, 905, bias=1.0), lambda f, x, y, w, h: FOX[4] if y == h - 1 and f != "down" else None)
+
+    def tail(f, x, y, w, h):
+        if f == "south" and 0 < x < w - 1 and 0 < y < h - 1:
+            return (VIOLET[3], G)
+        if f in ("up", "down") and y >= 6 and x in (1, 2):
+            return (VIOLET[2], G)
+        if f in ("east", "west", "up", "down") and y >= 7:       # Schwanzspitze hell
+            return ramp(FOX, 3.6 - (y - 7) * 0.2)
+        return None
+
+    e.paint("tail", overlay(fur, tail))
+    paw = overlay(M_fur(FOX, 905, bias=1.5), lambda f, x, y, w, h: FOX[4] if y >= h - 2 and f != "down" else None)
     for b in ("leg_front_left", "leg_front_right", "leg_back_left", "leg_back_right"):
         e.paint(b, paw)
     e.save()

@@ -5,12 +5,14 @@ import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.core.ModTags;
 import eu.shardline.mod.entity.ShardlineAnimations;
 import eu.shardline.mod.item.ModItems;
+import eu.shardline.mod.story.lore.TraderDialogue;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
@@ -93,23 +95,35 @@ public class ShardTraderEntity extends AbstractVillager implements GeoEntity {
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
 
+    /**
+     * Rechtsklick oeffnet das Gespraech (Dialogfenster mit Porträt), Schleichen + Rechtsklick handelt direkt.
+     */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (this.isAlive() && !this.isTrading() && !this.isBaby()) {
             if (hand == InteractionHand.MAIN_HAND) {
                 player.awardStat(Stats.TALKED_TO_VILLAGER);
             }
-            if (!this.level().isClientSide) {
-                this.offersRequested = true;
-                if (this.getOffers().isEmpty()) {
-                    return InteractionResult.CONSUME;
+            if (player instanceof ServerPlayer serverPlayer) {
+                if (player.isShiftKeyDown()) {
+                    this.beginTrading(serverPlayer);
+                } else {
+                    TraderDialogue.open(serverPlayer, this);
                 }
-                this.setTradingPlayer(player);
-                this.openTradingScreen(player, this.getDisplayName(), 1);
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
         return super.mobInteract(player, hand);
+    }
+
+    /** Oeffnet das Handelsfenster (Angebote entstehen beim ersten Mal). */
+    public void beginTrading(Player player) {
+        this.offersRequested = true;
+        if (this.getOffers().isEmpty()) {
+            return;
+        }
+        this.setTradingPlayer(player);
+        this.openTradingScreen(player, this.getDisplayName(), 1);
     }
 
     /**

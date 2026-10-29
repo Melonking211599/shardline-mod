@@ -1,0 +1,34 @@
+{
+  "parent": "shardline:crystal_slime",
+  "criteria": {
+    "resonance_compass": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:resonance_compass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.resonance_compass.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:resonance_compass"
+    },
+    "title": {
+      "translate": "advancements.shardline.resonance_compass.title"
+    }
+  },
+  "requirements": [
+    [
+      "resonance_compass"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

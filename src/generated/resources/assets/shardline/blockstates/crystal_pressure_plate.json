@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "shardline:block/crystal_pressure_plate"
+    },
+    "powered=true": {
+      "model": "shardline:block/crystal_pressure_plate_down"
+    }
+  }
+}

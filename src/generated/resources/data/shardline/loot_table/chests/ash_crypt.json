@@ -1,0 +1,718 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 8.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:ash_dust",
+          "weight": 14
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 6.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:bone",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:shard_ingot",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:knight_crest",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:gold_ingot",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:diamond",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 30.0,
+                "min": 15.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "shardline:shard_sword",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 30.0,
+                "min": 15.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "shardline:shard_helmet",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 30.0,
+                "min": 15.0
+              },
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "shardline:shard_boots",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "shardline:colossus_summoning_crystal"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 6.0,
+        "min": 3.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_last_knights"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "the_shattering"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "minecraft:written_book_content": {
+                  "author": "Shardline",
+                  "pages": [
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.1\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.2\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.7\"}"
+                    }
+                  ],
+                  "resolved": true,
+                  "title": {
+                    "raw": "first_infection"
+                  }
+                }
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_book"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_last_knights"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_shattering"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "first_infection"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 2.0,
+        "min": 1.0
+      }
+    }
+  ],
+  "random_sequence": "shardline:chests/ash_crypt"
+}

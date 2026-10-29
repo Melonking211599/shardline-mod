@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "shardline:item/keeper_tuning_fork"
+  }
+}

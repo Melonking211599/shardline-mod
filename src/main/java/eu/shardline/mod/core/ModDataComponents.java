@@ -17,6 +17,18 @@ public final class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> LORE_BOOK = DATA_COMPONENTS.registerComponentType(
             "lore_book", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
+    /** Seitennummer einer losen Lore-Seite (Buch-ID steht in {@link #LORE_BOOK}). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> LORE_PAGE = DATA_COMPONENTS.registerComponentType(
+            "lore_page", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /** Kapitelnummer eines Kapitel-Emblems (1-6). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CHAPTER = DATA_COMPONENTS.registerComponentType(
+            "chapter", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /** Gewaehltes Ziel des Resonanzkompasses (Index in der Zielliste der aktuellen Dimension). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> RESONANCE_TARGET = DATA_COMPONENTS.registerComponentType(
+            "resonance_target", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     private ModDataComponents() {
     }
 }

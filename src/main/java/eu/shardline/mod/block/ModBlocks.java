@@ -1,9 +1,11 @@
 package eu.shardline.mod.block;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.block.custom.ColossusAltarBlock;
 import eu.shardline.mod.block.custom.CrystalSaplingBlock;
 import eu.shardline.mod.block.custom.CrystalWebBlock;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.block.custom.InfectedBlock;
 import eu.shardline.mod.block.custom.InfectedPillarBlock;
 import eu.shardline.mod.block.custom.MemoryCrystalBlock;
@@ -21,21 +23,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import eu.shardline.mod.virus.VirusStrain;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -65,14 +81,24 @@ public final class ModBlocks {
             () -> new SlabBlock(stone(MapColor.COLOR_PURPLE, 2.0F)));
     public static final DeferredBlock<WallBlock> SHARDSTONE_BRICK_WALL = registerWithItem("shardstone_brick_wall",
             () -> new WallBlock(stone(MapColor.COLOR_PURPLE, 2.0F).forceSolidOn()));
+    public static final DeferredBlock<Block> POLISHED_SHARDSTONE = registerWithItem("polished_shardstone",
+            () -> new Block(stone(MapColor.COLOR_PURPLE, 2.0F)));
+    public static final DeferredBlock<StairBlock> POLISHED_SHARDSTONE_STAIRS = registerWithItem("polished_shardstone_stairs",
+            () -> new StairBlock(POLISHED_SHARDSTONE.get().defaultBlockState(), stone(MapColor.COLOR_PURPLE, 2.0F)));
+    public static final DeferredBlock<SlabBlock> POLISHED_SHARDSTONE_SLAB = registerWithItem("polished_shardstone_slab",
+            () -> new SlabBlock(stone(MapColor.COLOR_PURPLE, 2.0F)));
+    public static final DeferredBlock<Block> CHISELED_SHARDSTONE_BRICKS = registerWithItem("chiseled_shardstone_bricks",
+            () -> new Block(stone(MapColor.COLOR_PURPLE, 2.0F).lightLevel(state -> 4)));
 
     // --- Erze & Rohstoffbloecke ---
     public static final DeferredBlock<ShardOreBlock> SHARD_ORE = registerWithItem("shard_ore",
-            () -> new ShardOreBlock(UniformInt.of(2, 5), stone(MapColor.COLOR_PURPLE, 3.0F).lightLevel(state -> 3).randomTicks()));
+            () -> new ShardOreBlock(UniformInt.of(2, 5), stone(MapColor.COLOR_PURPLE, 3.0F).sound(ModSounds.SHARD_ORE_SOUND)
+                    .lightLevel(state -> 3).randomTicks()));
     public static final DeferredBlock<ShardOreBlock> DEEPSLATE_SHARD_ORE = registerWithItem("deepslate_shard_ore",
             () -> new ShardOreBlock(UniformInt.of(2, 5), BlockBehaviour.Properties.of()
                     .mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(SoundType.DEEPSLATE).lightLevel(state -> 3).randomTicks()));
+                    .requiresCorrectToolForDrops().strength(4.5F, 3.0F).sound(ModSounds.DEEPSLATE_SHARD_ORE_SOUND).lightLevel(state -> 3)
+                    .randomTicks()));
     public static final DeferredBlock<Block> SHARD_BLOCK = registerWithItem("shard_block",
             () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
                     .requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.AMETHYST)));
@@ -105,6 +131,22 @@ public final class ModBlocks {
                     .isViewBlocking((state, level, pos) -> false)
                     .pushReaction(PushReaction.DESTROY)
                     .isRedstoneConductor((state, level, pos) -> false)));
+    public static final DeferredBlock<StairBlock> CRYSTAL_STAIRS = registerWithItem("crystal_stairs",
+            () -> new StairBlock(CRYSTAL_PLANKS.get().defaultBlockState(), wood()));
+    public static final DeferredBlock<SlabBlock> CRYSTAL_SLAB = registerWithItem("crystal_slab", () -> new SlabBlock(wood()));
+    public static final DeferredBlock<FenceBlock> CRYSTAL_FENCE = registerWithItem("crystal_fence", () -> new FenceBlock(wood()));
+    public static final DeferredBlock<FenceGateBlock> CRYSTAL_FENCE_GATE = registerWithItem("crystal_fence_gate",
+            () -> new FenceGateBlock(WoodType.CHERRY, wood().forceSolidOn()));
+    public static final DeferredBlock<DoorBlock> CRYSTAL_DOOR = registerDoor("crystal_door",
+            () -> new DoorBlock(BlockSetType.CHERRY, wood().strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<TrapDoorBlock> CRYSTAL_TRAPDOOR = registerWithItem("crystal_trapdoor",
+            () -> new TrapDoorBlock(BlockSetType.CHERRY, wood().strength(3.0F).noOcclusion().isValidSpawn(Blocks::never)));
+    public static final DeferredBlock<ButtonBlock> CRYSTAL_BUTTON = registerWithItem("crystal_button",
+            () -> new ButtonBlock(BlockSetType.CHERRY, 30, BlockBehaviour.Properties.of().noCollission().strength(0.5F)
+                    .pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<PressurePlateBlock> CRYSTAL_PRESSURE_PLATE = registerWithItem("crystal_pressure_plate",
+            () -> new PressurePlateBlock(BlockSetType.CHERRY, wood().forceSolidOn().noCollission().strength(0.5F)
+                    .pushReaction(PushReaction.DESTROY)));
     public static final DeferredBlock<CrystalSaplingBlock> CRYSTAL_SAPLING = registerWithItem("crystal_sapling",
             () -> new CrystalSaplingBlock(CRYSTAL_TREE_GROWER, plant(MapColor.COLOR_PINK, 5).randomTicks()));
 
@@ -117,6 +159,18 @@ public final class ModBlocks {
             () -> new ShardPlantBlock(plant(MapColor.COLOR_LIGHT_BLUE, 12)));
     public static final DeferredBlock<ShardPlantBlock> LUMINOUS_BERRY_BUSH = registerWithItem("luminous_berry_bush",
             () -> new ShardPlantBlock(plant(MapColor.COLOR_MAGENTA, 6).offsetType(BlockBehaviour.OffsetType.XZ)));
+
+    // --- Licht & Glas ---
+    public static final DeferredBlock<LanternBlock> SHARD_LANTERN = registerWithItem("shard_lantern",
+            () -> new LanternBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).forceSolidOn()
+                    .requiresCorrectToolForDrops().strength(3.5F).sound(SoundType.LANTERN).lightLevel(state -> 15)
+                    .noOcclusion().pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<TransparentBlock> CRYSTAL_GLASS = registerWithItem("crystal_glass",
+            () -> new TransparentBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .lightLevel(state -> 3)));
+    public static final DeferredBlock<IronBarsBlock> CRYSTAL_GLASS_PANE = registerWithItem("crystal_glass_pane",
+            () -> new IronBarsBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS_PANE).mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .lightLevel(state -> 2)));
 
     // --- Portal ---
     public static final DeferredBlock<Block> SHARD_PORTAL_FRAME = registerWithItem("shard_portal_frame",
@@ -166,8 +220,61 @@ public final class ModBlocks {
     public static final DeferredBlock<InfectedBlock> INFECTED_SAND = registerWithItem("infected_sand",
             () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK).strength(0.6F)
                     .sound(SoundType.SAND).randomTicks()));
+    // Nach dem Ausbruch: tiefer im Boden, in Haeusern, im Nether (Glutbrand) und im End (Leerenfaeule)
+    public static final DeferredBlock<InfectedBlock> INFECTED_DEEPSLATE = registerWithItem("infected_deepslate",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.DEEPSLATE).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_PLANKS = registerWithItem("infected_planks",
+            () -> new InfectedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).instrument(NoteBlockInstrument.BASS)
+                    .strength(2.0F, 3.0F).sound(SoundType.NETHER_WOOD).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_NETHERRACK = registerWithItem("infected_netherrack",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.NETHER)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(0.6F).sound(SoundType.NETHERRACK)
+                    .lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_BLACKSTONE = registerWithItem("infected_blackstone",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.STONE)
+                    .lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_SOUL_SOIL = registerWithItem("infected_soul_soil",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.6F)
+                    .sound(SoundType.SOUL_SOIL).lightLevel(state -> 2).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_NYLIUM = registerWithItem("infected_nylium",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.CRIMSON_NYLIUM)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(0.5F).sound(SoundType.NYLIUM)
+                    .lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_WART_BLOCK = registerWithItem("infected_wart_block",
+            () -> new InfectedBlock(VirusStrain.EMBER, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(1.0F)
+                    .sound(SoundType.WART_BLOCK).lightLevel(state -> 3).randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_END_STONE = registerWithItem("infected_end_stone",
+            () -> new InfectedBlock(VirusStrain.VOID, BlockBehaviour.Properties.of().mapColor(MapColor.SAND)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(3.0F, 9.0F).sound(SoundType.STONE)
+                    .randomTicks()));
+    public static final DeferredBlock<InfectedBlock> INFECTED_PURPUR = registerWithItem("infected_purpur",
+            () -> new InfectedBlock(VirusStrain.VOID, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
+                    .instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.STONE)
+                    .randomTicks()));
+
+    // Nach dem Ausbruch: Schwaere (Kapitel 7-9)
+    public static final DeferredBlock<eu.shardline.mod.block.custom.FesteringNodeBlock> FESTERING_NODE = registerWithItem("festering_node",
+            () -> new eu.shardline.mod.block.custom.FesteringNodeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
+                    .requiresCorrectToolForDrops().strength(3.0F, 6.0F).sound(SoundType.SCULK_CATALYST).lightLevel(state -> 7)
+                    .randomTicks().noLootTable()),
+            new Item.Properties().rarity(Rarity.UNCOMMON));
 
     // --- Gegenmittel ---
+    // --- Hueter-Ruinen ---
+    public static final DeferredBlock<Block> KEEPER_RUIN_BRICKS = registerWithItem("keeper_ruin_bricks",
+            () -> new Block(stone(MapColor.QUARTZ, 2.0F)));
+    public static final DeferredBlock<RotatedPillarBlock> KEEPER_RUIN_PILLAR = registerWithItem("keeper_ruin_pillar",
+            () -> new RotatedPillarBlock(stone(MapColor.QUARTZ, 2.0F)));
+    public static final DeferredBlock<SlabBlock> KEEPER_RUNE_SLAB = registerWithItem("keeper_rune_slab",
+            () -> new SlabBlock(stone(MapColor.QUARTZ, 2.0F).lightLevel(state -> 3)));
+
+    public static final DeferredBlock<DecisionAltarBlock> DECISION_ALTAR = registerWithItem("decision_altar",
+            () -> new DecisionAltarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).strength(-1.0F, 3600000.0F)
+                    .sound(SoundType.AMETHYST).lightLevel(state -> state.getValue(DecisionAltarBlock.ACTIVE) ? 12 : 4)
+                    .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)),
+            new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredBlock<PurityAnchorBlock> PURITY_ANCHOR = registerWithItem("purity_anchor",
             () -> new PurityAnchorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).requiresCorrectToolForDrops()
                     .strength(5.0F, 1200.0F).sound(SoundType.AMETHYST).lightLevel(state -> 15).noOcclusion()),
@@ -189,6 +296,11 @@ public final class ModBlocks {
                 .requiresCorrectToolForDrops().strength(hardness, 6.0F).sound(SoundType.CALCITE);
     }
 
+    private static BlockBehaviour.Properties wood() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).instrument(NoteBlockInstrument.BASS)
+                .strength(2.0F, 3.0F).sound(SoundType.CHERRY_WOOD).ignitedByLava();
+    }
+
     private static BlockBehaviour.Properties plant(MapColor color, int light) {
         return BlockBehaviour.Properties.of().mapColor(color).noCollission().instabreak().sound(SoundType.AZALEA)
                 .lightLevel(state -> light).pushReaction(PushReaction.DESTROY);
@@ -202,6 +314,13 @@ public final class ModBlocks {
     private static BlockBehaviour.Properties trophy() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(3.0F, 1200.0F)
                 .sound(SoundType.AMETHYST).lightLevel(state -> 10).noOcclusion();
+    }
+
+    /** Tueren brauchen ein Doppelblock-Item (setzt beide Haelften und raeumt Wasser korrekt). */
+    private static <B extends Block> DeferredBlock<B> registerDoor(String name, Supplier<B> block) {
+        DeferredBlock<B> holder = BLOCKS.register(name, block);
+        BLOCK_ITEMS.add(ModItems.ITEMS.<BlockItem>register(name, () -> new DoubleHighBlockItem(holder.get(), new Item.Properties())));
+        return holder;
     }
 
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Supplier<B> block) {

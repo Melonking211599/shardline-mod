@@ -58,6 +58,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  *     <li>Phase 2 (&gt; 33 %): Teleportation und Klone; solange Klone leben, halbiert sich ihr Schaden.</li>
  *     <li>Phase 3: Void-Zonen unter den Spielern, schnellere Salven.</li>
  * </ul>
+ * In jeder Phase stuerzt sie regelmaessig fuer einige Sekunden herab und kaempft im Nahkampf - das ist das
+ * Fenster fuer Schwertkaempfer. Voll geheilt wird sie nur, wenn niemand mehr in der Arena ist.
  */
 public class ShardQueenEntity extends Monster implements GeoEntity {
     private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(ShardQueenEntity.class, EntityDataSerializers.INT);
@@ -77,6 +79,13 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
     private int cloneCooldown = 40;
     private int zoneCooldown = 40;
     private int idleTicks;
+    private int swoopCooldown = 160;
+    private int swoopTicks;
+    private int meleeCooldown;
+    private static final int SWOOP_TICKS = 100;
+    /** Der Koerper bleibt fuer den Clip {@code death} stehen (2,2 s statt der ueblichen 1 s). */
+    private static final int DEATH_TICKS = 44;
+    private int hurtAnimCooldown;
 
     public ShardQueenEntity(EntityType<? extends ShardQueenEntity> type, Level level) {
         super(type, level);
@@ -122,6 +131,12 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         this.home = home.immutable();
     }
 
+    /** Position des Throns, an dem die Koenigin gerufen wurde (null bei Spawn-Ei/Befehl). */
+    @Nullable
+    public BlockPos getHome() {
+        return this.home;
+    }
+
     private Vec3 arenaCenter() {
         return this.home != null ? Vec3.atBottomCenterOf(this.home) : this.position();
     }
@@ -132,6 +147,9 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
     protected void customServerAiStep() {
         super.customServerAiStep();
         ServerLevel level = (ServerLevel) this.level();
+        if (this.hurtAnimCooldown > 0) {
+            this.hurtAnimCooldown--;
+        }
         this.updatePhase(level);
 
         LivingEntity target = this.getTarget();
@@ -139,7 +157,7 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
             this.idleTicks = 0;
             this.getLookControl().setLookAt(target, 30.0F, 30.0F);
             this.tickAttacks(level, target);
-        } else if (++this.idleTicks > 600 && this.getHealth() < this.getMaxHealth()) {
+        } else if (++this.idleTicks > 600 && this.getHealth() < this.getMaxHealth() && this.playersInArena(level).isEmpty()) {
             this.resetFight(level);
         }
 
@@ -186,8 +204,48 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         level.sendParticles(ModParticles.SHARD_SPARKLE.get(), this.getX(), this.getY(0.5), this.getZ(), 60, 1.0, 1.5, 1.0, 0.1);
     }
 
+    public boolean isSwooping() {
+        return this.swoopTicks > 0;
+    }
+
+    /** Sturzflug: kommt bis auf Nahkampfreichweite herunter, schlaegt zu und steigt nach 5 s wieder auf. */
+    private void tickSwoop(ServerLevel level, LivingEntity target) {
+        this.swoopTicks--;
+        if (this.meleeCooldown > 0) {
+            this.meleeCooldown--;
+        }
+        this.getMoveControl().setWantedPosition(target.getX(), target.getY() + 0.8, target.getZ(), 1.4);
+        if (this.distanceToSqr(target) < 3.5 * 3.5 && this.meleeCooldown <= 0) {
+            this.meleeCooldown = 20;
+            this.triggerAnim(ShardlineAnimations.ACTION_CONTROLLER, "cast");
+            this.doHurtTarget(target);
+        }
+        if (this.swoopTicks == 0) {
+            Vec3 center = this.arenaCenter();
+            this.getMoveControl().setWantedPosition(this.getX(), Math.max(this.getY() + 6.0, center.y + 6.0), this.getZ(), 1.0);
+        }
+    }
+
     private void tickAttacks(ServerLevel level, LivingEntity target) {
         int phase = this.getPhase();
+        if (this.swoopTicks > 0) {
+            this.tickSwoop(level, target);
+            return;
+        }
+        if (--this.swoopCooldown <= 0 && target instanceof Player) {
+            this.swoopCooldown = switch (phase) {
+                case 1 -> 240;
+                case 2 -> 300;
+                default -> 220;
+            };
+            this.swoopTicks = SWOOP_TICKS;
+            this.triggerAnim(ShardlineAnimations.ACTION_CONTROLLER, "scream");
+            level.playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.QUEEN_SCREAM.get(), SoundSource.HOSTILE, 2.0F, 1.3F);
+            for (Player player : this.playersInArena(level)) {
+                player.displayClientMessage(Component.translatable("message.shardline.queen_swoop"), true);
+            }
+            return;
+        }
         this.volleyCooldown--;
         this.hailCooldown--;
         this.teleportCooldown--;
@@ -354,7 +412,12 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         if (this.getPhase() >= 2 && !this.livingClones().isEmpty()) {
             amount *= 0.5F;
         }
-        return super.hurt(source, amount);
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide && this.isAlive() && this.hurtAnimCooldown == 0) {
+            this.hurtAnimCooldown = 12;
+            this.triggerAnim(ShardlineAnimations.HURT_CONTROLLER, "hurt");
+        }
+        return hurt;
     }
 
     @Override
@@ -363,10 +426,25 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
         if (!this.level().isClientSide) {
             this.discardClones();
             VoidZoneEntity.clearAround(this, LEASH_RADIUS);
+            this.triggerAnim(ShardlineAnimations.ACTION_CONTROLLER, "death");
+        }
+    }
+
+    @Override
+    protected void tickDeath() {
+        this.deathTime++;
+        if (this.deathTime >= DEATH_TICKS && !this.level().isClientSide() && !this.isRemoved()) {
+            this.level().broadcastEntityEvent(this, (byte) 60);
+            this.remove(RemovalReason.KILLED);
         }
     }
 
     // --- Bossleiste ---
+
+    /** Fuer Unterklassen (Nachhall): Name und Farbe der Bossleiste. */
+    protected ServerBossEvent bossEvent() {
+        return this.bossEvent;
+    }
 
     @Override
     public void startSeenByPlayer(ServerPlayer player) {
@@ -469,7 +547,8 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(ShardlineAnimations.flying(this));
-        controllers.add(ShardlineAnimations.actions(this, "cast", "summon", "teleport", "scream"));
+        controllers.add(ShardlineAnimations.actions(this, "cast", "summon", "teleport", "scream", "death"));
+        controllers.add(ShardlineAnimations.flinch(this));
     }
 
     @Override
@@ -490,7 +569,7 @@ public class ShardQueenEntity extends Monster implements GeoEntity {
 
         @Override
         public boolean canUse() {
-            return !this.queen.getMoveControl().hasWanted() && this.queen.random.nextInt(reducedTickDelay(10)) == 0;
+            return !this.queen.isSwooping() && !this.queen.getMoveControl().hasWanted() && this.queen.random.nextInt(reducedTickDelay(10)) == 0;
         }
 
         @Override

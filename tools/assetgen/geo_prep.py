@@ -61,46 +61,9 @@ def colossus_details():
     ])
 
 
-def queen_details():
-    """Mehr Detail fuer die Splitterkoenigin: Haar, Kronenzacken, Schulterkristalle, Saumsplitter, Fluegelfedern."""
-    n = "shard_queen"
-    geofix.add_details(n, "head", "detail_head", [0, 30, 0], [
-        {"origin": [-4.5, 22, 3.5], "size": [9, 14, 2]},                       # langes Haar hinten
-        {"origin": [-5, 24, -3], "size": [1, 10, 6], "share": "hairside"},    # Haarstraehnen seitlich
-        {"origin": [4, 24, -3], "size": [1, 10, 6], "share": "hairside"},
-        {"origin": [-6, 36, -1], "size": [1, 5, 2], "share": "tiara"},        # Tiara-Zacken
-        {"origin": [5, 36, -1], "size": [1, 5, 2], "share": "tiara"},
-    ])
-    geofix.add_details(n, "torso", "detail_torso", [0, 18, 0], [
-        {"origin": [-8, 27, -2], "size": [3, 3, 4], "share": "shoulder"},     # Schulterkristalle
-        {"origin": [5, 27, -2], "size": [3, 3, 4], "share": "shoulder"},
-        {"origin": [-1.5, 22, -3.6], "size": [3, 3, 1]},                       # Korsett-Edelstein
-        {"origin": [-4, 28.5, -3.4], "size": [8, 1.5, 6.8]},                   # Kragen
-    ])
-    geofix.add_details(n, "skirt_lower", "detail_skirt", [0, 8, 0], [
-        {"origin": [-5, -3, -4], "size": [2, 4, 2], "share": "hem"},
-        {"origin": [3, -3, -4], "size": [2, 4, 2], "share": "hem"},
-        {"origin": [-5, -3, 2], "size": [2, 4, 2], "share": "hem"},
-        {"origin": [3, -3, 2], "size": [2, 4, 2], "share": "hem"},
-        {"origin": [-1, -5, -4], "size": [2, 6, 2]},
-        {"origin": [-1, -3, 2], "size": [2, 4, 2], "share": "hem"},
-    ])
-    geofix.add_details(n, "right_wing", "detail_right_wing", [-4, 26, 3], [
-        {"origin": [-27, 14, 3.2], "size": [6, 16, 1]},
-        {"origin": [-25, 33, 3.2], "size": [5, 10, 1]},
-        {"origin": [-23, 8, 3.2], "size": [5, 8, 1]},
-    ])
-    geofix.add_details(n, "left_wing", "detail_left_wing", [4, 26, 3], [
-        {"origin": [21, 14, 3.2], "size": [6, 16, 1]},
-        {"origin": [20, 33, 3.2], "size": [5, 10, 1]},
-        {"origin": [18, 8, 3.2], "size": [5, 8, 1]},
-    ])
-
-
 def main():
     fix_overlaps()
     colossus_details()
-    queen_details()
     print("geo_prep: UV-Korrekturen und Boss-Details angewendet")
 
 

@@ -42,6 +42,10 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
         add(ModEntities.GLOW_MOTH.get(), LootTable.lootTable()
                 .withPool(drop(Items.GLOWSTONE_DUST, 0, 1)));
 
+        add(ModEntities.CRYSTAL_SNAIL.get(), LootTable.lootTable()
+                .withPool(drop(ModItems.CRYSTAL_SLIME.get(), 1, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 1)));
+
         add(ModEntities.ASH_WALKER.get(), LootTable.lootTable()
                 .withPool(drop(ModItems.ASH_DUST.get(), 1, 3))
                 .withPool(drop(Items.BONE, 0, 1))
@@ -95,10 +99,44 @@ public class ModEntityLootProvider extends EntityLootSubProvider {
                 .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
                 .withPool(rare(ModItems.RAW_SHARD.get(), 0.1F, 0.03F)));
 
+        add(ModEntities.ECHO_QUEEN.get(), LootTable.lootTable()
+                .withPool(guaranteed(ModItems.ECHO_SHARD.get(), 6, 10))
+                .withPool(guaranteed(ModItems.SHARD_INGOT.get(), 2, 4)));
+
+        add(ModEntities.FESTERING_HEART.get(), LootTable.lootTable()
+                .withPool(guaranteed(ModItems.ECHO_SHARD.get(), 6, 10))
+                .withPool(guaranteed(ModItems.SHARD_INGOT.get(), 1, 3))
+                .withPool(guaranteed(ModItems.PURIFICATION_ESSENCE.get(), 1, 2)));
+
+        add(ModEntities.CRYSTALLIZED_PIGLIN.get(), LootTable.lootTable()
+                .withPool(drop(Items.GOLD_NUGGET, 1, 3))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
+                .withPool(rare(Items.BLAZE_POWDER, 0.1F, 0.03F)));
+
+        add(ModEntities.CRYSTALLIZED_ENDERMAN.get(), LootTable.lootTable()
+                .withPool(drop(Items.ENDER_PEARL, 0, 1))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
+                .withPool(rare(ModItems.RAW_SHARD.get(), 0.12F, 0.03F)));
+
         add(ModEntities.CRYSTALLIZED_COW.get(), LootTable.lootTable()
                 .withPool(drop(Items.BEEF, 1, 3))
                 .withPool(drop(Items.AMETHYST_SHARD, 0, 2))
                 .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 1)));
+
+        add(ModEntities.CRYSTALLIZED_SHEEP.get(), LootTable.lootTable()
+                .withPool(drop(Items.MUTTON, 1, 2))
+                .withPool(drop(Items.AMETHYST_SHARD, 0, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 1)));
+
+        add(ModEntities.CRYSTALLIZED_PIG.get(), LootTable.lootTable()
+                .withPool(drop(Items.PORKCHOP, 1, 3))
+                .withPool(drop(Items.AMETHYST_SHARD, 0, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 1)));
+
+        add(ModEntities.CRYSTALLIZED_VILLAGER.get(), LootTable.lootTable()
+                .withPool(drop(Items.AMETHYST_SHARD, 0, 2))
+                .withPool(drop(ModItems.SHARD_FRAGMENT.get(), 0, 2))
+                .withPool(rare(Items.EMERALD, 0.15F, 0.05F)));
 
         add(ModEntities.VIRUS_HEART.get(), LootTable.lootTable()
                 .withPool(guaranteed(ModItems.SHARD_FRAGMENT.get(), 6, 12))

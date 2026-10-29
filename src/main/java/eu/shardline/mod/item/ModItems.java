@@ -3,14 +3,17 @@ package eu.shardline.mod.item;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.entity.ModEntities;
 import eu.shardline.mod.item.custom.BreachCoreItem;
+import eu.shardline.mod.item.custom.ChapterEmblemItem;
 import eu.shardline.mod.item.custom.ColossusGauntletItem;
 import eu.shardline.mod.item.custom.CrystalBowItem;
 import eu.shardline.mod.item.custom.HeartOfTheExpanseItem;
 import eu.shardline.mod.item.custom.LoreBookItem;
+import eu.shardline.mod.item.custom.LorePageItem;
 import eu.shardline.mod.item.custom.LoreItem;
 import eu.shardline.mod.item.custom.ModSmithingTemplates;
 import eu.shardline.mod.item.custom.PurificationEssenceItem;
 import eu.shardline.mod.item.custom.QueensShardbladeItem;
+import eu.shardline.mod.item.custom.ResonanceCompassItem;
 import eu.shardline.mod.item.custom.ShardKeyItem;
 import eu.shardline.mod.item.custom.ShardlineArmorItem;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShovelItem;
@@ -52,6 +56,24 @@ public final class ModItems {
             new Item.Properties().food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.4F).alwaysEdible()
                     .effect(() -> new MobEffectInstance(MobEffects.NIGHT_VISION, 300), 1.0F).build()));
 
+    public static final DeferredItem<Item> CRYSTAL_SLIME = ITEMS.registerSimpleItem("crystal_slime");
+
+    // --- Speisen ---
+    public static final DeferredItem<Item> GLOWCAP_STEW = ITEMS.registerSimpleItem("glowcap_stew",
+            new Item.Properties().stacksTo(1).food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.6F)
+                    .usingConvertsTo(Items.BOWL)
+                    .effect(() -> new MobEffectInstance(MobEffects.NIGHT_VISION, 1200), 1.0F).build()));
+    public static final DeferredItem<Item> CRYSTAL_CANDY = ITEMS.registerSimpleItem("crystal_candy",
+            new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.2F).fast().alwaysEdible()
+                    .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 300), 1.0F).build()));
+    public static final DeferredItem<Item> BERRY_TART = ITEMS.registerSimpleItem("berry_tart",
+            new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F)
+                    .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 120), 1.0F).build()));
+
+    // --- Werkzeuge ---
+    public static final DeferredItem<ResonanceCompassItem> RESONANCE_COMPASS = ITEMS.registerItem("resonance_compass",
+            ResonanceCompassItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+
     // --- Fortschritt ---
     public static final DeferredItem<ShardKeyItem> SHARD_KEY = ITEMS.registerItem("shard_key", ShardKeyItem::new,
             new Item.Properties().durability(8).rarity(Rarity.UNCOMMON));
@@ -65,10 +87,20 @@ public final class ModItems {
             HeartOfTheExpanseItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 
     // --- Story & Shardvirus ---
+    public static final DeferredItem<ChapterEmblemItem> CHAPTER_EMBLEM = ITEMS.registerItem("chapter_emblem", ChapterEmblemItem::new,
+            new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<LorePageItem> LORE_PAGE = ITEMS.registerItem("lore_page", LorePageItem::new,
+            new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<LoreBookItem> LORE_BOOK = ITEMS.registerItem("lore_book", LoreBookItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<PurificationEssenceItem> PURIFICATION_ESSENCE = ITEMS.registerItem("purification_essence",
             PurificationEssenceItem::new, new Item.Properties().stacksTo(16).rarity(Rarity.RARE));
+    // Nach dem Ausbruch
+    public static final DeferredItem<Item> ECHO_SHARD = ITEMS.registerSimpleItem("echo_shard", new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<eu.shardline.mod.item.custom.KeeperTuningForkItem> KEEPER_TUNING_FORK = ITEMS.registerItem("keeper_tuning_fork",
+            eu.shardline.mod.item.custom.KeeperTuningForkItem::new, new Item.Properties().durability(64).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<eu.shardline.mod.item.custom.ChronicleJournalItem> CHRONICLE_JOURNAL = ITEMS.registerItem("chronicle_journal",
+            eu.shardline.mod.item.custom.ChronicleJournalItem::new, new Item.Properties().stacksTo(1));
     public static final DeferredItem<BreachCoreItem> BREACH_CORE = ITEMS.registerItem("breach_core", BreachCoreItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 
@@ -123,13 +155,25 @@ public final class ModItems {
     public static final DeferredItem<DeferredSpawnEggItem> VOID_RAY_SPAWN_EGG = spawnEgg("void_ray", ModEntities.VOID_RAY, 0x101025, 0x7A5CFF);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTAL_SPIDER_SPAWN_EGG = spawnEgg("crystal_spider", ModEntities.CRYSTAL_SPIDER, 0x2B1B3D, 0x7FE7FF);
     public static final DeferredItem<DeferredSpawnEggItem> SHARD_TRADER_SPAWN_EGG = spawnEgg("shard_trader", ModEntities.SHARD_TRADER, 0x3F2D5C, 0xE8C66A);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTAL_SNAIL_SPAWN_EGG = spawnEgg("crystal_snail", ModEntities.CRYSTAL_SNAIL, 0x9B8BC4, 0x5FE8FF);
     public static final DeferredItem<DeferredSpawnEggItem> SHADOW_FOX_SPAWN_EGG = spawnEgg("shadow_fox", ModEntities.SHADOW_FOX, 0x111111, 0x6A2C8C);
     public static final DeferredItem<DeferredSpawnEggItem> SHATTERED_KNIGHT_SPAWN_EGG = spawnEgg("shattered_knight", ModEntities.SHATTERED_KNIGHT, 0x3A3A4A, 0xB486FF);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTAL_COLOSSUS_SPAWN_EGG = spawnEgg("crystal_colossus", ModEntities.CRYSTAL_COLOSSUS, 0x4B2C7A, 0x9FFCFF);
     public static final DeferredItem<DeferredSpawnEggItem> SHARD_QUEEN_SPAWN_EGG = spawnEgg("shard_queen", ModEntities.SHARD_QUEEN, 0x1A0B2E, 0xFF5EDB);
     public static final DeferredItem<DeferredSpawnEggItem> SHARD_ZOMBIE_SPAWN_EGG = spawnEgg("shard_zombie", ModEntities.SHARD_ZOMBIE, 0x3B2A55, 0xC05CFF);
     public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_COW_SPAWN_EGG = spawnEgg("crystallized_cow", ModEntities.CRYSTALLIZED_COW, 0x4A3A3A, 0xB57BFF);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_SHEEP_SPAWN_EGG = spawnEgg("crystallized_sheep", ModEntities.CRYSTALLIZED_SHEEP, 0x3A2A48, 0xFF6FDC);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_PIGLIN_SPAWN_EGG = spawnEgg("crystallized_piglin", ModEntities.CRYSTALLIZED_PIGLIN, 0x7C3D46, 0xFF8A2A);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_ENDERMAN_SPAWN_EGG = spawnEgg("crystallized_enderman", ModEntities.CRYSTALLIZED_ENDERMAN, 0x100D17, 0x5FD6AC);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_PIG_SPAWN_EGG = spawnEgg("crystallized_pig", ModEntities.CRYSTALLIZED_PIG, 0x6B4A62, 0xE03CC0);
+    public static final DeferredItem<DeferredSpawnEggItem> CRYSTALLIZED_VILLAGER_SPAWN_EGG = spawnEgg("crystallized_villager", ModEntities.CRYSTALLIZED_VILLAGER, 0x2C2138, 0xC933B8);
+    public static final DeferredItem<DeferredSpawnEggItem> ECHO_QUEEN_SPAWN_EGG = spawnEgg("echo_queen", ModEntities.ECHO_QUEEN, 0x6C8098, 0xB8F4FA);
+    public static final DeferredItem<DeferredSpawnEggItem> FESTERING_HEART_SPAWN_EGG = spawnEgg("festering_heart", ModEntities.FESTERING_HEART, 0x341A06, 0xFFD060);
     public static final DeferredItem<DeferredSpawnEggItem> VIRUS_HEART_SPAWN_EGG = spawnEgg("virus_heart", ModEntities.VIRUS_HEART, 0x240A3A, 0xE040FF);
+    public static final DeferredItem<DeferredSpawnEggItem> RHEA_SPAWN_EGG = spawnEgg("rhea", ModEntities.RHEA, 0x36506E, 0xC06A3C);
+    public static final DeferredItem<DeferredSpawnEggItem> VEYL_SPAWN_EGG = spawnEgg("veyl", ModEntities.VEYL, 0xD8D4E6, 0x7FE6F2);
+    public static final DeferredItem<DeferredSpawnEggItem> ILSA_SPAWN_EGG = spawnEgg("ilsa", ModEntities.ILSA, 0x6B5A3E, 0xC9A45C);
+    public static final DeferredItem<DeferredSpawnEggItem> KESH_SPAWN_EGG = spawnEgg("kesh", ModEntities.KESH, 0x2E1F4A, 0xE04FD0);
 
     private ModItems() {
     }

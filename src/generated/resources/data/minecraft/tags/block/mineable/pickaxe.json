@@ -15,6 +15,21 @@
     "shardline:colossus_trophy",
     "shardline:queen_trophy",
     "shardline:infected_stone",
-    "shardline:purity_anchor"
+    "shardline:purity_anchor",
+    "shardline:infected_deepslate",
+    "shardline:infected_netherrack",
+    "shardline:infected_blackstone",
+    "shardline:infected_nylium",
+    "shardline:infected_end_stone",
+    "shardline:infected_purpur",
+    "shardline:festering_node",
+    "shardline:polished_shardstone",
+    "shardline:polished_shardstone_stairs",
+    "shardline:polished_shardstone_slab",
+    "shardline:chiseled_shardstone_bricks",
+    "shardline:shard_lantern",
+    "shardline:keeper_ruin_bricks",
+    "shardline:keeper_ruin_pillar",
+    "shardline:keeper_rune_slab"
   ]
 }

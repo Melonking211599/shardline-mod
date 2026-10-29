@@ -1,0 +1,32 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "eaten": {
+      "conditions": {
+        "item": {
+          "items": "shardline:glowcap_stew"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.glowcap_stew.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:glowcap_stew"
+    },
+    "title": {
+      "translate": "advancements.shardline.glowcap_stew.title"
+    }
+  },
+  "requirements": [
+    [
+      "eaten"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

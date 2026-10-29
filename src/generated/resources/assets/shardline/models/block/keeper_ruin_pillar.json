@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "shardline:block/keeper_ruin_pillar_top",
+    "side": "shardline:block/keeper_ruin_pillar"
+  }
+}

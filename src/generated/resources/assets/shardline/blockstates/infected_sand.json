@@ -1,7 +1,15 @@
 {
   "variants": {
-    "": {
-      "model": "shardline:block/infected_sand"
-    }
+    "": [
+      {
+        "model": "shardline:block/infected_sand"
+      },
+      {
+        "model": "shardline:block/infected_sand_v2"
+      },
+      {
+        "model": "shardline:block/infected_sand_v3"
+      }
+    ]
   }
 }

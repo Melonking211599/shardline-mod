@@ -2,11 +2,14 @@ package eu.shardline.mod.datagen;
 
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.block.custom.ShardPortalBlock;
+import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LanternBlock;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
@@ -23,18 +26,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        cube(ModBlocks.SHARDSTONE.get());
+        cubeVariants(ModBlocks.SHARDSTONE.get(), 3);
         cube(ModBlocks.SHARDSTONE_BRICKS.get());
         cube(ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
-        cube(ModBlocks.SHARD_ORE.get());
-        cube(ModBlocks.DEEPSLATE_SHARD_ORE.get());
+        cubeVariants(ModBlocks.SHARD_ORE.get(), 2);
+        cubeVariants(ModBlocks.DEEPSLATE_SHARD_ORE.get(), 2);
         cube(ModBlocks.SHARD_BLOCK.get());
         cube(ModBlocks.GLOW_CRYSTAL_BLOCK.get());
-        cube(ModBlocks.ASH_BLOCK.get());
+        cubeVariants(ModBlocks.ASH_BLOCK.get(), 3);
         cube(ModBlocks.CRYSTAL_PLANKS.get());
         cube(ModBlocks.SHARD_PORTAL_FRAME.get());
-        simpleBlockWithItem(ModBlocks.CRYSTAL_MOSS.get(), models().cubeBottomTop("crystal_moss",
-                modLoc("block/crystal_moss_side"), modLoc("block/shardstone"), modLoc("block/crystal_moss")));
+        withVariants(ModBlocks.CRYSTAL_MOSS.get(), 3, suffix -> models().cubeBottomTop("crystal_moss" + suffix,
+                modLoc("block/crystal_moss_side"), modLoc("block/shardstone"), modLoc("block/crystal_moss" + suffix)));
 
         ResourceLocation bricks = blockTexture(ModBlocks.SHARDSTONE_BRICKS.get());
         stairsBlock(ModBlocks.SHARDSTONE_BRICK_STAIRS.get(), bricks);
@@ -45,8 +48,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         logBlock(ModBlocks.CRYSTAL_LOG.get());
         simpleBlockItem(ModBlocks.CRYSTAL_LOG.get(), models().getExistingFile(modLoc("block/crystal_log")));
-        simpleBlockWithItem(ModBlocks.CRYSTAL_LEAVES.get(), models().cubeAll("crystal_leaves",
-                blockTexture(ModBlocks.CRYSTAL_LEAVES.get())).renderType("cutout_mipped"));
+        withVariants(ModBlocks.CRYSTAL_LEAVES.get(), 3, suffix -> models().cubeAll("crystal_leaves" + suffix,
+                modLoc("block/crystal_leaves" + suffix)).renderType("cutout_mipped"));
 
         cross(ModBlocks.CRYSTAL_SAPLING.get());
         cross(ModBlocks.GLOWBLOOM.get());
@@ -68,27 +71,104 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("particle", modLoc("block/glow_crystal_block")));
 
         // --- Shardvirus: Grundtextur + leuchtende Overlay-Schicht (<name>_glow.png) ---
-        infected(ModBlocks.INFECTED_STONE.get(), "infected_stone", "solid");
-        infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "solid");
-        infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "solid");
+        infected(ModBlocks.INFECTED_STONE.get(), "infected_stone", "cutout");
+        infected(ModBlocks.INFECTED_DIRT.get(), "infected_dirt", "cutout");
+        infected(ModBlocks.INFECTED_SAND.get(), "infected_sand", "cutout");
         infected(ModBlocks.INFECTED_LEAVES.get(), "infected_leaves", "cutout_mipped");
-        simpleBlockWithItem(ModBlocks.INFECTED_GRASS.get(), overlayModel("infected_grass",
-                modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top"), modLoc("block/infected_dirt"),
-                modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top_glow"), "cutout"));
+        infected(ModBlocks.INFECTED_DEEPSLATE.get(), "infected_deepslate", "cutout");
+        infected(ModBlocks.INFECTED_NETHERRACK.get(), "infected_netherrack", "cutout");
+        infected(ModBlocks.INFECTED_END_STONE.get(), "infected_end_stone", "cutout");
+        for (Block block : List.of(ModBlocks.INFECTED_PLANKS.get(), ModBlocks.INFECTED_BLACKSTONE.get(), ModBlocks.INFECTED_SOUL_SOIL.get(),
+                ModBlocks.INFECTED_WART_BLOCK.get(), ModBlocks.INFECTED_PURPUR.get())) {
+            infected(block, name(block), "cutout", 1);
+        }
+        ModelFile nylium = overlayModel("infected_nylium", modLoc("block/infected_nylium_side"), modLoc("block/infected_nylium_top"),
+                modLoc("block/infected_netherrack"), modLoc("block/infected_nylium_side_glow"), modLoc("block/infected_nylium_top_glow"), "cutout");
+        simpleBlockWithItem(ModBlocks.INFECTED_NYLIUM.get(), nylium);
+        ResourceLocation node = modLoc("block/festering_node");
+        simpleBlockWithItem(ModBlocks.FESTERING_NODE.get(), overlayModel("festering_node", node, node, node,
+                modLoc("block/festering_node_glow"), modLoc("block/festering_node_glow"), "cutout"));
+        withVariants(ModBlocks.INFECTED_GRASS.get(), 3, suffix -> overlayModel("infected_grass" + suffix,
+                modLoc("block/infected_grass_side"), modLoc("block/infected_grass_top" + suffix), modLoc("block/infected_dirt"),
+                modLoc("block/infected_grass_side_glow"), modLoc("block/infected_grass_top" + suffix + "_glow"), "cutout"));
         ModelFile log = overlayModel("infected_log", modLoc("block/infected_log"), modLoc("block/infected_log_top"),
                 modLoc("block/infected_log_top"), modLoc("block/infected_log_glow"), modLoc("block/infected_log_top_glow"), "cutout");
         axisBlock(ModBlocks.INFECTED_LOG.get(), log, log);
         simpleBlockItem(ModBlocks.INFECTED_LOG.get(), log);
 
         memoryCrystal();
+        keeperRuin();
+        decisionAltar();
         purityAnchor();
+
+        // --- Splitterhandwerk ---
+        cube(ModBlocks.POLISHED_SHARDSTONE.get());
+        cube(ModBlocks.CHISELED_SHARDSTONE_BRICKS.get());
+        ResourceLocation polished = blockTexture(ModBlocks.POLISHED_SHARDSTONE.get());
+        stairsBlock(ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), polished);
+        slabBlock(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), polished, polished);
+        simpleBlockItem(ModBlocks.POLISHED_SHARDSTONE_STAIRS.get(), models().getExistingFile(modLoc("block/polished_shardstone_stairs")));
+        simpleBlockItem(ModBlocks.POLISHED_SHARDSTONE_SLAB.get(), models().getExistingFile(modLoc("block/polished_shardstone_slab")));
+
+        ResourceLocation planks = blockTexture(ModBlocks.CRYSTAL_PLANKS.get());
+        stairsBlock(ModBlocks.CRYSTAL_STAIRS.get(), planks);
+        slabBlock(ModBlocks.CRYSTAL_SLAB.get(), planks, planks);
+        fenceBlock(ModBlocks.CRYSTAL_FENCE.get(), planks);
+        fenceGateBlock(ModBlocks.CRYSTAL_FENCE_GATE.get(), planks);
+        doorBlockWithRenderType(ModBlocks.CRYSTAL_DOOR.get(), modLoc("block/crystal_door_bottom"), modLoc("block/crystal_door_top"), "cutout");
+        trapdoorBlockWithRenderType(ModBlocks.CRYSTAL_TRAPDOOR.get(), modLoc("block/crystal_trapdoor"), true, "cutout");
+        buttonBlock(ModBlocks.CRYSTAL_BUTTON.get(), planks);
+        pressurePlateBlock(ModBlocks.CRYSTAL_PRESSURE_PLATE.get(), planks);
+        simpleBlockItem(ModBlocks.CRYSTAL_STAIRS.get(), models().getExistingFile(modLoc("block/crystal_stairs")));
+        simpleBlockItem(ModBlocks.CRYSTAL_SLAB.get(), models().getExistingFile(modLoc("block/crystal_slab")));
+        simpleBlockItem(ModBlocks.CRYSTAL_FENCE_GATE.get(), models().getExistingFile(modLoc("block/crystal_fence_gate")));
+        simpleBlockItem(ModBlocks.CRYSTAL_TRAPDOOR.get(), models().getExistingFile(modLoc("block/crystal_trapdoor_bottom")));
+        simpleBlockItem(ModBlocks.CRYSTAL_PRESSURE_PLATE.get(), models().getExistingFile(modLoc("block/crystal_pressure_plate")));
+
+        ResourceLocation lanternTexture = modLoc("block/shard_lantern");
+        ModelFile lantern = models().withExistingParent("shard_lantern", mcLoc("block/template_lantern"))
+                .texture("lantern", lanternTexture).renderType("cutout");
+        ModelFile hanging = models().withExistingParent("shard_lantern_hanging", mcLoc("block/template_hanging_lantern"))
+                .texture("lantern", lanternTexture).renderType("cutout");
+        getVariantBuilder(ModBlocks.SHARD_LANTERN.get()).forAllStatesExcept(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(LanternBlock.HANGING) ? hanging : lantern).build(), LanternBlock.WATERLOGGED);
+
+        simpleBlockWithItem(ModBlocks.CRYSTAL_GLASS.get(), models().cubeAll("crystal_glass",
+                blockTexture(ModBlocks.CRYSTAL_GLASS.get())).renderType("cutout"));
+        paneBlockWithRenderType(ModBlocks.CRYSTAL_GLASS_PANE.get(), modLoc("block/crystal_glass"), modLoc("block/crystal_glass_pane_top"), "cutout");
     }
 
+    /** Infizierter Block mit drei Varianten (Textur <name>, <name>_v2, <name>_v3, jeweils mit eigener Leuchtschicht). */
     private void infected(Block block, String name, String renderType) {
-        ResourceLocation base = modLoc("block/" + name);
-        ResourceLocation glow = modLoc("block/" + name + "_glow");
-        BlockModelBuilder model = overlayModel(name, base, base, base, glow, glow, renderType);
-        simpleBlockWithItem(block, model);
+        infected(block, name, renderType, 3);
+    }
+
+    private void infected(Block block, String name, String renderType, int variants) {
+        withVariants(block, variants, suffix -> {
+            ResourceLocation base = modLoc("block/" + name + suffix);
+            ResourceLocation glow = modLoc("block/" + name + suffix + "_glow");
+            return overlayModel(name + suffix, base, base, base, glow, glow, renderType);
+        });
+    }
+
+    /** Wuerfel mit gleicher Textur auf allen Seiten und {@code count} Varianten (<name>, <name>_v2, ...). */
+    private void cubeVariants(Block block, int count) {
+        String name = name(block);
+        withVariants(block, count, suffix -> models().cubeAll(name + suffix, modLoc("block/" + name + suffix)));
+    }
+
+    /**
+     * Blockstate mit gleich gewichteten Modellvarianten: Minecraft waehlt pro Blockposition fest eines davon, so bricht
+     * das Kachelmuster auf grossen Flaechen. Ohne Drehung, weil Asche und Tiefenschiefer eine Richtung haben.
+     * Das Item-Modell ist die erste Variante. Suffixe: "", "_v2", "_v3", ...
+     */
+    private void withVariants(Block block, int count, java.util.function.Function<String, ModelFile> model) {
+        ConfiguredModel[] models = new ConfiguredModel[count];
+        for (int i = 0; i < count; i++) {
+            models[i] = new ConfiguredModel(model.apply(i == 0 ? "" : "_v" + (i + 1)));
+        }
+        simpleBlock(block, models);
+        simpleBlockItem(block, models[0].model);
     }
 
     /**
@@ -125,6 +205,73 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .rotation().angle(-22.5F).axis(Direction.Axis.Z).origin(11, 2, 8).end()
                 .allFaces((dir, face) -> face.texture("#crystal")).end();
         simpleBlockWithItem(ModBlocks.MEMORY_CRYSTAL.get(), model);
+    }
+
+    /**
+     * Entscheidungsaltar: Sockel, Saeule, Schale mit Kristall. Erwacht (lit=true) liegt ueber allem eine
+     * Leuchtschicht mit voller Eigenhelligkeit; ruhend leuchtet nur der Kristall schwach.
+     */
+    private void decisionAltar() {
+        ResourceLocation side = modLoc("block/decision_altar_side");
+        ResourceLocation top = modLoc("block/decision_altar_top");
+        ResourceLocation bottom = modLoc("block/decision_altar_bottom");
+        ResourceLocation sideGlow = modLoc("block/decision_altar_side_glow");
+        ResourceLocation topGlow = modLoc("block/decision_altar_top_glow");
+        BlockModelBuilder dormant = altarModel("decision_altar", side, top, bottom, sideGlow, topGlow, false);
+        BlockModelBuilder awake = altarModel("decision_altar_active", side, top, bottom, sideGlow, topGlow, true);
+        getVariantBuilder(ModBlocks.DECISION_ALTAR.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(DecisionAltarBlock.ACTIVE) ? awake : dormant).build());
+        simpleBlockItem(ModBlocks.DECISION_ALTAR.get(), awake);
+    }
+
+    private BlockModelBuilder altarModel(String name, ResourceLocation side, ResourceLocation top, ResourceLocation bottom,
+                                         ResourceLocation sideGlow, ResourceLocation topGlow, boolean awake) {
+        BlockModelBuilder model = models().getBuilder(name).texture("particle", side).texture("side", side).texture("top", top)
+                .texture("bottom", bottom).texture("glow_side", sideGlow).texture("glow_top", topGlow).renderType("cutout");
+        float[][] parts = {{1, 0, 1, 15, 3, 15}, {4, 3, 4, 12, 10, 12}, {2, 10, 2, 14, 13, 14}};
+        for (float[] p : parts) {
+            model.element().from(p[0], p[1], p[2]).to(p[3], p[4], p[5])
+                    .allFaces((dir, face) -> face.texture(dir == Direction.UP ? "#top" : dir == Direction.DOWN ? "#bottom" : "#side")).end();
+        }
+        // Kristall in der Schale
+        model.element().from(6, 13, 6).to(10, 16, 10).emissivity(awake ? 15 : 7, awake ? 15 : 7)
+                .allFaces((dir, face) -> face.texture("#glow_top")).end();
+        if (awake) {
+            for (float[] p : parts) {
+                model.element().from(p[0], p[1], p[2]).to(p[3], p[4], p[5]).shade(false).emissivity(15, 15)
+                        .allFaces((dir, face) -> face.texture(dir.getAxis() == Direction.Axis.Y ? "#glow_top" : "#glow_side")).end();
+            }
+        }
+        return model;
+    }
+
+    /** Hueter-Ruinen: Ziegel, Saeule (drehbar) und Runenstufe mit leuchtender Rune auf der Oberseite. */
+    private void keeperRuin() {
+        cube(ModBlocks.KEEPER_RUIN_BRICKS.get());
+        axisBlock(ModBlocks.KEEPER_RUIN_PILLAR.get(), modLoc("block/keeper_ruin_pillar"), modLoc("block/keeper_ruin_pillar_top"));
+        simpleBlockItem(ModBlocks.KEEPER_RUIN_PILLAR.get(), models().getExistingFile(modLoc("block/keeper_ruin_pillar")));
+        BlockModelBuilder bottom = runeSlabModel("keeper_rune_slab", 0, 8);
+        BlockModelBuilder top = runeSlabModel("keeper_rune_slab_top", 8, 16);
+        BlockModelBuilder full = runeSlabModel("keeper_rune_slab_double", 0, 16);
+        slabBlock(ModBlocks.KEEPER_RUNE_SLAB.get(), bottom, top, full);
+        simpleBlockItem(ModBlocks.KEEPER_RUNE_SLAB.get(), bottom);
+    }
+
+    private BlockModelBuilder runeSlabModel(String name, float y0, float y1) {
+        BlockModelBuilder model = models().withExistingParent(name, mcLoc("block/block"))
+                .texture("particle", modLoc("block/keeper_rune_slab_side")).texture("side", modLoc("block/keeper_rune_slab_side"))
+                .texture("top", modLoc("block/keeper_rune_slab")).texture("bottom", modLoc("block/keeper_ruin_bricks"))
+                .texture("glow", modLoc("block/keeper_rune_slab_glow")).renderType("cutout");
+        model.element().from(0, y0, 0).to(16, y1, 16)
+                .allFaces((dir, face) -> {
+                    face.texture(dir == Direction.UP ? "#top" : dir == Direction.DOWN ? "#bottom" : "#side");
+                    if (dir != Direction.UP || y1 == 16) {
+                        face.cullface(dir);
+                    }
+                }).end();
+        model.element().from(0, y0, 0).to(16, y1, 16).shade(false).emissivity(15, 15)
+                .face(Direction.UP).texture("#glow").cullface(y1 == 16 ? Direction.UP : null).end().end();
+        return model;
     }
 
     /** Reinheitsanker: Sockel, Saeule und schwebender Kristall. */

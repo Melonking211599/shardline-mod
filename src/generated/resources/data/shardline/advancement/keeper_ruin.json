@@ -1,0 +1,40 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "found": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "shardline:keeper_ruin"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.keeper_ruin.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:keeper_ruin_pillar"
+    },
+    "title": {
+      "translate": "advancements.shardline.keeper_ruin.title"
+    }
+  },
+  "requirements": [
+    [
+      "found"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -54,6 +54,7 @@ public final class ModBiomes {
         spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.SHARD_SCOUT.get(), 15, 1, 1));
         spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.SHATTERED_KNIGHT.get(), 3, 1, 1));
         spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.CRYSTAL_GOLEM.get(), 6, 1, 1));
+        spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.CRYSTAL_SNAIL.get(), 10, 1, 2));
         spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.VOID_RAY.get(), 4, 1, 2));
         spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.SHARD_TRADER.get(), 1, 1, 1));
         spawns.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.GLOW_MOTH.get(), 12, 2, 3));
@@ -97,6 +98,7 @@ public final class ModBiomes {
         spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.SHARD_SCOUT.get(), 15, 1, 1));
         spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.ASH_WALKER.get(), 10, 1, 2));
         spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.CRYSTAL_GOLEM.get(), 8, 1, 1));
+        spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.CRYSTAL_SNAIL.get(), 14, 1, 3));
         spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.VOID_RAY.get(), 3, 1, 1));
         spawns.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.GLOW_MOTH.get(), 20, 2, 4));
 

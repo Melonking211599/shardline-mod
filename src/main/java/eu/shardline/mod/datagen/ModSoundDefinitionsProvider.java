@@ -9,8 +9,8 @@ import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
 /**
- * Erzeugt assets/shardline/sounds.json. Jedes Event verweist vorerst auf ein passendes Vanilla-Event;
- * eigene Sounds koennen spaeter als .ogg unter assets/shardline/sounds/ abgelegt und hier eingetragen werden.
+ * Erzeugt assets/shardline/sounds.json. Events mit eigener Datei ({@link ModSounds#FILES}) spielen
+ * assets/shardline/sounds/&lt;datei&gt;.ogg, alle anderen verweisen auf ein passendes Vanilla-Event.
  */
 public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
     public ModSoundDefinitionsProvider(PackOutput output, ExistingFileHelper fileHelper) {
@@ -21,9 +21,13 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
     public void registerSounds() {
         ModSounds.PLACEHOLDERS.forEach((holder, placeholder) -> {
             String path = holder.getId().getPath();
-            SoundDefinition definition = definition()
-                    .with(sound(ResourceLocation.withDefaultNamespace(placeholder), SoundDefinition.SoundType.EVENT));
-            if (!path.startsWith("music.")) {
+            String file = ModSounds.FILES.get(holder);
+            boolean music = path.startsWith("music.");
+            // Musik wird gestreamt statt ganz in den Speicher geladen
+            SoundDefinition definition = definition().with(file != null
+                    ? sound(Shardline.id(file), SoundDefinition.SoundType.SOUND).stream(music)
+                    : sound(ResourceLocation.withDefaultNamespace(placeholder), SoundDefinition.SoundType.EVENT));
+            if (!music) {
                 definition.subtitle("subtitles.shardline." + path);
             }
             add(holder, definition);

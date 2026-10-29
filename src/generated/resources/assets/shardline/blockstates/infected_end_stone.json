@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "shardline:block/infected_end_stone"
+      },
+      {
+        "model": "shardline:block/infected_end_stone_v2"
+      },
+      {
+        "model": "shardline:block/infected_end_stone_v3"
+      }
+    ]
+  }
+}

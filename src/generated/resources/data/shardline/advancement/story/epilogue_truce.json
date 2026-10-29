@@ -1,0 +1,30 @@
+{
+  "parent": "shardline:story/festering_heart",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.epilogue_truce.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "shardline:echo_shard"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.epilogue_truce.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "rewards": {
+    "experience": 300
+  },
+  "sends_telemetry_event": true
+}

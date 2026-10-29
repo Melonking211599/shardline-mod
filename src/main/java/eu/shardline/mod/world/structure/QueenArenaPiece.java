@@ -1,6 +1,7 @@
 package eu.shardline.mod.world.structure;
 
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.block.custom.MemoryCrystalBlock;
 import eu.shardline.mod.core.ModLootTables;
 import eu.shardline.mod.story.lore.Visions;
@@ -146,6 +147,10 @@ public class QueenArenaPiece extends ShardlinePiece {
         for (Direction side : Direction.Plane.HORIZONTAL) {
             this.set(level, chunkBox, ox + side.getStepX() * 2, oy + 3, oz + side.getStepZ() * 2, clusterUp);
         }
+
+        // Entscheidungsaltar vor dem Thron (in aelteren Welten entsteht er beim Tod der Koenigin)
+        BlockPos altar = DecisionAltarBlock.spotBeforeThrone(new BlockPos(ox, oy + 3, oz));
+        this.set(level, chunkBox, altar.getX(), altar.getY(), altar.getZ(), ModBlocks.DECISION_ALTAR.get().defaultBlockState());
 
         // Erinnerungskristalle vor dem Thron
         this.set(level, chunkBox, ox, oy + 1, oz + 7, ModBlocks.MEMORY_CRYSTAL.get().defaultBlockState()

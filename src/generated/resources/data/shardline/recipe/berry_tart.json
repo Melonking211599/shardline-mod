@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "shardline:luminous_berry"
+    },
+    {
+      "item": "shardline:luminous_berry"
+    },
+    {
+      "item": "shardline:luminous_berry"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:egg"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "shardline:berry_tart"
+  }
+}

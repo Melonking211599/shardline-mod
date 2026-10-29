@@ -3,8 +3,7 @@ package eu.shardline.mod.item.custom;
 import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.effect.ShardFeverEffect;
-import eu.shardline.mod.entity.infected.CrystallizedCowEntity;
-import eu.shardline.mod.entity.infected.ShardZombieEntity;
+import eu.shardline.mod.entity.infected.CrystallizedVillagerEntity;
 import eu.shardline.mod.network.ScreenEffectPayload;
 import eu.shardline.mod.story.StoryEvents;
 import eu.shardline.mod.story.StoryManager;
@@ -21,7 +20,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -33,7 +31,8 @@ import net.minecraft.world.phys.AABB;
 
 /**
  * Reinigungsessenz (aus dem Herz der Splitterweite): reinigt infizierte Bloecke im Umkreis,
- * heilt Splitterfieber und verwandelt infizierte Kuehe und Zombies zurueck.
+ * heilt Splitterfieber und verwandelt infizierte Wesen zurueck (Kuh, Schaf, Schwein, Zombie; ein
+ * kristallisierter Dorfbewohner erhaelt seinen Beruf zurueck).
  * Rechtsklick in die Luft wirkt um den Spieler, auf einen Block um diesen Block.
  */
 public class PurificationEssenceItem extends Item {
@@ -61,14 +60,17 @@ public class PurificationEssenceItem extends Item {
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (!(player.level() instanceof ServerLevel level)) {
-            return target instanceof CrystallizedCowEntity || target instanceof ShardZombieEntity ? InteractionResult.SUCCESS : InteractionResult.PASS;
+            return VirusEffects.isCurable(target) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
-        if (target instanceof CrystallizedCowEntity cow) {
-            VirusEffects.convert(level, cow, EntityType.COW);
-        } else if (target instanceof ShardZombieEntity zombie) {
-            VirusEffects.convert(level, zombie, EntityType.ZOMBIE);
-        } else {
+        if (!VirusEffects.isCurable(target)) {
             return InteractionResult.PASS;
+        }
+        boolean villager = target instanceof CrystallizedVillagerEntity;
+        if (VirusEffects.purifyMob(level, target) == null) {
+            return InteractionResult.PASS;
+        }
+        if (villager && player instanceof ServerPlayer serverPlayer) {
+            StoryManager.award(serverPlayer, "story/cure_villager");
         }
         level.sendParticles(ParticleTypes.END_ROD, target.getX(), target.getY() + 1.0, target.getZ(), 30, 0.4, 0.6, 0.4, 0.05);
         level.playSound(null, target.blockPosition(), ModSounds.PURIFICATION_ESSENCE_USE.get(), SoundSource.PLAYERS, 1.0F, 1.4F);
@@ -80,10 +82,13 @@ public class PurificationEssenceItem extends Item {
         int radius = ShardlineConfig.ESSENCE_RADIUS.get();
         Purification.purifySphere(level, center, radius, purified -> player.displayClientMessage(
                 Component.translatable("message.shardline.purified", purified).withStyle(ChatFormatting.AQUA), true));
+        int immunity = ShardlineConfig.IMMUNITY_ESSENCE_SECONDS.get() * 20;
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(center).inflate(radius))) {
             entity.removeEffectsCuredBy(ShardFeverEffect.PURIFICATION);
+            VirusEffects.giveImmunity(entity, immunity, false);
         }
         player.removeEffectsCuredBy(ShardFeverEffect.PURIFICATION);
+        VirusEffects.giveImmunity(player, immunity, false);
 
         level.sendParticles(ParticleTypes.END_ROD, center.getX() + 0.5, center.getY() + 1.0, center.getZ() + 0.5, 80, radius * 0.4, 1.0, radius * 0.4, 0.05);
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, center.getX() + 0.5, center.getY() + 1.0, center.getZ() + 0.5, 40, radius * 0.5, 0.5, radius * 0.5, 0.0);
@@ -105,5 +110,10 @@ public class PurificationEssenceItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("item.shardline.purification_essence.tooltip").withStyle(ChatFormatting.AQUA));
         tooltip.add(Component.translatable("item.shardline.purification_essence.tooltip2").withStyle(ChatFormatting.GRAY));
+        int seconds = ShardlineConfig.IMMUNITY_ESSENCE_SECONDS.get();
+        if (seconds > 0) {
+            tooltip.add(Component.translatable("item.shardline.purification_essence.tooltip_immunity",
+                    String.format("%d:%02d", seconds / 60, seconds % 60)).withStyle(ChatFormatting.GOLD));
+        }
     }
 }

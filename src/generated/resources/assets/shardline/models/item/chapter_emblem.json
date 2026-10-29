@@ -1,0 +1,68 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "shardline:item/chapter_emblem_2",
+      "predicate": {
+        "shardline:chapter": 0.15
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_3",
+      "predicate": {
+        "shardline:chapter": 0.25
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_4",
+      "predicate": {
+        "shardline:chapter": 0.35
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_5",
+      "predicate": {
+        "shardline:chapter": 0.45
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_6",
+      "predicate": {
+        "shardline:chapter": 0.55
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_7",
+      "predicate": {
+        "shardline:chapter": 0.65
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_8_seal",
+      "predicate": {
+        "shardline:chapter": 1.75
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_9_seal",
+      "predicate": {
+        "shardline:chapter": 1.85
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_8_dominate",
+      "predicate": {
+        "shardline:chapter": 2.75
+      }
+    },
+    {
+      "model": "shardline:item/chapter_emblem_9_dominate",
+      "predicate": {
+        "shardline:chapter": 2.8500001
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "shardline:item/chapter_emblem_1"
+  }
+}

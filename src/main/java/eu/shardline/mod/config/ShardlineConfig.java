@@ -14,7 +14,7 @@ public final class ShardlineConfig {
     /** IDs aller Mobs, deren Spawnrate einzeln konfigurierbar ist. */
     public static final List<String> SPAWNING_MOBS = List.of(
             "shard_creeper", "crystal_golem", "glow_moth", "ash_walker", "shard_scout",
-            "void_ray", "crystal_spider", "shard_trader", "shadow_fox", "shattered_knight");
+            "void_ray", "crystal_spider", "shard_trader", "shadow_fox", "shattered_knight", "crystal_snail");
 
     // Spawns
     public static final ModConfigSpec.BooleanValue OVERWORLD_SPAWNS;
@@ -63,6 +63,16 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue CHAPTER_TITLES;
     public static final ModConfigSpec.BooleanValue TRADER_DIALOGUE;
     public static final ModConfigSpec.IntValue DIALOGUE_LINE_DELAY_TICKS;
+    public static final ModConfigSpec.IntValue LORE_PAGE_PRICE;
+    public static final ModConfigSpec.DoubleValue DIALOGUE_MAX_DISTANCE;
+    public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> DIALOGUE_COMMAND_WHITELIST;
+    public static final ModConfigSpec.IntValue QUEST_CHECK_TICKS;
+    public static final ModConfigSpec.IntValue NPC_CAMP_RADIUS;
+    public static final ModConfigSpec.BooleanValue NPC_SLEEP;
+    public static final ModConfigSpec.IntValue AFTERSHOCK_MINUTES;
+    public static final ModConfigSpec.IntValue MAX_NODES_NEAR_PLAYER;
+    public static final ModConfigSpec.DoubleValue ECHO_QUEEN_HEALTH;
+    public static final ModConfigSpec.DoubleValue FESTERING_HEART_HEALTH;
 
     // Virus
     public static final ModConfigSpec.BooleanValue VIRUS_ENABLED;
@@ -80,6 +90,17 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.DoubleValue MOB_CONVERSION_CHANCE;
     public static final ModConfigSpec.BooleanValue VILLAGERS_FLEE;
     public static final ModConfigSpec.BooleanValue VILLAGERS_TRANSFORM;
+    public static final ModConfigSpec.BooleanValue ANIMALS_TRANSFORM;
+    public static final ModConfigSpec.IntValue VIRUS_OVERWORLD_SEED_MINUTES;
+    public static final ModConfigSpec.IntValue VIRUS_NETHER_END_SEED_MINUTES;
+    public static final ModConfigSpec.IntValue VIRUS_MAX_DEPTH;
+    public static final ModConfigSpec.DoubleValue VIRUS_DEPTH_CHANCE;
+    public static final ModConfigSpec.BooleanValue VIRUS_SURFACE_ONLY;
+    public static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> VIRUS_DIMENSIONS;
+    public static final ModConfigSpec.DoubleValue VIRUS_EMBER_SPREAD_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue VIRUS_VOID_SPREAD_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue VIRUS_STRAIN_EFFECTS;
+    public static final ModConfigSpec.BooleanValue NETHER_END_MOBS_TRANSFORM;
     public static final ModConfigSpec.DoubleValue FEVER_CHANCE_ON_INFECTED_BLOCK;
     public static final ModConfigSpec.IntValue FEVER_DURATION_SECONDS;
     public static final ModConfigSpec.DoubleValue FEVER_DAMAGE;
@@ -89,9 +110,14 @@ public final class ShardlineConfig {
     // Gegenmittel
     public static final ModConfigSpec.IntValue ANCHOR_RADIUS;
     public static final ModConfigSpec.IntValue ANCHOR_PURIFY_PER_PULSE;
+    public static final ModConfigSpec.IntValue ANCHOR_START_RADIUS;
+    public static final ModConfigSpec.IntValue ANCHOR_GROW_SECONDS;
     public static final ModConfigSpec.IntValue ESSENCE_RADIUS;
+    public static final ModConfigSpec.IntValue IMMUNITY_ESSENCE_SECONDS;
+    public static final ModConfigSpec.IntValue IMMUNITY_ANCHOR_SECONDS;
     public static final ModConfigSpec.IntValue HEART_PURIFY_RADIUS;
     public static final ModConfigSpec.DoubleValue VIRUS_HEART_HEALTH;
+    public static final ModConfigSpec.EnumValue<HeartDifficulty> VIRUS_HEART_DIFFICULTY;
     public static final ModConfigSpec.IntValue HEART_SPAWN_THRESHOLD;
     public static final ModConfigSpec.IntValue HEART_SPAWN_COOLDOWN_MINUTES;
     public static final ModConfigSpec.IntValue HEARTS_FOR_CORE;
@@ -112,6 +138,35 @@ public final class ShardlineConfig {
     public static final ModConfigSpec.BooleanValue VIRUS_RUN;
 
     /** Wer am Altar ueber das Ende entscheidet. */
+    /** Schwierigkeit des Virusherzens: Abklingzeiten, Schaden und wie viele Infizierte es in Phase 3 ruft. */
+    public enum HeartDifficulty {
+        EASY(1.4, 0.7, 2),
+        NORMAL(1.0, 1.0, 4),
+        HARD(0.7, 1.35, 6);
+
+        private final double cooldown;
+        private final double damage;
+        private final int minions;
+
+        HeartDifficulty(double cooldown, double damage, int minions) {
+            this.cooldown = cooldown;
+            this.damage = damage;
+            this.minions = minions;
+        }
+
+        public double cooldown() {
+            return this.cooldown;
+        }
+
+        public double damage() {
+            return this.damage;
+        }
+
+        public int minions() {
+            return this.minions;
+        }
+    }
+
     public enum EndingMode {
         /** Der erste Spieler mit dem Kern des Bruchs entscheidet allein. */
         FIRST_PLAYER,
@@ -249,6 +304,42 @@ public final class ShardlineConfig {
         DIALOGUE_LINE_DELAY_TICKS = b.comment("Abstand zwischen zwei Dialogzeilen in Ticks (20 = 1 Sekunde).")
                 .translation(key("dialogue_line_delay_ticks"))
                 .defineInRange("dialogueLineDelayTicks", 50, 0, 400);
+        LORE_PAGE_PRICE = b.comment("Shard-Splitter, die der Splitterhaendler fuer eine lose Lore-Seite zahlt.")
+                .translation(key("lore_page_price"))
+                .defineInRange("lorePagePrice", 2, 0, 64);
+        b.pop();
+
+        b.translation(key("dialogue")).push("dialogue");
+        DIALOGUE_MAX_DISTANCE = b.comment("Groesster Abstand zum NPC in Bloecken, bevor ein Dialog abbricht.")
+                .translation(key("dialogue_max_distance"))
+                .defineInRange("maxDistance", 8.0, 2.0, 32.0);
+        DIALOGUE_COMMAND_WHITELIST = b.comment("Befehlsanfaenge, die Dialoge mit run_command_safe ausfuehren duerfen (nur Ziel @s, kein execute).")
+                .translation(key("dialogue_command_whitelist"))
+                .defineListAllowEmpty("commandWhitelist", java.util.List.of("effect give @s ", "particle ", "playsound "), () -> "", o -> o instanceof String);
+        QUEST_CHECK_TICKS = b.comment("Alle wie viele Ticks Sammel- und Ortsschritte von Auftraegen geprueft werden.")
+                .translation(key("quest_check_ticks"))
+                .defineInRange("questCheckTicks", 40, 10, 400);
+        b.pop();
+
+        b.translation(key("aftermath")).push("aftermath");
+        NPC_CAMP_RADIUS = b.comment("Umkreis um den Heimatpunkt eines Lager-NPCs, in dem er unverwundbar ist (Bloecke).")
+                .translation(key("npc_camp_radius"))
+                .defineInRange("campRadius", 32, 0, 256);
+        NPC_SLEEP = b.comment("Lager-NPCs gehen nachts zu ihrem Platz und schlafen (dann nur schleichend ansprechbar).")
+                .translation(key("npc_sleep"))
+                .define("npcSleep", true);
+        AFTERSHOCK_MINUTES = b.comment("Alle so viele Minuten bebt die Weite fuer Spieler ab Kapitel 7; dabei kann eine Schwaere entstehen (0 = aus).")
+                .translation(key("aftershock_minutes"))
+                .defineInRange("aftershockMinutes", 8, 0, 1440);
+        MAX_NODES_NEAR_PLAYER = b.comment("Hoechstens so viele Schwaeren im Umkreis von 96 Bloecken um einen Spieler, bevor keine neuen entstehen.")
+                .translation(key("max_nodes_near_player"))
+                .defineInRange("maxNodesNearPlayer", 3, 0, 32);
+        ECHO_QUEEN_HEALTH = b.comment("Lebenspunkte des Nachhalls (Kapitel 9, versiegelt).")
+                .translation(key("echo_queen_health"))
+                .defineInRange("echoQueenHealth", 320.0, 1.0, 100000.0);
+        FESTERING_HEART_HEALTH = b.comment("Lebenspunkte des Schwaerenherzens (Kapitel 9, beherrscht).")
+                .translation(key("festering_heart_health"))
+                .defineInRange("festeringHeartHealth", 320.0, 1.0, 100000.0);
         b.pop();
 
         b.translation(key("virus")).push("virus");
@@ -260,7 +351,7 @@ public final class ShardlineConfig {
                 .define("spreadPaused", false);
         VIRUS_SPREAD_CHANCE = b.comment("Chance (0-1), dass ein infizierter Block bei einem Random Tick versucht, sich auszubreiten.")
                 .translation(key("virus_spread_chance"))
-                .defineInRange("spreadChance", 0.6, 0.0, 1.0);
+                .defineInRange("spreadChance", 0.75, 0.0, 1.0);
         VIRUS_SPREAD_ATTEMPTS = b.comment("Wie viele Nachbarbloecke pro Ausbreitungsversuch geprueft werden.")
                 .translation(key("virus_spread_attempts"))
                 .defineInRange("spreadAttempts", 2, 1, 8);
@@ -272,31 +363,65 @@ public final class ShardlineConfig {
                 .defineInRange("maxRange", 0, 0, 1000000);
         VIRUS_MAX_BLOCKS_PER_TICK = b.comment("Hoechstens so viele Bloecke werden pro Tick und Dimension umgewandelt (Performance).")
                 .translation(key("virus_max_blocks_per_tick"))
-                .defineInRange("maxBlocksPerTick", 64, 1, 4096);
+                .defineInRange("maxBlocksPerTick", 80, 1, 4096);
         VIRUS_QUEUE_LIMIT = b.comment("Groesse der Warteschlange fuer Umwandlungen pro Dimension. Ueberschuss wird verworfen.")
                 .translation(key("virus_queue_limit"))
                 .defineInRange("queueLimit", 8192, 64, 262144);
         VIRUS_ORE_SEED_CHANCE = b.comment("Chance (0-1) pro Random Tick, dass Shard-Erz seine Umgebung infiziert.")
                 .translation(key("virus_ore_seed_chance"))
-                .defineInRange("oreSeedChance", 0.15, 0.0, 1.0);
+                .defineInRange("oreSeedChance", 0.2, 0.0, 1.0);
         VIRUS_PORTAL_SEED_CHANCE = b.comment("Chance (0-1) pro Random Tick, dass ein Splitterportal in der Oberwelt seine Umgebung infiziert.")
                 .translation(key("virus_portal_seed_chance"))
-                .defineInRange("portalSeedChance", 0.6, 0.0, 1.0);
+                .defineInRange("portalSeedChance", 0.75, 0.0, 1.0);
         VIRUS_PORTAL_SEED_RADIUS = b.comment("Radius um Splitterportale, in dem neue Infektionen entstehen.")
                 .translation(key("virus_portal_seed_radius"))
                 .defineInRange("portalSeedRadius", 6, 1, 32);
         INFECTED_MOB_SEED_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass ein infizierter Mob den Boden unter sich infiziert.")
                 .translation(key("infected_mob_seed_chance"))
-                .defineInRange("infectedMobSeedChance", 0.05, 0.0, 1.0);
-        MOB_CONVERSION_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass Zombies, Kuehe und Dorfbewohner auf infiziertem Boden kristallisieren.")
+                .defineInRange("infectedMobSeedChance", 0.065, 0.0, 1.0);
+        MOB_CONVERSION_CHANCE = b.comment("Chance (0-1) pro Sekunde, dass Zombies, Kuehe, Schafe, Schweine und Dorfbewohner auf infiziertem Boden kristallisieren.")
                 .translation(key("mob_conversion_chance"))
                 .defineInRange("mobConversionChance", 0.02, 0.0, 1.0);
         VILLAGERS_FLEE = b.comment("Dorfbewohner fliehen vor infizierten Mobs.")
                 .translation(key("villagers_flee"))
                 .define("villagersFlee", true);
-        VILLAGERS_TRANSFORM = b.comment("Dorfbewohner verwandeln sich in Shard-Zombies (auf infiziertem Boden oder wenn ein Shard-Zombie sie toetet).")
+        VILLAGERS_TRANSFORM = b.comment("Dorfbewohner verwandeln sich: auf infiziertem Boden in kristallisierte Dorfbewohner, durch einen Shard-Zombie getoetet in Shard-Zombies.")
                 .translation(key("villagers_transform"))
                 .define("villagersTransform", true);
+        ANIMALS_TRANSFORM = b.comment("Kuehe, Schafe und Schweine auf infiziertem Boden kristallisieren.")
+                .translation(key("animals_transform"))
+                .define("animalsTransform", true);
+        VIRUS_OVERWORLD_SEED_MINUTES = b.comment("Alle so viele Minuten setzt der Virus nach dem Bruch einen neuen Herd nahe einem Spieler in der Oberwelt (0 = aus).")
+                .translation(key("overworld_seed_minutes"))
+                .defineInRange("overworldSeedMinutes", 4, 0, 1440);
+        VIRUS_NETHER_END_SEED_MINUTES = b.comment("Alle so viele Minuten setzt der Virus einen neuen Herd nahe einem Spieler im Nether und im End (0 = aus).")
+                .translation(key("nether_end_seed_minutes"))
+                .defineInRange("netherEndSeedMinutes", 10, 0, 1440);
+        VIRUS_MAX_DEPTH = b.comment("Wie tief (Bloecke unter der naechsten Oberflaeche) sich der Virus ins Gestein frisst. 0 = nur Oberflaeche.")
+                .translation(key("virus_max_depth"))
+                .defineInRange("maxDepth", 6, 0, 32);
+        VIRUS_DEPTH_CHANCE = b.comment("Anteil (0-1) der Bloecke unter der Oberflaeche, die befallen werden koennen (Adern im Gestein statt voller Wuerfel).")
+                .translation(key("virus_depth_chance"))
+                .defineInRange("depthChance", 0.35, 0.0, 1.0);
+        VIRUS_SURFACE_ONLY = b.comment("Alter Modus: Der Virus befaellt nur Bloecke mit Luftkontakt (ueberschreibt maxDepth).")
+                .translation(key("virus_surface_only"))
+                .define("surfaceOnly", false);
+        VIRUS_DIMENSIONS = b.comment("Dimensionen, in denen sich der Virus ausbreitet. Nether: Glutbrand, End: Leerenfaeule, sonst Shardvirus.")
+                .translation(key("virus_dimensions"))
+                .defineListAllowEmpty("dimensions", java.util.List.of("minecraft:overworld", "minecraft:the_nether", "minecraft:the_end",
+                        "shardline:splitterweite"), () -> "", o -> o instanceof String);
+        VIRUS_EMBER_SPREAD_MULTIPLIER = b.comment("Faktor auf spreadChance fuer den Glutbrand (Nether).")
+                .translation(key("virus_ember_spread_multiplier"))
+                .defineInRange("emberSpreadMultiplier", 1.25, 0.0, 4.0);
+        VIRUS_VOID_SPREAD_MULTIPLIER = b.comment("Faktor auf spreadChance fuer die Leerenfaeule (End).")
+                .translation(key("virus_void_spread_multiplier"))
+                .defineInRange("voidSpreadMultiplier", 0.75, 0.0, 4.0);
+        VIRUS_STRAIN_EFFECTS = b.comment("Stammwirkungen: Glutbrand setzt Lebewesen kurz in Brand, Leerenfaeule verdunkelt die Sicht.")
+                .translation(key("virus_strain_effects"))
+                .define("strainEffects", true);
+        NETHER_END_MOBS_TRANSFORM = b.comment("Piglins und Endermen auf befallenem Boden kristallisieren.")
+                .translation(key("nether_end_mobs_transform"))
+                .define("netherEndMobsTransform", true);
         FEVER_CHANCE_ON_INFECTED_BLOCK = b.comment("Chance (0-1) pro Sekunde auf infiziertem Boden, Splitterfieber zu bekommen.")
                 .translation(key("fever_chance_on_infected_block"))
                 .defineInRange("feverChanceOnInfectedBlock", 0.04, 0.0, 1.0);
@@ -315,21 +440,37 @@ public final class ShardlineConfig {
         b.pop();
 
         b.translation(key("remedies")).push("remedies");
-        ANCHOR_RADIUS = b.comment("Schutzradius eines Reinheitsankers in Bloecken.")
+        ANCHOR_RADIUS = b.comment("Endgueltiger Schutzradius eines Reinheitsankers in Bloecken (die Zone waechst bis dahin).")
                 .translation(key("anchor_radius"))
                 .defineInRange("anchorRadius", 24, 1, 128);
         ANCHOR_PURIFY_PER_PULSE = b.comment("Wie viele zufaellige Positionen ein Reinheitsanker alle zwei Sekunden reinigt.")
                 .translation(key("anchor_purify_per_pulse"))
                 .defineInRange("anchorPurifyPerPulse", 24, 0, 512);
+        ANCHOR_START_RADIUS = b.comment("Schutzradius direkt nach dem Setzen eines Reinheitsankers.")
+                .translation(key("anchor_start_radius"))
+                .defineInRange("anchorStartRadius", 6, 1, 128);
+        ANCHOR_GROW_SECONDS = b.comment("Sekunden, bis die Zone eines Reinheitsankers den vollen Radius erreicht (0 = sofort).")
+                .translation(key("anchor_grow_seconds"))
+                .defineInRange("anchorGrowSeconds", 300, 0, 36000);
         ESSENCE_RADIUS = b.comment("Reinigungsradius der Reinigungsessenz.")
                 .translation(key("essence_radius"))
                 .defineInRange("essenceRadius", 6, 1, 32);
+        IMMUNITY_ESSENCE_SECONDS = b.comment("Wie lange die Reinigungsessenz Immunitaet gegen Splitterfieber verleiht (Sekunden, 0 = keine).")
+                .translation(key("immunity_essence_seconds"))
+                .defineInRange("immunityEssenceSeconds", 120, 0, 3600);
+        IMMUNITY_ANCHOR_SECONDS = b.comment("Immunitaet, die ein Reinheitsanker alle zwei Sekunden in seiner Zone auffrischt (Sekunden, 0 = keine).")
+                .translation(key("immunity_anchor_seconds"))
+                .defineInRange("immunityAnchorSeconds", 15, 0, 600);
         HEART_PURIFY_RADIUS = b.comment("Radius, den ein besiegtes Virusherz reinigt.")
                 .translation(key("heart_purify_radius"))
                 .defineInRange("heartPurifyRadius", 40, 4, 128);
         VIRUS_HEART_HEALTH = b.comment("Lebenspunkte eines Virusherzens.")
                 .translation(key("virus_heart_health"))
                 .defineInRange("virusHeartHealth", 200.0, 1.0, 100000.0);
+        VIRUS_HEART_DIFFICULTY = b.comment("Schwierigkeit des Virusherzens (Phasen bei 2/3 und 1/3 Leben): EASY, NORMAL oder HARD."
+                        + " Wirkt auf Abklingzeiten, Schaden und die Zahl der beschworenen Infizierten.")
+                .translation(key("virus_heart_difficulty"))
+                .defineEnum("virusHeartDifficulty", HeartDifficulty.NORMAL);
         HEART_SPAWN_THRESHOLD = b.comment("Ab so vielen infizierten Bloecken in einem Chunk kann dort ein Virusherz entstehen.")
                 .translation(key("heart_spawn_threshold"))
                 .defineInRange("heartSpawnThreshold", 160, 16, 65536);

@@ -1,0 +1,14 @@
+{
+  "chapter_min": 8,
+  "branch": "dominate",
+  "giver": "rhea",
+  "steps": [
+    {"type": "tame", "target": "any", "count": 3},
+    {"type": "talk", "target": "rhea"}
+  ],
+  "rewards": [
+    {"item": "shardline:shard_fragment", "count": 16}
+  ],
+  "xp": 160,
+  "flags": ["ruler:following"]
+}

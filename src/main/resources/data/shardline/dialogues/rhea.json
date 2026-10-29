@@ -1,0 +1,760 @@
+{
+  "speaker": "rhea",
+  "start": [
+    {
+      "if": [
+        {
+          "chapter_max": 6
+        }
+      ],
+      "node": "too_early"
+    },
+    {
+      "if": [
+        {
+          "not_flag": "rhea:met"
+        }
+      ],
+      "node": "first_meeting"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "camp_wood",
+            "step": 3
+          }
+        }
+      ],
+      "node": "wood_turn_in"
+    },
+    {
+      "if": [
+        {
+          "quest_active": "camp_wood"
+        }
+      ],
+      "node": "wood_waiting"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "first_festering",
+            "step": 4
+          }
+        }
+      ],
+      "node": "festering_turn_in"
+    },
+    {
+      "if": [
+        {
+          "quest_active": "first_festering"
+        }
+      ],
+      "node": "festering_waiting"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "anchor_net",
+            "step": 2
+          }
+        }
+      ],
+      "node": "anchors_turn_in"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "knights_without_lord",
+            "step": 2
+          }
+        }
+      ],
+      "node": "knights_turn_in"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "following",
+            "step": 2
+          }
+        }
+      ],
+      "node": "following_turn_in"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "night_watch",
+            "step": 2
+          }
+        }
+      ],
+      "node": "watch_turn_in"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "stillness"
+        }
+      ],
+      "node": "idle_stillness"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "chronicle"
+        }
+      ],
+      "node": "idle_chronicle"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "truce"
+        }
+      ],
+      "node": "idle_truce"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "dominion"
+        }
+      ],
+      "node": "idle_dominion"
+    },
+    {
+      "if": [
+        {
+          "branch": "seal"
+        }
+      ],
+      "node": "idle_seal"
+    },
+    {
+      "if": [
+        {
+          "branch": "dominate"
+        }
+      ],
+      "node": "idle_dominate"
+    },
+    {
+      "node": "idle"
+    }
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.too_early.1",
+        "dialogue.shardline.rhea.too_early.2"
+      ]
+    },
+    "first_meeting": {
+      "portrait": "neutral",
+      "do": [
+        {
+          "set_flag": "rhea:met"
+        },
+        {
+          "give_item": {
+            "item": "shardline:chronicle_journal",
+            "count": 1
+          }
+        }
+      ],
+      "text": [
+        "dialogue.shardline.rhea.first_meeting.1",
+        "dialogue.shardline.rhea.first_meeting.2",
+        "dialogue.shardline.rhea.first_meeting.3",
+        "dialogue.shardline.rhea.first_meeting.4"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.first_meeting.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.first_meeting.c2",
+          "next": "help",
+          "if": [
+            {
+              "quest_new": "camp_wood"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.first_meeting.c3",
+          "next": "END"
+        }
+      ]
+    },
+    "camp": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.rhea.camp.1",
+        "dialogue.shardline.rhea.camp.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.camp.c1",
+          "next": "marked"
+        },
+        {
+          "text": "dialogue.shardline.rhea.camp.c2",
+          "next": "help",
+          "if": [
+            {
+              "quest_new": "camp_wood"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.camp.c3",
+          "next": "END"
+        }
+      ]
+    },
+    "marked": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.rhea.marked.1",
+        "dialogue.shardline.rhea.marked.2"
+      ],
+      "next": "idle"
+    },
+    "help": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.help.1",
+        "dialogue.shardline.rhea.help.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.help.c1",
+          "next": "help_accepted",
+          "do": [
+            {
+              "start_quest": "camp_wood"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.help.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "help_accepted": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.rhea.help_accepted.1"
+      ]
+    },
+    "wood_waiting": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.wood_waiting.1",
+        "dialogue.shardline.rhea.wood_waiting.2"
+      ]
+    },
+    "wood_turn_in": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.wood_turn_in.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.wood_turn_in.c1",
+          "next": "wood_thanks",
+          "if": [
+            {
+              "has_item": {
+                "item": "shardline:crystal_planks",
+                "count": 32
+              }
+            },
+            {
+              "has_item": {
+                "item": "shardline:shard_lantern",
+                "count": 4
+              }
+            }
+          ],
+          "do": [
+            {
+              "take_item": {
+                "item": "shardline:crystal_planks",
+                "count": 32
+              }
+            },
+            {
+              "take_item": {
+                "item": "shardline:shard_lantern",
+                "count": 4
+              }
+            },
+            {
+              "complete_quest_step": "camp_wood"
+            }
+          ],
+          "show_locked": true,
+          "locked_hint": "dialogue.shardline.rhea.wood_turn_in.locked1"
+        },
+        {
+          "text": "dialogue.shardline.rhea.wood_turn_in.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "wood_thanks": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.rhea.wood_thanks.1",
+        "dialogue.shardline.rhea.wood_thanks.2"
+      ]
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.idle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_seal": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.idle_seal.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_dominate": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.rhea.idle_dominate.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_stillness": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.rhea.idle_stillness.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_chronicle": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.idle_chronicle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_truce": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.idle_truce.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_dominion": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.rhea.idle_dominion.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.idle.c1",
+          "next": "camp"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c_work",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.rhea.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "work": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.work.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.work.c1",
+          "next": "festering_offer",
+          "if": [
+            {
+              "quest_done": "camp_wood"
+            },
+            {
+              "quest_new": "first_festering"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.work.c2",
+          "next": "knights_offer",
+          "if": [
+            {
+              "quest_new": "knights_without_lord"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.work.c3",
+          "next": "watch_offer",
+          "if": [
+            {
+              "quest_new": "night_watch"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.work.c4",
+          "next": "work_branch"
+        }
+      ]
+    },
+    "work_branch": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.work_branch.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.work_branch.c1",
+          "next": "anchors_offer",
+          "if": [
+            {
+              "quest_new": "anchor_net"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.work_branch.c2",
+          "next": "following_offer",
+          "if": [
+            {
+              "quest_new": "following"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.work_branch.c3",
+          "next": "END"
+        }
+      ]
+    },
+    "festering_offer": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.festering_offer.1",
+        "dialogue.shardline.rhea.festering_offer.2",
+        "dialogue.shardline.rhea.festering_offer.3"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.festering_offer.c1",
+          "next": "festering_accepted",
+          "do": [
+            {
+              "start_quest": "first_festering"
+            },
+            {
+              "give_item": {
+                "item": "shardline:keeper_tuning_fork",
+                "count": 1
+              }
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.festering_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "festering_accepted": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.festering_accepted.1"
+      ]
+    },
+    "festering_waiting": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.festering_waiting.1"
+      ]
+    },
+    "festering_turn_in": {
+      "portrait": "neutral",
+      "do": [
+        {
+          "complete_quest_step": "first_festering"
+        },
+        {
+          "advance_chapter": 8
+        }
+      ],
+      "text": [
+        "dialogue.shardline.rhea.festering_turn_in.1",
+        "dialogue.shardline.rhea.festering_turn_in.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.festering_turn_in.c1",
+          "next": "after_seal",
+          "if": [
+            {
+              "ending": "seal"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.festering_turn_in.c2",
+          "next": "after_dominate",
+          "if": [
+            {
+              "ending": "dominate"
+            }
+          ]
+        }
+      ]
+    },
+    "after_seal": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.rhea.after_seal.1",
+        "dialogue.shardline.rhea.after_seal.2"
+      ]
+    },
+    "after_dominate": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.rhea.after_dominate.1",
+        "dialogue.shardline.rhea.after_dominate.2"
+      ]
+    },
+    "anchors_offer": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.anchors_offer.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.anchors_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "anchor_net"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.anchors_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "anchors_turn_in": {
+      "portrait": "happy",
+      "do": [
+        {
+          "complete_quest_step": "anchor_net"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.rhea.anchors_turn_in.1",
+        "dialogue.shardline.rhea.anchors_turn_in.2"
+      ]
+    },
+    "knights_offer": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.knights_offer.1",
+        "dialogue.shardline.rhea.knights_offer.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.knights_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "knights_without_lord"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.knights_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "knights_turn_in": {
+      "portrait": "neutral",
+      "do": [
+        {
+          "complete_quest_step": "knights_without_lord"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.rhea.knights_turn_in.1"
+      ]
+    },
+    "following_offer": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.rhea.following_offer.1",
+        "dialogue.shardline.rhea.following_offer.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.following_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "following"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.following_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "following_turn_in": {
+      "portrait": "sad",
+      "do": [
+        {
+          "complete_quest_step": "following"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.rhea.following_turn_in.1"
+      ]
+    },
+    "watch_offer": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.rhea.watch_offer.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.rhea.watch_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "night_watch"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.rhea.watch_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "watch_turn_in": {
+      "portrait": "happy",
+      "do": [
+        {
+          "complete_quest_step": "night_watch"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.rhea.watch_turn_in.1"
+      ]
+    }
+  }
+}

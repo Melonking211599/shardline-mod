@@ -20,6 +20,10 @@ public final class ModParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> VIRUS_SPORE =
             PARTICLE_TYPES.register("virus_spore", () -> new SimpleParticleType(false));
 
+    /** Goldene Funken der Reinheitszone (Rand der Zone eines Reinheitsankers). */
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PURITY_MOTE =
+            PARTICLE_TYPES.register("purity_mote", () -> new SimpleParticleType(false));
+
     private ModParticles() {
     }
 }

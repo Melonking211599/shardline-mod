@@ -49,14 +49,35 @@ public final class Purification {
             }
             return;
         }
-        JOBS.add(new Job(level, center.immutable(), radius, onDone));
+        JOBS.add(new Job(level, center.immutable(), -1, radius, onDone));
+    }
+
+    /**
+     * Reinigt eine Kugelschale (innerer Radius ausgenommen), etwa die neu hinzugekommene Zone eines wachsenden
+     * Reinheitsankers. Gleiche Regeln wie {@link #purifySphere}: kleine Schalen sofort, grosse im Hintergrund.
+     */
+    public static void purifyShell(ServerLevel level, BlockPos center, int inner, int outer, @Nullable IntConsumer onDone) {
+        if (outer <= INSTANT_RADIUS) {
+            int purified = purifyNow(level, center, inner, outer);
+            if (onDone != null) {
+                onDone.accept(purified);
+            }
+            return;
+        }
+        JOBS.add(new Job(level, center.immutable(), inner, outer, onDone));
     }
 
     private static int purifyNow(ServerLevel level, BlockPos center, int radius) {
+        return purifyNow(level, center, -1, radius);
+    }
+
+    private static int purifyNow(ServerLevel level, BlockPos center, int inner, int radius) {
         int purified = 0;
         long radiusSqr = (long) radius * radius;
+        long innerSqr = inner < 0 ? -1L : (long) inner * inner;
         for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))) {
-            if (pos.distSqr(center) > radiusSqr) {
+            long d = (long) pos.distSqr(center);
+            if (d > radiusSqr || d <= innerSqr) {
                 continue;
             }
             BlockState state = InfectionMap.stateIfLoaded(level, pos);
@@ -103,6 +124,8 @@ public final class Purification {
         final BlockPos center;
         final int radius;
         final long radiusSqr;
+        /** Innen liegender, bereits sauberer Bereich (-1 = keiner). */
+        final long innerSqr;
         @Nullable
         final IntConsumer onDone;
         final List<ChunkPos> chunks = new ArrayList<>();
@@ -112,11 +135,12 @@ public final class Purification {
         int sectionIndex;
         int purified;
 
-        Job(ServerLevel level, BlockPos center, int radius, @Nullable IntConsumer onDone) {
+        Job(ServerLevel level, BlockPos center, int inner, int radius, @Nullable IntConsumer onDone) {
             this.level = level;
             this.center = center;
             this.radius = radius;
             this.radiusSqr = (long) radius * radius;
+            this.innerSqr = inner < 0 ? -1L : (long) inner * inner;
             this.onDone = onDone;
             int minChunkX = (center.getX() - radius) >> 4;
             int maxChunkX = (center.getX() + radius) >> 4;
@@ -172,7 +196,8 @@ public final class Purification {
                 for (int z = 0; z < 16; z++) {
                     for (int x = 0; x < 16; x++) {
                         pos.set(chunkPos.getMinBlockX() + x, baseY + y, chunkPos.getMinBlockZ() + z);
-                        if (pos.distSqr(this.center) > this.radiusSqr) {
+                        double d = pos.distSqr(this.center);
+                        if (d > this.radiusSqr || d <= this.innerSqr) {
                             continue;
                         }
                         BlockState state = chunk.getBlockState(pos);

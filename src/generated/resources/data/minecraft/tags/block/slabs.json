@@ -1,5 +1,7 @@
 {
   "values": [
-    "shardline:shardstone_brick_slab"
+    "shardline:shardstone_brick_slab",
+    "shardline:polished_shardstone_slab",
+    "shardline:keeper_rune_slab"
   ]
 }

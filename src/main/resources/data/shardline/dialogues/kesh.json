@@ -1,0 +1,280 @@
+{
+  "speaker": "kesh",
+  "start": [
+    {
+      "if": [
+        {
+          "chapter_max": 6
+        }
+      ],
+      "node": "too_early"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "first_festering",
+            "step": 1
+          }
+        }
+      ],
+      "node": "festering_lead"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "the_marked",
+            "step": 4
+          }
+        }
+      ],
+      "node": "marked_heal"
+    },
+    {
+      "if": [
+        {
+          "any": [
+            {
+              "quest_step": {
+                "quest": "first_festering",
+                "step": 2
+              }
+            },
+            {
+              "quest_step": {
+                "quest": "first_festering",
+                "step": 3
+              }
+            }
+          ]
+        }
+      ],
+      "node": "festering_escort"
+    },
+    {
+      "if": [
+        {
+          "flag": "kesh:healed"
+        }
+      ],
+      "node": "healed"
+    },
+    {
+      "if": [
+        {
+          "not_flag": "kesh:met"
+        }
+      ],
+      "node": "first_meeting"
+    },
+    {
+      "node": "idle"
+    }
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.kesh.too_early.1"
+      ]
+    },
+    "first_meeting": {
+      "portrait": "neutral",
+      "do": [
+        {
+          "set_flag": "kesh:met"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.kesh.first_meeting.1",
+        "dialogue.shardline.kesh.first_meeting.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.kesh.first_meeting.c1",
+          "next": "tone"
+        },
+        {
+          "text": "dialogue.shardline.kesh.first_meeting.c2",
+          "next": "marks"
+        },
+        {
+          "text": "dialogue.shardline.kesh.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "tone": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.kesh.tone.1",
+        "dialogue.shardline.kesh.tone.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.kesh.tone.c1",
+          "next": "tone_seal",
+          "if": [
+            {
+              "ending": "seal"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.kesh.tone.c2",
+          "next": "tone_dominate",
+          "if": [
+            {
+              "ending": "dominate"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.kesh.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "tone_seal": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.kesh.tone_seal.1"
+      ],
+      "next": "idle"
+    },
+    "tone_dominate": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.kesh.tone_dominate.1"
+      ],
+      "next": "idle"
+    },
+    "marks": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.kesh.marks.1",
+        "dialogue.shardline.kesh.marks.2"
+      ],
+      "next": "idle"
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.kesh.idle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.kesh.idle.c1",
+          "next": "tone"
+        },
+        {
+          "text": "dialogue.shardline.kesh.idle.c2",
+          "next": "marked_offer",
+          "if": [
+            {
+              "quest_new": "the_marked"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.kesh.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "marked_offer": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.kesh.marked_offer.1",
+        "dialogue.shardline.kesh.marked_offer.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.kesh.marked_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "the_marked"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.kesh.marked_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "festering_lead": {
+      "portrait": "neutral",
+      "do": [
+        {
+          "complete_quest_step": "first_festering"
+        },
+        {
+          "npc_state": "follow"
+        },
+        {
+          "summon_encounter": "festering_node"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.kesh.festering_lead.1",
+        "dialogue.shardline.kesh.festering_lead.2"
+      ]
+    },
+    "festering_escort": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.kesh.festering_escort.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.kesh.festering_escort.c1",
+          "next": "END",
+          "do": [
+            {
+              "npc_state": "follow"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.kesh.festering_escort.c2",
+          "next": "END",
+          "do": [
+            {
+              "npc_state": "stay"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.kesh.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "marked_heal": {
+      "portrait": "happy",
+      "do": [
+        {
+          "complete_quest_step": "the_marked"
+        },
+        {
+          "npc_state": "healed"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.kesh.marked_heal.1",
+        "dialogue.shardline.kesh.marked_heal.2"
+      ],
+      "next": "healed"
+    },
+    "healed": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.kesh.healed.1",
+        "dialogue.shardline.kesh.healed.2"
+      ]
+    }
+  }
+}

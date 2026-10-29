@@ -1,11 +1,14 @@
 package eu.shardline.mod.network;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.client.story.ClientDialogue;
 import eu.shardline.mod.client.story.ClientStoryHandler;
 import eu.shardline.mod.event.CrystalShieldHandler;
 import eu.shardline.mod.story.StoryEnding;
+import eu.shardline.mod.story.dialogue.DialogueSessions;
 import eu.shardline.mod.story.ending.EndingManager;
 import eu.shardline.mod.story.ending.RulerAbilities;
+import eu.shardline.mod.story.lore.TraderDialogue;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,7 +21,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  */
 @EventBusSubscriber(modid = Shardline.MODID)
 public final class ModNetworking {
-    private static final String PROTOCOL_VERSION = "2";
+    private static final String PROTOCOL_VERSION = "5";
 
     private ModNetworking() {
     }
@@ -51,7 +54,37 @@ public final class ModNetworking {
                     }
                 }));
 
+        registrar.playToServer(TraderActionPayload.TYPE, TraderActionPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        TraderDialogue.handleAction(player, payload.entityId(), payload.action());
+                    }
+                }));
+
+        registrar.playToServer(OpenJournalPayload.TYPE, OpenJournalPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        eu.shardline.mod.story.quest.QuestSync.send(player, true);
+                    }
+                }));
+        registrar.playToServer(DialogueChoicePayload.TYPE, DialogueChoicePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        DialogueSessions.onChoice(player, payload.session(), payload.index());
+                    }
+                }));
+        registrar.playBidirectional(CloseDialoguePayload.TYPE, CloseDialoguePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+                    if (context.player() instanceof ServerPlayer player) {
+                        DialogueSessions.onClientClose(player, payload.session());
+                    } else {
+                        ClientDialogue.close(payload);
+                    }
+                }));
+
         // Server -> Client
+        registrar.playToClient(OpenDialoguePayload.TYPE, OpenDialoguePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientDialogue.open(payload)));
         registrar.playToClient(StoryStatePayload.TYPE, StoryStatePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.handleState(payload)));
         registrar.playToClient(TitlesPayload.TYPE, TitlesPayload.STREAM_CODEC, (payload, context) ->
@@ -60,5 +93,13 @@ public final class ModNetworking {
                 context.enqueueWork(() -> ClientStoryHandler.handleScreenEffect(payload)));
         registrar.playToClient(OpenEndingChoicePayload.TYPE, OpenEndingChoicePayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> ClientStoryHandler.openEndingChoice(payload)));
+        registrar.playToClient(ChapterCardPayload.TYPE, ChapterCardPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientStoryHandler.showChapterCard(payload)));
+        registrar.playToClient(OpenLorePagePayload.TYPE, OpenLorePagePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientStoryHandler.openLorePage(payload)));
+        registrar.playToClient(JournalPayload.TYPE, JournalPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> eu.shardline.mod.client.story.ClientJournal.receive(payload)));
+        registrar.playToClient(TraderDialoguePayload.TYPE, TraderDialoguePayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> ClientStoryHandler.openTraderDialogue(payload)));
     }
 }

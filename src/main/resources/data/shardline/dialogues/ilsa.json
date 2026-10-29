@@ -1,0 +1,721 @@
+{
+  "speaker": "ilsa",
+  "start": [
+    {
+      "if": [
+        {
+          "chapter_max": 6
+        }
+      ],
+      "node": "too_early"
+    },
+    {
+      "if": [
+        {
+          "not_flag": "ilsa:met"
+        }
+      ],
+      "node": "first_meeting"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "the_marked",
+            "step": 3
+          }
+        }
+      ],
+      "node": "marked_brew"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "echo_harvest",
+            "step": 2
+          }
+        }
+      ],
+      "node": "harvest_turn_in"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "spare_or_use",
+            "step": 2
+          }
+        }
+      ],
+      "node": "spare_turn_in"
+    },
+    {
+      "if": [
+        {
+          "chapter_max": 8
+        },
+        {
+          "branch": "dominate"
+        },
+        {
+          "quest_done": "following"
+        },
+        {
+          "quest_done": "spare_or_use"
+        }
+      ],
+      "node": "song_turns"
+    },
+    {
+      "if": [
+        {
+          "branch": "dominate"
+        },
+        {
+          "flag": "boss:festering_heart"
+        },
+        {
+          "epilogue": ""
+        }
+      ],
+      "node": "decision"
+    },
+    {
+      "if": [
+        {
+          "chapter_min": 9
+        },
+        {
+          "branch": "dominate"
+        },
+        {
+          "not_flag": "boss:festering_heart"
+        }
+      ],
+      "node": "heart_waiting"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "stillness"
+        }
+      ],
+      "node": "idle_stillness"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "chronicle"
+        }
+      ],
+      "node": "idle_chronicle"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "truce"
+        }
+      ],
+      "node": "idle_truce"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "dominion"
+        }
+      ],
+      "node": "idle_dominion"
+    },
+    {
+      "node": "idle"
+    }
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.too_early.1"
+      ]
+    },
+    "first_meeting": {
+      "portrait": "happy",
+      "do": [
+        {
+          "set_flag": "ilsa:met"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.ilsa.first_meeting.1",
+        "dialogue.shardline.ilsa.first_meeting.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.first_meeting.c1",
+          "next": "workshop"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.trade",
+          "next": "END",
+          "do": [
+            {
+              "open_trade": true
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "workshop": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.workshop.1",
+        "dialogue.shardline.ilsa.workshop.2"
+      ],
+      "next": "idle"
+    },
+    "rebuild": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.rebuild.1",
+        "dialogue.shardline.ilsa.rebuild.2"
+      ],
+      "next": "idle"
+    },
+    "resistance": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.ilsa.resistance.1",
+        "dialogue.shardline.ilsa.resistance.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.resistance.c1",
+          "next": "resistance_trust"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.resistance.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "resistance_trust": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.ilsa.resistance_trust.1"
+      ],
+      "next": "idle"
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.idle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.trade",
+          "next": "END",
+          "do": [
+            {
+              "open_trade": true
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle.c2",
+          "next": "talk"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle.c3",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "talk": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.talk.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.talk.c1",
+          "next": "rebuild",
+          "if": [
+            {
+              "ending": "seal"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.talk.c2",
+          "next": "resistance",
+          "if": [
+            {
+              "ending": "dominate"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.talk.c3",
+          "next": "workshop"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "work": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.work.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.work.c1",
+          "next": "harvest_offer",
+          "if": [
+            {
+              "quest_new": "echo_harvest"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.work.c2",
+          "next": "spare_offer",
+          "if": [
+            {
+              "quest_new": "spare_or_use"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.work.c3",
+          "next": "idle"
+        }
+      ]
+    },
+    "harvest_offer": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.harvest_offer.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.harvest_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "echo_harvest"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.harvest_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "harvest_turn_in": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.harvest_turn_in.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.harvest_turn_in.c1",
+          "next": "harvest_thanks",
+          "if": [
+            {
+              "has_item": {
+                "item": "shardline:echo_shard",
+                "count": 5
+              }
+            }
+          ],
+          "do": [
+            {
+              "take_item": {
+                "item": "shardline:echo_shard",
+                "count": 5
+              }
+            },
+            {
+              "complete_quest_step": "echo_harvest"
+            }
+          ],
+          "show_locked": true,
+          "locked_hint": "dialogue.shardline.ilsa.harvest_turn_in.locked1"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.harvest_turn_in.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "harvest_thanks": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.harvest_thanks.1"
+      ]
+    },
+    "marked_brew": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.marked_brew.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.marked_brew.c1",
+          "next": "marked_brewed",
+          "if": [
+            {
+              "has_item": {
+                "item": "shardline:purification_essence",
+                "count": 1
+              }
+            },
+            {
+              "has_item": {
+                "item": "shardline:echo_shard",
+                "count": 3
+              }
+            }
+          ],
+          "do": [
+            {
+              "take_item": {
+                "item": "shardline:purification_essence",
+                "count": 1
+              }
+            },
+            {
+              "take_item": {
+                "item": "shardline:echo_shard",
+                "count": 3
+              }
+            },
+            {
+              "complete_quest_step": "the_marked"
+            }
+          ],
+          "show_locked": true,
+          "locked_hint": "dialogue.shardline.ilsa.marked_brew.locked1"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.marked_brew.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "marked_brewed": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.marked_brewed.1",
+        "dialogue.shardline.ilsa.marked_brewed.2"
+      ]
+    },
+    "spare_offer": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.ilsa.spare_offer.1",
+        "dialogue.shardline.ilsa.spare_offer.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.spare_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "spare_or_use"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.spare_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "spare_turn_in": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.ilsa.spare_turn_in.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.spare_turn_in.c1",
+          "next": "spared",
+          "if": [
+            {
+              "has_item": {
+                "item": "shardline:echo_shard",
+                "count": 3
+              }
+            }
+          ],
+          "do": [
+            {
+              "take_item": {
+                "item": "shardline:echo_shard",
+                "count": 3
+              }
+            },
+            {
+              "set_flag": "voiceless:spared"
+            },
+            {
+              "complete_quest_step": "spare_or_use"
+            }
+          ],
+          "show_locked": true,
+          "locked_hint": "dialogue.shardline.ilsa.spare_turn_in.locked1"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.spare_turn_in.c2",
+          "next": "used",
+          "if": [
+            {
+              "has_item": {
+                "item": "shardline:echo_shard",
+                "count": 3
+              }
+            }
+          ],
+          "do": [
+            {
+              "take_item": {
+                "item": "shardline:echo_shard",
+                "count": 3
+              }
+            },
+            {
+              "set_flag": "voiceless:used"
+            },
+            {
+              "complete_quest_step": "spare_or_use"
+            }
+          ],
+          "show_locked": true,
+          "locked_hint": "dialogue.shardline.ilsa.spare_turn_in.locked2"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.spare_turn_in.c3",
+          "next": "END"
+        }
+      ]
+    },
+    "spared": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.spared.1"
+      ]
+    },
+    "used": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.ilsa.used.1"
+      ]
+    },
+    "song_turns": {
+      "portrait": "angry",
+      "do": [
+        {
+          "advance_chapter": 9
+        },
+        {
+          "summon_encounter": "festering_heart"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.ilsa.song_turns.1",
+        "dialogue.shardline.ilsa.song_turns.2"
+      ]
+    },
+    "heart_waiting": {
+      "portrait": "angry",
+      "text": [
+        "dialogue.shardline.ilsa.heart_waiting.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.heart_waiting.c1",
+          "next": "END",
+          "do": [
+            {
+              "summon_encounter": "festering_heart"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.heart_waiting.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "decision": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.decision.1",
+        "dialogue.shardline.ilsa.decision.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.decision.c1",
+          "next": "epilogue_truce",
+          "do": [
+            {
+              "set_epilogue": "truce"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.decision.c2",
+          "next": "epilogue_dominion",
+          "do": [
+            {
+              "set_epilogue": "dominion"
+            }
+          ]
+        }
+      ]
+    },
+    "epilogue_truce": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.epilogue_truce.1",
+        "dialogue.shardline.ilsa.epilogue_truce.2"
+      ]
+    },
+    "epilogue_dominion": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.ilsa.epilogue_dominion.1",
+        "dialogue.shardline.ilsa.epilogue_dominion.2"
+      ]
+    },
+    "idle_stillness": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.idle_stillness.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.trade",
+          "next": "END",
+          "do": [
+            {
+              "open_trade": true
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_stillness.c2",
+          "next": "talk"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_stillness.c3",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_chronicle": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.ilsa.idle_chronicle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.trade",
+          "next": "END",
+          "do": [
+            {
+              "open_trade": true
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_chronicle.c2",
+          "next": "talk"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_chronicle.c3",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_truce": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.ilsa.idle_truce.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.trade",
+          "next": "END",
+          "do": [
+            {
+              "open_trade": true
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_truce.c2",
+          "next": "talk"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_truce.c3",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_dominion": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.ilsa.idle_dominion.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.ilsa.trade",
+          "next": "END",
+          "do": [
+            {
+              "open_trade": true
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_dominion.c2",
+          "next": "talk"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.idle_dominion.c3",
+          "next": "work"
+        },
+        {
+          "text": "dialogue.shardline.ilsa.bye",
+          "next": "END"
+        }
+      ]
+    }
+  }
+}

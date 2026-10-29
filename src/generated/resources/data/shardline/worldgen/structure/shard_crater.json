@@ -1,0 +1,6 @@
+{
+  "type": "shardline:shard_crater",
+  "biomes": "#shardline:has_structure/shard_crater",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

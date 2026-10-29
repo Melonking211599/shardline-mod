@@ -216,6 +216,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_colossus.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_colossus.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -251,6 +263,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_last_knights.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -286,6 +310,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.queen_selvaine.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -321,6 +357,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_shattering.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_shattering.page.7\"}"
                     }
                   ],
                   "resolved": true,

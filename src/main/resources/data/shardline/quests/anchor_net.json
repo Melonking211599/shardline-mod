@@ -1,0 +1,15 @@
+{
+  "chapter_min": 8,
+  "branch": "seal",
+  "giver": "rhea",
+  "steps": [
+    {"type": "place_anchor", "target": "shardline:purity_anchor", "count": 3},
+    {"type": "talk", "target": "rhea"}
+  ],
+  "rewards": [
+    {"item": "shardline:shard_ingot", "count": 3},
+    {"item": "shardline:berry_tart", "count": 4}
+  ],
+  "xp": 160,
+  "flags": ["camp:anchors"]
+}

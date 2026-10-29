@@ -94,6 +94,7 @@ public final class InfectionAtmosphere {
     @SubscribeEvent
     static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         StoryClientState.reset();
+        ClientJournal.reset();
         intensity = 0.0F;
         target = 0.0F;
     }

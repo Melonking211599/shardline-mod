@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "shardline:keeper_ruin_bricks"
+    },
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    }
+  },
+  "pattern": [
+    " G ",
+    "BBB"
+  ],
+  "result": {
+    "count": 6,
+    "id": "shardline:keeper_rune_slab"
+  }
+}

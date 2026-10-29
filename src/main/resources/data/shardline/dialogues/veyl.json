@@ -1,0 +1,465 @@
+{
+  "speaker": "veyl",
+  "start": [
+    {
+      "if": [
+        {
+          "chapter_max": 6
+        }
+      ],
+      "node": "too_early"
+    },
+    {
+      "if": [
+        {
+          "not_flag": "veyl:met"
+        }
+      ],
+      "node": "first_meeting"
+    },
+    {
+      "if": [
+        {
+          "quest_step": {
+            "quest": "archive_voices",
+            "step": 3
+          }
+        }
+      ],
+      "node": "archive_turn_in"
+    },
+    {
+      "if": [
+        {
+          "chapter_max": 8
+        },
+        {
+          "branch": "seal"
+        },
+        {
+          "quest_done": "archive_voices"
+        },
+        {
+          "quest_done": "anchor_net"
+        }
+      ],
+      "node": "awakening"
+    },
+    {
+      "if": [
+        {
+          "branch": "seal"
+        },
+        {
+          "flag": "boss:echo_queen"
+        },
+        {
+          "epilogue": ""
+        }
+      ],
+      "node": "decision"
+    },
+    {
+      "if": [
+        {
+          "chapter_min": 9
+        },
+        {
+          "branch": "seal"
+        },
+        {
+          "not_flag": "boss:echo_queen"
+        }
+      ],
+      "node": "echo_waiting"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "stillness"
+        }
+      ],
+      "node": "idle_stillness"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "chronicle"
+        }
+      ],
+      "node": "idle_chronicle"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "truce"
+        }
+      ],
+      "node": "idle_truce"
+    },
+    {
+      "if": [
+        {
+          "epilogue": "dominion"
+        }
+      ],
+      "node": "idle_dominion"
+    },
+    {
+      "if": [
+        {
+          "ending": "seal"
+        }
+      ],
+      "node": "idle_seal"
+    },
+    {
+      "if": [
+        {
+          "ending": "dominate"
+        }
+      ],
+      "node": "idle_dominate"
+    },
+    {
+      "node": "idle"
+    }
+  ],
+  "nodes": {
+    "too_early": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.too_early.1"
+      ]
+    },
+    "first_meeting": {
+      "portrait": "neutral",
+      "do": [
+        {
+          "set_flag": "veyl:met"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.veyl.first_meeting.1",
+        "dialogue.shardline.veyl.first_meeting.2",
+        "dialogue.shardline.veyl.first_meeting.3"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.first_meeting.c1",
+          "next": "who"
+        },
+        {
+          "text": "dialogue.shardline.veyl.first_meeting.c2",
+          "next": "chronicle"
+        },
+        {
+          "text": "dialogue.shardline.veyl.first_meeting.c3",
+          "next": "END"
+        }
+      ]
+    },
+    "who": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.veyl.who.1",
+        "dialogue.shardline.veyl.who.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.who.c1",
+          "next": "chronicle"
+        },
+        {
+          "text": "dialogue.shardline.veyl.who.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "chronicle": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.chronicle.1",
+        "dialogue.shardline.veyl.chronicle.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.chronicle.c1",
+          "next": "judge"
+        },
+        {
+          "text": "dialogue.shardline.veyl.chronicle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "judge": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.judge.1"
+      ],
+      "next": "END"
+    },
+    "idle": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.idle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c1",
+          "next": "chronicle"
+        },
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_seal": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.veyl.idle_seal.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c1",
+          "next": "chronicle"
+        },
+        {
+          "text": "dialogue.shardline.veyl.idle_seal.c2",
+          "next": "archive_offer",
+          "if": [
+            {
+              "quest_new": "archive_voices"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_dominate": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.veyl.idle_dominate.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c1",
+          "next": "chronicle"
+        },
+        {
+          "text": "dialogue.shardline.veyl.idle_dominate.c2",
+          "next": "archive_offer",
+          "if": [
+            {
+              "quest_new": "archive_voices"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "archive_offer": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.archive_offer.1",
+        "dialogue.shardline.veyl.archive_offer.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.archive_offer.c1",
+          "next": "END",
+          "do": [
+            {
+              "start_quest": "archive_voices"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.veyl.archive_offer.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "archive_turn_in": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.archive_turn_in.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.archive_turn_in.c1",
+          "next": "archive_thanks",
+          "if": [
+            {
+              "has_item": {
+                "item": "shardline:echo_shard",
+                "count": 2
+              }
+            }
+          ],
+          "do": [
+            {
+              "take_item": {
+                "item": "shardline:echo_shard",
+                "count": 2
+              }
+            },
+            {
+              "complete_quest_step": "archive_voices"
+            }
+          ],
+          "show_locked": true,
+          "locked_hint": "dialogue.shardline.veyl.archive_turn_in.locked1"
+        },
+        {
+          "text": "dialogue.shardline.veyl.archive_turn_in.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "archive_thanks": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.veyl.archive_thanks.1",
+        "dialogue.shardline.veyl.archive_thanks.2"
+      ]
+    },
+    "awakening": {
+      "portrait": "angry",
+      "do": [
+        {
+          "advance_chapter": 9
+        },
+        {
+          "summon_encounter": "echo_queen"
+        }
+      ],
+      "text": [
+        "dialogue.shardline.veyl.awakening.1",
+        "dialogue.shardline.veyl.awakening.2"
+      ]
+    },
+    "echo_waiting": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.veyl.echo_waiting.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.echo_waiting.c1",
+          "next": "END",
+          "do": [
+            {
+              "summon_encounter": "echo_queen"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.veyl.echo_waiting.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "decision": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.decision.1",
+        "dialogue.shardline.veyl.decision.2"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.decision.c1",
+          "next": "epilogue_stillness",
+          "do": [
+            {
+              "set_epilogue": "stillness"
+            }
+          ]
+        },
+        {
+          "text": "dialogue.shardline.veyl.decision.c2",
+          "next": "epilogue_chronicle",
+          "do": [
+            {
+              "set_epilogue": "chronicle"
+            }
+          ]
+        }
+      ]
+    },
+    "epilogue_stillness": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.veyl.epilogue_stillness.1",
+        "dialogue.shardline.veyl.epilogue_stillness.2"
+      ]
+    },
+    "epilogue_chronicle": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.veyl.epilogue_chronicle.1",
+        "dialogue.shardline.veyl.epilogue_chronicle.2"
+      ]
+    },
+    "idle_stillness": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.veyl.idle_stillness.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_chronicle": {
+      "portrait": "happy",
+      "text": [
+        "dialogue.shardline.veyl.idle_chronicle.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c1",
+          "next": "chronicle"
+        },
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_truce": {
+      "portrait": "neutral",
+      "text": [
+        "dialogue.shardline.veyl.idle_truce.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    },
+    "idle_dominion": {
+      "portrait": "sad",
+      "text": [
+        "dialogue.shardline.veyl.idle_dominion.1"
+      ],
+      "choices": [
+        {
+          "text": "dialogue.shardline.veyl.idle.c2",
+          "next": "END"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "chapter_min": 7,
+  "giver": "kesh",
+  "steps": [
+    {"type": "collect", "target": "shardline:purification_essence", "count": 1},
+    {"type": "collect", "target": "shardline:echo_shard", "count": 3},
+    {"type": "talk", "target": "ilsa"},
+    {"type": "talk", "target": "kesh"}
+  ],
+  "rewards": [
+    {"item": "shardline:berry_tart", "count": 3}
+  ],
+  "xp": 150,
+  "flags": ["kesh:healed"]
+}

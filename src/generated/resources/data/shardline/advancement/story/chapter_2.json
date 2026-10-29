@@ -11,8 +11,11 @@
     },
     "frame": "goal",
     "icon": {
+      "components": {
+        "shardline:chapter": 2
+      },
       "count": 1,
-      "id": "shardline:shard_portal_frame"
+      "id": "shardline:chapter_emblem"
     },
     "title": {
       "translate": "advancements.shardline.story.chapter_2.title"

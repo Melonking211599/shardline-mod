@@ -17,7 +17,7 @@ import software.bernie.geckolib.util.Color;
 public class QueenCloneRenderer extends ShardlineGeoRenderer<QueenCloneEntity> {
     public QueenCloneRenderer(EntityRendererProvider.Context context) {
         super(context, new DefaultedEntityGeoModel<QueenCloneEntity>(Shardline.id("shard_queen"), true)
-                .withAltTexture(Shardline.id("queen_clone")), 0.5F, false);
+                .withAltTexture(Shardline.id("queen_clone")), 0.4F, false);
     }
 
     @Nullable

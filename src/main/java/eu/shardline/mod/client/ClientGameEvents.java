@@ -38,6 +38,11 @@ public final class ClientGameEvents {
         while (KeyBindings.CRYSTAL_WAVE.consumeClick()) {
             useAbility(minecraft, AbilityPayload.CRYSTAL_WAVE);
         }
+        while (KeyBindings.JOURNAL.consumeClick()) {
+            if (minecraft.player != null && minecraft.getConnection() != null) {
+                PacketDistributor.sendToServer(new eu.shardline.mod.network.OpenJournalPayload());
+            }
+        }
         PortalOverlay.tick(minecraft);
     }
 

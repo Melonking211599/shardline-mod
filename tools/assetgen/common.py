@@ -182,6 +182,26 @@ class Tex:
                         self.px[x, y] = c
                         break
 
+    def selout(self, factor: float = 0.4, base=OUTLINE, keep: float = 0.2):
+        """Weiche Kontur wie bei Vanilla: jeder Randpixel bekommt einen dunkleren Ton seiner Nachbarn
+        (Anteil `keep` der festen Konturfarbe `base` bleibt beigemischt, damit es auf dunklem Grund sichtbar bleibt)."""
+        src = self.img.copy()
+        sp = src.load()
+        for y in range(self.h):
+            for x in range(self.w):
+                if sp[x, y][3] != 0:
+                    continue
+                near = [sp[nx, ny] for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
+                        if 0 <= nx < self.w and 0 <= ny < self.h and sp[nx, ny][3] != 0]
+                if not near:
+                    continue
+                r = sum(c[0] for c in near) / len(near)
+                g = sum(c[1] for c in near) / len(near)
+                b = sum(c[2] for c in near) / len(near)
+                self.px[x, y] = (int((r * factor) * (1 - keep) + base[0] * keep),
+                                 int((g * factor) * (1 - keep) + base[1] * keep),
+                                 int((b * factor) * (1 - keep) + base[2] * keep), 255)
+
     def save(self, path: Path):
         path.parent.mkdir(parents=True, exist_ok=True)
         self.img.save(path, "PNG", optimize=False)
@@ -195,3 +215,19 @@ def save_png(tex: Tex, relative: str):
 def write_json(path: Path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+# ---------------------------------------------------------------- Story-Paletten (Erweiterung)
+# Viruspalette: krankes Magenta, giftiges Pink, fast schwarzes Violett. VGLOW ist die pulsierende Adernschicht.
+VIRUS = [hx(c) for c in ("#0d0412", "#240a2c", "#481044", "#7c1a68", "#b8268f")]
+VGLOW = [hx(c) for c in ("#a3208a", "#e03cc0", "#ff6fdc", "#ffb3f0", "#fff0fb")]
+TOXIC = hx("#ff3fb4")
+# Reinheitspalette: warmes Gold, Weiss und sanftes Hellblau als klarer Gegenpol zum Virus.
+GOLD = [hx(c) for c in ("#4a2c08", "#8a5a14", "#cf9425", "#f4c95a", "#fff1b0")]
+IVORY = [hx(c) for c in ("#6f6a82", "#9f9ab4", "#cdc9dd", "#ecebf6", "#ffffff")]
+SKYB = [hx(c) for c in ("#4879ad", "#79b0e0", "#acd6f5", "#d8eeff", "#f4fbff")]
+# Leder / Pergament fuer Haendlernotizen
+LEATHER = [hx(c) for c in ("#2a1810", "#46281a", "#6b4128", "#93603a", "#bf8a55")]
+
+# Glut fuer den Aschland (Grau/Orange): dunkle Kohle, rote Glut, Orange, helles Gelb
+EMBER = [hx(c) for c in ("#3a1208", "#7a2a0c", "#c4501a", "#f08a2c", "#ffd070")]

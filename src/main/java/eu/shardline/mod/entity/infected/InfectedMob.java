@@ -15,6 +15,12 @@ public interface InfectedMob extends OwnableEntity {
         return this.getOwnerUUID() != null;
     }
 
+    /**
+     * Ob das Wesen einen Besitzer hat. Anders als {@link #isTamed()} auch auf dem Client gueltig
+     * (synchronisiert); der Renderer zeichnet dann den Kragen.
+     */
+    boolean hasCollar();
+
     /** Verbleibende Lebenszeit eines beschworenen Dieners in Ticks (0 = dauerhaft). */
     int getSummonTicks();
 

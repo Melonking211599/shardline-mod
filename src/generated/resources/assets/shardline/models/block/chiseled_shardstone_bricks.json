@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "shardline:block/chiseled_shardstone_bricks"
+  }
+}

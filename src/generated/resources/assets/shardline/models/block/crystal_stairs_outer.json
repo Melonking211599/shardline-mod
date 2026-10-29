@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "shardline:block/crystal_planks",
+    "side": "shardline:block/crystal_planks",
+    "top": "shardline:block/crystal_planks"
+  }
+}

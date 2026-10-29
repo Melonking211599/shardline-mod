@@ -1,0 +1,14 @@
+{
+  "chapter_min": 7,
+  "giver": "ilsa",
+  "repeatable": true,
+  "steps": [
+    {"type": "collect", "target": "shardline:echo_shard", "count": 5},
+    {"type": "talk", "target": "ilsa"}
+  ],
+  "rewards": [
+    {"item": "shardline:purification_essence", "count": 1},
+    {"item": "shardline:shard_fragment", "count": 10}
+  ],
+  "xp": 60
+}

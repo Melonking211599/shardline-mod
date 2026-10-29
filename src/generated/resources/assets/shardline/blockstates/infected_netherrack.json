@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "shardline:block/infected_netherrack"
+      },
+      {
+        "model": "shardline:block/infected_netherrack_v2"
+      },
+      {
+        "model": "shardline:block/infected_netherrack_v3"
+      }
+    ]
+  }
+}

@@ -3,7 +3,10 @@ package eu.shardline.mod.gametest;
 import com.mojang.datafixers.util.Pair;
 import eu.shardline.mod.Shardline;
 import eu.shardline.mod.block.ModBlocks;
+import eu.shardline.mod.core.ModDamageTypes;
+import eu.shardline.mod.core.ModEnchantments;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.entity.mob.CrystalSnailEntity;
 import eu.shardline.mod.story.ShardlineWorldData;
 import eu.shardline.mod.story.StoryChapter;
 import eu.shardline.mod.story.StoryEnding;
@@ -17,11 +20,16 @@ import eu.shardline.mod.virus.VirusSpreadManager;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import eu.shardline.mod.world.noise.ModNoiseSettings;
 import eu.shardline.mod.world.portal.ShardPortalShape;
+import eu.shardline.mod.world.structure.AshCryptPiece;
 import eu.shardline.mod.world.structure.ColossusArenaPiece;
+import eu.shardline.mod.world.structure.CrystalGeodePiece;
+import eu.shardline.mod.world.structure.KeeperShrinePiece;
 import eu.shardline.mod.world.structure.ModStructures;
 import eu.shardline.mod.world.structure.QueenArenaPiece;
 import eu.shardline.mod.world.structure.RuinTowerPiece;
+import eu.shardline.mod.world.structure.ShardCraterPiece;
 import eu.shardline.mod.world.structure.ShardlinePiece;
+import eu.shardline.mod.world.structure.TraderOutpostPiece;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +40,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.QuartPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -41,8 +50,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -118,7 +134,7 @@ public final class ShardlineGameTests {
         helper.succeed();
     }
 
-    /** Alle drei Bauwerke einmal vollstaendig errichten und Schluesselbloecke pruefen. */
+    /** Alle Bauwerke einmal vollstaendig errichten und Schluesselbloecke pruefen. */
     @GameTest(template = EMPTY, timeoutTicks = 100)
     public static void structurePieces(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
@@ -141,6 +157,50 @@ public final class ShardlineGameTests {
         expect(helper, level, arena.offset(-10, 1, 10), ModBlocks.MEMORY_CRYSTAL.get());
         expect(helper, level, throne.offset(0, 1, 7), ModBlocks.MEMORY_CRYSTAL.get());
         expect(helper, level, throne.offset(0, 1, -7), ModBlocks.MEMORY_CRYSTAL.get());
+
+        BlockPos shrine = new BlockPos(base.getX() + 500, 120, base.getZ());
+        BlockPos outpost = new BlockPos(base.getX() + 560, 120, base.getZ());
+        BlockPos crypt = new BlockPos(base.getX() + 620, 120, base.getZ());
+        BlockPos geode = new BlockPos(base.getX() + 680, 120, base.getZ());
+        BlockPos crater = new BlockPos(base.getX() + 740, 120, base.getZ());
+        BlockPos keeperRuin = new BlockPos(base.getX() + 800, 120, base.getZ());
+        build(level, new KeeperShrinePiece(shrine, 4L));
+        build(level, new TraderOutpostPiece(outpost, 5L));
+        build(level, new AshCryptPiece(crypt, 6L));
+        build(level, new CrystalGeodePiece(geode, 7L));
+        build(level, new ShardCraterPiece(crater, 8L));
+        build(level, new eu.shardline.mod.world.structure.KeeperRuinPiece(keeperRuin, 9L));
+
+        expect(helper, level, shrine.above(2), ModBlocks.MEMORY_CRYSTAL.get());
+        expect(helper, level, shrine.offset(0, 1, 2), Blocks.CHEST);
+        expect(helper, level, outpost.offset(2, 1, 2), Blocks.CHEST);
+        expect(helper, level, outpost.offset(3, 1, 3), ModBlocks.CRYSTAL_LOG.get());
+        expect(helper, level, outpost.offset(0, 5, 0), ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        expect(helper, level, crypt.offset(4, -7, 4), Blocks.CHEST);
+        expect(helper, level, crypt.offset(-4, -7, 4), Blocks.CHEST);
+        expect(helper, level, crypt.offset(0, -7, 4), ModBlocks.MEMORY_CRYSTAL.get());
+        expect(helper, level, crypt.offset(0, -7, -4), Blocks.LADDER);
+        expect(helper, level, crypt.offset(0, 0, -4), Blocks.LADDER);
+        expect(helper, level, geode.offset(0, -1, 2), Blocks.CHEST);
+        expect(helper, level, geode.offset(0, -6, 0), ModBlocks.SHARDSTONE.get(), ModBlocks.SHARD_ORE.get());
+        expect(helper, level, geode.offset(0, 0, -7), Blocks.AIR);
+        expect(helper, level, crater.offset(0, -3, 0), ModBlocks.SHARDSTONE.get(), ModBlocks.SHARD_ORE.get(), ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        expect(helper, level, crater.offset(0, -1, 0), ModBlocks.GLOW_CRYSTAL_CLUSTER.get());
+        boolean craterChest = BlockPos.betweenClosedStream(crater.offset(-7, -4, -7), crater.offset(7, 1, 7))
+                .anyMatch(pos -> level.getBlockState(pos).is(Blocks.CHEST));
+        helper.assertTrue(craterChest, "Keine Truhe im Splitterkrater");
+        expect(helper, level, eu.shardline.mod.world.structure.KeeperRuinPiece.crystalPos(keeperRuin), ModBlocks.MEMORY_CRYSTAL.get());
+        expect(helper, level, eu.shardline.mod.world.structure.KeeperRuinPiece.chestPos(keeperRuin), Blocks.CHEST);
+        expect(helper, level, keeperRuin.offset(eu.shardline.mod.world.structure.KeeperRuinPiece.HALF_W, 1,
+                eu.shardline.mod.world.structure.KeeperRuinPiece.HALF_L), ModBlocks.KEEPER_RUIN_PILLAR.get());
+        expect(helper, level, keeperRuin.offset(0, 0, 2), ModBlocks.KEEPER_RUNE_SLAB.get());
+        // Die Truhe der Hueter-Ruinen enthaelt immer mindestens ein Lore-Buch.
+        var table = level.getServer().reloadableRegistries().getLootTable(eu.shardline.mod.core.ModLootTables.KEEPER_RUIN_CHEST);
+        boolean lore = table.getRandomItems(new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, keeperRuin.getCenter())
+                        .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST))
+                .stream().anyMatch(stack -> stack.is(eu.shardline.mod.item.ModItems.LORE_BOOK.get()));
+        helper.assertTrue(lore, "Keine Lore-Buecher in der Truhe der Hueter-Ruinen");
         helper.succeed();
     }
 
@@ -212,6 +272,13 @@ public final class ShardlineGameTests {
         BlockPos tower = locate(helper, level, ModStructures.RUIN_TOWER_KEY, ModBlocks.SHARDSTONE_BRICKS.get(),
                 ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
         BlockPos altar = locate(helper, level, ModStructures.COLOSSUS_ARENA_KEY, ModBlocks.COLOSSUS_ALTAR.get());
+        BlockPos shrine = locate(helper, level, ModStructures.KEEPER_SHRINE_KEY, ModBlocks.MEMORY_CRYSTAL.get());
+        BlockPos outpost = locate(helper, level, ModStructures.TRADER_OUTPOST_KEY, ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        BlockPos crypt = locate(helper, level, ModStructures.ASH_CRYPT_KEY, ModBlocks.SHARDSTONE_BRICKS.get(),
+                ModBlocks.CRACKED_SHARDSTONE_BRICKS.get());
+        BlockPos geode = locate(helper, level, ModStructures.CRYSTAL_GEODE_KEY, ModBlocks.GLOW_CRYSTAL_BLOCK.get());
+        Shardline.LOGGER.info("[GameTest] Splitterweite: Schrein bei {}, Handelsposten bei {}, Gruft bei {}, Geode bei {}",
+                shrine, outpost, crypt, geode);
         Shardline.LOGGER.info("[GameTest] Splitterweite: Thron bei {}, Ruinen-Turm bei {}, Koloss-Altar bei {}", floor.above(3), tower, altar);
 
         // Spawnregeln: jeder Bodenmob muss auf dem Arenaboden, jeder Flieger in der Luft darueber spawnen koennen.
@@ -303,7 +370,9 @@ public final class ShardlineGameTests {
                 ModEntities.CRYSTAL_SPIDER.get(), ModEntities.SHARD_TRADER.get(), ModEntities.SHADOW_FOX.get(),
                 ModEntities.SHATTERED_KNIGHT.get(), ModEntities.CRYSTAL_COLOSSUS.get(), ModEntities.SHARD_QUEEN.get(),
                 ModEntities.QUEEN_CLONE.get(), ModEntities.SHARD_ZOMBIE.get(), ModEntities.CRYSTALLIZED_COW.get(),
-                ModEntities.VIRUS_HEART.get())) {
+                ModEntities.VIRUS_HEART.get(), ModEntities.CRYSTAL_SNAIL.get(), ModEntities.CRYSTALLIZED_SHEEP.get(),
+                ModEntities.CRYSTALLIZED_PIG.get(), ModEntities.CRYSTALLIZED_VILLAGER.get(), ModEntities.CRYSTALLIZED_PIGLIN.get(),
+                ModEntities.CRYSTALLIZED_ENDERMAN.get())) {
             // Mit Abstand erzeugen, damit grosse Wesen kleinere nicht in Bloecke schieben.
             BlockPos spawn = origin.offset((index % 5) * 8, 0, (index / 5) * 8);
             index++;
@@ -321,6 +390,371 @@ public final class ShardlineGameTests {
             }
             helper.succeed();
         });
+    }
+
+    // ------------------------------------------------------------------ Splitterhandwerk
+
+    /** Kristallschnecke: zieht sich bei Treffern ins Haus zurueck, nimmt dann deutlich weniger Schaden und kommt wieder heraus. */
+    @GameTest(template = EMPTY, timeoutTicks = 300, batch = "shardline_snail")
+    public static void crystalSnailHides(GameTestHelper helper) {
+        // Freiraum schaffen: Bauwerke anderer Tests koennen in die Testflaeche ragen (sonst Erstickungsschaden).
+        for (BlockPos pos : BlockPos.betweenClosed(-2, 0, -2, 4, 4, 4)) {
+            helper.setBlock(pos, pos.getY() == 0 ? Blocks.STONE : Blocks.AIR);
+        }
+        Runnable release = forceArea(helper, 4);
+        CrystalSnailEntity snail = helper.spawn(ModEntities.CRYSTAL_SNAIL.get(), new BlockPos(1, 1, 1));
+        helper.assertFalse(snail.isHiding(), "Schnecke darf anfangs nicht versteckt sein");
+        float[] firstHit = new float[1];
+        helper.startSequence()
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    float before = snail.getHealth();
+                    snail.invulnerableTime = 0;
+                    snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
+                    firstHit[0] = before - snail.getHealth();
+                    helper.assertTrue(firstHit[0] > 0.0F, "Erster Treffer hat keinen Schaden gemacht");
+                    helper.assertTrue(snail.isHiding(), "Schnecke versteckt sich nach einem Treffer nicht");
+                })
+                .thenIdle(23)
+                .thenExecute(() -> {
+                    float before = snail.getHealth();
+                    snail.invulnerableTime = 0;
+                    snail.hurt(helper.getLevel().damageSources().generic(), 4.0F);
+                    float secondHit = before - snail.getHealth();
+                    helper.assertTrue(secondHit < firstHit[0] * 0.5F, "Versteckte Schnecke nimmt zu viel Schaden: " + secondHit + " statt < " + firstHit[0] * 0.5F);
+                    helper.assertTrue(snail.isHiding(), "Schnecke sollte noch versteckt sein");
+                })
+                .thenWaitUntil(() -> helper.assertFalse(snail.isHiding(), "Schnecke kommt nicht wieder aus dem Haus"))
+                .thenExecute(() -> {
+                    helper.assertTrue(snail.isAlive(), "Schnecke ist gestorben");
+                    snail.discard();
+                    release.run();
+                })
+                .thenSucceed();
+    }
+
+
+    /** Splitterbann trifft nur Splitterwesen, Kristallwehr schuetzt nur vor Splitterschaden. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void shardEnchantments(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        net.minecraft.core.Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Holder<Enchantment> bane = registry.getHolderOrThrow(ModEnchantments.SHARD_BANE);
+        Holder<Enchantment> ward = registry.getHolderOrThrow(ModEnchantments.CRYSTAL_WARD);
+
+        ItemStack sword = new ItemStack(Items.IRON_SWORD);
+        sword.enchant(bane, 3);
+        Entity zombie = ModEntities.SHARD_ZOMBIE.get().create(level);
+        Entity cow = EntityType.COW.create(level);
+        net.minecraft.world.damagesource.DamageSource generic = level.damageSources().generic();
+        float vsZombie = EnchantmentHelper.modifyDamage(level, sword, zombie, generic, 5.0F);
+        float vsCow = EnchantmentHelper.modifyDamage(level, sword, cow, generic, 5.0F);
+        helper.assertTrue(Math.abs(vsZombie - 12.5F) < 0.01F, "Splitterbann III gegen Splitterzombie: " + vsZombie + " statt 12.5");
+        helper.assertTrue(Math.abs(vsCow - 5.0F) < 0.01F, "Splitterbann darf normale Tiere nicht staerker treffen: " + vsCow);
+
+        ArmorStand stand = EntityType.ARMOR_STAND.create(level);
+        ItemStack chest = new ItemStack(Items.IRON_CHESTPLATE);
+        chest.enchant(ward, 4);
+        stand.setItemSlot(EquipmentSlot.CHEST, chest);
+        float vsShard = EnchantmentHelper.getDamageProtection(level, stand, ModDamageTypes.source(level, ModDamageTypes.SHARD, null));
+        float vsGeneric = EnchantmentHelper.getDamageProtection(level, stand, generic);
+        helper.assertTrue(Math.abs(vsShard - 8.0F) < 0.01F, "Kristallwehr IV gegen Splitterschaden: " + vsShard + " statt 8");
+        helper.assertTrue(vsGeneric == 0.0F, "Kristallwehr darf nicht vor normalem Schaden schuetzen: " + vsGeneric);
+        zombie.discard();
+        cow.discard();
+        stand.discard();
+        helper.succeed();
+    }
+
+    /** Neue Rezepte sind geladen und jedes Item, Wesen, Bauwerk und jede Verzauberung der Mod hat einen Namen. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void craftingContentComplete(GameTestHelper helper) {
+        net.minecraft.world.item.crafting.RecipeManager recipes = helper.getLevel().getRecipeManager();
+        for (String id : List.of("crystal_stairs", "crystal_door", "crystal_trapdoor", "crystal_fence_gate", "polished_shardstone",
+                "chiseled_shardstone_bricks", "shard_lantern", "crystal_glass", "crystal_glass_pane", "glowcap_stew", "crystal_candy",
+                "berry_tart", "resonance_compass")) {
+            helper.assertTrue(recipes.byKey(Shardline.id(id)).isPresent(), "Rezept fehlt: " + id);
+        }
+        Language language = Language.getInstance();
+        List<String> keys = new ArrayList<>();
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Shardline.MODID)) {
+                keys.add(item.getDescriptionId());
+            }
+        }
+        for (EntityType<?> type : BuiltInRegistries.ENTITY_TYPE) {
+            if (EntityType.getKey(type).getNamespace().equals(Shardline.MODID)) {
+                keys.add(type.getDescriptionId());
+            }
+        }
+        for (ResourceKey<Structure> key : List.of(ModStructures.SHARD_CRATER_KEY, ModStructures.RUIN_TOWER_KEY, ModStructures.KEEPER_SHRINE_KEY,
+                ModStructures.TRADER_OUTPOST_KEY, ModStructures.ASH_CRYPT_KEY, ModStructures.CRYSTAL_GEODE_KEY,
+                ModStructures.COLOSSUS_ARENA_KEY, ModStructures.QUEEN_ARENA_KEY, ModStructures.KEEPER_RUIN_KEY)) {
+            keys.add("structure.shardline." + key.location().getPath());
+        }
+        keys.add("enchantment.shardline.shard_bane");
+        keys.add("enchantment.shardline.crystal_ward");
+        for (String dir : List.of("n", "ne", "e", "se", "s", "sw", "w", "nw")) {
+            keys.add("item.shardline.resonance_compass.dir." + dir);
+        }
+        List<String> missing = keys.stream().filter(key -> !language.has(key)).toList();
+        helper.assertTrue(missing.isEmpty(), "Fehlende Namen: " + missing);
+        helper.succeed();
+    }
+
+    // ------------------------------------------------------------------ Story-Erweiterung 2
+
+    /**
+     * Haelt die Chunks der Testflaeche geladen und tickend. Die Vorlage test/empty ist nur 1x1x1 gross; Wesen ausserhalb
+     * ihres Chunks ticken sonst je nach Lage der Testposition nicht. @return gibt die Chunks wieder frei
+     */
+    private static Runnable forceArea(GameTestHelper helper, int size) {
+        return forceArea(helper, new BlockPos(-1, 0, -1), new BlockPos(size, 0, size));
+    }
+
+    private static Runnable forceArea(GameTestHelper helper, BlockPos fromRelative, BlockPos toRelative) {
+        ServerLevel level = helper.getLevel();
+        BlockPos a = helper.absolutePos(fromRelative);
+        BlockPos b = helper.absolutePos(toRelative);
+        List<ChunkPos> forced = new ArrayList<>();
+        for (int cx = Math.min(a.getX(), b.getX()) >> 4; cx <= Math.max(a.getX(), b.getX()) >> 4; cx++) {
+            for (int cz = Math.min(a.getZ(), b.getZ()) >> 4; cz <= Math.max(a.getZ(), b.getZ()) >> 4; cz++) {
+                if (level.setChunkForced(cx, cz, true)) {
+                    forced.add(new ChunkPos(cx, cz));
+                }
+            }
+        }
+        return () -> forced.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, false));
+    }
+
+    /** Freie Testflaeche mit Steinboden (Bauwerke anderer Tests koennen hineinragen). */
+    private static void clearArea(GameTestHelper helper, int size, int height) {
+        for (BlockPos pos : BlockPos.betweenClosed(-1, 0, -1, size, height, size)) {
+            helper.setBlock(pos, pos.getY() == 0 ? Blocks.STONE : Blocks.AIR);
+        }
+    }
+
+    /** Schaf, Schwein und Dorfbewohner kristallisieren; Kragen nach dem Zaehmen; Reinigung gibt dem Dorfbewohner den Beruf zurueck. */
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void infectedAnimals(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.world.entity.animal.Sheep sheep = helper.spawn(EntityType.SHEEP, new BlockPos(1, 1, 1));
+        net.minecraft.world.entity.animal.Pig pig = helper.spawn(EntityType.PIG, new BlockPos(4, 1, 1));
+        net.minecraft.world.entity.npc.Villager villager = helper.spawn(EntityType.VILLAGER, new BlockPos(7, 1, 1));
+        villager.setVillagerData(villager.getVillagerData().setProfession(net.minecraft.world.entity.npc.VillagerProfession.LIBRARIAN).setLevel(2));
+
+        var crystalSheep = eu.shardline.mod.virus.VirusEffects.convert(level, sheep, ModEntities.CRYSTALLIZED_SHEEP.get());
+        var crystalPig = eu.shardline.mod.virus.VirusEffects.convert(level, pig, ModEntities.CRYSTALLIZED_PIG.get());
+        var crystalVillager = eu.shardline.mod.entity.infected.CrystallizedVillagerEntity.infect(level, villager);
+        helper.assertTrue(crystalSheep != null && crystalPig != null && crystalVillager != null, "Kristallisierung fehlgeschlagen");
+        helper.assertTrue(crystalVillager.remembersVillager(), "Dorfbewohner-Daten wurden nicht gespeichert");
+
+        helper.assertFalse(crystalSheep.hasCollar(), "Wildes Schaf darf keinen Kragen haben");
+        crystalSheep.setOwnerUUID(java.util.UUID.randomUUID());
+        helper.assertTrue(crystalSheep.hasCollar(), "Gezaehmtes Schaf zeigt keinen Kragen");
+        net.minecraft.nbt.CompoundTag saved = new net.minecraft.nbt.CompoundTag();
+        crystalSheep.addAdditionalSaveData(saved);
+        var reloaded = ModEntities.CRYSTALLIZED_SHEEP.get().create(level);
+        reloaded.readAdditionalSaveData(saved);
+        helper.assertTrue(reloaded.hasCollar() && reloaded.isTamed(), "Besitzer/Kragen wird nicht gespeichert");
+
+        crystalSheep.shear(net.minecraft.sounds.SoundSource.PLAYERS);
+        helper.assertTrue(crystalSheep.isSheared(), "Kristallschaf laesst sich nicht scheren");
+        boolean amethyst = !level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, crystalSheep.getBoundingBox().inflate(3.0),
+                item -> item.getItem().is(Items.AMETHYST_SHARD)).isEmpty();
+        helper.assertTrue(amethyst, "Scheren liefert keinen Amethyst");
+
+        var cured = eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalVillager);
+        helper.assertTrue(cured instanceof net.minecraft.world.entity.npc.Villager, "Reinigung liefert keinen Dorfbewohner");
+        var data = ((net.minecraft.world.entity.npc.Villager) cured).getVillagerData();
+        helper.assertTrue(data.getProfession() == net.minecraft.world.entity.npc.VillagerProfession.LIBRARIAN && data.getLevel() == 2,
+                "Beruf ging bei der Reinigung verloren: " + data.getProfession() + " " + data.getLevel());
+        helper.assertTrue(eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalPig) instanceof net.minecraft.world.entity.animal.Pig,
+                "Schwein wird nicht gereinigt");
+        for (Entity entity : level.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(helper.absolutePos(BlockPos.ZERO)).inflate(12.0),
+                entity -> !(entity instanceof net.minecraft.world.entity.player.Player))) {
+            entity.discard();
+        }
+        helper.succeed();
+    }
+
+    /** Der Entscheidungsaltar entsteht vor dem Thron, nur einmal, und ruht ohne Kern in der Naehe. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void decisionAltar(GameTestHelper helper) {
+        clearArea(helper, 8, 6);
+        ServerLevel level = helper.getLevel();
+        BlockPos throne = helper.absolutePos(new BlockPos(3, 3, 0));
+        level.setBlockAndUpdate(throne, ModBlocks.QUEEN_ALTAR.get().defaultBlockState());
+        BlockPos altar = eu.shardline.mod.block.custom.DecisionAltarBlock.raise(level, throne, throne);
+        BlockPos expected = eu.shardline.mod.block.custom.DecisionAltarBlock.spotBeforeThrone(throne);
+        helper.assertTrue(expected.equals(altar), "Altar nicht vor dem Thron: " + altar + " statt " + expected);
+        helper.assertTrue(level.getBlockState(expected).is(ModBlocks.DECISION_ALTAR.get()), "Altarblock fehlt");
+        helper.assertTrue(expected.equals(eu.shardline.mod.block.custom.DecisionAltarBlock.raise(level, throne, throne)),
+                "Zweiter Aufruf darf keinen weiteren Altar bauen");
+        helper.assertFalse(eu.shardline.mod.block.custom.DecisionAltarBlock.isCoreNearby(level, expected), "Ohne Kern darf der Altar nicht erwachen");
+        net.minecraft.world.level.block.state.BlockState state = level.getBlockState(expected);
+        helper.assertTrue(state.getLightEmission() == 4, "Ruhender Altar sollte schwach leuchten");
+        helper.assertTrue(state.setValue(eu.shardline.mod.block.custom.DecisionAltarBlock.ACTIVE, true).getLightEmission() == 12,
+                "Erwachter Altar sollte hell leuchten");
+        helper.succeed();
+    }
+
+    /** Immunitaet blockt Splitterfieber; der Reinheitsanker verteilt sie in seiner Zone. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void immunity(GameTestHelper helper) {
+        clearArea(helper, 6, 3);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.world.entity.animal.Pig shielded = helper.spawn(EntityType.PIG, new BlockPos(1, 1, 1));
+        net.minecraft.world.entity.animal.Pig exposed = helper.spawn(EntityType.PIG, new BlockPos(5, 1, 5));
+        eu.shardline.mod.virus.VirusEffects.giveImmunity(shielded, 200, false);
+        eu.shardline.mod.virus.VirusEffects.giveFever(shielded, 200);
+        eu.shardline.mod.virus.VirusEffects.giveFever(exposed, 200);
+        helper.assertFalse(shielded.hasEffect(eu.shardline.mod.effect.ModEffects.SHARD_FEVER), "Immunitaet hat das Fieber nicht verhindert");
+        helper.assertTrue(exposed.hasEffect(eu.shardline.mod.effect.ModEffects.SHARD_FEVER), "Ohne Immunitaet muss das Fieber wirken");
+
+        BlockPos anchor = helper.absolutePos(new BlockPos(3, 1, 3));
+        level.setBlockAndUpdate(anchor, ModBlocks.PURITY_ANCHOR.get().defaultBlockState());
+        try {
+            level.getBlockState(anchor).tick(level, anchor, level.getRandom());
+            helper.assertTrue(exposed.hasEffect(eu.shardline.mod.effect.ModEffects.IMMUNITY), "Anker verteilt keine Immunitaet");
+            helper.assertFalse(exposed.hasEffect(eu.shardline.mod.effect.ModEffects.SHARD_FEVER), "Anker heilt das Fieber nicht");
+        } finally {
+            level.setBlockAndUpdate(anchor, Blocks.AIR.defaultBlockState());
+            shielded.discard();
+            exposed.discard();
+        }
+        helper.succeed();
+    }
+
+    /** Virusherz: Phasen nach Lebenspunkten, Verhaertung beim Phasenwechsel (unverwundbar), danach wieder verwundbar. */
+    @GameTest(template = EMPTY, timeoutTicks = 240, batch = "shardline_heart")
+    public static void virusHeartPhases(GameTestHelper helper) {
+        clearArea(helper, 6, 5);
+        Runnable release = forceArea(helper, 6);
+        var heart = helper.spawn(ModEntities.VIRUS_HEART.get(), new BlockPos(3, 1, 3));
+        helper.assertTrue(eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(1.0F) == 1
+                && eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(0.6F) == 2
+                && eu.shardline.mod.entity.boss.VirusHeartEntity.phaseFor(0.2F) == 3, "Phasengrenzen falsch");
+        helper.assertTrue(heart.getPhase() == 1, "Neues Herz muss in Phase 1 sein");
+        heart.setHealth(heart.getMaxHealth() * 0.6F);
+        // Warten statt fester Verzoegerung: Der Chunk einer neuen Batch tickt nicht sofort.
+        helper.startSequence()
+                .thenWaitUntil(() -> helper.assertTrue(heart.getPhase() == 2, "Phase 2 wurde nicht erreicht"))
+                .thenExecute(() -> {
+                    heart.invulnerableTime = 0;
+                    helper.assertFalse(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F),
+                            "Beim Phasenwechsel muss das Herz unverwundbar sein");
+                })
+                .thenIdle(40)
+                .thenExecute(() -> {
+                    heart.invulnerableTime = 0;
+                    helper.assertTrue(heart.hurt(helper.getLevel().damageSources().generic(), 4.0F),
+                            "Nach dem Phasenwechsel muss das Herz verwundbar sein");
+                    heart.setHealth(heart.getMaxHealth() * 0.2F);
+                })
+                .thenWaitUntil(() -> helper.assertTrue(heart.getPhase() == 3, "Phase 3 wurde nicht erreicht"))
+                .thenExecute(() -> {
+                    heart.discard();
+                    release.run();
+                })
+                .thenSucceed();
+    }
+
+    /** Lose Lore-Seiten: Verkauf gegen Splitter und Binden von vier Seiten desselben Buchs. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void lorePageTrading(GameTestHelper helper) {
+        net.minecraft.world.entity.player.Player player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        LoreBooks.LoreBook seal = LoreBooks.byId("the_seal");
+        LoreBooks.LoreBook oath = LoreBooks.byId("keepers_oath");
+        for (int page = 1; page <= 4; page++) {
+            player.getInventory().add(LoreBooks.page(seal, page));
+        }
+        player.getInventory().add(LoreBooks.page(oath, 2));
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.countPages(player) == 5, "Seiten falsch gezaehlt");
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.bindableBooks(player).equals(List.of(seal)), "Bindbares Buch nicht erkannt");
+        LoreBooks.LoreBook bound = eu.shardline.mod.story.lore.TraderDialogue.bindBook(player);
+        helper.assertTrue(bound == seal, "Falsches Buch gebunden");
+        helper.assertTrue(player.getInventory().contains(stack -> stack.is(eu.shardline.mod.item.ModItems.LORE_BOOK.get())
+                && "the_seal".equals(stack.get(eu.shardline.mod.core.ModDataComponents.LORE_BOOK.get()))), "Gebundenes Buch fehlt im Inventar");
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.countPages(player) == 1, "Gebundene Seiten wurden nicht entfernt");
+        int sold = eu.shardline.mod.story.lore.TraderDialogue.sellPages(player);
+        int fragments = player.getInventory().countItem(eu.shardline.mod.item.ModItems.SHARD_FRAGMENT.get());
+        helper.assertTrue(sold == 1 && fragments == eu.shardline.mod.config.ShardlineConfig.LORE_PAGE_PRICE.get(),
+                "Verkauf falsch: " + sold + " Seiten, " + fragments + " Splitter");
+        helper.assertTrue(eu.shardline.mod.story.lore.TraderDialogue.bindBook(player) == null, "Ohne Seiten darf nichts gebunden werden");
+        helper.succeed();
+    }
+
+    /** Kapitel sichtbar: Status-Ausgabe, eigene Embleme als Icons der Kapitel-Advancements, Texte fuer jedes Ziel. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void chapterDisplay(GameTestHelper helper) {
+        net.minecraft.server.MinecraftServer server = helper.getLevel().getServer();
+        List<net.minecraft.network.chat.Component> lines = eu.shardline.mod.command.ShardlineCommands.statusLines(server, java.util.UUID.randomUUID());
+        helper.assertTrue(lines.size() >= 5, "Status hat zu wenige Zeilen: " + lines.size());
+        Language language = Language.getInstance();
+        for (StoryChapter chapter : StoryChapter.values()) {
+            for (StoryEnding branch : branchesOf(chapter)) {
+                String next = eu.shardline.mod.command.ShardlineCommands.nextKey(chapter.number(), branch, "");
+                helper.assertTrue(language.has(next), "Ziel-Text fehlt: " + next);
+                var holder = server.getAdvancements().get(Shardline.id(chapter.advancementId(branch)));
+                helper.assertTrue(holder != null && holder.value().display().isPresent(), "Advancement fehlt: " + chapter.advancementId(branch));
+                net.minecraft.world.item.ItemStack icon = holder.value().display().get().getIcon();
+                helper.assertTrue(icon.is(eu.shardline.mod.item.ModItems.CHAPTER_EMBLEM.get())
+                        && icon.getOrDefault(eu.shardline.mod.core.ModDataComponents.CHAPTER.get(), 0) == chapter.emblemValue(branch),
+                        "Kapitel " + chapter.number() + " hat nicht das eigene Emblem als Icon");
+            }
+        }
+        helper.assertTrue(language.has("story.shardline.next.0"), "Ziel-Text fehlt fuer Kapitel 0");
+        helper.succeed();
+    }
+
+    /** Reinheitszone: wachsender Radius (alte Anker voll), Schutz nach aktuellem Radius, Reinigung nur der neuen Schale. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void purityZone(GameTestHelper helper) {
+        helper.assertTrue(Math.abs(PurityAnchors.radius(0L, 3000L, 6, 24, 6000L) - 15.0) < 1.0E-6, "Halbe Wachstumszeit = halber Weg");
+        helper.assertTrue(PurityAnchors.radius(-1L, 3000L, 6, 24, 6000L) == 24.0, "Alte Anker ohne Zeitstempel haben den vollen Radius");
+        helper.assertTrue(PurityAnchors.radius(0L, 99999L, 6, 24, 6000L) == 24.0, "Radius waechst nicht ueber das Maximum");
+
+        ServerLevel level = helper.getLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        Runnable release = forceArea(helper, 18);
+        BlockPos center = helper.absolutePos(new BlockPos(9, 1, 9));
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-8, -1, -8), center.offset(8, 2, 8))) {
+            level.setBlock(pos, pos.getY() == center.getY() - 1 ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+        }
+        level.setBlock(center, ModBlocks.PURITY_ANCHOR.get().defaultBlockState(), 3);
+        try {
+            int start = eu.shardline.mod.config.ShardlineConfig.ANCHOR_START_RADIUS.get();
+            int max = eu.shardline.mod.config.ShardlineConfig.ANCHOR_RADIUS.get();
+            long grow = eu.shardline.mod.config.ShardlineConfig.ANCHOR_GROW_SECONDS.get() * 20L;
+            // Frisch gesetzt: Startradius (die Halbzeit prueft oben die Formel; die Spielzeit einer Testwelt ist dafuer zu klein)
+            double radius = PurityAnchors.radius(level, center);
+            helper.assertTrue(grow <= 0 ? radius == Math.max(start, max) : Math.abs(radius - start) < 0.5, "Startradius falsch: " + radius);
+            helper.assertTrue(PurityAnchors.isProtected(level, center.offset((int) radius - 1, 0, 0)), "Innerhalb der Zone muss geschuetzt sein");
+            helper.assertFalse(PurityAnchors.isProtected(level, center.offset((int) radius + 2, 0, 0)), "Ausserhalb der Zone darf kein Schutz sein");
+
+            level.getBlockState(center).tick(level, center, level.getRandom());
+            helper.assertTrue(level.getBlockEntity(center) instanceof eu.shardline.mod.block.entity.PurityAnchorBlockEntity anchor
+                    && Math.abs(anchor.radius(level.getGameTime()) - radius) < 0.5, "Block-Entity kennt den Radius nicht");
+
+            // Schale 4..8: der Block bei 3 bleibt (schon sauber gerechnet), der bei 6 wird gereinigt
+            BlockPos inner = center.offset(3, -1, 0);
+            BlockPos outer = center.offset(6, -1, 0);
+            level.setBlock(inner, ModBlocks.INFECTED_STONE.get().defaultBlockState(), 2);
+            level.setBlock(outer, ModBlocks.INFECTED_STONE.get().defaultBlockState(), 2);
+            int[] purified = {-1};
+            Purification.purifyShell(level, center, 4, 8, count -> purified[0] = count);
+            helper.assertTrue(purified[0] == 1, "Schale sollte genau einen Block reinigen, waren " + purified[0]);
+            helper.assertTrue(level.getBlockState(inner).is(ModBlocks.INFECTED_STONE.get()), "Innerer Block durfte nicht gereinigt werden");
+            helper.assertFalse(level.getBlockState(outer).is(ModBlocks.INFECTED_STONE.get()), "Aeusserer Block wurde nicht gereinigt");
+        } finally {
+            level.setBlock(center, Blocks.AIR.defaultBlockState(), 3);
+            release.run();
+        }
+        helper.assertFalse(data.anchors(level.dimension()).contains(center.asLong()), "Anker wurde nicht abgemeldet");
+        helper.assertTrue(data.anchorSince(level.dimension(), center.asLong()) == -1L, "Setzzeit wurde nicht entfernt");
+        helper.succeed();
     }
 
     // ------------------------------------------------------------------ Story & Shardvirus
@@ -505,7 +939,11 @@ public final class ShardlineGameTests {
         for (StoryChapter chapter : StoryChapter.values()) {
             keys.add("story.shardline.chapter." + chapter.id());
             keys.add("story.shardline.chapter." + chapter.id() + ".summary");
-            keys.add("advancements.shardline.story.chapter_" + chapter.number() + ".title");
+            for (StoryEnding branch : branchesOf(chapter)) {
+                keys.add(((net.minecraft.network.chat.contents.TranslatableContents) chapter.title(branch).getContents()).getKey());
+                keys.add(((net.minecraft.network.chat.contents.TranslatableContents) chapter.summary(branch).getContents()).getKey());
+                keys.add("advancements.shardline." + chapter.advancementId(branch).replace('/', '.') + ".title");
+            }
         }
         for (StoryEnding ending : StoryEnding.values()) {
             keys.add("story.shardline.ending." + ending.id());
@@ -525,7 +963,7 @@ public final class ShardlineGameTests {
             }
         }
         List<String> stages = new ArrayList<>(List.of("sealed", "dominated"));
-        for (int chapter = 0; chapter <= StoryChapter.MAX; chapter++) {
+        for (int chapter = 0; chapter <= StoryChapter.BEFORE_ENDING; chapter++) {
             stages.add("chapter_" + chapter);
         }
         for (String stage : stages) {
@@ -534,6 +972,7 @@ public final class ShardlineGameTests {
             }
             for (int line = 1; line <= 3; line++) {
                 keys.add("dialogue.shardline.trader." + stage + ".idle." + line);
+                keys.add("dialogue.shardline.trader." + stage + ".more." + line);
             }
         }
         List<String> missing = keys.stream().filter(key -> !language.has(key)).toList();
@@ -576,5 +1015,910 @@ public final class ShardlineGameTests {
             data.setInfected(wasInfected, outbreakTime);
             data.setEnding(ending);
         }
+    }
+
+    /** Ende "Beherrschen": Shardgegner nehmen Splitterherrscher nicht als Ziel, Bosse bleiben feindlich. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_ending")
+    @SuppressWarnings("removal")
+    public static void rulerAllegiance(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        try {
+            net.minecraft.world.entity.Mob creeper = helper.spawnWithNoFreeWill(ModEntities.SHARD_CREEPER.get(), 0, 1, 0);
+            creeper.setTarget(player);
+            helper.assertTrue(creeper.getTarget() == player, "Ohne Titel muss der Kriecher angreifen");
+            creeper.setTarget(null);
+            data.addRuler(player.getUUID());
+            creeper.setTarget(player);
+            helper.assertTrue(creeper.getTarget() == null, "Kriecher darf den Herrscher nicht als Ziel nehmen");
+            helper.assertTrue(eu.shardline.mod.story.ending.RulerAllegiance.obeys(creeper, player), "Kriecher muss gehorchen");
+            for (EntityType<?> boss : List.<EntityType<?>>of(ModEntities.CRYSTAL_COLOSSUS.get(), ModEntities.SHARD_QUEEN.get())) {
+                helper.assertFalse(boss.is(eu.shardline.mod.core.ModTags.EntityTypes.OBEYS_RULER), "Bosse muessen feindlich bleiben");
+            }
+            creeper.discard();
+            helper.succeed();
+        } finally {
+            data.rulers().remove(player.getUUID());
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    // ================================================================== Nach dem Ausbruch: Dialoge, Auftraege, Kapitel 7-9
+
+    private static com.google.gson.JsonObject json(String text) {
+        return com.google.gson.JsonParser.parseString(text).getAsJsonObject();
+    }
+
+    private static final String TEST_DIALOGUE = """
+            {"speaker": "rhea",
+             "start": [{"if": [{"flag": "test:met"}], "node": "again"}, {"node": "hello"}],
+             "nodes": {
+               "hello": {"portrait": "happy", "text": ["dialogue.shardline.test.hello.1"], "do": [{"set_flag": "test:met"}],
+                 "choices": [
+                   {"text": "dialogue.shardline.test.hello.c1", "next": "gift", "do": [{"give_item": {"item": "minecraft:bread", "count": 2}}]},
+                   {"text": "dialogue.shardline.test.hello.c2", "next": "END", "if": [{"chapter_min": 9}], "show_locked": true},
+                   {"text": "dialogue.shardline.test.hello.c3", "next": "END", "if": [{"chapter_min": 9}]}
+                 ]},
+               "gift": {"text": ["dialogue.shardline.test.gift.1"], "next": "thanks"},
+               "thanks": {"text": ["dialogue.shardline.test.thanks.1"],
+                 "choices": [{"text": "dialogue.shardline.test.thanks.c1", "next": "END", "do": [{"take_item": {"item": "minecraft:bread", "count": 1}}]}]},
+               "again": {"text": ["dialogue.shardline.test.again.1"]}
+             }}""";
+
+    /** Dialog-Engine: Startknoten nach Bedingung, gesperrte und versteckte Antworten, Aktionen, Weiter-Knoten, Ende. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void dialogueEngine(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("test");
+            var dialogue = eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("test"), json(TEST_DIALOGUE), problems);
+            helper.assertTrue(problems.ok(), "Testdialog hat Fehler: " + problems.errors());
+            var context = new eu.shardline.mod.story.dialogue.DialogueContext(player, null);
+            var start = eu.shardline.mod.story.dialogue.Dialogues.startNode(dialogue, context);
+            helper.assertTrue(start != null && start.name().equals("hello"), "Startknoten muss 'hello' sein");
+            eu.shardline.mod.story.dialogue.Dialogues.enter(start, context);
+            helper.assertTrue(data.hasFlag(player.getUUID(), "test:met"), "Aktion beim Betreten hat das Flag nicht gesetzt");
+            var visible = eu.shardline.mod.story.dialogue.Dialogues.visibleChoices(start, context);
+            helper.assertTrue(visible.size() == 2 && visible.get(0).enabled() && !visible.get(1).enabled(),
+                    "Erwartet: eine freie und eine gesperrte Antwort, die dritte versteckt");
+            helper.assertFalse(eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, start, context, 1).accepted(),
+                    "Gesperrte Antwort darf nicht angenommen werden");
+            helper.assertFalse(eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, start, context, 7).accepted(),
+                    "Ungueltiger Index darf nicht angenommen werden");
+            var outcome = eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, start, context, 0);
+            helper.assertTrue(outcome.accepted() && outcome.next() != null && outcome.next().name().equals("gift"), "Antwort 1 fuehrt zu 'gift'");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.countItem(player, "minecraft:bread") == 2, "give_item hat kein Brot gegeben");
+            var thanks = eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, outcome.next(), context, 0);
+            helper.assertTrue(thanks.next() != null && thanks.next().name().equals("thanks"), "Knoten ohne Antworten fuehrt mit 'Weiter' zu 'next'");
+            var end = eu.shardline.mod.story.dialogue.Dialogues.choose(dialogue, thanks.next(), context, 0);
+            helper.assertTrue(end.accepted() && end.next() == null, "END beendet den Dialog");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.countItem(player, "minecraft:bread") == 1, "take_item hat kein Brot genommen");
+            var again = eu.shardline.mod.story.dialogue.Dialogues.startNode(dialogue, context);
+            helper.assertTrue(again != null && again.name().equals("again"), "Mit gesetztem Flag startet 'again'");
+            helper.succeed();
+        } finally {
+            data.removeFlag(player.getUUID(), "test:met");
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Validierung: fehlende Knoten, unbekannte Bedingungen/Aktionen/Items, Endlosschleifen, zu viele Antworten, kein Rueckfall. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    public static void dialogueValidation(GameTestHelper helper) {
+        var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("broken");
+        eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("broken"), json("""
+                {"speaker": "rhea", "start": [{"if": [{"flag": "x"}], "node": "a"}],
+                 "nodes": {
+                   "a": {"text": ["k"], "choices": [{"text": "k", "next": "missing"}, {"text": "k", "if": [{"moon_phase": 3}]},
+                         {"text": "k", "do": [{"explode": true}]}, {"text": "k", "do": [{"give_item": "minecraft:not_an_item"}]},
+                         {"text": "k"}]},
+                   "b": {"text": ["k"], "next": "c"},
+                   "c": {"text": ["k"], "next": "b"},
+                   "d": {"text": ["k"], "do": [{"run_command_safe": "op @a"}], "portrait": "grinning"}
+                 }}"""), problems);
+        String all = String.join("\n", problems.errors());
+        for (String expected : List.of("unbekannter Knoten 'missing'", "unbekannte Bedingung 'moon_phase'", "unbekannte Aktion 'explode'",
+                "unbekanntes Item 'minecraft:not_an_item'", "Endlosschleife", "hoechstens 4 Antworten", "Rueckfall", "Befehl abgelehnt",
+                "unbekannte Pose 'grinning'")) {
+            helper.assertTrue(all.contains(expected), "Fehlermeldung fehlt: " + expected + "\n" + all);
+        }
+        var questProblems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("refs");
+        eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("refs"), json("""
+                {"speaker": "rhea", "start": [{"node": "a"}], "nodes": {"a": {"text": ["k"], "do": [{"start_quest": "no_such_quest"}]}}}"""),
+                questProblems);
+        eu.shardline.mod.story.dialogue.DialogueParser.checkQuestRefs(questProblems, java.util.Set.of("camp_wood"));
+        helper.assertTrue(String.join("\n", questProblems.errors()).contains("unbekannter Auftrag 'no_such_quest'"), "Auftragsverweis nicht geprueft");
+        helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueParser.unsafeReason("effect give @s minecraft:regeneration 5 0") == null,
+                "Erlaubter Befehl abgelehnt");
+        for (String bad : List.of("effect give @a minecraft:speed", "execute as @s run op @s", "op @s", "/effect give @s x", "say hi; op @s")) {
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueParser.unsafeReason(bad) != null, "Unsicherer Befehl erlaubt: " + bad);
+        }
+        helper.succeed();
+    }
+
+    /** Auftrag: Annehmen, Sammelschritt per Inventarpruefung, Gespraechsschritt per Aktion, Belohnung, Flag, keine Wiederholung. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void questFlow(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var saved = new java.util.LinkedHashMap<String, eu.shardline.mod.story.quest.QuestDefinition>();
+        eu.shardline.mod.story.quest.Quests.all().forEach(quest -> saved.put(quest.id(), quest));
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("quest");
+            var quest = eu.shardline.mod.story.dialogue.DialogueParser.parseQuest("test_wood", json("""
+                    {"giver": "rhea", "steps": [{"type": "collect", "target": "minecraft:oak_planks", "count": 4}, {"type": "talk", "target": "rhea"}],
+                     "rewards": [{"item": "minecraft:bread", "count": 3}], "flags": ["test:wood_done"]}"""), problems);
+            helper.assertTrue(problems.ok(), "Testauftrag hat Fehler: " + problems.errors());
+            var map = new java.util.LinkedHashMap<>(saved);
+            map.put(quest.id(), quest);
+            eu.shardline.mod.story.quest.Quests.setDefinitions(map);
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "test_wood"), "Auftrag liess sich nicht annehmen");
+            helper.assertFalse(eu.shardline.mod.story.quest.Quests.start(player, "test_wood"), "Aktiver Auftrag doppelt angenommen");
+            player.getInventory().add(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 4));
+            eu.shardline.mod.story.quest.Quests.check(player);
+            var progress = data.quest(player.getUUID(), "test_wood");
+            helper.assertTrue(progress != null && progress.active() && progress.step() == 1, "Sammelschritt nicht erkannt");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "talk", "ilsa");
+            helper.assertTrue(progress.step() == 1 && progress.active(), "Falscher Gespraechspartner zaehlt mit");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "talk", "rhea");
+            helper.assertTrue(!progress.active() && progress.everCompleted(), "Auftrag nicht abgeschlossen");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.countItem(player, "minecraft:bread") == 3, "Belohnung fehlt");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "test:wood_done") && data.hasFlag(player.getUUID(), "quest_done:test_wood"),
+                    "Flags nach Abschluss fehlen");
+            helper.assertFalse(eu.shardline.mod.story.quest.Quests.start(player, "test_wood"), "Nicht wiederholbarer Auftrag erneut angenommen");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.quest.Quests.reset(player, "test_wood");
+            data.removeFlag(player.getUUID(), "test:wood_done");
+            eu.shardline.mod.story.quest.Quests.setDefinitions(saved);
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Kapitel 7-9: kein Kapitel 7 ohne Ende, nie springen, Zweig wird mit Kapitel 8 festgelegt, Advancements im Zweig. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void aftermathChapters(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        net.minecraft.server.MinecraftServer server = helper.getLevel().getServer();
+        ShardlineWorldData data = StoryManager.data(server);
+        StoryEnding ending = data.ending();
+        try {
+            data.setEnding(StoryEnding.NONE);
+            data.setChapter(player.getUUID(), 6);
+            StoryManager.checkAftermath(player);
+            helper.assertTrue(data.chapter(player.getUUID()) == 6, "Ohne Ende darf Kapitel 7 nicht beginnen");
+            data.setEnding(StoryEnding.SEALED);
+            helper.assertFalse(StoryManager.advance(player, 8), "Kapitel duerfen nicht uebersprungen werden");
+            StoryManager.checkAftermath(player);
+            helper.assertTrue(data.chapter(player.getUUID()) == 7, "Mit Ende muss Kapitel 7 beginnen");
+            helper.assertTrue(StoryManager.advance(player, 8), "Kapitel 8 nicht erreicht");
+            helper.assertTrue(data.branch(player.getUUID()) == StoryEnding.SEALED, "Zweig nicht festgelegt");
+            data.setEnding(StoryEnding.DOMINATED);
+            helper.assertTrue(StoryManager.advance(player, 9) && data.branch(player.getUUID()) == StoryEnding.SEALED,
+                    "Ein spaeter geaendertes Ende darf den Zweig nicht kippen");
+            var holder = server.getAdvancements().get(Shardline.id("story/chapter_9_seal"));
+            helper.assertTrue(holder != null && player.getAdvancements().getOrStartProgress(holder).isDone(), "Zweig-Advancement fehlt");
+            helper.assertFalse(StoryManager.advance(player, 10), "Kapitel 10 gibt es nicht");
+            helper.succeed();
+        } finally {
+            data.setEnding(ending);
+            data.setChapter(player.getUUID(), 0);
+            data.setBranch(player.getUUID(), StoryEnding.NONE);
+            server.getPlayerList().remove(player);
+        }
+    }
+
+    /** Alte Welten laden ohne die neuen Felder (Standardwerte); neue Felder ueberstehen Speichern und Laden. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void aftermathSaveData(GameTestHelper helper) {
+        var registries = helper.getLevel().registryAccess();
+        java.util.UUID uuid = java.util.UUID.randomUUID();
+        net.minecraft.nbt.CompoundTag old = new net.minecraft.nbt.CompoundTag();
+        net.minecraft.nbt.CompoundTag players = new net.minecraft.nbt.CompoundTag();
+        net.minecraft.nbt.CompoundTag entry = new net.minecraft.nbt.CompoundTag();
+        entry.putInt("Chapter", 6);
+        players.put(uuid.toString(), entry);
+        old.put("Players", players);
+        old.putString("Ending", "seal");
+        ShardlineWorldData loaded = ShardlineWorldData.load(old, registries);
+        helper.assertTrue(loaded.chapter(uuid) == 6 && loaded.branch(uuid) == StoryEnding.NONE && loaded.epilogue(uuid).isEmpty()
+                && loaded.quests(uuid).isEmpty(), "Alte Welt laedt nicht mit Standardwerten");
+
+        loaded.setBranch(uuid, StoryEnding.DOMINATED);
+        loaded.setEpilogue(uuid, "truce");
+        loaded.questOrCreate(uuid, "camp_wood");
+        ShardlineWorldData again = ShardlineWorldData.load(loaded.save(new net.minecraft.nbt.CompoundTag(), registries), registries);
+        helper.assertTrue(again.branch(uuid) == StoryEnding.DOMINATED && again.epilogue(uuid).equals("truce")
+                && again.quest(uuid, "camp_wood") != null, "Zweig, Epilog oder Auftrag nicht gespeichert");
+        helper.succeed();
+    }
+
+    /** Sitzungen: Start, Antwort, ungueltige Sitzung, Abbruch bei Entfernung und bei Schaden; ein offener Dialog pro Spieler. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void dialogueSessions(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        var previous = new java.util.LinkedHashMap<net.minecraft.resources.ResourceLocation, eu.shardline.mod.story.dialogue.DialogueDefinition>();
+        eu.shardline.mod.story.dialogue.Dialogues.all().forEach(d -> previous.put(d.id(), d));
+        var errors = eu.shardline.mod.story.dialogue.Dialogues.errors();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("session");
+            var dialogue = eu.shardline.mod.story.dialogue.DialogueParser.parseDialogue(Shardline.id("session_test"), json(TEST_DIALOGUE), problems);
+            var map = new java.util.LinkedHashMap<>(previous);
+            map.put(dialogue.id(), dialogue);
+            eu.shardline.mod.story.dialogue.Dialogues.set(map, errors);
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.start(player, null, dialogue.id()), "Dialog startet nicht");
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("hello"), "Sitzung nicht bei 'hello'");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id() + 99, 0);
+            helper.assertTrue(session.node().equals("hello"), "Fremde Sitzungsnummer wurde angenommen");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 1);
+            helper.assertTrue(session.node().equals("hello") && eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == session,
+                    "Gesperrte Antwort hat den Dialog veraendert");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(session.node().equals("gift"), "Antwort nicht ausgefuehrt");
+            player.teleportTo(player.getX() + 40, player.getY(), player.getZ());
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == null, "Zu grosser Abstand bricht nicht ab");
+            data.removeFlag(player.getUUID(), "test:met");
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.start(player, null, dialogue.id()), "Zweiter Start fehlgeschlagen");
+            player.hurt(player.damageSources().fellOutOfWorld(), 1.0F);   // umgeht den Spawn-Schutz des Testspielers
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == null, "Schaden bricht den Dialog nicht ab");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            eu.shardline.mod.story.dialogue.Dialogues.set(previous, errors);
+            data.removeFlag(player.getUUID(), "test:met");
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Netzwerk: OpenDialoguePayload uebersteht Kodieren und Dekodieren (Texte als Components, gesperrte Antworten). */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void dialoguePayloadCodec(GameTestHelper helper) {
+        var payload = new eu.shardline.mod.network.OpenDialoguePayload(7, 42, "rhea", "sad",
+                List.of(net.minecraft.network.chat.Component.translatable("dialogue.shardline.rhea.greeting.1")),
+                List.of(new eu.shardline.mod.network.OpenDialoguePayload.Choice(net.minecraft.network.chat.Component.literal("Ja"), true,
+                                net.minecraft.network.chat.Component.empty()),
+                        new eu.shardline.mod.network.OpenDialoguePayload.Choice(net.minecraft.network.chat.Component.literal("Nein"), false,
+                                net.minecraft.network.chat.Component.translatable("screen.shardline.dialogue.locked"))), false);
+        var buf = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), helper.getLevel().registryAccess());
+        eu.shardline.mod.network.OpenDialoguePayload.STREAM_CODEC.encode(buf, payload);
+        var decoded = eu.shardline.mod.network.OpenDialoguePayload.STREAM_CODEC.decode(buf);
+        helper.assertTrue(decoded.equals(payload), "Payload nach dem Dekodieren verschieden: " + decoded);
+        helper.succeed();
+    }
+
+    /** Mitgelieferte Dialoge und Auftraege laden ohne Fehler; jeder Text-, Antwort-, Hinweis- und Auftragsschluessel existiert. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void storyDataFiles(GameTestHelper helper) {
+        helper.assertTrue(eu.shardline.mod.story.dialogue.Dialogues.errors().isEmpty(), "Ladefehler: " + eu.shardline.mod.story.dialogue.Dialogues.errors());
+        helper.assertTrue(eu.shardline.mod.story.dialogue.Dialogues.get(Shardline.id("rhea")) != null, "Dialog rhea nicht geladen");
+        Language language = Language.getInstance();
+        List<String> missing = new ArrayList<>();
+        for (var dialogue : eu.shardline.mod.story.dialogue.Dialogues.all()) {
+            for (var node : dialogue.nodes().values()) {
+                java.util.List<String> keys = new ArrayList<>(node.text());
+                keys.add("npc.shardline." + node.speaker());
+                node.choices().forEach(choice -> {
+                    keys.add(choice.text());
+                    if (!choice.lockedHint().isEmpty()) {
+                        keys.add(choice.lockedHint());
+                    }
+                });
+                keys.stream().filter(key -> !language.has(key)).forEach(key -> missing.add(dialogue.id() + "/" + node.name() + ": " + key));
+            }
+        }
+        for (var quest : eu.shardline.mod.story.quest.Quests.all()) {
+            List<String> keys = new ArrayList<>(List.of(quest.langKey() + ".title", quest.langKey() + ".description"));
+            for (int i = 1; i <= quest.steps().size(); i++) {
+                keys.add(quest.langKey() + ".step." + i);
+            }
+            keys.stream().filter(key -> !language.has(key)).forEach(key -> missing.add("quest " + quest.id() + ": " + key));
+        }
+        helper.assertTrue(missing.isEmpty(), "Fehlende Texte: " + missing);
+        helper.succeed();
+    }
+
+    /** Rhea: Rechtsklick startet ihren Dialog, im Lager unverwundbar, ausserhalb bricht sie zusammen statt zu sterben. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void rheaNpc(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var rhea = helper.spawn(eu.shardline.mod.entity.ModEntities.RHEA.get(), new BlockPos(1, 2, 1));
+        try {
+            rhea.setHome(rhea.blockPosition());
+            player.moveTo(rhea.getX() + 1.5, rhea.getY(), rhea.getZ());
+            data.setChapter(player.getUUID(), 7);
+            rhea.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("first_meeting"), "Rhea startet nicht mit 'first_meeting'");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "rhea:met"), "Rhea setzt 'rhea:met' nicht");
+            float health = rhea.getHealth();
+            helper.assertFalse(rhea.hurt(rhea.damageSources().generic(), 5.0F), "Im Lager darf Rhea keinen Schaden nehmen");
+            rhea.setHome(rhea.blockPosition().offset(500, 0, 0));
+            rhea.hurt(rhea.damageSources().generic(), 1000.0F);
+            helper.assertTrue(rhea.isAlive() && rhea.getHealth() >= 1.0F && rhea.getHealth() < health, "Rhea muss zusammenbrechen statt sterben");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            data.setChapter(player.getUUID(), 0);
+            data.removeFlag(player.getUUID(), "rhea:met");
+            rhea.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Veyl schwebt, schlaeft nicht und nimmt keinen Schaden; Ilsa handelt ueber die Dialogaktion open_trade. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void veylAndIlsa(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var veyl = helper.spawn(eu.shardline.mod.entity.ModEntities.VEYL.get(), new BlockPos(1, 2, 1));
+        var ilsa = helper.spawn(eu.shardline.mod.entity.ModEntities.ILSA.get(), new BlockPos(3, 2, 1));
+        try {
+            helper.assertTrue(veyl.isNoGravity(), "Veyl muss schweben");
+            veyl.setHome(veyl.blockPosition().offset(500, 0, 0));
+            helper.assertFalse(veyl.hurt(veyl.damageSources().generic(), 1000.0F), "Veyl darf als Geist keinen Schaden nehmen");
+            helper.assertTrue(veyl.isAlive() && veyl.getHealth() == veyl.getMaxHealth(), "Veyl hat Leben verloren");
+            helper.assertFalse(ilsa.getOffers().isEmpty(), "Ilsa hat keine Angebote");
+            helper.assertTrue(ilsa.getOffers().stream().allMatch(offer -> offer.getBaseCostA().is(eu.shardline.mod.item.ModItems.SHARD_FRAGMENT.get())
+                    || offer.getResult().is(eu.shardline.mod.item.ModItems.SHARD_FRAGMENT.get())), "Ilsa handelt nicht in Shard-Splittern");
+            ilsa.setHome(ilsa.blockPosition());
+            player.moveTo(ilsa.getX() + 1.5, ilsa.getY(), ilsa.getZ());
+            data.setChapter(player.getUUID(), 7);
+            data.addFlag(player.getUUID(), "ilsa:met");
+            ilsa.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("idle"), "Ilsa startet nicht mit 'idle'");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(ilsa.getTradingPlayer() == player, "open_trade hat den Handel nicht geoeffnet");
+            helper.assertTrue(eu.shardline.mod.story.dialogue.DialogueSessions.current(player) == null, "Dialog bleibt beim Handel offen");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            data.setChapter(player.getUUID(), 0);
+            data.removeFlag(player.getUUID(), "ilsa:met");
+            ilsa.setTradingPlayer(null);
+            veyl.discard();
+            ilsa.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Kesh folgt nach npc_state "follow", meldet bei Rhea den Begleitschritt und wird mit "healed" geheilt. */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void keshEscort(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        var saved = new java.util.LinkedHashMap<String, eu.shardline.mod.story.quest.QuestDefinition>();
+        eu.shardline.mod.story.quest.Quests.all().forEach(quest -> saved.put(quest.id(), quest));
+        var kesh = helper.spawn(eu.shardline.mod.entity.ModEntities.KESH.get(), new BlockPos(1, 2, 1));
+        var rhea = helper.spawn(eu.shardline.mod.entity.ModEntities.RHEA.get(), new BlockPos(4, 2, 1));
+        try {
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("quest");
+            var quest = eu.shardline.mod.story.dialogue.DialogueParser.parseQuest("test_escort", json("""
+                    {"giver": "rhea", "steps": [{"type": "escort", "target": "shardline:kesh"}]}"""), problems);
+            helper.assertTrue(problems.ok(), "Testauftrag hat Fehler: " + problems.errors());
+            var map = new java.util.LinkedHashMap<>(saved);
+            map.put(quest.id(), quest);
+            eu.shardline.mod.story.quest.Quests.setDefinitions(map);
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "test_escort"), "Auftrag liess sich nicht annehmen");
+            var bad = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("action");
+            eu.shardline.mod.story.dialogue.DialogueParser.action(json("{\"npc_state\": \"dance\"}"), bad, "x");
+            helper.assertFalse(bad.ok(), "Unbekannter NPC-Zustand nicht abgelehnt");
+            var follow = eu.shardline.mod.story.dialogue.DialogueParser.action(json("{\"npc_state\": \"follow\"}"), problems, "x");
+            follow.run(new eu.shardline.mod.story.dialogue.DialogueContext(player, kesh));
+            helper.assertTrue(player.getUUID().equals(kesh.following()), "Kesh folgt nicht");
+            player.moveTo(kesh.getX() + 2.0, kesh.getY(), kesh.getZ());
+            kesh.checkArrival();
+            helper.assertTrue(kesh.following() == null, "Kesh bleibt bei Rhea nicht stehen");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "quest_done:test_escort"), "Begleitschritt bei Rhea nicht erkannt");
+            kesh.applyState("healed", player);
+            helper.assertTrue(kesh.isHealed(), "Kesh wurde nicht geheilt");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.quest.Quests.reset(player, "test_escort");
+            eu.shardline.mod.story.quest.Quests.setDefinitions(saved);
+            kesh.discard();
+            rhea.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    // ------------------------------------------------------------------ Nach dem Ausbruch: Virusstaemme und Tiefe
+
+    /** Stammbloecke: richtige Zuordnung (inkl. Tiefenschiefer vor Stein), Stamm, Reinigung zurueck, Dimensionen erlaubt. */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_virus")
+    public static void virusStrainBlocks(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        record Case(Block clean, Block infected, eu.shardline.mod.virus.VirusStrain strain, Block purified) {
+        }
+        var shard = eu.shardline.mod.virus.VirusStrain.SHARD;
+        var ember = eu.shardline.mod.virus.VirusStrain.EMBER;
+        var voidStrain = eu.shardline.mod.virus.VirusStrain.VOID;
+        for (Case c : List.of(
+                new Case(Blocks.DEEPSLATE, ModBlocks.INFECTED_DEEPSLATE.get(), shard, Blocks.DEEPSLATE),
+                new Case(Blocks.SPRUCE_PLANKS, ModBlocks.INFECTED_PLANKS.get(), shard, Blocks.OAK_PLANKS),
+                new Case(Blocks.NETHERRACK, ModBlocks.INFECTED_NETHERRACK.get(), ember, Blocks.NETHERRACK),
+                new Case(Blocks.BASALT, ModBlocks.INFECTED_BLACKSTONE.get(), ember, Blocks.BLACKSTONE),
+                new Case(Blocks.SOUL_SAND, ModBlocks.INFECTED_SOUL_SOIL.get(), ember, Blocks.SOUL_SOIL),
+                new Case(Blocks.WARPED_NYLIUM, ModBlocks.INFECTED_NYLIUM.get(), ember, Blocks.CRIMSON_NYLIUM),
+                new Case(Blocks.NETHER_WART_BLOCK, ModBlocks.INFECTED_WART_BLOCK.get(), ember, Blocks.NETHER_WART_BLOCK),
+                new Case(Blocks.END_STONE, ModBlocks.INFECTED_END_STONE.get(), voidStrain, Blocks.END_STONE),
+                new Case(Blocks.PURPUR_PILLAR, ModBlocks.INFECTED_PURPUR.get(), voidStrain, Blocks.PURPUR_BLOCK),
+                new Case(Blocks.STONE, ModBlocks.INFECTED_STONE.get(), shard, Blocks.STONE))) {
+            var infected = eu.shardline.mod.virus.InfectionMap.infectedFor(c.clean().defaultBlockState());
+            helper.assertTrue(infected != null && infected.is(c.infected()), c.clean() + " wird nicht zu " + c.infected());
+            helper.assertTrue(((eu.shardline.mod.virus.Infected) infected.getBlock()).strain() == c.strain(), c.infected() + ": falscher Stamm");
+            helper.assertTrue(infected.isRandomlyTicking(), c.infected() + " bekommt keine Random Ticks");
+            var clean = eu.shardline.mod.virus.InfectionMap.purifiedFor(infected, level);
+            helper.assertTrue(clean != null && clean.is(c.purified()), c.infected() + " wird nicht zu " + c.purified() + " gereinigt");
+        }
+        helper.assertTrue(eu.shardline.mod.virus.VirusStrain.of(net.minecraft.world.level.Level.NETHER) == ember, "Nether muss Glutbrand haben");
+        helper.assertTrue(eu.shardline.mod.virus.VirusStrain.of(net.minecraft.world.level.Level.END) == voidStrain, "End muss Leerenfaeule haben");
+        var server = level.getServer();
+        for (var dimension : List.of(net.minecraft.world.level.Level.OVERWORLD, net.minecraft.world.level.Level.NETHER,
+                net.minecraft.world.level.Level.END)) {
+            ServerLevel target = server.getLevel(dimension);
+            helper.assertTrue(target != null && VirusSpreadManager.isAllowedDimension(target), dimension.location() + " ist fuer den Virus gesperrt");
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Tiefeninfektion: unter einer befallenen Oberflaeche werden genau die "poroesen" Bloecke befallbar; die Tiefe wird
+     * entlang der Achsen gemessen; ohne befallenen Nachbarn bleibt Gestein sauber.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 100, batch = "shardline_virus")
+    public static void virusDepth(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        boolean wasInfected = data.isInfected();
+        long outbreakTime = data.outbreakTime();
+        boolean wasPaused = data.isPaused();
+        StoryEnding ending = data.ending();
+        data.setInfected(true, level.getGameTime());
+        data.setPaused(false);
+        data.setEnding(StoryEnding.NONE);
+        BlockPos origin = helper.absolutePos(new BlockPos(0, 1, 0)).offset(0, 0, -200);
+        int size = 13;
+        try {
+            for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(size, size + 1, size))) {
+                boolean inside = pos.getX() >= origin.getX() && pos.getX() < origin.getX() + size && pos.getY() < origin.getY() + size
+                        && pos.getZ() >= origin.getZ() && pos.getZ() < origin.getZ() + size;
+                level.setBlock(pos, inside ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+            }
+            BlockPos center = origin.offset(size / 2, size / 2, size / 2);
+            helper.assertTrue(eu.shardline.mod.virus.InfectionMap.depthBelowSurface(level, center, 32) == size / 2 + 1,
+                    "Tiefe der Wuerfelmitte falsch: " + eu.shardline.mod.virus.InfectionMap.depthBelowSurface(level, center, 32));
+            helper.assertTrue(eu.shardline.mod.virus.InfectionMap.depthBelowSurface(level, center, 3) == 4, "Tiefenmessung haelt die Grenze nicht ein");
+            BlockPos inner = origin.offset(4, size - 2, 4);
+            helper.assertFalse(VirusSpreadManager.tryInfect(level, inner), "Gestein ohne befallenen Nachbarn wurde befallen");
+            int top = origin.getY() + size - 1;
+            for (int x = 2; x < size - 2; x++) {
+                for (int z = 2; z < size - 2; z++) {
+                    level.setBlock(new BlockPos(origin.getX() + x, top, origin.getZ() + z), ModBlocks.INFECTED_STONE.get().defaultBlockState(), 2);
+                }
+            }
+            int porous = 0;
+            for (int x = 3; x < size - 3; x++) {
+                for (int z = 3; z < size - 3; z++) {
+                    BlockPos below = new BlockPos(origin.getX() + x, top - 1, origin.getZ() + z);
+                    boolean expected = eu.shardline.mod.virus.InfectionMap.isPorous(below, eu.shardline.mod.config.ShardlineConfig.VIRUS_DEPTH_CHANCE.get());
+                    boolean infected = VirusSpreadManager.tryInfect(level, below);
+                    helper.assertTrue(infected == expected, "Tiefeninfektion bei " + below.toShortString() + ": " + infected + " statt " + expected);
+                    helper.assertTrue(!infected || level.getBlockState(below).is(ModBlocks.INFECTED_STONE.get()), "Falscher Block in der Tiefe");
+                    porous += expected ? 1 : 0;
+                }
+            }
+            helper.assertTrue(porous > 0 && porous < 49, "Unplausibler Anteil poroeser Bloecke: " + porous + "/49");
+            helper.succeed();
+        } finally {
+            for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(size, size + 1, size))) {
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+            }
+            data.setInfected(wasInfected, outbreakTime);
+            data.setPaused(wasPaused);
+            data.setEnding(ending);
+        }
+    }
+
+    /** Glutbrand brennt, Leerenfaeule verdunkelt; Piglin und Enderman kristallisieren und lassen sich reinigen. */
+    @GameTest(template = EMPTY, timeoutTicks = 40, batch = "shardline_virus")
+    public static void virusStrainMobs(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        var cow = helper.spawn(EntityType.COW, new BlockPos(1, 1, 1));
+        var sheep = helper.spawn(EntityType.SHEEP, new BlockPos(3, 1, 1));
+        eu.shardline.mod.virus.VirusEffects.applyStrain(cow, eu.shardline.mod.virus.VirusStrain.EMBER);
+        eu.shardline.mod.virus.VirusEffects.applyStrain(sheep, eu.shardline.mod.virus.VirusStrain.VOID);
+        helper.assertTrue(cow.getRemainingFireTicks() > 0, "Glutbrand setzt nicht in Brand");
+        helper.assertTrue(sheep.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS), "Leerenfaeule verdunkelt nicht");
+
+        var piglin = helper.spawn(EntityType.PIGLIN, new BlockPos(5, 1, 1));
+        var enderman = helper.spawn(EntityType.ENDERMAN, new BlockPos(7, 1, 1));
+        var crystalPiglin = eu.shardline.mod.virus.VirusEffects.convert(level, piglin, ModEntities.CRYSTALLIZED_PIGLIN.get());
+        var crystalEnderman = eu.shardline.mod.virus.VirusEffects.convert(level, enderman, ModEntities.CRYSTALLIZED_ENDERMAN.get());
+        helper.assertTrue(crystalPiglin != null && crystalEnderman != null, "Kristallisierung von Piglin/Enderman fehlgeschlagen");
+        helper.assertTrue(crystalPiglin.fireImmune(), "Kristallisierter Piglin muss feuerfest sein");
+        helper.assertTrue(eu.shardline.mod.virus.VirusEffects.isImmune(crystalEnderman), "Kristallisierter Enderman muss immun sein");
+        var curedPiglin = eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalPiglin);
+        var curedEnderman = eu.shardline.mod.virus.VirusEffects.purifyMob(level, crystalEnderman);
+        helper.assertTrue(curedPiglin != null && curedPiglin.getType() == EntityType.ZOMBIFIED_PIGLIN,
+                "Piglin wird in der Oberwelt nicht zum Zombifizierten Piglin gereinigt");
+        helper.assertTrue(curedEnderman != null && curedEnderman.getType() == EntityType.ENDERMAN, "Enderman wird nicht gereinigt");
+        cow.discard();
+        sheep.discard();
+        curedPiglin.discard();
+        curedEnderman.discard();
+        helper.succeed();
+    }
+
+    // ------------------------------------------------------------------ Nach dem Ausbruch: Kapitel 7-9
+
+    /** Story-Zustand eines Testspielers zuruecksetzen (Kapitel, Zweig, Epilog, Auftraege, Flaggen). */
+    private static void resetStory(ShardlineWorldData data, net.minecraft.server.level.ServerPlayer player) {
+        java.util.UUID uuid = player.getUUID();
+        data.setChapter(uuid, 0);
+        data.setBranch(uuid, StoryEnding.NONE);
+        data.setEpilogue(uuid, "");
+        for (String quest : new ArrayList<>(data.quests(uuid).keySet())) {
+            eu.shardline.mod.story.quest.Quests.reset(player, quest);
+        }
+        for (String flag : List.of("rhea:met", "kesh:met", "veyl:met", "ilsa:met", "boss:echo_queen", "boss:festering_heart", "festering:first")) {
+            data.removeFlag(uuid, flag);
+        }
+    }
+
+    /** Schwaeren aus Welt und Liste entfernen, die ein Test in der Naehe erzeugt hat. */
+    private static void clearNodes(ServerLevel level, BlockPos center, int radius) {
+        var nodes = StoryManager.data(level.getServer()).festeringNodes(level.dimension());
+        for (long packed : nodes.toLongArray()) {
+            BlockPos pos = BlockPos.of(packed);
+            if (pos.distSqr(center) <= (double) radius * radius) {
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                nodes.remove(packed);
+            }
+        }
+    }
+
+    /**
+     * Kapitel 7 bis 8 im versiegelten Ende, ueber die echten Dialoge: Kesh fuehrt zur Schwaere und folgt, die Schwaere
+     * wird gereinigt, Kesh meldet bei Rhea den Begleitschritt, Rhea schliesst ab und Kapitel 8 (versiegelt) beginnt.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void aftermathFlowSeal(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        var rhea = helper.spawn(ModEntities.RHEA.get(), new BlockPos(1, 1, 1));
+        var kesh = helper.spawn(ModEntities.KESH.get(), new BlockPos(4, 1, 1));
+        BlockPos nodePos = helper.absolutePos(new BlockPos(7, 0, 7));
+        try {
+            rhea.setHome(rhea.blockPosition());
+            kesh.setHome(kesh.blockPosition());
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 7);
+            data.addFlag(player.getUUID(), "rhea:met");
+            data.addFlag(player.getUUID(), "kesh:met");
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "first_festering"), "Erste Schwaere liess sich nicht annehmen");
+
+            player.moveTo(kesh.getX() + 1.5, kesh.getY(), kesh.getZ());
+            kesh.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("festering_lead"), "Kesh fuehrt nicht zur Schwaere");
+            helper.assertTrue(data.quest(player.getUUID(), "first_festering").step() == 1, "Gespraech mit Kesh zaehlt nicht");
+            helper.assertTrue(player.getUUID().equals(kesh.following()), "Kesh folgt nicht");
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+
+            level.setBlock(nodePos, ModBlocks.FESTERING_NODE.get().defaultBlockState(), 3);
+            helper.assertTrue(data.festeringNodes(level.dimension()).contains(nodePos.asLong()), "Schwaere nicht gespeichert");
+            eu.shardline.mod.block.custom.FesteringNodeBlock.silence(level, nodePos, player);
+            helper.assertTrue(level.getBlockState(nodePos).isAir() && !data.festeringNodes(level.dimension()).contains(nodePos.asLong()),
+                    "Schwaere nicht entfernt");
+            helper.assertTrue(!level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(nodePos).inflate(2),
+                    item -> item.getItem().is(eu.shardline.mod.item.ModItems.ECHO_SHARD.get())).isEmpty(), "Keine Echosplitter");
+            helper.assertTrue(data.quest(player.getUUID(), "first_festering").step() == 2, "Reinigung zaehlt nicht");
+
+            kesh.checkArrival();
+            helper.assertTrue(kesh.following() == null && data.quest(player.getUUID(), "first_festering").step() == 3,
+                    "Begleitschritt bei Rhea nicht erkannt");
+
+            player.moveTo(rhea.getX() + 1.5, rhea.getY(), rhea.getZ());
+            rhea.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("festering_turn_in"), "Rhea nimmt den Bericht nicht an");
+            helper.assertTrue(data.hasFlag(player.getUUID(), "quest_done:first_festering"), "Erste Schwaere nicht abgeschlossen");
+            helper.assertTrue(data.chapter(player.getUUID()) == 8 && data.branch(player.getUUID()) == StoryEnding.SEALED,
+                    "Kapitel 8 (versiegelt) nicht erreicht");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            clearNodes(level, kesh.blockPosition(), 48);
+            resetStory(data, player);
+            data.setEnding(ending);
+            rhea.discard();
+            kesh.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /**
+     * "Der Gezeichnete" ueber die echten Dialoge: Ilsa braut aus Essenz und Echosplittern, Kesh trinkt und ist geheilt.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    public static void markedHealing(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        var ilsa = helper.spawn(ModEntities.ILSA.get(), new BlockPos(1, 1, 1));
+        var kesh = helper.spawn(ModEntities.KESH.get(), new BlockPos(5, 1, 1));
+        try {
+            ilsa.setHome(ilsa.blockPosition());
+            kesh.setHome(kesh.blockPosition());
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 7);
+            for (String flag : List.of("rhea:met", "kesh:met", "ilsa:met")) {
+                data.addFlag(player.getUUID(), flag);
+            }
+            helper.assertTrue(eu.shardline.mod.story.quest.Quests.start(player, "the_marked"), "Der Gezeichnete liess sich nicht annehmen");
+            player.getInventory().add(new ItemStack(eu.shardline.mod.item.ModItems.PURIFICATION_ESSENCE.get()));
+            player.getInventory().add(new ItemStack(eu.shardline.mod.item.ModItems.ECHO_SHARD.get(), 3));
+            eu.shardline.mod.story.quest.Quests.check(player);
+            helper.assertTrue(data.quest(player.getUUID(), "the_marked").step() == 2, "Sammelschritte nicht erkannt");
+
+            player.moveTo(ilsa.getX() + 1.5, ilsa.getY(), ilsa.getZ());
+            ilsa.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("marked_brew"), "Ilsa bietet das Brauen nicht an");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 0);
+            helper.assertTrue(data.quest(player.getUUID(), "the_marked").step() == 3, "Brauen zaehlt nicht");
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+
+            player.moveTo(kesh.getX() + 1.5, kesh.getY(), kesh.getZ());
+            kesh.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("marked_heal"), "Kesh trinkt nicht");
+            helper.assertTrue(kesh.isHealed() && data.hasFlag(player.getUUID(), "kesh:healed")
+                    && data.hasFlag(player.getUUID(), "quest_done:the_marked"), "Kesh nicht geheilt");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            resetStory(data, player);
+            data.setEnding(ending);
+            ilsa.discard();
+            kesh.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /**
+     * Kapitel-9-Gegner: Nachhall und Schwaerenherz erscheinen ueber die Dialogaktion (nie doppelt), ihr Tod setzt die
+     * Boss-Flaggen ohne Ausbruch oder Entscheidungsaltar; danach fuehrt Veyl zur Epilog-Entscheidung.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 60, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void aftermathBossesAndEpilogue(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        boolean infected = data.isInfected();
+        long outbreak = data.outbreakTime();
+        var veyl = helper.spawn(ModEntities.VEYL.get(), new BlockPos(2, 1, 2));
+        List<Entity> spawned = new ArrayList<>();
+        try {
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 9);
+            data.setBranch(player.getUUID(), StoryEnding.SEALED);
+            player.moveTo(veyl.getX() + 1.5, veyl.getY(), veyl.getZ());
+            helper.assertTrue(eu.shardline.mod.story.Encounters.summon(eu.shardline.mod.story.Encounters.ECHO_QUEEN, player, veyl),
+                    "Nachhall erscheint nicht");
+            helper.assertFalse(eu.shardline.mod.story.Encounters.summon(eu.shardline.mod.story.Encounters.ECHO_QUEEN, player, veyl),
+                    "Nachhall darf nicht doppelt erscheinen");
+            helper.assertTrue(eu.shardline.mod.story.Encounters.summon(eu.shardline.mod.story.Encounters.FESTERING_HEART, player, veyl),
+                    "Schwaerenherz erscheint nicht");
+            var queens = level.getEntitiesOfClass(eu.shardline.mod.entity.boss.EchoQueenEntity.class, new net.minecraft.world.phys.AABB(veyl.blockPosition()).inflate(32));
+            var hearts = level.getEntitiesOfClass(eu.shardline.mod.entity.boss.FesteringHeartEntity.class, new net.minecraft.world.phys.AABB(veyl.blockPosition()).inflate(32));
+            helper.assertTrue(queens.size() == 1 && hearts.size() == 1, "Bosse nicht gefunden");
+            spawned.addAll(queens);
+            spawned.addAll(hearts);
+            helper.assertTrue(queens.get(0).getMaxHealth() == eu.shardline.mod.config.ShardlineConfig.ECHO_QUEEN_HEALTH.get().floatValue(),
+                    "Nachhall hat nicht das eigene Leben");
+            queens.get(0).kill();
+            hearts.get(0).kill();
+            helper.assertTrue(data.hasFlag(player.getUUID(), "boss:echo_queen") && data.hasFlag(player.getUUID(), "boss:festering_heart"),
+                    "Boss-Flaggen fehlen");
+            helper.assertTrue(data.ending() == StoryEnding.SEALED && data.isInfected() == infected, "Nachhall hat den Weltzustand veraendert");
+
+            data.addFlag(player.getUUID(), "veyl:met");
+            veyl.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            var session = eu.shardline.mod.story.dialogue.DialogueSessions.current(player);
+            helper.assertTrue(session != null && session.node().equals("decision"), "Veyl bietet die Entscheidung nicht an");
+            eu.shardline.mod.story.dialogue.DialogueSessions.onChoice(player, session.id(), 1);
+            helper.assertTrue(data.epilogue(player.getUUID()).equals("chronicle"), "Epilog nicht gesetzt");
+            var advancement = level.getServer().getAdvancements().get(Shardline.id("story/epilogue_chronicle"));
+            helper.assertTrue(advancement != null && player.getAdvancements().getOrStartProgress(advancement).isDone(), "Epilog-Advancement fehlt");
+            helper.succeed();
+        } finally {
+            eu.shardline.mod.story.dialogue.DialogueSessions.close(player, false);
+            spawned.forEach(Entity::discard);
+            level.getEntitiesOfClass(eu.shardline.mod.entity.boss.QueenCloneEntity.class, new net.minecraft.world.phys.AABB(veyl.blockPosition()).inflate(64))
+                    .forEach(Entity::discard);
+            resetStory(data, player);
+            data.setEnding(ending);
+            data.setInfected(infected, outbreak);
+            veyl.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Schwaere im beherrschten Ende: Stimmgabel findet sie, ein Herrscher bindet sie; Gegengesang-Befallene greifen Herrscher an. */
+    @GameTest(template = EMPTY, timeoutTicks = 40, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void festeringNodeDominated(GameTestHelper helper) {
+        clearArea(helper, 8, 4);
+        ServerLevel level = helper.getLevel();
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(level.getServer());
+        StoryEnding ending = data.ending();
+        boolean wasRuler = data.isRuler(player.getUUID());
+        BlockPos nodePos = helper.absolutePos(new BlockPos(4, 0, 4));
+        var zombie = helper.spawn(ModEntities.SHARD_ZOMBIE.get(), new BlockPos(1, 1, 1));
+        try {
+            data.setEnding(StoryEnding.DOMINATED);
+            data.addRuler(player.getUUID());
+            data.setChapter(player.getUUID(), 8);
+            data.setBranch(player.getUUID(), StoryEnding.DOMINATED);
+            level.setBlock(nodePos, ModBlocks.FESTERING_NODE.get().defaultBlockState(), 3);
+            helper.assertTrue(nodePos.equals(eu.shardline.mod.item.custom.KeeperTuningForkItem.nearestNode(level, nodePos.above(5))),
+                    "Stimmgabel findet die Schwaere nicht");
+            helper.assertTrue(eu.shardline.mod.entity.infected.InfectedMobs.isFriendly(zombie, player), "Wilder Befallener greift den Herrscher an");
+            eu.shardline.mod.entity.infected.InfectedMobs.markCounterSong(zombie);
+            helper.assertFalse(eu.shardline.mod.entity.infected.InfectedMobs.isFriendly(zombie, player), "Gegengesang schont den Herrscher");
+            var problems = new eu.shardline.mod.story.dialogue.DialogueParser.Problems("quest");
+            var quest = eu.shardline.mod.story.dialogue.DialogueParser.parseQuest("test_bind", json("""
+                    {"steps": [{"type": "bind_node", "target": "shardline:festering_node"}]}"""), problems);
+            var saved = new java.util.LinkedHashMap<String, eu.shardline.mod.story.quest.QuestDefinition>();
+            eu.shardline.mod.story.quest.Quests.all().forEach(q -> saved.put(q.id(), q));
+            var map = new java.util.LinkedHashMap<>(saved);
+            map.put(quest.id(), quest);
+            eu.shardline.mod.story.quest.Quests.setDefinitions(map);
+            try {
+                eu.shardline.mod.story.quest.Quests.start(player, "test_bind");
+                eu.shardline.mod.block.custom.FesteringNodeBlock.silence(level, nodePos, player);
+                helper.assertTrue(data.hasFlag(player.getUUID(), "quest_done:test_bind"), "Herrscher hat die Schwaere nicht gebunden");
+            } finally {
+                eu.shardline.mod.story.quest.Quests.reset(player, "test_bind");
+                eu.shardline.mod.story.quest.Quests.setDefinitions(saved);
+            }
+            BlockPos spawnedNode = eu.shardline.mod.story.Encounters.spawnNodeNear(level, helper.absolutePos(new BlockPos(4, 1, 4)), 2, 3,
+                    level.getRandom());
+            helper.assertTrue(spawnedNode != null && level.getBlockState(spawnedNode).is(ModBlocks.FESTERING_NODE.get()), "Schwaere entsteht nicht");
+            helper.assertTrue(eu.shardline.mod.story.Encounters.nodesNear(level, spawnedNode, 4) >= 1, "Schwaere wird nicht gezaehlt");
+            helper.succeed();
+        } finally {
+            clearNodes(level, nodePos, 16);
+            resetStory(data, player);
+            data.setEnding(ending);
+            if (!wasRuler) {
+                data.rulers().remove(player.getUUID());
+            }
+            zombie.discard();
+            level.getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /**
+     * Auftragsbuch: QuestSync baut aus dem Spielerstand Kapitel, Auftraege (Schritt, Fortschritt), getroffene Figuren
+     * und gelesene Seiten; das Paket uebersteht Kodieren und Dekodieren unveraendert.
+     */
+    @GameTest(template = EMPTY, timeoutTicks = 20, batch = "shardline_aftermath")
+    @SuppressWarnings("removal")
+    public static void journalSync(GameTestHelper helper) {
+        net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ShardlineWorldData data = StoryManager.data(helper.getLevel().getServer());
+        StoryEnding ending = data.ending();
+        try {
+            data.setEnding(StoryEnding.SEALED);
+            data.setChapter(player.getUUID(), 8);
+            data.setBranch(player.getUUID(), StoryEnding.SEALED);
+            data.addFlag(player.getUUID(), "rhea:met");
+            data.addFlag(player.getUUID(), "kesh:met");
+            data.addFlag(player.getUUID(), "kesh:healed");
+            data.addFlag(player.getUUID(), "lore_read:the_seal:2");
+            eu.shardline.mod.story.quest.Quests.start(player, "knights_without_lord");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "kill", "shardline:shattered_knight");
+            var payload = eu.shardline.mod.story.quest.QuestSync.build(player, true);
+            helper.assertTrue(payload.open() && payload.chapter() == 8 && payload.branch().equals("seal"), "Kapitel/Zweig falsch");
+            helper.assertTrue(payload.nextKey().equals("story.shardline.next.8.seal"), "Naechstes Ziel falsch: " + payload.nextKey());
+            var quest = payload.quests().stream().filter(q -> q.id().equals("knights_without_lord")).findFirst().orElse(null);
+            helper.assertTrue(quest != null && quest.active() && quest.step() == 0 && quest.count() == 1 && quest.needed() == 5
+                    && quest.steps() == 2 && quest.giver().equals("rhea"), "Auftragsstand falsch: " + quest);
+            helper.assertTrue(payload.npcs().size() == 2 && payload.npcs().get(1).bioKey().equals("journal.shardline.npc.kesh.healed"),
+                    "Figuren falsch: " + payload.npcs());
+            helper.assertTrue(payload.lore().size() == 1 && payload.lore().get(0).book().equals("the_seal") && payload.lore().get(0).pages() == 2,
+                    "Lore falsch: " + payload.lore());
+            var buf = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), helper.getLevel().registryAccess());
+            eu.shardline.mod.network.JournalPayload.STREAM_CODEC.encode(buf, payload);
+            helper.assertTrue(eu.shardline.mod.network.JournalPayload.STREAM_CODEC.decode(buf).equals(payload), "Paket uebersteht Kodierung nicht");
+            helper.succeed();
+        } finally {
+            resetStory(data, player);
+            data.removeFlag(player.getUUID(), "kesh:healed");
+            data.removeFlag(player.getUUID(), "lore_read:the_seal:2");
+            data.setEnding(ending);
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        }
+    }
+
+    /** Ueberlebendenlager und Hueter-Bibliothek: Kernbloecke stehen, die Bewohner erscheinen mit Heimatpunkt am Platz. */
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aftermathStructures(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos base = helper.absolutePos(BlockPos.ZERO);
+        BlockPos camp = new BlockPos(base.getX() + 900, 120, base.getZ());
+        BlockPos library = new BlockPos(base.getX() + 960, 120, base.getZ());
+        build(level, new eu.shardline.mod.world.structure.SurvivorCampPiece(camp, 11L));
+        build(level, new eu.shardline.mod.world.structure.KeeperLibraryPiece(library, 12L));
+        List<Entity> npcs = new ArrayList<>();
+        try {
+            expect(helper, level, camp.above(), Blocks.CAMPFIRE);
+            expect(helper, level, eu.shardline.mod.world.structure.SurvivorCampPiece.chestPos(camp), Blocks.CHEST);
+            expect(helper, level, camp.offset(6, 1, 3), Blocks.ANVIL);
+            expect(helper, level, eu.shardline.mod.world.structure.KeeperLibraryPiece.chestPos(library), Blocks.CHEST);
+            expect(helper, level, library.offset(4, 1, 1), Blocks.BOOKSHELF);
+            expect(helper, level, library.offset(-2, 1, -4), Blocks.LECTERN);
+            for (var expected : List.of(
+                    java.util.Map.entry(ModEntities.RHEA.get(), eu.shardline.mod.world.structure.SurvivorCampPiece.rheaPos(camp)),
+                    java.util.Map.entry(ModEntities.ILSA.get(), eu.shardline.mod.world.structure.SurvivorCampPiece.ilsaPos(camp)),
+                    java.util.Map.entry(ModEntities.KESH.get(), eu.shardline.mod.world.structure.SurvivorCampPiece.keshPos(camp)),
+                    java.util.Map.entry(ModEntities.VEYL.get(), eu.shardline.mod.world.structure.KeeperLibraryPiece.veylPos(library)))) {
+                var found = level.getEntities(expected.getKey(), new net.minecraft.world.phys.AABB(expected.getValue()).inflate(2), entity -> true);
+                helper.assertTrue(found.size() == 1, EntityType.getKey(expected.getKey()) + " erscheint nicht genau einmal: " + found.size());
+                var npc = (eu.shardline.mod.entity.npc.AftermathNpcEntity) found.get(0);
+                helper.assertTrue(expected.getValue().equals(npc.home()) && npc.inCamp(), EntityType.getKey(expected.getKey()) + " hat keinen Heimatpunkt");
+                npcs.add(npc);
+            }
+            helper.succeed();
+        } finally {
+            npcs.forEach(Entity::discard);
+        }
+    }
+
+    /** Eigene Klaenge: jede in ModSounds.FILES eingetragene Datei liegt als .ogg in der Mod; Shard-Erz klingt eigen. */
+    @GameTest(template = EMPTY, timeoutTicks = 20)
+    public static void soundFiles(GameTestHelper helper) {
+        List<String> missing = new ArrayList<>();
+        eu.shardline.mod.core.ModSounds.FILES.values().forEach(file -> {
+            if (Shardline.class.getResource("/assets/shardline/sounds/" + file + ".ogg") == null) {
+                missing.add(file);
+            }
+        });
+        helper.assertTrue(missing.isEmpty(), "Fehlende Sounddateien: " + missing);
+        helper.assertTrue(eu.shardline.mod.core.ModSounds.FILES.size() >= 21, "Zu wenige eigene Klaenge eingetragen");
+        helper.assertTrue(ModBlocks.SHARD_ORE.get().defaultBlockState().getSoundType().getBreakSound()
+                == eu.shardline.mod.core.ModSounds.SHARD_ORE_BREAK.get(), "Shard-Erz nutzt den eigenen Abbauklang nicht");
+        helper.succeed();
+    }
+
+    /** Zweige eines Kapitels: bei 8 und 9 versiegelt und beherrscht, sonst keiner. */
+    private static List<StoryEnding> branchesOf(StoryChapter chapter) {
+        return chapter.branched() ? List.of(StoryEnding.SEALED, StoryEnding.DOMINATED) : List.of(StoryEnding.NONE);
     }
 }

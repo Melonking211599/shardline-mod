@@ -1,0 +1,34 @@
+{
+  "parent": "shardline:enter_splitterweite",
+  "criteria": {
+    "crystal_slime": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shardline:crystal_slime"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.shardline.crystal_slime.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:crystal_slime"
+    },
+    "title": {
+      "translate": "advancements.shardline.crystal_slime.title"
+    }
+  },
+  "requirements": [
+    [
+      "crystal_slime"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

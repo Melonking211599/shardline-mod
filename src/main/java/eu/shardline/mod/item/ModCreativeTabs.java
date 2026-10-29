@@ -30,6 +30,10 @@ public final class ModCreativeTabs {
                     Item item = holder.get();
                     if (item == ModItems.LORE_BOOK.get()) {
                         LoreBooks.ALL.forEach(book -> output.accept(LoreBooks.create(book)));
+                    } else if (item == ModItems.CHAPTER_EMBLEM.get()) {
+                        // Nur ein Symbol fuer Advancements und die Kapitelkarte.
+                    } else if (item == ModItems.LORE_PAGE.get()) {
+                        LoreBooks.ALL.forEach(book -> output.accept(LoreBooks.page(book, 1)));
                     } else if (!(item instanceof BlockItem) && !(item instanceof SpawnEggItem)) {
                         output.accept(item);
                     }

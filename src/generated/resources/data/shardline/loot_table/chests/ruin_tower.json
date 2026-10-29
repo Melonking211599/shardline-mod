@@ -195,6 +195,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.wanderer_notes.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -230,6 +242,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.crystal_kingdom.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -265,6 +289,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.keepers_oath.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -300,6 +336,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.the_resonance.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.the_resonance.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -335,6 +383,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.first_infection.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.first_infection.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -370,6 +430,18 @@
                     },
                     {
                       "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.3\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.4\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.5\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.6\"}"
+                    },
+                    {
+                      "raw": "{\"translate\":\"lore.shardline.traders_ledger.page.7\"}"
                     }
                   ],
                   "resolved": true,
@@ -385,6 +457,650 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:empty",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "wanderer_notes"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "crystal_kingdom"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "keepers_oath"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "the_resonance"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 1
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 2
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 3
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 4
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 5
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 6
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "components": {
+                "shardline:lore_book": "traders_ledger"
+              },
+              "function": "minecraft:set_components"
+            },
+            {
+              "components": {
+                "shardline:lore_page": 7
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "shardline:lore_page"
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 2.0,
+        "min": 1.0
+      }
     }
   ],
   "random_sequence": "shardline:chests/ruin_tower"

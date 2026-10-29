@@ -2,6 +2,15 @@
   "values": [
     "shardline:crystal_log",
     "shardline:crystal_planks",
-    "shardline:infected_log"
+    "shardline:infected_log",
+    "shardline:infected_planks",
+    "shardline:crystal_stairs",
+    "shardline:crystal_slab",
+    "shardline:crystal_fence",
+    "shardline:crystal_fence_gate",
+    "shardline:crystal_door",
+    "shardline:crystal_trapdoor",
+    "shardline:crystal_button",
+    "shardline:crystal_pressure_plate"
   ]
 }

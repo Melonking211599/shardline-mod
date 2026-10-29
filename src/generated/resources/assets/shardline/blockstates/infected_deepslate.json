@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "shardline:block/infected_deepslate"
+      },
+      {
+        "model": "shardline:block/infected_deepslate_v2"
+      },
+      {
+        "model": "shardline:block/infected_deepslate_v3"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "chapter_min": 8,
+  "branch": "dominate",
+  "giver": "ilsa",
+  "steps": [
+    {"type": "collect", "target": "shardline:echo_shard", "count": 3},
+    {"type": "talk", "target": "ilsa"}
+  ],
+  "xp": 160
+}

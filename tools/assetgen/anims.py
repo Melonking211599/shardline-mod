@@ -69,14 +69,6 @@ ADD = {
     "crystal_colossus": {"death": fall(3.0, [-85, 0, 0], [0, 0, 14], {**shrink(3.0, "crystals"), "head": {"rotation": {
         "0.0": [0, 0, 0], "3.00": [-25, 0, 8]}}}),
                          "stomp": "slam", "summon_pillars": "pillar", "phase_transition": "roar"},
-    "shard_queen": {"death": fall(2.0, [55, 0, 25], [0, -26, 0], {**shrink(2.0, "halo"), "left_wing": {"rotation": {
-        "0.0": [0, 0, 0], "2.00": [0, -40, 0]}}, "right_wing": {"rotation": {"0.0": [0, 0, 0], "2.00": [0, 40, 0]}}}),
-                    "idle": hover_idle("root", 1.0, 120), "projectile_barrage": "cast", "clone_summon": "summon",
-                    "phase_transition": "scream",
-                    "void_zone": {"loop": False, "animation_length": 1.4, "bones": {
-                        "right_arm": {"rotation": {"0.0": [0, 0, 0], "0.50": [-80, 0, -30], "1.40": [0, 0, 0]}},
-                        "left_arm": {"rotation": {"0.0": [0, 0, 0], "0.50": [-80, 0, 30], "1.40": [0, 0, 0]}},
-                        "skirt_lower": {"scale": {"0.0": [1, 1, 1], "0.70": [1.25, 1, 1.25], "1.40": [1, 1, 1]}}}}},
 }
 
 # Wo "attack" fehlt und None steht, wird die vorhandene Aktionsanimation als Alias genutzt

@@ -1,11 +1,13 @@
 package eu.shardline.mod.story;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.block.custom.DecisionAltarBlock;
 import eu.shardline.mod.config.ShardlineConfig;
 import eu.shardline.mod.entity.boss.CrystalColossusEntity;
 import eu.shardline.mod.entity.boss.ShardQueenEntity;
 import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.entity.infected.InfectedMob;
+import eu.shardline.mod.core.ModSounds;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.network.ScreenEffectPayload;
 import eu.shardline.mod.story.lore.LoreBooks;
@@ -19,6 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -57,6 +60,7 @@ public final class StoryEvents {
             StoryManager.applyTitleTeam(player);
             StoryManager.sync(player);
             StoryManager.syncTitles(player);
+            StoryManager.checkAftermath(player);
         }
     }
 
@@ -73,8 +77,16 @@ public final class StoryEvents {
     static void onPickup(ItemEntityPickupEvent.Post event) {
         if (event.getPlayer() instanceof ServerPlayer player && isShard(event.getOriginalStack())) {
             StoryManager.reach(player, StoryChapter.FIRST_SHARD);
+            // Eigener Klang fuer Shard-Splitter, hoechstens alle 4 Ticks (beim Einsammeln vieler Stapel)
+            if (event.getOriginalStack().is(ModItems.SHARD_FRAGMENT.get()) && player.tickCount - player.getPersistentData().getInt(PICKUP_TICK) >= 4) {
+                player.getPersistentData().putInt(PICKUP_TICK, player.tickCount);
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.SHARD_FRAGMENT_PICKUP.get(),
+                        SoundSource.PLAYERS, 0.5F, 0.9F + player.getRandom().nextFloat() * 0.2F);
+            }
         }
     }
+
+    private static final String PICKUP_TICK = "ShardlineShardPickupTick";
 
     @SubscribeEvent
     static void onCrafted(PlayerEvent.ItemCraftedEvent event) {
@@ -96,8 +108,11 @@ public final class StoryEvents {
 
     @SubscribeEvent
     static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getTo() == ModDimensions.SPLITTERWEITE_LEVEL) {
-            StoryManager.reach(player, StoryChapter.THE_GATE);
+        if (event.getEntity() instanceof ServerPlayer player) {
+            if (event.getTo() == ModDimensions.SPLITTERWEITE_LEVEL) {
+                StoryManager.reach(player, StoryChapter.THE_GATE);
+            }
+            StoryManager.checkAftermath(player);
         }
     }
 
@@ -107,6 +122,7 @@ public final class StoryEvents {
         ShardlineWorldData data = StoryManager.data(player.server);
         if (data.addFlag(player.getUUID(), "book:" + book.id())) {
             StoryManager.award(player, "story/lore_book");
+            eu.shardline.mod.story.quest.Quests.trigger(player, "read_lore", target -> target.equals("any") || target.equals(book.id()), 1);
             int read = data.countFlags(player.getUUID(), "book:");
             player.displayClientMessage(Component.translatable("message.shardline.lore_book_found", read, LoreBooks.ALL.size())
                     .withStyle(ChatFormatting.LIGHT_PURPLE), true);
@@ -143,8 +159,13 @@ public final class StoryEvents {
             for (ServerPlayer player : creditedPlayers(level, entity, killer, BOSS_CREDIT_RADIUS)) {
                 StoryManager.reach(player, StoryChapter.HEART_OF_THE_EXPANSE);
             }
-        } else if (entity instanceof ShardQueenEntity) {
+        } else if (entity instanceof eu.shardline.mod.entity.boss.EchoQueenEntity) {
+            Encounters.onBossDefeated(level, entity, killer, Encounters.ECHO_QUEEN);
+        } else if (entity instanceof ShardQueenEntity queen) {
             VirusOutbreak.onQueenDeath(level, entity.blockPosition(), killer);
+            if (StoryManager.data(level.getServer()).ending() == StoryEnding.NONE) {
+                DecisionAltarBlock.raise(level, queen.getHome(), entity.blockPosition());
+            }
         } else if (entity instanceof InfectedMob && killer != null && StoryManager.data(level.getServer()).isInfected()) {
             StoryManager.reach(killer, StoryChapter.THE_BREACH);
         }
@@ -185,7 +206,7 @@ public final class StoryEvents {
         }
     }
 
-    private static Set<ServerPlayer> creditedPlayers(ServerLevel level, LivingEntity boss, ServerPlayer killer, double radius) {
+    static Set<ServerPlayer> creditedPlayers(ServerLevel level, LivingEntity boss, ServerPlayer killer, double radius) {
         Set<ServerPlayer> players = new LinkedHashSet<>();
         if (killer != null) {
             players.add(killer);

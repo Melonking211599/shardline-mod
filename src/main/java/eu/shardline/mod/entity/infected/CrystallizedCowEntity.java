@@ -8,6 +8,9 @@ import eu.shardline.mod.virus.VirusEffects;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -38,6 +41,8 @@ import net.minecraft.world.level.Level;
  * trifft, riskiert Splitterfieber durch absplitternde Kristalle.
  */
 public class CrystallizedCowEntity extends Cow implements InfectedMob {
+    private static final EntityDataAccessor<Boolean> DATA_COLLAR = SynchedEntityData.defineId(CrystallizedCowEntity.class, EntityDataSerializers.BOOLEAN);
+
     @Nullable
     private UUID owner;
     private int summonTicks;
@@ -136,6 +141,17 @@ public class CrystallizedCowEntity extends Cow implements InfectedMob {
 
     // --- InfectedMob ---
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_COLLAR, false);
+    }
+
+    @Override
+    public boolean hasCollar() {
+        return this.entityData.get(DATA_COLLAR);
+    }
+
     @Nullable
     @Override
     public UUID getOwnerUUID() {
@@ -145,6 +161,7 @@ public class CrystallizedCowEntity extends Cow implements InfectedMob {
     @Override
     public void setOwnerUUID(@Nullable UUID owner) {
         this.owner = owner;
+        this.entityData.set(DATA_COLLAR, owner != null);
         if (owner != null) {
             this.setPersistenceRequired();
         }

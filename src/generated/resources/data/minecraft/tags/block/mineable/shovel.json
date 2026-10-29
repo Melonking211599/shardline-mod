@@ -4,6 +4,7 @@
     "shardline:ash_block",
     "shardline:infected_dirt",
     "shardline:infected_grass",
-    "shardline:infected_sand"
+    "shardline:infected_sand",
+    "shardline:infected_soul_soil"
   ]
 }

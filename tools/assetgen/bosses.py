@@ -1,4 +1,4 @@
-"""Texturen der beiden Bosse: Kristallkoloss (256x256) und Splitterkoenigin (128x128, plus Klon).
+"""Textur des Kristallkolosses (256x256). Die Splitterkoenigin samt Klon erzeugt queen_rig.py.
 
 Beide haben deutlich mehr Detail als normale Mobs (Zusatz-Quader aus geo_prep.py) und eine Leuchtmaske.
 Aufruf: python tools/assetgen/bosses.py
@@ -7,15 +7,14 @@ from __future__ import annotations
 
 import math
 
-from common import ASH, BONE, COL, CYAN, LILAC, MAGENTA, SHARD, SLATE, VIOLET, hx, mix, nz, ramp, vnoise
-from ent import Ent, M_cloth, M_crystal, M_flat, M_fur, M_plate, M_stone, art_face, overlay
-from uvlib import FACE_LIGHT, edge_light
+from clean import ordered
+from common import BONE, CYAN, MAGENTA, SLATE, VIOLET, hx, mix, ramp
+from ent import Ent, M_crystal, M_plate, M_stone, art_face, overlay
+from uvlib import FACE_LIGHT
 
 G = True
 COLO = [mix(SLATE[i], VIOLET[min(i + 1, 4)], 0.38) for i in range(5)]
 COLO_DARK = [mix(SLATE[max(i - 1, 0)], VIOLET[min(i, 4)], 0.25) for i in range(5)]
-ROBE = [hx(c) for c in ("#190c33", "#2a1556", "#40227f", "#5a35ad", "#7e55d6")]
-HAIR = [hx(c) for c in ("#06030c", "#0e0719", "#190d2d", "#2a1a4a", "#432a73")]
 
 
 def P(**kw):
@@ -76,7 +75,7 @@ pppppppppppp
             if fx in (4, 5) and 6 < fy < 26 and fy % 5 != 0:
                 return (CYAN[2] if fx == 4 else CYAN[1], G)
             if fy >= 27:
-                return ramp(COLO_DARK, 1.2 + FACE_LIGHT[face] * 0.8 + (nz(fx, fy, 2003) - 0.5) * 0.6 + (0.9 if fy == 27 else 0))
+                return ramp(COLO_DARK, 1.2 + FACE_LIGHT[face] * 0.8 + ordered(fx, fy) * 0.54 + (0.9 if fy == 27 else 0))
             if fy in (11, 12):
                 return COLO[0]
         return None
@@ -98,7 +97,7 @@ pppppppppppp
             if fx in (4, 5) and 3 < fy < 12:
                 return (CYAN[2], G)
             if fy >= 19:
-                return ramp(COLO_DARK, 1.3 + FACE_LIGHT[face] * 0.8 + (nz(fx, fy, 2007) - 0.5) * 0.6 + (0.9 if fy == 19 else 0))
+                return ramp(COLO_DARK, 1.3 + FACE_LIGHT[face] * 0.8 + ordered(fx, fy) * 0.54 + (0.9 if fy == 19 else 0))
         return None
 
     e.paint("right_leg", overlay(stone, leg))
@@ -173,95 +172,9 @@ pppppppppppp
     e.save()
 
 
-# ====================================================================== Splitterkoenigin
-def queen(variant="queen"):
-    ghost = variant == "clone"
-    if ghost:
-        robe = [hx(c) for c in ("#4a3a7c", "#6a58a6", "#8c7cc8", "#b0a2e8", "#d8ceff")]
-        hair = [hx(c) for c in ("#3a2e66", "#554688", "#7060ac", "#8f80d0", "#b4a6f0")]
-        skin = [BONE[2], BONE[3], BONE[4], BONE[4]]
-        accent = [hx(c) for c in ("#8a5c9c", "#b878c8", "#e0a0f0", "#ffc4f8", "#ffe6fb")]
-        wing_base = [hx(c) for c in ("#4a3a7c", "#6a58a6", "#8c7cc8", "#b0a2e8", "#d8ceff")]
-    else:
-        robe, hair, skin, accent, wing_base = ROBE, HAIR, [BONE[2], BONE[3], BONE[4], BONE[4]], MAGENTA, VIOLET
-    e = Ent(variant if ghost else "shard_queen", "shard_queen")
-    if ghost:
-        e.name = "queen_clone"
-
-    cloth = M_cloth(robe, 3001, bias=1.9)
-
-    def dress(face, fx, fy, fw, fh):
-        if fy == fh - 1 and fx % 2 == 0:
-            return (accent[3], G)
-        if fy == fh - 2:
-            return accent[1]
-        if face == "north" and fx == fw // 2 and fy % 3 != 2:
-            return (accent[2], G) if fy % 2 == 0 else accent[1]
-        if face in ("north", "south") and (fx + fy * 2) % 7 == 0:
-            return ramp(robe, 4)
-        return cloth(face, fx, fy, fw, fh)
-
-    e.paint("skirt_lower", dress)
-    e.paint("skirt_upper", overlay(cloth, lambda f, x, y, w, h: accent[1] if y == 0 and f != "up" else (
-        (accent[2], G) if f == "north" and y == 4 and x % 3 == 1 else None)))
-    e.paint("torso", overlay(cloth, lambda f, x, y, w, h: (accent[2], G) if f == "north" and y in (3, 5, 7) and 1 < x < w - 2 and x % 2 == 1 else (
-        accent[1] if f in ("north", "south") and y == 0 else (accent[0] if f in ("north", "south") and y == h - 1 else None))))
-
-    face_art = """
-hhhhhhhh
-hhhhhhhh
-hssssssh
-hsEssEsh
-hssssssh
-hssmmssh
-hhsssshh
-hhhhhhhh
-"""
-    hair_mat = M_fur(hair, 3003, bias=1.7)
-    e.paint("head", art_face(face_art, P(h=hair[2], s=skin[2], E=(accent[3], G), m=accent[1]), hair_mat))
-
-    # Krone und Heiligenschein leuchten
-    e.paint("crown", M_crystal(accent, 3005, glow_from=1.0))
-    e.paint("halo", M_flat(accent[4], G))
-
-    sleeve = overlay(cloth, lambda f, x, y, w, h: skin[2] if y >= h - 3 and f != "up" else (accent[2] if y == h - 4 else None))
-    e.paint("right_arm", sleeve)
-    e.paint("left_arm", sleeve)
-
-    def wing(face, fx, fy, fw, fh):
-        if face in ("north", "south"):
-            # Federn: diagonale Splitter, nach aussen laenger, Kanten leuchten
-            stripe = (fx + fy // 2) % 5
-            edge = (fx - fy // 2 + 40) % 5 == 0
-            n = nz(fx, fy, 3007)
-            if stripe == 0:
-                return (accent[3], G) if fy % 2 == 0 else (accent[2], G)
-            if fx == 0 or fy == 0 or fy == fh - 1:
-                return ramp(wing_base, 3.2)
-            return ramp(wing_base, 1.0 + (stripe * 0.35) + (n - 0.5) * 0.7 + (0.6 if edge else 0))
-        return ramp(wing_base, 2.0)
-
-    e.paint("right_wing", wing)
-    e.paint("left_wing", wing)
-
-    # ---- Zusatz-Details
-    e.paint("detail_head", M_fur(hair, 3009, bias=1.5), only=[0, 1, 2])
-    e.paint("detail_head", M_crystal(accent, 3011, glow_from=1.0), only=[3, 4])
-    e.paint("detail_torso", M_crystal(accent, 3013, glow_from=1.0), only=[0, 1])
-    e.paint("detail_torso", M_flat(accent[3], G), only=[2])
-    e.paint("detail_torso", overlay(cloth, lambda f, x, y, w, h: (accent[2], G) if f in ("north", "south") and y == 0 else None), only=[3])
-    e.paint("detail_skirt", M_crystal(accent, 3015, glow_from=1.0))
-    feather = M_crystal(wing_base if not ghost else accent, 3017, glow_from=2.8)
-    e.paint("detail_right_wing", feather)
-    e.paint("detail_left_wing", feather)
-    e.save()
-
-
 def main():
     crystal_colossus()
-    queen("queen")
-    queen("clone")
-    print("bosse: crystal_colossus, shard_queen, queen_clone")
+    print("bosse: crystal_colossus (Splitterkoenigin: queen_rig.py)")
 
 
 if __name__ == "__main__":

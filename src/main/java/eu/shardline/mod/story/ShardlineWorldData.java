@@ -1,7 +1,10 @@
 package eu.shardline.mod.story;
 
+import eu.shardline.mod.story.quest.QuestProgress;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2LongMap;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -12,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -44,6 +48,12 @@ public class ShardlineWorldData extends SavedData {
     /** Einmalige Ereignisse pro Spieler: gelesene Buecher, gesehene Visionen, gehoerte Dialoge. */
     private final Map<UUID, Set<String>> flags = new HashMap<>();
     private final Map<UUID, Integer> heartsDefeated = new HashMap<>();
+    /** Zweig ab Kapitel 8 (Ende der Welt beim Eintritt), damit ein spaeter zurueckgesetztes Ende den Weg nicht kippt. */
+    private final Map<UUID, StoryEnding> branches = new HashMap<>();
+    /** Gewaehlter Epilog nach Kapitel 9 (z. B. "stillness", "chronicle", "truce", "dominion"); leer = keiner. */
+    private final Map<UUID, String> epilogues = new HashMap<>();
+    /** Auftragsstand pro Spieler und Auftrag. */
+    private final Map<UUID, Map<String, QuestProgress>> quests = new HashMap<>();
 
     // --- Virus ---
     private boolean infected;
@@ -51,6 +61,10 @@ public class ShardlineWorldData extends SavedData {
     private boolean paused;
     private long lastHeartSpawn;
     private final Map<ResourceKey<Level>, LongSet> anchors = new HashMap<>();
+    /** Schwaeren (Kapitel 7-9) je Dimension, damit Stimmgabel, Kompass und Nachbeben keine Welt absuchen muessen. */
+    private final Map<ResourceKey<Level>, LongSet> festeringNodes = new HashMap<>();
+    /** Spielzeit, zu der ein Anker gesetzt wurde (fuer den wachsenden Schutzradius). Fehlt sie, gilt der volle Radius. */
+    private final Map<ResourceKey<Level>, Long2LongOpenHashMap> anchorSince = new HashMap<>();
     private final Map<ResourceKey<Level>, LongList> herds = new HashMap<>();
     /** Pro Chunk: Anzahl infizierter Bloecke (geschaetzt, steigt beim Infizieren, faellt beim Reinigen). */
     private final Map<ResourceKey<Level>, Long2IntOpenHashMap> chunkInfection = new HashMap<>();
@@ -98,6 +112,58 @@ public class ShardlineWorldData extends SavedData {
         return result;
     }
 
+    // ------------------------------------------------------------------ Nach dem Ausbruch: Zweig, Epilog, Auftraege
+
+    public StoryEnding branch(UUID player) {
+        return this.branches.getOrDefault(player, StoryEnding.NONE);
+    }
+
+    public void setBranch(UUID player, StoryEnding branch) {
+        if (branch == StoryEnding.NONE) {
+            this.branches.remove(player);
+        } else {
+            this.branches.put(player, branch);
+        }
+        this.setDirty();
+    }
+
+    public String epilogue(UUID player) {
+        return this.epilogues.getOrDefault(player, "");
+    }
+
+    public void setEpilogue(UUID player, String epilogue) {
+        if (epilogue.isEmpty()) {
+            this.epilogues.remove(player);
+        } else {
+            this.epilogues.put(player, epilogue);
+        }
+        this.setDirty();
+    }
+
+    /** Auftragsstand oder null, wenn der Auftrag nie begonnen wurde. */
+    @Nullable
+    public QuestProgress quest(UUID player, String quest) {
+        Map<String, QuestProgress> map = this.quests.get(player);
+        return map == null ? null : map.get(quest);
+    }
+
+    public Map<String, QuestProgress> quests(UUID player) {
+        return this.quests.getOrDefault(player, Map.of());
+    }
+
+    /** Legt den Auftragsstand an (oder liefert den vorhandenen). */
+    public QuestProgress questOrCreate(UUID player, String quest) {
+        this.setDirty();
+        return this.quests.computeIfAbsent(player, uuid -> new HashMap<>()).computeIfAbsent(quest, id -> new QuestProgress());
+    }
+
+    public void removeQuest(UUID player, String quest) {
+        Map<String, QuestProgress> map = this.quests.get(player);
+        if (map != null && map.remove(quest) != null) {
+            this.setDirty();
+        }
+    }
+
     // ------------------------------------------------------------------ Flags
 
     public boolean hasFlag(UUID player, String flag) {
@@ -126,6 +192,13 @@ public class ShardlineWorldData extends SavedData {
             }
         }
         return count;
+    }
+
+    public void removeFlag(UUID player, String flag) {
+        Set<String> set = this.flags.get(player);
+        if (set != null && set.remove(flag)) {
+            this.setDirty();
+        }
     }
 
     public void clearFlags(UUID player, String prefix) {
@@ -186,6 +259,22 @@ public class ShardlineWorldData extends SavedData {
         return this.anchors.computeIfAbsent(dimension, key -> new LongOpenHashSet());
     }
 
+    public LongSet festeringNodes(ResourceKey<Level> dimension) {
+        return this.festeringNodes.computeIfAbsent(dimension, key -> new LongOpenHashSet());
+    }
+
+    public void addFesteringNode(ResourceKey<Level> dimension, BlockPos pos) {
+        if (this.festeringNodes(dimension).add(pos.asLong())) {
+            this.setDirty();
+        }
+    }
+
+    public void removeFesteringNode(ResourceKey<Level> dimension, BlockPos pos) {
+        if (this.festeringNodes(dimension).remove(pos.asLong())) {
+            this.setDirty();
+        }
+    }
+
     public void addAnchor(ResourceKey<Level> dimension, BlockPos pos) {
         if (this.anchors(dimension).add(pos.asLong())) {
             this.setDirty();
@@ -196,6 +285,28 @@ public class ShardlineWorldData extends SavedData {
         if (this.anchors(dimension).remove(pos.asLong())) {
             this.setDirty();
         }
+        if (this.anchorSince(dimension).remove(pos.asLong()) != this.anchorSince(dimension).defaultReturnValue()) {
+            this.setDirty();
+        }
+    }
+
+    private Long2LongOpenHashMap anchorSince(ResourceKey<Level> dimension) {
+        return this.anchorSince.computeIfAbsent(dimension, key -> {
+            Long2LongOpenHashMap map = new Long2LongOpenHashMap();
+            map.defaultReturnValue(-1L);
+            return map;
+        });
+    }
+
+    /** Merkt sich, wann ein Anker gesetzt wurde. */
+    public void setAnchorSince(ResourceKey<Level> dimension, BlockPos pos, long gameTime) {
+        this.anchorSince(dimension).put(pos.asLong(), gameTime);
+        this.setDirty();
+    }
+
+    /** Spielzeit, zu der der Anker gesetzt wurde, oder -1 (alte Anker: voller Radius). */
+    public long anchorSince(ResourceKey<Level> dimension, long packedPos) {
+        return this.anchorSince(dimension).get(packedPos);
     }
 
     public LongList herds(ResourceKey<Level> dimension) {
@@ -349,10 +460,25 @@ public class ShardlineWorldData extends SavedData {
         Set<UUID> all = new HashSet<>(this.chapters.keySet());
         all.addAll(this.flags.keySet());
         all.addAll(this.heartsDefeated.keySet());
+        all.addAll(this.branches.keySet());
+        all.addAll(this.epilogues.keySet());
+        all.addAll(this.quests.keySet());
         for (UUID uuid : all) {
             CompoundTag player = new CompoundTag();
             player.putInt("Chapter", this.chapter(uuid));
             player.putInt("Hearts", this.heartsDefeated(uuid));
+            if (this.branches.containsKey(uuid)) {
+                player.putString("Branch", this.branches.get(uuid).id());
+            }
+            if (this.epilogues.containsKey(uuid)) {
+                player.putString("Epilogue", this.epilogues.get(uuid));
+            }
+            Map<String, QuestProgress> questMap = this.quests.get(uuid);
+            if (questMap != null && !questMap.isEmpty()) {
+                CompoundTag questTag = new CompoundTag();
+                questMap.forEach((id, progress) -> questTag.put(id, progress.save()));
+                player.put("Quests", questTag);
+            }
             ListTag flagList = new ListTag();
             this.flags.getOrDefault(uuid, Set.of()).forEach(flag -> flagList.add(StringTag.valueOf(flag)));
             player.put("Flags", flagList);
@@ -367,12 +493,23 @@ public class ShardlineWorldData extends SavedData {
 
         CompoundTag dimensions = new CompoundTag();
         Set<ResourceKey<Level>> keys = new HashSet<>(this.anchors.keySet());
+        keys.addAll(this.anchorSince.keySet());
         keys.addAll(this.herds.keySet());
         keys.addAll(this.chunkInfection.keySet());
+        keys.addAll(this.festeringNodes.keySet());
         for (ResourceKey<Level> key : keys) {
             CompoundTag dimension = new CompoundTag();
             dimension.put("Anchors", new LongArrayTag(this.anchors(key).toLongArray()));
+            Long2LongOpenHashMap since = this.anchorSince(key);
+            long[] sincePairs = new long[since.size() * 2];
+            int s = 0;
+            for (Long2LongMap.Entry entry : since.long2LongEntrySet()) {
+                sincePairs[s++] = entry.getLongKey();
+                sincePairs[s++] = entry.getLongValue();
+            }
+            dimension.put("AnchorSince", new LongArrayTag(sincePairs));
             dimension.put("Herds", new LongArrayTag(this.herds(key).toLongArray()));
+            dimension.put("FesteringNodes", new LongArrayTag(this.festeringNodes(key).toLongArray()));
             Long2IntOpenHashMap infection = this.chunkInfection(key);
             long[] chunkKeys = new long[infection.size()];
             int[] chunkValues = new int[infection.size()];
@@ -415,6 +552,18 @@ public class ShardlineWorldData extends SavedData {
             if (player.getInt("Hearts") > 0) {
                 data.heartsDefeated.put(uuid, player.getInt("Hearts"));
             }
+            // Felder ab "Nach dem Ausbruch": fehlen sie (alte Welt), bleiben die Standardwerte
+            StoryEnding branch = StoryEnding.byId(player.getString("Branch"));
+            if (branch != StoryEnding.NONE) {
+                data.branches.put(uuid, branch);
+            }
+            if (!player.getString("Epilogue").isEmpty()) {
+                data.epilogues.put(uuid, player.getString("Epilogue"));
+            }
+            CompoundTag questTag = player.getCompound("Quests");
+            for (String quest : questTag.getAllKeys()) {
+                data.quests.computeIfAbsent(uuid, id -> new HashMap<>()).put(quest, QuestProgress.load(questTag.getCompound(quest)));
+            }
             ListTag flagList = player.getList("Flags", Tag.TAG_STRING);
             if (!flagList.isEmpty()) {
                 Set<String> set = new HashSet<>();
@@ -439,7 +588,12 @@ public class ShardlineWorldData extends SavedData {
             ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, location);
             CompoundTag dimension = dimensions.getCompound(key);
             data.anchors(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("Anchors")));
+            long[] sincePairs = dimension.getLongArray("AnchorSince");
+            for (int s = 0; s + 1 < sincePairs.length; s += 2) {
+                data.anchorSince(dimensionKey).put(sincePairs[s], sincePairs[s + 1]);
+            }
             data.herds(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("Herds")));
+            data.festeringNodes(dimensionKey).addAll(LongArrayList.wrap(dimension.getLongArray("FesteringNodes")));
             long[] chunkKeys = dimension.getLongArray("InfectionChunks");
             int[] chunkValues = dimension.getIntArray("InfectionCounts");
             Long2IntOpenHashMap infection = data.chunkInfection(dimensionKey);

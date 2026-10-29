@@ -1,18 +1,24 @@
 package eu.shardline.mod.client;
 
 import eu.shardline.mod.Shardline;
+import eu.shardline.mod.block.entity.ModBlockEntities;
 import eu.shardline.mod.client.particle.ShardParticle;
 import eu.shardline.mod.client.renderer.CrystalGolemRenderer;
 import eu.shardline.mod.client.renderer.InfectedRenderers;
 import eu.shardline.mod.client.renderer.KeeperCapeLayer;
+import eu.shardline.mod.client.renderer.PurityAnchorRenderer;
 import eu.shardline.mod.client.renderer.QueenCloneRenderer;
 import eu.shardline.mod.client.renderer.ShardCreeperRenderer;
 import eu.shardline.mod.client.renderer.ShardlineGeoRenderer;
 import eu.shardline.mod.client.renderer.VoidRayRenderer;
 import eu.shardline.mod.client.sky.SplitterweiteEffects;
+import eu.shardline.mod.client.story.ChapterCardOverlay;
 import eu.shardline.mod.client.story.StoryScreenEffects;
+import eu.shardline.mod.core.ModDataComponents;
 import eu.shardline.mod.core.ModParticles;
 import eu.shardline.mod.entity.ModEntities;
+import eu.shardline.mod.entity.boss.ShardQueenEntity;
+import eu.shardline.mod.entity.boss.VirusHeartEntity;
 import eu.shardline.mod.item.ModItems;
 import eu.shardline.mod.world.dimension.ModDimensions;
 import net.minecraft.client.renderer.entity.NoopRenderer;
@@ -57,6 +63,9 @@ public final class ShardlineClient {
             });
             ItemProperties.register(ModItems.CRYSTAL_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"),
                     (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+            // Kapitel-Emblem: Emblem-Wert / 10 fuer die Modell-Overrides (Kapitel 1-7: 0.1-0.7, Zweige 8/9: 1.8-2.9)
+            ItemProperties.register(ModItems.CHAPTER_EMBLEM.get(), Shardline.id("chapter"),
+                    (stack, level, entity, seed) -> stack.getOrDefault(ModDataComponents.CHAPTER.get(), 1) / 10.0F);
         });
     }
 
@@ -70,17 +79,42 @@ public final class ShardlineClient {
         event.registerEntityRenderer(ModEntities.VOID_RAY.get(), VoidRayRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTAL_SPIDER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_spider", 0.8F, true));
         event.registerEntityRenderer(ModEntities.SHARD_TRADER.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_trader", 0.5F, false));
+        event.registerEntityRenderer(ModEntities.CRYSTAL_SNAIL.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_snail", 0.35F, true));
+        event.registerEntityRenderer(ModEntities.RHEA.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "rhea", 0.5F, true));
+        event.registerEntityRenderer(ModEntities.VEYL.get(), eu.shardline.mod.client.renderer.NpcRenderers.VeylRenderer::new);
+        event.registerEntityRenderer(ModEntities.ILSA.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "ilsa", 0.5F, true));
+        event.registerEntityRenderer(ModEntities.KESH.get(), eu.shardline.mod.client.renderer.NpcRenderers.KeshRenderer::new);
         event.registerEntityRenderer(ModEntities.SHADOW_FOX.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shadow_fox", 0.4F, true));
         event.registerEntityRenderer(ModEntities.SHATTERED_KNIGHT.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shattered_knight", 0.6F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_COLOSSUS.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_colossus", 1.6F, true));
-        event.registerEntityRenderer(ModEntities.SHARD_QUEEN.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "shard_queen", 0.8F, true));
+        // Kein Umkippen beim Tod: Der Clip "death" laesst die Koenigin an Ort und Stelle zerfallen.
+        event.registerEntityRenderer(ModEntities.SHARD_QUEEN.get(), ctx -> new ShardlineGeoRenderer<ShardQueenEntity>(ctx, "shard_queen", 0.55F, true) {
+            @Override
+            protected float getDeathMaxRotation(ShardQueenEntity animatable) {
+                return 0.0F;
+            }
+        });
         event.registerEntityRenderer(ModEntities.QUEEN_CLONE.get(), QueenCloneRenderer::new);
         event.registerEntityRenderer(ModEntities.SHARD_PROJECTILE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerEntityRenderer(ModEntities.CRYSTAL_PILLAR.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "crystal_pillar", 0.0F, true));
         event.registerEntityRenderer(ModEntities.VOID_ZONE.get(), NoopRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.PURITY_ANCHOR.get(), PurityAnchorRenderer::new);
         event.registerEntityRenderer(ModEntities.SHARD_ZOMBIE.get(), InfectedRenderers.ShardZombieRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIGLIN.get(), InfectedRenderers.CrystallizedPiglinRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_ENDERMAN.get(), InfectedRenderers.CrystallizedEndermanRenderer::new);
         event.registerEntityRenderer(ModEntities.CRYSTALLIZED_COW.get(), InfectedRenderers.CrystallizedCowRenderer::new);
-        event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<>(ctx, "virus_heart", 1.2F, true));
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_SHEEP.get(), InfectedRenderers.CrystallizedSheepRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_PIG.get(), InfectedRenderers.CrystallizedPigRenderer::new);
+        event.registerEntityRenderer(ModEntities.CRYSTALLIZED_VILLAGER.get(), InfectedRenderers.CrystallizedVillagerRenderer::new);
+        event.registerEntityRenderer(ModEntities.ECHO_QUEEN.get(), eu.shardline.mod.client.renderer.NpcRenderers.EchoQueenRenderer::new);
+        event.registerEntityRenderer(ModEntities.FESTERING_HEART.get(), eu.shardline.mod.client.renderer.NpcRenderers.FesteringHeartRenderer::new);
+        // Kein Umkippen beim Tod: Der Clip "death" laesst das Herz an Ort und Stelle zerfallen.
+        event.registerEntityRenderer(ModEntities.VIRUS_HEART.get(), ctx -> new ShardlineGeoRenderer<VirusHeartEntity>(ctx, "virus_heart", 1.2F, true) {
+            @Override
+            protected float getDeathMaxRotation(VirusHeartEntity animatable) {
+                return 0.0F;
+            }
+        });
     }
 
     @SubscribeEvent
@@ -97,11 +131,13 @@ public final class ShardlineClient {
         event.registerSpriteSet(ModParticles.SHARD_SPARKLE.get(), ShardParticle.SparkleProvider::new);
         event.registerSpriteSet(ModParticles.VOID_MOTE.get(), ShardParticle.VoidProvider::new);
         event.registerSpriteSet(ModParticles.VIRUS_SPORE.get(), ShardParticle.SporeProvider::new);
+        event.registerSpriteSet(ModParticles.PURITY_MOTE.get(), ShardParticle.PurityProvider::new);
     }
 
     @SubscribeEvent
     static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(KeyBindings.CRYSTAL_SHIELD);
+        event.register(KeyBindings.JOURNAL);
         event.register(KeyBindings.SHARD_CALL);
         event.register(KeyBindings.CRYSTAL_WAVE);
     }
@@ -115,5 +151,6 @@ public final class ShardlineClient {
     static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("shard_portal_overlay"), PortalOverlay::render);
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, Shardline.id("story_effects"), StoryScreenEffects::render);
+        event.registerAbove(VanillaGuiLayers.TITLE, Shardline.id("chapter_card"), ChapterCardOverlay::render);
     }
 }

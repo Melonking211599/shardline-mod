@@ -30,6 +30,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 
 /**
  * Shard-Zombie: ein vom Virus kristallisierter Zombie. Brennt nicht in der Sonne, steckt mit
@@ -37,6 +40,8 @@ import net.minecraft.nbt.CompoundTag;
  * Splitterherrscher koennen ihn zaehmen.
  */
 public class ShardZombieEntity extends Zombie implements InfectedMob {
+    private static final EntityDataAccessor<Boolean> DATA_COLLAR = SynchedEntityData.defineId(ShardZombieEntity.class, EntityDataSerializers.BOOLEAN);
+
     @Nullable
     private UUID owner;
     private int summonTicks;
@@ -167,6 +172,17 @@ public class ShardZombieEntity extends Zombie implements InfectedMob {
 
     // --- InfectedMob ---
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_COLLAR, false);
+    }
+
+    @Override
+    public boolean hasCollar() {
+        return this.entityData.get(DATA_COLLAR);
+    }
+
     @Nullable
     @Override
     public UUID getOwnerUUID() {
@@ -176,6 +192,7 @@ public class ShardZombieEntity extends Zombie implements InfectedMob {
     @Override
     public void setOwnerUUID(@Nullable UUID owner) {
         this.owner = owner;
+        this.entityData.set(DATA_COLLAR, owner != null);
         if (owner != null) {
             this.setPersistenceRequired();
         }

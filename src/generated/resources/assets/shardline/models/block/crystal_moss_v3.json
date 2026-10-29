@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "shardline:block/shardstone",
+    "side": "shardline:block/crystal_moss_side",
+    "top": "shardline:block/crystal_moss_v3"
+  }
+}

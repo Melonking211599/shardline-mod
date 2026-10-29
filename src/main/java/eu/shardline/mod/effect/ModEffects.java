@@ -13,6 +13,7 @@ public final class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, Shardline.MODID);
 
     public static final DeferredHolder<MobEffect, ShardFeverEffect> SHARD_FEVER = MOB_EFFECTS.register("shard_fever", ShardFeverEffect::new);
+    public static final DeferredHolder<MobEffect, ImmunityEffect> IMMUNITY = MOB_EFFECTS.register("immunity", ImmunityEffect::new);
 
     private ModEffects() {
     }

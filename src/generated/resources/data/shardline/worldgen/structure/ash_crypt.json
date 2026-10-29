@@ -1,0 +1,24 @@
+{
+  "type": "shardline:ash_crypt",
+  "biomes": "#shardline:has_structure/ash_crypt",
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "shardline:ash_walker",
+          "maxCount": 1,
+          "minCount": 1,
+          "weight": 2
+        },
+        {
+          "type": "shardline:crystal_spider",
+          "maxCount": 1,
+          "minCount": 1,
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "step": "surface_structures"
+}

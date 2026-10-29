@@ -1,0 +1,26 @@
+{
+  "parent": "shardline:story/breach_core",
+  "criteria": {
+    "story": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.shardline.story.decision_altar.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "shardline:decision_altar"
+    },
+    "title": {
+      "translate": "advancements.shardline.story.decision_altar.title"
+    }
+  },
+  "requirements": [
+    [
+      "story"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
